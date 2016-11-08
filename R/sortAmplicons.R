@@ -7,10 +7,10 @@
 ##' @return MultiAmplicon
 ##' @author Emanuel Heitlinger
 
-## setGeneric(name="sortAmplicons",
-##            def=function(MA, ...) {
-##                standardGeneric("sortAmplicons", ...)
-##            })
+setGeneric(name="sortAmplicons",
+           def=function(MA, ...) {
+               standardGeneric("sortAmplicons", ...)
+           })
 
 setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, ...){
     ## the data matrix of amplicons x samples stratified counts 
