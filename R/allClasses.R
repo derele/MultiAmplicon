@@ -40,19 +40,6 @@ setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
 setMethod("names", "PairedReadFileSet", function(x) basename(x@readsF))
 
 
-setMethod("show", "PairedReadFileSet", function(object) {
-    cat("  A ", class(object),
-        " instance of length ", length(object@readsF), 
-        "\n", sep = "")
-    if (length(object@readsF) != 0) {
-        cat("\n", length(object@readsF), " Forward read files:",
-            substr(paste(object@readsF, collapse=" "), 1, 180),
-            "... \n")
-        cat(length(object@readsR), " Reverse read files:",
-            substr(paste(object@readsR, collapse=" "), 1, 180),
-            "... \n")
-    }
-})
 
 ##' A class representing sequences of forward and reverse
 ##' rimers. Exactly two \code{\link{DNAStrinSet}} objects of the same
@@ -121,20 +108,6 @@ setMethod(names, "PrimerPairsSet", function(x){
     paste0(x@primerF, ":", x@primerR)
 })
 
-setMethod("show", "PrimerPairsSet",
-          function(object){
-              cat("  A ", class(object),
-                  " instance of length ", length(object@primerF), 
-                  "\n", sep = "")
-              if (length(object@primerF) != 0) {
-                  cat("Forward:\n")
-                  cat(Biostrings:::.XStringSet.show_frame(object@primerF))
-                  cat("Reverse:\n")
-                  cat(Biostrings:::.XStringSet.show_frame(object@primerR))
-              }
-          })
-
-
 
 ##' A class representing sequences of forward and reverse
 ##' rimers. Exactly two \code{\link{DNAStrinSet}} objects of the same
@@ -177,32 +150,4 @@ MultiAmplicon <- function(PrimerPairsSet,
         PairedReadFileSet = PairedReadFileSet        
         )
 }
-
-## Methods 
-setMethod("length", "MultiAmplicon", function(x) length(x@PrimerPairsSet))
-setMethod("nrow", "MultiAmplicon", function(x) length(x@PrimerPairsSet))
-setMethod("ncol", "MultiAmplicon", function(x) length(x@PairedReadFileSet))
-setMethod("rownames", "MultiAmplicon", function(x) names(x@PrimerPairsSet))
-setMethod("colnames", "MultiAmplicon", function(x) names(x@PairedReadFileSet))
-
-setMethod("show", "MultiAmplicon",
-          function(object){
-              cat("  A ", class(object),
-                  " instance of dimensions ", length(object@PrimerPairsSet), " x ",
-                  length(object@PairedReadFileSet),
-                  "\n", sep = "")
-              if (length(object@PairedReadFileSet) != 0 &&
-                  length(object@PrimerPairsSet) !=0) {
-                  cat("Forward Primers:\n")
-                  cat(Biostrings:::.XStringSet.show_frame(object@PrimerPairsSet@primerF))
-                  cat("Reverse Primers:\n")
-                  cat(Biostrings:::.XStringSet.show_frame(object@PrimerPairsSet@primerR))
-                  cat("\n", length(object@PairedReadFileSet), " Forward read files:",
-                      substr(paste(object@PairedReadFileSet@readsF, collapse=" "), 1, 180),
-                      "... \n")
-                  cat(length(object@PairedReadFileSet), " Reverse read files:",
-                      substr(paste(object@PairedReadFileSet@readsR, collapse=" "), 1, 180),
-                      "... \n")
-              }
-          })
 
