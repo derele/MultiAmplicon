@@ -165,14 +165,16 @@ setMethod("show", "PrimerPairsSet",
 setClass("MultiAmplicon",
          representation(PrimerPairsSet="PrimerPairsSet",
                         PairedReadFileSet="PairedReadFileSet",
-                        rawCounts="matrix"))
+                        rawCounts="matrix",
+                        FstratifiedFiles="matrix",
+                        RstratifiedFiles="matrix"))
 
 
 MultiAmplicon <- function(PrimerPairsSet,
                           PairedReadFileSet, ...){
     new("MultiAmplicon",
         PrimerPairsSet = PrimerPairsSet,
-        PairedReadFileSet = PairedReadFileSet
+        PairedReadFileSet = PairedReadFileSet        
         )
 }
 
