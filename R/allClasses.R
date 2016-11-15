@@ -135,6 +135,8 @@ setMethod(names, "PrimerPairsSet", function(x){
 ##' @return PrimerPairsSet-class
 ##' @author Emanuel Heitlinger
 ##' @importClassesFrom Biostrings DNAStringSet
+##' @export MultiAmplicon
+##' @exportClass MultiAmplicon
 
 setClass("MultiAmplicon",
          representation(PrimerPairsSet="PrimerPairsSet",
