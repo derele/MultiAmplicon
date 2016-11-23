@@ -9,7 +9,7 @@
 ##' @param ... 
 ##' @return MultiAmplicon
 ##' @author Emanuel Heitlinger
-##' @importFrom ShortRead FastqStreamer yield narrow
+##' @importFrom ShortRead FastqStreamer yield narrow sread
 ##' @importFrom Biostrings isMatchingStartingAt
 ##' @export
 setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, ...){
@@ -39,12 +39,13 @@ setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, ...){
          while(length(suppressWarnings(Ffq <- ShortRead::yield(f))) &&
                length(suppressWarnings(Rfq <- ShortRead::yield(r)))){
                    fM <- lapply(MA@PrimerPairsSet@.uniqueF, function(x){
-                       as.vector(Biostrings::isMatchingStartingAt(x, sread(Ffq),
-                                                      fixed=FALSE))
+                       as.vector(Biostrings::isMatchingStartingAt(x,
+                                                                  ShortRead::sread(Ffq),
+                                                                  fixed=FALSE))
                    })
                    rM <- lapply(MA@PrimerPairsSet@.uniqueR, function(x){
-                       as.vector(Biostrings::isMatchingStartingAt(x, sread(Rfq),
-                                                      fixed=FALSE))
+                       as.vector(Biostrings::isMatchingStartingAt(x, ShortRead::sread(Rfq),
+                                                                  fixed=FALSE))
                    })
                    matches <- numeric(length=length(MA@PrimerPairsSet))
                    ## add primer pair data and metadata in rows 
