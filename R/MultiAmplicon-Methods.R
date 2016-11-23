@@ -9,7 +9,8 @@
 ##' @param ... 
 ##' @return MultiAmplicon
 ##' @author Emanuel Heitlinger
-##' @export
+##' @importFrom ShortRead FastqStreamer yield narrow
+##' @importFrom Biostrings isMatchingStartingAt
 setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, ...){
     ## the data matrix of amplicons x samples stratified counts 
     data <- matrix(0,
@@ -29,19 +30,19 @@ setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, ...){
     readsR <- MA@PairedReadFileSet@readsR
     ## add sample data and metadata in columns
     for(x in seq_along(readsF)) {
-        f <- FastqStreamer(readsF[[x]], n = n)
-        r <- FastqStreamer(readsR[[x]], n = n)
+        f <- ShortRead::FastqStreamer(readsF[[x]], n = n)
+        r <- ShortRead::FastqStreamer(readsR[[x]], n = n)
         tmpbaseF <- paste0(tempfile(), basename(readsF[[x]]))
         tmpbaseR <- paste0(tempfile(), basename(readsR[[x]]))
         ## request forward and reverse file simultaneously
-         while(length(suppressWarnings(Ffq <- yield(f))) &&
-               length(suppressWarnings(Rfq <- yield(r)))){
+         while(length(suppressWarnings(Ffq <- ShortRead::yield(f))) &&
+               length(suppressWarnings(Rfq <- ShortRead::yield(r)))){
                    fM <- lapply(MA@PrimerPairsSet@.uniqueF, function(x){
-                       as.vector(isMatchingStartingAt(x, sread(Ffq),
+                       as.vector(Biostrings::isMatchingStartingAt(x, sread(Ffq),
                                                       fixed=FALSE))
                    })
                    rM <- lapply(MA@PrimerPairsSet@.uniqueR, function(x){
-                       as.vector(isMatchingStartingAt(x, sread(Rfq),
+                       as.vector(Biostrings::isMatchingStartingAt(x, sread(Rfq),
                                                       fixed=FALSE))
                    })
                    matches <- numeric(length=length(MA@PrimerPairsSet))
@@ -54,13 +55,13 @@ setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, ...){
                        tmppathR[y, x] <- paste0(tmpbaseR, names(MA@PrimerPairsSet)[[y]], ".fastq.gz")
                        lengthF <- length(foo@PrimerPairsSet@primerF[[y]])
                        lengthR <- length(foo@PrimerPairsSet@primerR[[y]])
-                       F <- narrow(Ffq[select],
-                                   lengthF, width(Ffq[select]))
+                       F <- ShortRead::narrow(Ffq[select],
+                                              lengthF, width(Ffq[select]))
                        R <- Rfq[select]
-                       R <- narrow(Rfq[select],
-                                   lengthR, width(Rfq[select]))
-                       writeFastq(F, file=tmppathF[[y, x]], mode="a")
-                       writeFastq(R, file=tmppathR[[y, x]], mode="a")
+                       R <- ShortRead::narrow(Rfq[select],
+                                              lengthR, width(Rfq[select]))
+                       ShortRead::writeFastq(F, file=tmppathF[[y, x]], mode="a")
+                       ShortRead::writeFastq(R, file=tmppathR[[y, x]], mode="a")
                        matches[y] <- length(select[select==TRUE])
                    }
                    ## need to add over the while loop because of fastq streaming 
