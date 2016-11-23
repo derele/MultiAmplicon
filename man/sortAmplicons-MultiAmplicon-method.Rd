@@ -10,6 +10,8 @@
 \arguments{
 \item{MA}{}
 
+\item{n}{}
+
 \item{...}{}
 }
 \value{
