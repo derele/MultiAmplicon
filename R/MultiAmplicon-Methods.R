@@ -1,14 +1,14 @@
 ################################################################################
-##' .. content for \description{} (no empty lines) ..
+##' .. content for description (no empty lines) ..
 ##'
-##' .. content for \details{} ..
+##' .. content for details
+##' 
 ##' @title sortAmplicons
 ##' @param MA 
+##' @param n 
 ##' @param ... 
 ##' @return MultiAmplicon
 ##' @author Emanuel Heitlinger
-
-
 setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, ...){
     ## the data matrix of amplicons x samples stratified counts 
     data <- matrix(0,
