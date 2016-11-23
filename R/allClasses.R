@@ -12,8 +12,8 @@
 ##' @param readsR The path and filenames of reverse reads
 ##' @return Constructors for defined classes 
 ##' @author Emanuel Heitlinger
-
-
+##'
+##' @export PairedReadFileSet
 setClass("PairedReadFileSet",
          slots = c(readsF="character", readsR="character"),
          contains = c(readsF="character", readsR="character"),
@@ -35,11 +35,10 @@ PairedReadFileSet <- function(readsF = as.character(), readsR = as.character()){
         readsR = as.character(readsR))
 }
 
+
 ## Methods
 setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
 setMethod("names", "PairedReadFileSet", function(x) basename(x@readsF))
-
-
 
 ##' A class representing sequences of forward and reverse
 ##' rimers. Exactly two \code{\link{DNAStrinSet}} objects of the same
@@ -73,6 +72,7 @@ setMethod("names", "PairedReadFileSet", function(x) basename(x@readsF))
 ##' @title PrimerPairsSet-class
 ##' @return PrimerPairsSet-class
 ##' @author Emanuel Heitlinger
+##' @export PrimerPairsSet
 
 setClass("PrimerPairsSet", contains = "DNAStringSet",
          representation(primerF="DNAStringSet", primerR="DNAStringSet",
