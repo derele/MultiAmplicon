@@ -76,6 +76,7 @@ setMethod("names", "PairedReadFileSet", function(x) basename(x@readsF))
 
 setClass("PrimerPairsSet", contains = "DNAStringSet",
          representation(primerF="DNAStringSet", primerR="DNAStringSet",
+                        textNames="character", 
                         .mapF="numeric", .mapR="numeric",
                         .uniqueF="character", .uniqueR="character"),         
          validity=function(object) {
@@ -89,12 +90,12 @@ setClass("PrimerPairsSet", contains = "DNAStringSet",
                  "Same number of forward and reverse primer sequences needed to constitute Primer-Pairs"}
 })
 
-
 ## Constructor
 PrimerPairsSet <- function(primerF = DNAStringSet(), primerR = DNAStringSet()){
     new("PrimerPairsSet",
         primerF = DNAStringSet(primerF),
         primerR = DNAStringSet(primerR),
+        textNames = paste0(names(primerF), ":", names(primerR)),
         .mapF=as.numeric(factor(as.character(primerF))),
         .mapR=as.numeric(factor(as.character(primerR))),
         .uniqueF=sort(unique(primerF)),
@@ -108,6 +109,13 @@ setMethod(names, "PrimerPairsSet", function(x){
     paste0(x@primerF, ":", x@primerR)
 })
 
+textNames <- function(x){
+    if (class(x)!= "PrimerPairsSet"){
+        stop("please provide a PrimerPairsSet object")
+    } else {
+        x@textNames
+    }
+}
 
 ##' A class representing sequences of forward and reverse
 ##' rimers. Exactly two \code{\link{DNAStrinSet}} objects of the same

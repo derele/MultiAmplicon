@@ -1,4 +1,6 @@
 ################################################################################
+#' @title show-methods
+#' @name show-methods
 #' @rdname show-methods
 setMethod("show", "PairedReadFileSet", function(object) {
     cat("  A ", class(object),
