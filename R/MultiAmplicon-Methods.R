@@ -11,6 +11,7 @@
 ##' @author Emanuel Heitlinger
 ##' @importFrom ShortRead FastqStreamer yield narrow
 ##' @importFrom Biostrings isMatchingStartingAt
+##' @export
 setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, ...){
     ## the data matrix of amplicons x samples stratified counts 
     data <- matrix(0,
