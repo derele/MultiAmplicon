@@ -55,8 +55,8 @@ setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, ...){
                        select <- fM[[map.primerF]] & rM[[map.primerR]]
                        tmppathF[y, x] <- paste0(tmpbaseF, names(MA@PrimerPairsSet)[[y]], ".fastq.gz")
                        tmppathR[y, x] <- paste0(tmpbaseR, names(MA@PrimerPairsSet)[[y]], ".fastq.gz")
-                       lengthF <- length(foo@PrimerPairsSet@primerF[[y]])
-                       lengthR <- length(foo@PrimerPairsSet@primerR[[y]])
+                       lengthF <- length(MA@PrimerPairsSet@primerF[[y]])
+                       lengthR <- length(MA@PrimerPairsSet@primerR[[y]])
                        F <- ShortRead::narrow(Ffq[select],
                                               lengthF, width(Ffq[select]))
                        R <- Rfq[select]
