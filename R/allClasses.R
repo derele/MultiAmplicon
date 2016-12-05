@@ -132,10 +132,13 @@ textNames <- function(x){
 ##'
 ##' PrimerPairsSet(primerF, primerR)
 ##' 
-##' @param primerF Character vector (then converted to) or DNAStringSet. Can be named or unnamed.
-##' @param primerR Character vector (then converted to) or DNAStringSet of the same length. Can be named or unnamed.
+##' @param primerF Character vector (then converted to) or
+##'     DNAStringSet. Can be named or unnamed.
+##' @param primerR Character vector (then converted to) or
+##'     DNAStringSet of the same length. Can be named or unnamed.
 ##' 
-##' @description The PrimerPairsSet class is a container for storing primer pairs. 
+##' @description The PrimerPairsSet class is a container for storing
+##'     primer pairs.
 ##' 
 ##' @seealso \code{\link{DNAStringSet}}
 ##' @rdname PrimerPairsSet-class
