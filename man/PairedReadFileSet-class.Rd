@@ -17,11 +17,12 @@ PairedReadFileSet(readsF, readsR)
 Constructors for defined classes
 }
 \description{
-A class representing just file path to paired end reads, meaning
-basically two character vectors of the same length.
+A class representing file paths to paired end reads.
 }
 \details{
-Filenames a checked for existence.
+Two character vectors of the same length specifying file names of
+paired end reads can be stored in this class. Filenames a checked
+for their existence.
 }
 \author{
 Emanuel Heitlinger

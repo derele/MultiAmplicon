@@ -2,53 +2,33 @@
 % Please edit documentation in R/allClasses.R
 \docType{class}
 \name{PrimerPairsSet-class}
-\alias{MultiAmplicon-class}
 \alias{PrimerPairsSet-class}
 \title{PrimerPairsSet-class}
 \usage{
 ## Constructors:
 
 PrimerPairsSet(primerF, primerR)
-
-## Constructors:
-
-PrimerPairsSet(primerF, primerR)
 }
 \arguments{
-\item{primerF}{Character vector or DNAStringSet. Can be named or unnamed.}
+\item{primerF}{Character vector or DNAStringSet. Can be named or
+unnamed.}
 
-\item{primerR}{Character vector or DNAStringSet of the same length. Can be named or unnamed.}
-
-\item{primerF}{Character vector (then converted to) or DNAStringSet. Can be named or unnamed.}
-
-\item{primerR}{Character vector (then converted to) or DNAStringSet of the same length. Can be named or unnamed.}
+\item{primerR}{Character vector or DNAStringSet of the same
+length. Can be named or unnamed.}
 }
 \value{
 PrimerPairsSet-class
-
-PrimerPairsSet-class
 }
 \description{
-The PrimerPairsSet class is a container for storing primer pairs.
-
-The PrimerPairsSet class is a container for storing primer pairs.
+A class representing sequences of forward and reverse
+primers.
 }
 \details{
-A class representing sequences of forward and reverse
-rimers. Exactly two \code{\link{DNAStrinSet}} objects of the same
-length specifying primer-pairs. Primer sequences can be provided
-as character strings and will be converted to
-\code{\link{DNAStringSet}} by the function of the same
-name. primerF and primerR have to be of the same length to specify
-primer pairs (primerF[i]:primerR[i]; for i in 1:length(PrimerF)).
-Warnings are given if primer sequences are of unusal length (<16
-or >26 bases).
-
-A class representing sequences of forward and reverse
-rimers. Exactly two \code{\link{DNAStrinSet}} objects of the same
-length specifying primer-pairs. Primer sequences can be provided
-as character strings and will be converted to
-\code{\link{DNAStringSet}} by the function of the same
+The PrimerPairsSet class is a container for storing primer pairs.
+This means exactly two \code{\link{DNAStrinSet}} objects of the
+same length specifying primer-pairs. Primer sequences can be
+provided as character strings and will be converted to
+\code{\link{DNAStringSet}} by the constructor function of the same
 name. primerF and primerR have to be of the same length to specify
 primer pairs (primerF[i]:primerR[i]; for i in 1:length(PrimerF)).
 Warnings are given if primer sequences are of unusal length (<16
@@ -59,24 +39,25 @@ or >26 bases).
 \describe{
 \item{\code{primerF}}{DNAStringSet. Can be named or unnamed.}
 
-\item{\code{primerR}}{DNAStringSet of the same length. Can be named or unnnamed.}
+\item{\code{primerR}}{DNAStringSet of the same length. Can be named or
+unnnamed.}
 
-\item{\code{.mapF}}{Mapps potentially duplicate entries in FW primers to unique entries.}
+\item{\code{.mapF}}{(automatically generated) maps potentially duplicate
+entries in FW primers to unique entries.}
 
-\item{\code{.mapR}}{Mapps potentially duplicate entries in FW primers to unique entries.}
+\item{\code{.mapR}}{(auto-generated) maps potentially duplicate entries in
+FW primers to unique entries.}
 
-\item{\code{.uniqueF}}{unique forward primers as character strings.}
+\item{\code{.uniqueF}}{(auto-generated) unique forward primers as
+character strings.}
 
-\item{\code{.uniqueR}}{unique reverse primers as character strings.}
+\item{\code{.uniqueR}}{(auto-generated) unique reverse primers as
+character strings.}
 }}
 \author{
 Emanuel Heitlinger
-
-Emanuel Heitlinger
 }
 \seealso{
-\code{\link{DNAStringSet}}
-
 \code{\link{DNAStringSet}}
 }
 

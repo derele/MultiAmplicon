@@ -1,4 +1,7 @@
 ################################################################################
+## The S4 interface to this function does not make much sense at the
+## moment (there are no other methods for sortAmplcions). For now this
+## is just an exercise in S4 generics.
 setGeneric(name="sortAmplicons",
            def=function(MA, ...) {
                standardGeneric("sortAmplicons", ...)
