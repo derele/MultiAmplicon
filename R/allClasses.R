@@ -1,7 +1,9 @@
-##' A class representing just file path to paired end reads, meaning
-##' basically two character vectors of the same length. 
+##' A class representing file paths to paired end reads.
 ##'
-##' Filenames a checked for existence.  
+##' Two character vectors of the same length specifying file names of
+##' paired end reads can be stored in this class. Filenames a checked
+##' for their existence.
+##'
 ##' @title PairedReadFileSet-Class
 ##'
 ##' @usage
@@ -41,31 +43,39 @@ setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
 setMethod("names", "PairedReadFileSet", function(x) basename(x@readsF))
 
 ##' A class representing sequences of forward and reverse
-##' rimers. Exactly two \code{\link{DNAStrinSet}} objects of the same
-##' length specifying primer-pairs. Primer sequences can be provided
-##' as character strings and will be converted to
-##' \code{\link{DNAStringSet}} by the function of the same
+##' primers.
+##'
+##' The PrimerPairsSet class is a container for storing primer pairs.
+##' This means exactly two \code{\link{DNAStrinSet}} objects of the
+##' same length specifying primer-pairs. Primer sequences can be
+##' provided as character strings and will be converted to
+##' \code{\link{DNAStringSet}} by the constructor function of the same
 ##' name. primerF and primerR have to be of the same length to specify
 ##' primer pairs (primerF[i]:primerR[i]; for i in 1:length(PrimerF)).
 ##' Warnings are given if primer sequences are of unusal length (<16
 ##' or >26 bases).
 ##'
 ##' @slot primerF DNAStringSet. Can be named or unnamed.
-##' @slot primerR DNAStringSet of the same length. Can be named or unnnamed.
-##' @slot .mapF Mapps potentially duplicate entries in FW primers to unique entries.
-##' @slot .mapR Mapps potentially duplicate entries in FW primers to unique entries.
-##' @slot .uniqueF unique forward primers as character strings.
-##' @slot .uniqueR unique reverse primers as character strings.
+##' @slot primerR DNAStringSet of the same length. Can be named or
+##'     unnnamed.
+##' @slot .mapF (automatically generated) maps potentially duplicate
+##'     entries in FW primers to unique entries.
+##' @slot .mapR (auto-generated) maps potentially duplicate entries in
+##'     FW primers to unique entries.
+##' @slot .uniqueF (auto-generated) unique forward primers as
+##'     character strings.
+##' @slot .uniqueR (auto-generated) unique reverse primers as
+##'     character strings.
 ##' 
 ##' @usage
 ##' ## Constructors:
 ##'
 ##' PrimerPairsSet(primerF, primerR)
 ##' 
-##' @param primerF Character vector or DNAStringSet. Can be named or unnamed.
-##' @param primerR Character vector or DNAStringSet of the same length. Can be named or unnamed.
-##' 
-##' @description The PrimerPairsSet class is a container for storing primer pairs. 
+##' @param primerF Character vector or DNAStringSet. Can be named or
+##'     unnamed.
+##' @param primerR Character vector or DNAStringSet of the same
+##'     length. Can be named or unnamed.
 ##' 
 ##' @seealso \code{\link{DNAStringSet}}
 ##' @rdname PrimerPairsSet-class
@@ -117,35 +127,29 @@ textNames <- function(x){
     }
 }
 
-##' A class representing sequences of forward and reverse
-##' rimers. Exactly two \code{\link{DNAStrinSet}} objects of the same
-##' length specifying primer-pairs. Primer sequences can be provided
-##' as character strings and will be converted to
-##' \code{\link{DNAStringSet}} by the function of the same
-##' name. primerF and primerR have to be of the same length to specify
-##' primer pairs (primerF[i]:primerR[i]; for i in 1:length(PrimerF)).
-##' Warnings are given if primer sequences are of unusal length (<16
-##' or >26 bases).
+##' A class combining sequences of forward and reverse primers (in a
+##' \code{\link{PrimerPairsSet-class}}) plus file names of paired end
+##' sequencing files (in a \code{\link{PairedReadFileSet-class}}).
 ##' 
 ##' @usage
 ##' ## Constructors:
 ##'
-##' PrimerPairsSet(primerF, primerR)
+##' MultiAmplicon(PrimerPairsSet, PairedReadFileSet)
 ##' 
-##' @param primerF Character vector (then converted to) or
-##'     DNAStringSet. Can be named or unnamed.
-##' @param primerR Character vector (then converted to) or
-##'     DNAStringSet of the same length. Can be named or unnamed.
+##' @param PrimerPairsSet a set of primer pairs specifiying your
+##'     amplicons see \code{\link{PrimerPairsSet-class}}
+##' 
+##' @param PairedReadFileSet a set of paired end sequencing data fiels
+##'     \code{\link{PairedReadFileSet-class}}
 ##' 
 ##' @description The PrimerPairsSet class is a container for storing
 ##'     primer pairs.
 ##' 
 ##' @seealso \code{\link{DNAStringSet}}
-##' @rdname PrimerPairsSet-class
-##' @title PrimerPairsSet-class
-##' @return PrimerPairsSet-class
+##' @rdname MultiAmplicon-class
+##' @title MultiAmplicon-class
+##' @return MultiAmplicon-class
 ##' @author Emanuel Heitlinger
-##' @importClassesFrom Biostrings DNAStringSet
 ##' @export MultiAmplicon
 ##' @exportClass MultiAmplicon
 
