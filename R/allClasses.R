@@ -4,7 +4,8 @@
 ##' paired end reads can be stored in this class. Filenames a checked
 ##' for their existence.
 ##'
-##' @title PairedReadFileSet-Class
+##' @slot readF The file path to forward reads
+##' @slot readR The file path to reverse reads
 ##'
 ##' @usage
 ##' ## Constructors:
@@ -12,7 +13,9 @@
 ##'
 ##' @param readsF The path and filenames of forward reads
 ##' @param readsR The path and filenames of reverse reads
-##' @return Constructors for defined classes 
+##' 
+##' @return PairedReadFileSet
+##' @title PairedReadFileSet-Class
 ##' @author Emanuel Heitlinger
 ##'
 ##' @export PairedReadFileSet
