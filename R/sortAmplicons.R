@@ -52,8 +52,8 @@ setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, ...){
     for(x in seq_along(readsF)) {
         f <- ShortRead::FastqStreamer(readsF[[x]], n = n)
         r <- ShortRead::FastqStreamer(readsR[[x]], n = n)
-        tmpbaseF <- paste0(tempfile(), basename(readsF[[x]]))
-        tmpbaseR <- paste0(tempfile(), basename(readsR[[x]]))
+        tmpbaseF <- paste0(tempfile(), ";-;", basename(readsF[[x]]))
+        tmpbaseR <- paste0(tempfile(), ";-;", basename(readsR[[x]]))
         ## request forward and reverse file simultaneously
          while(length(suppressWarnings(Ffq <- ShortRead::yield(f))) &&
                length(suppressWarnings(Rfq <- ShortRead::yield(r)))){
