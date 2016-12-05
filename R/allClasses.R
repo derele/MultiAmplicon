@@ -2,17 +2,21 @@
 ##'
 ##' Two character vectors of the same length specifying file names of
 ##' paired end reads can be stored in this class. Filenames a checked
-##' for their existence.
+##' for their existence. Usually these are the filnames of quality
+##' filtered fastq files already stratified into samples (one file
+##' pair for each sample)
 ##'
-##' @slot readF The file path to forward reads
-##' @slot readR The file path to reverse reads
+##' @slot readF The file path to a file containing forward (sometimes
+##'     called R1) sequencing reads
+##' @slot readR The file path to a file containing reverse (sometimes
+##'     called R2) sequencing reads
 ##'
 ##' @usage
 ##' ## Constructors:
 ##' PairedReadFileSet(readsF, readsR)
 ##'
-##' @param readsF The path and filenames of forward reads
-##' @param readsR The path and filenames of reverse reads
+##' @param readsF The path and filenames containing forward (R1) reads
+##' @param readsR The path and filenames containing reverse (R2) reads
 ##' 
 ##' @return PairedReadFileSet
 ##' @title PairedReadFileSet-Class
@@ -81,6 +85,7 @@ setMethod("names", "PairedReadFileSet", function(x) basename(x@readsF))
 ##'     length. Can be named or unnamed.
 ##' 
 ##' @seealso \code{\link{DNAStringSet}}
+##' @importFrom Biostrings DNAStringSet
 ##' @rdname PrimerPairsSet-class
 ##' @title PrimerPairsSet-class
 ##' @return PrimerPairsSet-class
@@ -133,6 +138,33 @@ textNames <- function(x){
 ##' A class combining sequences of forward and reverse primers (in a
 ##' \code{\link{PrimerPairsSet-class}}) plus file names of paired end
 ##' sequencing files (in a \code{\link{PairedReadFileSet-class}}).
+##'
+##' @slot PrimerPairsSet The primer pairs used in your experiment to
+##'     specify amplicons stored in a PrimerPairsSet-class object.
+##'
+##' @slot PairedReadFileSet The (quality filtered) fastq files (one
+##'     file pair for each sample) that store your sequencing data.
+##'
+##' @slot rawCounts
+##'
+##' @slot FstratifiedFiles temporary forward (sometimes called R1)
+##'     files as a result of stratifying into amplicons and samples
+##'     using the function \code{\link{sortAmplicons}}
+##'
+##' @slot RstratifiedFiles temporary reverse (sometimes called R2)
+##'     files as a result of stratifying into amplicons and samples
+##'     using the function \code{\link{sortAmplicons}}
+##'
+##' @slot derep
+##'
+##' @slot dada
+##'
+##' @slot mergers
+##'
+##' @slot sequenceTable
+##'
+##' @slot sequenceTableNoChime
+##'
 ##' 
 ##' @usage
 ##' ## Constructors:
@@ -148,7 +180,8 @@ textNames <- function(x){
 ##' @description The PrimerPairsSet class is a container for storing
 ##'     primer pairs.
 ##' 
-##' @seealso \code{\link{DNAStringSet}}
+##' @seealso \code{\link{derep}},\code{\link{dada}}
+##' @importFrom dada derep dada
 ##' @rdname MultiAmplicon-class
 ##' @title MultiAmplicon-class
 ##' @return MultiAmplicon-class
@@ -161,7 +194,12 @@ setClass("MultiAmplicon",
                         PairedReadFileSet="PairedReadFileSet",
                         rawCounts="matrix",
                         FstratifiedFiles="matrix",
-                        RstratifiedFiles="matrix"))
+                        RstratifiedFiles="matrix",
+                        derep="derep",
+                        dada="dada",
+                        mergers="list",
+                        sequenceTable="matrix",
+                        sequenceTableNoChime="matrix"))
 
 
 MultiAmplicon <- function(PrimerPairsSet,
