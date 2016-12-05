@@ -1,4 +1,8 @@
 ################################################################################
+setGeneric(name="sortAmplicons",
+           def=function(MA, ...) {
+               standardGeneric("sortAmplicons", ...)
+           })
 ##' Sort different amplicons into a fully stratified samples x
 ##' amplicons ##' structure based on primer matches.
 ##'
