@@ -9,12 +9,12 @@
 PairedReadFileSet(readsF, readsR)
 }
 \arguments{
-\item{readsF}{The path and filenames of forward reads}
+\item{readsF}{The path and filenames containing forward (R1) reads}
 
-\item{readsR}{The path and filenames of reverse reads}
+\item{readsR}{The path and filenames containing reverse (R2) reads}
 }
 \value{
-Constructors for defined classes
+PairedReadFileSet
 }
 \description{
 A class representing file paths to paired end reads.
@@ -22,8 +22,19 @@ A class representing file paths to paired end reads.
 \details{
 Two character vectors of the same length specifying file names of
 paired end reads can be stored in this class. Filenames a checked
-for their existence.
+for their existence. Usually these are the filnames of quality
+filtered fastq files already stratified into samples (one file
+pair for each sample)
 }
+\section{Slots}{
+
+\describe{
+\item{\code{readF}}{The file path to a file containing forward (sometimes
+called R1) sequencing reads}
+
+\item{\code{readR}}{The file path to a file containing reverse (sometimes
+called R2) sequencing reads}
+}}
 \author{
 Emanuel Heitlinger
 }

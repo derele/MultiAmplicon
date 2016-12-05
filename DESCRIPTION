@@ -8,11 +8,11 @@ biocViews:
     Metagenomics, Clustering, Classification, MultipleComparison,
     GeneticVariability
 Imports:
-    Biostrings (>= 2.42.0),
+    Biostrings (>= 2.42.0)
+Depends:
+    R (>= 3.3.1),
     ShortRead (>= 1.30.0), 
     dada2 (>= 1.2.0)
-Depends:
-    R (>= 3.3.1)
 License:  GNU GENERAL PUBLIC LICENSE V3.0
 Encoding: UTF-8
 LazyData: true

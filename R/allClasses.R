@@ -181,7 +181,7 @@ textNames <- function(x){
 ##'     primer pairs.
 ##' 
 ##' @seealso \code{\link{derep}},\code{\link{dada}}
-##' @importFrom dada derep dada
+##' @importFrom dada2 derepFastq dada
 ##' @rdname MultiAmplicon-class
 ##' @title MultiAmplicon-class
 ##' @return MultiAmplicon-class
@@ -195,8 +195,8 @@ setClass("MultiAmplicon",
                         rawCounts="matrix",
                         FstratifiedFiles="matrix",
                         RstratifiedFiles="matrix",
-                        derep="derep",
-                        dada="dada",
+                        derep="list",
+                        dada="list",
                         mergers="list",
                         sequenceTable="matrix",
                         sequenceTableNoChime="matrix"))

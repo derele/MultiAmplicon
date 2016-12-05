@@ -28,10 +28,39 @@ A class combining sequences of forward and reverse primers (in a
 \code{\link{PrimerPairsSet-class}}) plus file names of paired end
 sequencing files (in a \code{\link{PairedReadFileSet-class}}).
 }
+\section{Slots}{
+
+\describe{
+\item{\code{PrimerPairsSet}}{The primer pairs used in your experiment to
+specify amplicons stored in a PrimerPairsSet-class object.}
+
+\item{\code{PairedReadFileSet}}{The (quality filtered) fastq files (one
+file pair for each sample) that store your sequencing data.}
+
+\item{\code{rawCounts}}{}
+
+\item{\code{FstratifiedFiles}}{temporary forward (sometimes called R1)
+files as a result of stratifying into amplicons and samples
+using the function \code{\link{sortAmplicons}}}
+
+\item{\code{RstratifiedFiles}}{temporary reverse (sometimes called R2)
+files as a result of stratifying into amplicons and samples
+using the function \code{\link{sortAmplicons}}}
+
+\item{\code{derep}}{}
+
+\item{\code{dada}}{}
+
+\item{\code{mergers}}{}
+
+\item{\code{sequenceTable}}{}
+
+\item{\code{sequenceTableNoChime}}{}
+}}
 \author{
 Emanuel Heitlinger
 }
 \seealso{
-\code{\link{DNAStringSet}}
+\code{\link{derep}},\code{\link{dada}}
 }
 
