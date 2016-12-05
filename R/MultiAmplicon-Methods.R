@@ -1,12 +1,24 @@
 ################################################################################
-##' .. content for description (no empty lines) ..
+##' Sort different amplicons into a fully stratified samples x
+##' amplicons ##' structure based on primer matches.
 ##'
-##' .. content for details
+##' This functions uses Biostrings::isMatchingStartingAt to match
+##' primer sequences at the first postion of forward and reverse
+##' sequences. These sequences are written to temporary files to allow
+##' processing via standard metabarcoding pipelines (i.e. dada2 using
+##' fastq streaming).
 ##' 
 ##' @title sortAmplicons
-##' @param MA 
-##' @param n 
-##' @param ... 
+##' @param MA MultiAmplicon-class object containing a set of paired
+##'     end files and a primer-pairs set.
+##' @param n parameter passed to the yield functions of package
+##'     ShortRead. This controls the memory consumption during
+##'     streaming. Lower values mean lower memory but longer
+##'     processing time.
+##' @param ... addtional parameter so be passed to
+##'     Biostrings::isMatchingStartingAt. Be careful when using
+##'     multiple starting positions or allowing error. This could lead
+##'     to read pairs being assigned to multiple amplicons.
 ##' @return MultiAmplicon
 ##' @author Emanuel Heitlinger
 ##' @importFrom ShortRead FastqStreamer yield narrow sread
