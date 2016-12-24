@@ -24,16 +24,21 @@ Two character vectors of the same length specifying file names of
 paired end reads can be stored in this class. Filenames a checked
 for their existence. Usually these are the filnames of quality
 filtered fastq files already stratified into samples (one file
-pair for each sample)
+pair for each sample).
 }
 \section{Slots}{
 
 \describe{
-\item{\code{readF}}{The file path to a file containing forward (sometimes
-called R1) sequencing reads}
+\item{\code{readF}}{A charcter vector specifying the file paths to files
+containing forward (sometimes called R1) sequencing
+reads. This vector can be named to store short short-name of
+samples.}
 
-\item{\code{readR}}{The file path to a file containing reverse (sometimes
-called R2) sequencing reads}
+\item{\code{readR}}{A character vector specifiying the file path to a file
+containing reverse (sometimes called R2) sequencing
+reads. This vector can be named to store short short-name of
+samples. Names of readF and readR should be identical in this
+case}
 }}
 \author{
 Emanuel Heitlinger
