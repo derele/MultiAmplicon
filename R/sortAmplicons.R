@@ -27,6 +27,7 @@ setGeneric(name="sortAmplicons",
 ##'     multiple starting positions or allowing error. This could lead
 ##'     to read pairs being assigned to multiple amplicons.
 ##' @return MultiAmplicon
+##' @rdname sortAmplicons
 ##' @author Emanuel Heitlinger
 ##' @importFrom ShortRead FastqStreamer yield narrow sread
 ##' @importFrom Biostrings isMatchingStartingAt
@@ -50,10 +51,16 @@ setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, ...){
     readsR <- MA@PairedReadFileSet@readsR
     ## add sample data and metadata in columns
     for(x in seq_along(readsF)) {
+        tmpbaseF <- paste0(tempfile(), basename(readsF[[x]]))
+        tmpbaseR <- paste0(tempfile(), basename(readsR[[x]]))
+        if(!file.exists(readsF[[x]]) | !file.exists(readsR[[x]])){
+            data[, names(readsF)[[x]]] <- 0
+            tmppathF[,x] <- paste0(tmpbaseF, names(MA@PrimerPairsSet), ".fastq.gz")
+            tmppathR[,x] <- paste0(tmpbaseR, names(MA@PrimerPairsSet), ".fastq.gz")
+            break()
+        }
         f <- ShortRead::FastqStreamer(readsF[[x]], n = n)
         r <- ShortRead::FastqStreamer(readsR[[x]], n = n)
-        tmpbaseF <- paste0(tempfile(), ";-;", basename(readsF[[x]]))
-        tmpbaseR <- paste0(tempfile(), ";-;", basename(readsR[[x]]))
         ## request forward and reverse file simultaneously
          while(length(suppressWarnings(Ffq <- ShortRead::yield(f))) &&
                length(suppressWarnings(Rfq <- ShortRead::yield(r)))){
@@ -86,21 +93,26 @@ setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, ...){
                        matches[y] <- length(select[select==TRUE])
                    }
                    ## need to add over the while loop because of fastq streaming 
-                   data[, basename(readsF[[x]])] <-
-                       data[, basename(readsF[[x]])] + matches
+                   data[, names(readsF)[[x]]] <-
+                       data[, names(readsF)[[x]]] + matches
                }
         close(f)
         close(r)
-        cat("\n finished sorting ", sum(data[, basename(readsF[[x]])]), " sequencing reads in",
+        cat("\n finished sorting", sum(data[, names(readsF)[[x]]]),
+            "sequencing reads for", names(readsF)[[x]], "in",
             "\n ", readsF[[x]], " and \n ", readsR[[x]], "\n",
-            " into ", sum(data[, basename(readsF[[x]])]>0), "amplicons \n" )
+            " into ", sum(data[, names(readsF)[[x]]]>0), "amplicons \n" )
     }
+    ## capture the warnings for non-existing files only if zeros are
+    ## repored in the report of what was mapped
+    stratifiedFiles <- lapply(seq_along(MA@PrimerPairsSet),
+                              function(i) PairedReadFileSet(tmppathF[i,],
+                                                            tmppathR[i,]))
     return(new("MultiAmplicon",
                PrimerPairsSet = MA@PrimerPairsSet,
                PairedReadFileSet = MA@PairedReadFileSet,
                rawCounts = data,
-               FstratifiedFiles = tmppathF,
-               RstratifiedFiles = tmppathR
+               stratifiedFiles = stratifiedFiles
                ))
 })
 
