@@ -4,12 +4,18 @@
 ##' paired end reads can be stored in this class. Filenames a checked
 ##' for their existence. Usually these are the filnames of quality
 ##' filtered fastq files already stratified into samples (one file
-##' pair for each sample)
+##' pair for each sample). 
 ##'
-##' @slot readF The file path to a file containing forward (sometimes
-##'     called R1) sequencing reads
-##' @slot readR The file path to a file containing reverse (sometimes
-##'     called R2) sequencing reads
+##' @slot readF A charcter vector specifying the file paths to files
+##'     containing forward (sometimes called R1) sequencing
+##'     reads. This vector can be named to store short short-name of
+##'     samples.
+##'
+##' @slot readR A character vector specifiying the file path to a file
+##'     containing reverse (sometimes called R2) sequencing
+##'     reads. This vector can be named to store short short-name of
+##'     samples. Names of readF and readR should be identical in this
+##'     case
 ##'
 ##' @usage
 ##' ## Constructors:
@@ -19,35 +25,38 @@
 ##' @param readsR The path and filenames containing reverse (R2) reads
 ##' 
 ##' @return PairedReadFileSet
+##' @rdname PairedReadFileSet-class
 ##' @title PairedReadFileSet-Class
 ##' @author Emanuel Heitlinger
 ##'
-##' @export PairedReadFileSet
 setClass("PairedReadFileSet",
-         slots = c(readsF="character", readsR="character"),
-         contains = c(readsF="character", readsR="character"),
-             validity=function(object) {
-        all.files <- c(object@readsF, object@readsR)
-        missing.file <- !file.exists(all.files)
-        if (any(missing.file)){
-            warning(paste0("\nfile ", all.files[missing.file], " do(es) not exist on your system"))
-        }
-        if (length(object@readsF) != length(object@readsR)){
-            "Same number of forward and reverse reads files needed to constitute files of paired end reads"}
-        else{TRUE}
+         slots = c(readsF="character", readsR="character", names="character"),
+         contains = c(readsF="character", readsR="character", names="character"),
+         validity=function(object) {
+             all.files <- c(object@readsF, object@readsR)
+             missing.file <- !file.exists(all.files)
+             if (any(missing.file)){
+                 warning(paste0("\nfile ", all.files[missing.file], " does not exist on your system"))
              }
-        )
+             if (length(object@readsF) != length(object@readsR)){
+                 "Same number of forward and reverse reads files needed to constitute files of paired end reads"}
+             else{TRUE}
+         })
 
-PairedReadFileSet <- function(readsF = as.character(), readsR = as.character()){
+PairedReadFileSet <- function(readsF,
+                              readsR){
+    if(length(names(readsF)) == length(readsF)) {
+        na <- names(readsF)
+    } else { na <- basename(readsF)}
     new("PairedReadFileSet",
-        readsF = as.character(readsF),
-        readsR = as.character(readsR))
+        readsF = readsF,
+        readsR = readsR,
+        names = na)
 }
 
 
 ## Methods
 setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
-setMethod("names", "PairedReadFileSet", function(x) basename(x@readsF))
 
 ##' A class representing sequences of forward and reverse
 ##' primers.
@@ -90,11 +99,10 @@ setMethod("names", "PairedReadFileSet", function(x) basename(x@readsF))
 ##' @title PrimerPairsSet-class
 ##' @return PrimerPairsSet-class
 ##' @author Emanuel Heitlinger
-##' @export PrimerPairsSet
 
 setClass("PrimerPairsSet", contains = "DNAStringSet",
          representation(primerF="DNAStringSet", primerR="DNAStringSet",
-                        textNames="character", 
+                        names="character", 
                         .mapF="numeric", .mapR="numeric",
                         .uniqueF="character", .uniqueR="character"),         
          validity=function(object) {
@@ -113,27 +121,22 @@ PrimerPairsSet <- function(primerF = DNAStringSet(), primerR = DNAStringSet()){
     new("PrimerPairsSet",
         primerF = DNAStringSet(primerF),
         primerR = DNAStringSet(primerR),
-        textNames = paste0(names(primerF), ":", names(primerR)),
-        .mapF=as.numeric(factor(as.character(primerF))),
-        .mapR=as.numeric(factor(as.character(primerR))),
-        .uniqueF=sort(unique(primerF)),
-        .uniqueR=sort(unique(primerR)))
+        names = paste0(names(primerF), ":", names(primerR)),
+        .mapF = as.numeric(factor(as.character(primerF))),
+        .mapR = as.numeric(factor(as.character(primerR))),
+        .uniqueF = sort(unique(primerF)),
+        .uniqueR = sort(unique(primerR)))
 }
 
 ## Methods
 setMethod(length, "PrimerPairsSet", function(x) length(x@primerF))
 
 setMethod(names, "PrimerPairsSet", function(x){
-    paste0(x@primerF, ":", x@primerR)
+    if(length(x@primerF) == length(x@names)){
+        x@names
+    } else {paste0(x@primerF, ":", x@primerR)}
 })
 
-textNames <- function(x){
-    if (class(x)!= "PrimerPairsSet"){
-        stop("please provide a PrimerPairsSet object")
-    } else {
-        x@textNames
-    }
-}
 
 ##' A class combining sequences of forward and reverse primers (in a
 ##' \code{\link{PrimerPairsSet-class}}) plus file names of paired end
@@ -193,17 +196,28 @@ setClass("MultiAmplicon",
          representation(PrimerPairsSet="PrimerPairsSet",
                         PairedReadFileSet="PairedReadFileSet",
                         rawCounts="matrix",
-                        FstratifiedFiles="matrix",
-                        RstratifiedFiles="matrix",
-                        derep="list",
-                        dada="list",
+                        stratifiedFiles="list",
+                        derepF="list",
+                        derepR="list",
+                        dadaF="list",
+                        dadaR="list",
                         mergers="list",
-                        sequenceTable="matrix",
-                        sequenceTableNoChime="matrix"))
+                        sequenceTable="list",
+                        sequenceTableNoChime="list"))
 
 
-MultiAmplicon <- function(PrimerPairsSet,
-                          PairedReadFileSet, ...){
+MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
+                          PairedReadFileSet = PairedReadFileSet(),
+                          rawCounts = matrix(),
+                          stratifiedFiles = list(),
+                          derepF = list(),
+                          derepR = list(),
+                          dadaF = list(),
+                          dadaR = list(),
+                          mergers = list(),
+                          sequenceTable = list(),
+                          sequenceTableNoChime = list()
+                          ){
     new("MultiAmplicon",
         PrimerPairsSet = PrimerPairsSet,
         PairedReadFileSet = PairedReadFileSet        

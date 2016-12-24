@@ -98,9 +98,9 @@ setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, ...){
     return(new("MultiAmplicon",
                PrimerPairsSet = MA@PrimerPairsSet,
                PairedReadFileSet = MA@PairedReadFileSet,
-               rawCounts=data,
-               FstratifiedFiles=tmppathF,
-               RstratifiedFiles=tmppathR
+               rawCounts = data,
+               FstratifiedFiles = tmppathF,
+               RstratifiedFiles = tmppathR
                ))
 })
 
