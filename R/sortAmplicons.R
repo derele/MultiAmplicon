@@ -30,7 +30,7 @@
 ##' @export sortAmplicons
 ##' @aliases sortAmplicons, sortAmplicons-Method
 setGeneric(name="sortAmplicons",
-           def=function(MA, ...) {
+           def=function(MA, n, ...) {
                standardGeneric("sortAmplicons", ...)
            })
 ################################################################################
