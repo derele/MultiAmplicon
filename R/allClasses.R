@@ -28,6 +28,7 @@
 ##' @rdname PairedReadFileSet-class
 ##' @title PairedReadFileSet-Class
 ##' @author Emanuel Heitlinger
+##' @export PairedReadFileSet
 ##'
 setClass("PairedReadFileSet",
          slots = c(readsF="character", readsR="character", names="character"),
@@ -99,6 +100,7 @@ setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
 ##' @title PrimerPairsSet-class
 ##' @return PrimerPairsSet-class
 ##' @author Emanuel Heitlinger
+##' @export PrimerPairsSet
 
 setClass("PrimerPairsSet", contains = "DNAStringSet",
          representation(primerF="DNAStringSet", primerR="DNAStringSet",
