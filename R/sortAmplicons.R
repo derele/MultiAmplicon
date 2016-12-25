@@ -1,13 +1,5 @@
-################################################################################
-## The S4 interface to this function does not make much sense at the
-## moment (there are no other methods for sortAmplcions). For now this
-## is just an exercise in S4 generics.
-setGeneric(name="sortAmplicons",
-           def=function(MA, ...) {
-               standardGeneric("sortAmplicons", ...)
-           })
 ##' Sort different amplicons into a fully stratified samples x
-##' amplicons ##' structure based on primer matches.
+##' amplicons structure based on primer matches.
 ##'
 ##' This functions uses Biostrings::isMatchingStartingAt to match
 ##' primer sequences at the first postion of forward and reverse
@@ -32,6 +24,12 @@ setGeneric(name="sortAmplicons",
 ##' @importFrom ShortRead FastqStreamer yield narrow sread
 ##' @importFrom Biostrings isMatchingStartingAt
 ##' @export
+##' @aliases sortAmplicons, sortAmplicons-Method
+setGeneric(name="sortAmplicons",
+           def=function(MA, ...) {
+               standardGeneric("sortAmplicons", ...)
+           })
+################################################################################
 setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, ...){
     ## the data matrix of amplicons x samples stratified counts 
     data <- matrix(0,
