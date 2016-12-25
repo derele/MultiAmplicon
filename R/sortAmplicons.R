@@ -59,7 +59,7 @@ setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, ...){
             data[, names(readsF)[[x]]] <- 0
             tmppathF[,x] <- paste0(tmpbaseF, names(MA@PrimerPairsSet), ".fastq.gz")
             tmppathR[,x] <- paste0(tmpbaseR, names(MA@PrimerPairsSet), ".fastq.gz")
-            break()
+            next()
         }
         f <- ShortRead::FastqStreamer(readsF[[x]], n = n)
         r <- ShortRead::FastqStreamer(readsR[[x]], n = n)
