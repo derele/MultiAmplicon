@@ -23,7 +23,11 @@ streaming. Lower values mean lower memory but longer
 processing time.}
 }
 \value{
-MultiAmplicon
+MultiAmplicon: A MultiAmplicon-class object is returned
+    with the stratifiedFiles slot populated. Stratified file names
+    are constructed using a unique string created by
+    \code{\link{tempfile()}} and stored in R's
+    \code{\link{tempdir()}}
 }
 \description{
 Sort different amplicons into a fully stratified samples x

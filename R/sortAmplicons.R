@@ -18,12 +18,16 @@
 ##'     Biostrings::isMatchingStartingAt. Be careful when using
 ##'     multiple starting positions or allowing error. This could lead
 ##'     to read pairs being assigned to multiple amplicons.
-##' @return MultiAmplicon
+##' @return MultiAmplicon: A MultiAmplicon-class object is returned
+##'     with the stratifiedFiles slot populated. Stratified file names
+##'     are constructed using a unique string created by
+##'     \code{\link{tempfile()}} and stored in R's
+##'     \code{\link{tempdir()}}
 ##' @rdname sortAmplicons
 ##' @author Emanuel Heitlinger
 ##' @importFrom ShortRead FastqStreamer yield narrow sread
 ##' @importFrom Biostrings isMatchingStartingAt
-##' @export
+##' @export sortAmplicons
 ##' @aliases sortAmplicons, sortAmplicons-Method
 setGeneric(name="sortAmplicons",
            def=function(MA, ...) {
@@ -101,11 +105,15 @@ setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, ...){
             "\n ", readsF[[x]], " and \n ", readsR[[x]], "\n",
             " into ", sum(data[, names(readsF)[[x]]]>0), "amplicons \n" )
     }
-    ## capture the warnings for non-existing files only if zeros are
-    ## repored in the report of what was mapped
+    ## run only on existing files to avoid warnings for non-existing
+    ## files. This means don't run on files corresponding to zeros
+    ## read counts repored 
     stratifiedFiles <- lapply(seq_along(MA@PrimerPairsSet),
-                              function(i) PairedReadFileSet(tmppathF[i,],
-                                                            tmppathR[i,]))
+                              function(i){
+                                  existing <- which(data[i, ]>0)
+                                  PairedReadFileSet(tmppathF[i, existing],
+                                                    tmppathR[i, existing])
+                              })
     return(new("MultiAmplicon",
                PrimerPairsSet = MA@PrimerPairsSet,
                PairedReadFileSet = MA@PairedReadFileSet,
