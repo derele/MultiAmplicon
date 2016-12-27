@@ -122,9 +122,9 @@ setClass("PrimerPairsSet", contains = "DNAStringSet",
                  "Same number of forward and reverse primer sequences needed to constitute Primer-Pairs"}
 })
 
-PrimerPairsSet <- function(primerF = DNAStringSet(), primerR = DNAStringSet()){
+PrimerPairsSet <- function(primerF, primerR){
     ## if names exist construct primer names
-    if(length(names(primerF)) == length(primerR) &&
+    if(length(names(primerR)) == length(primerR) &&
        length(names(primerF))== length(primerF)) {
         na <- paste0(names(primerF), ":", names(primerR))
     } else {na <- paste0(primerF, ":", primerR)} ## otherwise use primer sequences
@@ -141,10 +141,16 @@ PrimerPairsSet <- function(primerF = DNAStringSet(), primerR = DNAStringSet()){
 ## Methods
 setMethod(length, "PrimerPairsSet", function(x) length(x@primerF))
 
+setMethod(names, "PrimerPairsSet", function (x) x@names)
+
 ##' A class combining sequences of forward and reverse primers (in a
 ##' \code{\link{PrimerPairsSet-class}}) plus file names of paired end
 ##' sequencing files (in a \code{\link{PairedReadFileSet-class}}).
 ##'
+##' The MultiAmplicon class is a container for storing primer pairs,
+##' read files and processed data in an 'amplicon x samples'
+##' format. Slots 
+##' 
 ##' @slot PrimerPairsSet The primer pairs used in your experiment to
 ##'     specify amplicons stored in a PrimerPairsSet-class object.
 ##'
@@ -153,13 +159,12 @@ setMethod(length, "PrimerPairsSet", function(x) length(x@primerF))
 ##'
 ##' @slot rawCounts
 ##'
-##' @slot FstratifiedFiles temporary forward (sometimes called R1)
-##'     files as a result of stratifying into amplicons and samples
-##'     using the function \code{\link{sortAmplicons}}
-##'
-##' @slot RstratifiedFiles temporary reverse (sometimes called R2)
-##'     files as a result of stratifying into amplicons and samples
-##'     using the function \code{\link{sortAmplicons}}
+##' @slot stratifiedFiles temporary files as a result of stratifying
+##'     into amplicons and samples using the function
+##'     \code{\link{sortAmplicons}}. Forward (sometimes called R1) and
+##'     reverse (sometimes called R2) files are stored as a (amplicons
+##'     x samples) matrix of \code{\link{PairedReadFileSet-class}}
+##'     objects.
 ##'
 ##' @slot derep
 ##'
@@ -182,10 +187,24 @@ setMethod(length, "PrimerPairsSet", function(x) length(x@primerF))
 ##' 
 ##' @param PairedReadFileSet a set of paired end sequencing data fiels
 ##'     \code{\link{PairedReadFileSet-class}}
+##'
+##' Accessor-like methods:
 ##' 
-##' @description The PrimerPairsSet class is a container for storing
-##'     primer pairs.
+##' In the code snippets below, 'x' is an MultiAmplicon-class object.
 ##' 
+##' 'nrow(x)' An integer giving the number of primer pairs in the
+##' object
+##'
+##' 'ncol(x)' An integer giving the number of paired read files
+##' (usually samples and their replicates) in the object
+##'
+##' 'rownames(x)' A character vector giving the primer-pair names see
+##' \code{\link{PrimerPairsSet}}
+##'
+##' 'colnames(x)' A character vector giving the names of the paired
+##' read filnames (e.g. used to store sample names) see also
+##' \code{\link{PairedReadFileSet}}
+##'
 ##' @seealso \code{\link{derep}},\code{\link{dada}}
 ##' @importFrom dada2 derepFastq dada
 ##' @rdname MultiAmplicon-class
@@ -227,3 +246,8 @@ MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
         )
 }
 
+setMethod("colnames", "MultiAmplicon", function (x) x@PairedReadFileSet@names)
+setMethod("rownames", "MultiAmplicon", function (x) x@PrimerPairsSet@names)
+
+setMethod("ncol", "MultiAmplicon", function (x) length(x@PairedReadFileSet))
+setMethod("nrow", "MultiAmplicon", function (x) length(x@PrimerPairsSet))

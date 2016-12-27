@@ -14,19 +14,37 @@ MultiAmplicon(PrimerPairsSet, PairedReadFileSet)
 amplicons see \code{\link{PrimerPairsSet-class}}}
 
 \item{PairedReadFileSet}{a set of paired end sequencing data fiels
-\code{\link{PairedReadFileSet-class}}}
+    \code{\link{PairedReadFileSet-class}}
+
+Accessor-like methods:
+
+In the code snippets below, 'x' is an MultiAmplicon-class object.
+
+'nrow(x)' An integer giving the number of primer pairs in the
+object
+
+'ncol(x)' An integer giving the number of paired read files
+(usually samples and their replicates) in the object
+
+'rownames(x)' A character vector giving the primer-pair names see
+\code{\link{PrimerPairsSet}}
+
+'colnames(x)' A character vector giving the names of the paired
+read filnames (e.g. used to store sample names) see also
+\code{\link{PairedReadFileSet}}}
 }
 \value{
 MultiAmplicon-class
 }
 \description{
-The PrimerPairsSet class is a container for storing
-    primer pairs.
-}
-\details{
 A class combining sequences of forward and reverse primers (in a
 \code{\link{PrimerPairsSet-class}}) plus file names of paired end
 sequencing files (in a \code{\link{PairedReadFileSet-class}}).
+}
+\details{
+The MultiAmplicon class is a container for storing primer pairs,
+read files and processed data in an 'amplicon x samples'
+format. Slots
 }
 \section{Slots}{
 
@@ -39,13 +57,12 @@ file pair for each sample) that store your sequencing data.}
 
 \item{\code{rawCounts}}{}
 
-\item{\code{FstratifiedFiles}}{temporary forward (sometimes called R1)
-files as a result of stratifying into amplicons and samples
-using the function \code{\link{sortAmplicons}}}
-
-\item{\code{RstratifiedFiles}}{temporary reverse (sometimes called R2)
-files as a result of stratifying into amplicons and samples
-using the function \code{\link{sortAmplicons}}}
+\item{\code{stratifiedFiles}}{temporary files as a result of stratifying
+into amplicons and samples using the function
+\code{\link{sortAmplicons}}. Forward (sometimes called R1) and
+reverse (sometimes called R2) files are stored as a (amplicons
+x samples) matrix of \code{\link{PairedReadFileSet-class}}
+objects.}
 
 \item{\code{derep}}{}
 
