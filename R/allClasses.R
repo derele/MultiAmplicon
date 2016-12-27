@@ -143,6 +143,69 @@ setMethod(length, "PrimerPairsSet", function(x) length(x@primerF))
 
 setMethod(names, "PrimerPairsSet", function (x) x@names)
 
+##' A pair of two derep objects and their names
+##'
+##' derep-class objects as defined by the package \code{\link{derep2}}
+##' are bundeled as forward and reverse read pairs in this object
+##' @title derep-class
+##'
+##' ## Constructors
+##'
+##' PairedDerep(derepF, derepR, names)
+##' 
+##' @param derepF derep object containing forward read pairs created
+##'     by \code{\link{dada2}}'s \code{\link{derepFastq}} function
+##' @param derepR derep object containing reverse read pairscreated by
+##'     \code{\link{dada2}}'s \code{\link{derepFastq}} function
+##' @param names names of e.g. the amplicon the read pairs are part of
+##' @return A PairedDerep-class object
+##' @author Emanuel Heitlinger
+setClass("PairedDerep",
+         slots = c(derepF="list", derepR="list", names="character"),
+         validity=function(object) {
+             if (length(object@derepF) != length(object@derepR)){
+                 "Same number of forward and reverse derep objects needed to constitute forward and reverse sequence read pairs"
+             }})
+PairedDerep <- function(derepF, derepR, names){
+    new("PairedDerep",
+        derepF = derepF,
+        derepR = derepR,
+        names = names)
+}
+
+
+##' A pair of two dada objects and their names
+##'
+##' dada-class objects as defined by the package \code{\link{dada2}}
+##' are bundeled as forward and reverse read pairs in this object
+##' @title dada-class
+##'
+##' ## Constructors
+##'
+##' PairedDada(dadaF, dadaR, names)
+##' 
+##' @param dadaF dada object containing forward read pairs created by
+##'     \code{\link{dada2}}'s \code{\link{dada}} function
+##' @param dadaR dada object containing reverse read pairs created by
+##'     \code{\link{dada2}}'s \code{\link{dada}} function
+##' @param names names of e.g. the amplicon the read pairs are part of
+##' @return A PairedDada class object
+##' @author Emanuel Heitlinger
+
+setClass("PairedDada",
+         slots = c(dadaF="list", dadaR="list", names="character"),
+         validity=function(object) {
+             if (length(object@dadaF) != length(object@dadaR)){
+                 "Same number of forward and reverse dada objects needed to constitute forward and reverse sequence read pairs"
+             }})
+
+PairedDada <- function(dadaF, dadaR, names){
+    new("PairedDada",
+        dadaF = dadaF,
+        dadaR = dadaR,
+        names = names)
+}
+
 ##' A class combining sequences of forward and reverse primers (in a
 ##' \code{\link{PrimerPairsSet-class}}) plus file names of paired end
 ##' sequencing files (in a \code{\link{PairedReadFileSet-class}}).
@@ -166,9 +229,13 @@ setMethod(names, "PrimerPairsSet", function (x) x@names)
 ##'     x samples) matrix of \code{\link{PairedReadFileSet-class}}
 ##'     objects.
 ##'
-##' @slot derep
+##' @slot derep A \code{\link{PairedDerep}}-class object containing
+##'     pairs of derep-class objects created by \code{\link{dada2}}’s
+##'     \code{\link{derepFastq}} function
 ##'
-##' @slot dada
+##' @slot dadaderep A \code{\link{PairedDada}}-class object containing
+##'     pairs of dada-class objects created by \code{\link{dada2}}’s
+##'     \code{\link{dada}} function
 ##'
 ##' @slot mergers
 ##'
@@ -223,10 +290,8 @@ setClass("MultiAmplicon",
                         PairedReadFileSet="PairedReadFileSet",
                         rawCounts="matrix",
                         stratifiedFiles="list",
-                        derepF="list",
-                        derepR="list",
-                        dadaF="list",
-                        dadaR="list",
+                        derep="PairedDerep",
+                        dada="PairedDada",
                         mergers="list",
                         sequenceTable="list",
                         sequenceTableNoChime="list"))
@@ -236,10 +301,8 @@ MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
                           PairedReadFileSet = PairedReadFileSet(),
                           rawCounts = matrix(),
                           stratifiedFiles = list(),
-                          derepF = list(),
-                          derepR = list(),
-                          dadaF = list(),
-                          dadaR = list(),
+                          derep = list(),
+                          dada = list(),
                           mergers = list(),
                           sequenceTable = list(),
                           sequenceTableNoChime = list()
@@ -268,3 +331,5 @@ setMethod("nrow", "MultiAmplicon", function (x) length(x@PrimerPairsSet))
 ##' @export
 setGeneric("rawCounts", function(x){standardGeneric("rawCounts")})
 setMethod("rawCounts", "MultiAmplicon", function(x) x@rawCounts)
+
+
