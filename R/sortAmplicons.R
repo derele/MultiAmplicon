@@ -12,8 +12,9 @@
 ##'     end files and a primer-pairs set.
 ##' @param n parameter passed to the yield functions of package
 ##'     ShortRead. This controls the memory consumption during
-##'     streaming. Lower values mean lower memory but longer
-##'     processing time.
+##'     streaming. Lower values result in lower memory requirements
+##'     but might result longer processing time due to more repeated
+##'     I/O operations reading the sequence files.
 ##' @param ... addtional parameter so be passed to
 ##'     Biostrings::isMatchingStartingAt. Be careful when using
 ##'     multiple starting positions or allowing error. This could lead
@@ -30,7 +31,7 @@
 ##' @export sortAmplicons
 ##' @aliases sortAmplicons, sortAmplicons-Method
 setGeneric(name="sortAmplicons",
-           def=function(MA, n, ...) {
+           def=function(MA, n=1e6, ...) {
                standardGeneric("sortAmplicons", ...)
            })
 ################################################################################

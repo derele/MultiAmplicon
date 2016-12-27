@@ -6,7 +6,7 @@
 \alias{sortAmplicons-Method}
 \title{sortAmplicons}
 \usage{
-sortAmplicons(MA, n, ...)
+sortAmplicons(MA, n = 1e+06, ...)
 }
 \arguments{
 \item{MA}{MultiAmplicon-class object containing a set of paired
@@ -14,8 +14,9 @@ end files and a primer-pairs set.}
 
 \item{n}{parameter passed to the yield functions of package
 ShortRead. This controls the memory consumption during
-streaming. Lower values mean lower memory but longer
-processing time.}
+streaming. Lower values result in lower memory requirements
+but might result longer processing time due to more repeated
+I/O operations reading the sequence files.}
 
 \item{...}{addtional parameter so be passed to
 Biostrings::isMatchingStartingAt. Be careful when using
