@@ -70,11 +70,11 @@ setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, ...){
                    fM <- lapply(MA@PrimerPairsSet@.uniqueF, function(x){
                        as.vector(Biostrings::isMatchingStartingAt(x,
                                                                   ShortRead::sread(Ffq),
-                                                                  fixed=FALSE))
+                                                                  fixed=FALSE, ...))
                    })
                    rM <- lapply(MA@PrimerPairsSet@.uniqueR, function(x){
                        as.vector(Biostrings::isMatchingStartingAt(x, ShortRead::sread(Rfq),
-                                                                  fixed=FALSE))
+                                                                  fixed=FALSE, ...))
                    })
                    matches <- numeric(length=length(MA@PrimerPairsSet))
                    ## add primer pair data and metadata in rows 
