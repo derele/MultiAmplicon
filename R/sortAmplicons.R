@@ -32,24 +32,20 @@
 ##' @aliases sortAmplicons, sortAmplicons-Method
 setGeneric(name="sortAmplicons",
            def=function(MA, n=1e6, ...) {
-               standardGeneric("sortAmplicons", ...)
+               standardGeneric("sortAmplicons")
            })
 ################################################################################
 setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, ...){
     ## the data matrix of amplicons x samples stratified counts 
-    data <- matrix(0,
-                   nrow=length(MA@PrimerPairsSet),
-                   ncol=length(MA@PairedReadFileSet))
+    NR <- length(MA@PrimerPairsSet@primerF)
+    NC <- length(MA@PairedReadFileSet@readsF)
+    data <- matrix(0, nrow=NR, ncol=ncol(NC))
     ## colnames are sample names taken from file names
-    colnames(data) <- names(MA@PairedReadFileSet)
+    colnames(data) <- colnames(MA)
     ## rownames have to come from (matched) primers
-    rownames(data) <- names(MA@PrimerPairsSet)
-    tmppathF <- matrix("",
-                       nrow=length(MA@PrimerPairsSet),
-                       ncol=length(MA@PairedReadFileSet))
-    tmppathR <- matrix("",
-                       nrow=length(MA@PrimerPairsSet),
-                       ncol=length(MA@PairedReadFileSet))
+    rownames(data) <- rownames(MA)
+    tmppathF <- matrix("", nrow=NR, ncol=NC)
+    tmppathR <- matrix("", nrow=NR, ncol=NC)
     readsF <- MA@PairedReadFileSet@readsF
     readsR <- MA@PairedReadFileSet@readsR
     ## add sample data and metadata in columns
