@@ -31,7 +31,11 @@ object
 
 'colnames(x)' A character vector giving the names of the paired
 read filnames (e.g. used to store sample names) see also
-\code{\link{PairedReadFileSet}}}
+\code{\link{PairedReadFileSet}}
+
+'rawCounts(x)' A matrix of raw sequencing read counts assigned to
+a particular sample (input file pair) and amplicon (input primer
+pair)}
 }
 \value{
 MultiAmplicon-class

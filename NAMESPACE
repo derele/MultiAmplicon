@@ -3,6 +3,7 @@
 export(MultiAmplicon)
 export(PairedReadFileSet)
 export(PrimerPairsSet)
+export(rawCounts)
 export(sortAmplicons)
 exportClasses(MultiAmplicon)
 importFrom(Biostrings,DNAStringSet)
