@@ -76,6 +76,9 @@ setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
 ##' @slot primerF DNAStringSet. Can be named or unnamed.
 ##' @slot primerR DNAStringSet of the same length. Can be named or
 ##'     unnnamed.
+##' @slot names Either constructed as a concatenation of names of
+##'     forward and reverse primers or of their sequences (if primer
+##'     sequences are unnamed)
 ##' @slot .mapF (automatically generated) maps potentially duplicate
 ##'     entries in FW primers to unique entries.
 ##' @slot .mapR (auto-generated) maps potentially duplicate entries in
@@ -119,7 +122,6 @@ setClass("PrimerPairsSet", contains = "DNAStringSet",
                  "Same number of forward and reverse primer sequences needed to constitute Primer-Pairs"}
 })
 
-## Constructor
 PrimerPairsSet <- function(primerF = DNAStringSet(), primerR = DNAStringSet()){
     ## if names exist construct primer names
     if(length(names(primerF)) == length(primerR) &&
@@ -129,7 +131,7 @@ PrimerPairsSet <- function(primerF = DNAStringSet(), primerR = DNAStringSet()){
     new("PrimerPairsSet",
         primerF = DNAStringSet(primerF),
         primerR = DNAStringSet(primerR),
-        names = paste0(names(primerF), ":", names(primerR)),
+        names = na,
         .mapF = as.numeric(factor(as.character(primerF))),
         .mapR = as.numeric(factor(as.character(primerR))),
         .uniqueF = sort(unique(primerF)),

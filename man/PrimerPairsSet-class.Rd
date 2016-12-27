@@ -42,6 +42,10 @@ or >26 bases).
 \item{\code{primerR}}{DNAStringSet of the same length. Can be named or
 unnnamed.}
 
+\item{\code{names}}{Either constructed as a concatenation of names of
+forward and reverse primers or of their sequences (if primer
+sequences are unnamed)}
+
 \item{\code{.mapF}}{(automatically generated) maps potentially duplicate
 entries in FW primers to unique entries.}
 
