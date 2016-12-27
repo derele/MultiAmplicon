@@ -39,11 +39,11 @@ setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, ...){
     ## the data matrix of amplicons x samples stratified counts 
     NR <- length(MA@PrimerPairsSet@primerF)
     NC <- length(MA@PairedReadFileSet@readsF)
-    data <- matrix(0, nrow=NR, ncol=ncol(NC))
+    data <- matrix(0, nrow=NR, ncol=NC)
     ## colnames are sample names taken from file names
-    colnames(data) <- colnames(MA)
+    colnames(data) <- names(MA@PairedReadFileSet)
     ## rownames have to come from (matched) primers
-    rownames(data) <- rownames(MA)
+    rownames(data) <- names(MA@PrimerPairsSet)
     tmppathF <- matrix("", nrow=NR, ncol=NC)
     tmppathR <- matrix("", nrow=NR, ncol=NC)
     readsF <- MA@PairedReadFileSet@readsF
