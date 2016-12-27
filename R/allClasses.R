@@ -205,6 +205,10 @@ setMethod(names, "PrimerPairsSet", function (x) x@names)
 ##' read filnames (e.g. used to store sample names) see also
 ##' \code{\link{PairedReadFileSet}}
 ##'
+##' 'rawCounts(x)' A matrix of raw sequencing read counts assigned to
+##' a particular sample (input file pair) and amplicon (input primer
+##' pair)
+##' 
 ##' @seealso \code{\link{derep}},\code{\link{dada}}
 ##' @importFrom dada2 derepFastq dada
 ##' @rdname MultiAmplicon-class
@@ -251,3 +255,7 @@ setMethod("rownames", "MultiAmplicon", function (x) x@PrimerPairsSet@names)
 
 setMethod("ncol", "MultiAmplicon", function (x) length(x@PairedReadFileSet))
 setMethod("nrow", "MultiAmplicon", function (x) length(x@PrimerPairsSet))
+
+
+setGeneric("rawCounts", function(x){standardGeneric("rawCounts")})
+setMethod("rawCounts", "MultiAmplicon", function(x) x@rawCounts)
