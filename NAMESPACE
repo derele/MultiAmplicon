@@ -3,6 +3,7 @@
 export(MultiAmplicon)
 export(PairedReadFileSet)
 export(PrimerPairsSet)
+export(plot_Amplicon_numbers)
 export(rawCounts)
 export(sortAmplicons)
 exportClasses(MultiAmplicon)

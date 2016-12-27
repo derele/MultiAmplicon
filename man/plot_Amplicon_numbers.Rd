@@ -23,7 +23,7 @@ just like the original \code{\link{pheatmap}} function, A
     heatmap is drawn to the graphics output device. Returned are
     (invisibly) a list of components: 1."tree_row" the clustering
     of rows as hclust object 2. "tree_col" the clustering of
-    columns as hclust object 3. kmeans the kmeans clustering of
+    columns as hclust object 3. "kmeans" the kmeans clustering of
     rows if parameter kmeans_k was specified.
 }
 \description{

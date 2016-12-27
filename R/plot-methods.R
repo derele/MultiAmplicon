@@ -21,8 +21,9 @@
 ##'     heatmap is drawn to the graphics output device. Returned are
 ##'     (invisibly) a list of components: 1."tree_row" the clustering
 ##'     of rows as hclust object 2. "tree_col" the clustering of
-##'     columns as hclust object 3. kmeans the kmeans clustering of
+##'     columns as hclust object 3. "kmeans" the kmeans clustering of
 ##'     rows if parameter kmeans_k was specified.
+##' @export
 ##' @author Emanuel Heitlinger
 
 plot_Amplicon_numbers <- function (MAmatrix, transf=log10, add=0.1, ...){
@@ -34,7 +35,7 @@ plot_Amplicon_numbers <- function (MAmatrix, transf=log10, add=0.1, ...){
         ## get the function name for display on the plot
         transf_function <- deparse(transf)
         if (is.primitive(transf)){
-            transf_function <- gsub('\\.Primitive\\(\\").*(\\")', "\\1",
+            transf_function <- gsub('\\.Primitive\\(\\"(.*)\\"\\)', "\\1",
                                     transf_function)
         }
         pheatmap(transf(MAmatrix + add),
