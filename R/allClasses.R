@@ -46,9 +46,10 @@ setClass("PairedReadFileSet",
 
 PairedReadFileSet <- function(readsF,
                               readsR){
+    ## construct from names if they exist
     if(length(names(readsF)) == length(readsF)) {
         na <- names(readsF)
-    } else { na <- basename(readsF)}
+    } else { na <- basename(readsF)} ## otherwise use filenames
     new("PairedReadFileSet",
         readsF = readsF,
         readsR = readsR,
@@ -120,6 +121,11 @@ setClass("PrimerPairsSet", contains = "DNAStringSet",
 
 ## Constructor
 PrimerPairsSet <- function(primerF = DNAStringSet(), primerR = DNAStringSet()){
+    ## if names exist construct primer names
+    if(length(names(primerF)) == length(primerR) &&
+       length(names(primerF))== length(primerF)) {
+        na <- paste0(names(primerF), ":", names(primerR))
+    } else {na <- paste0(primerF, ":", primerR)} ## otherwise use primer sequences
     new("PrimerPairsSet",
         primerF = DNAStringSet(primerF),
         primerR = DNAStringSet(primerR),
@@ -132,13 +138,6 @@ PrimerPairsSet <- function(primerF = DNAStringSet(), primerR = DNAStringSet()){
 
 ## Methods
 setMethod(length, "PrimerPairsSet", function(x) length(x@primerF))
-
-setMethod(names, "PrimerPairsSet", function(x){
-    if(length(x@primerF) == length(x@names)){
-        x@names
-    } else {paste0(x@primerF, ":", x@primerR)}
-})
-
 
 ##' A class combining sequences of forward and reverse primers (in a
 ##' \code{\link{PrimerPairsSet-class}}) plus file names of paired end
