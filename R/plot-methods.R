@@ -26,22 +26,22 @@
 ##' @export
 ##' @author Emanuel Heitlinger
 
-plot_Amplicon_numbers <- function (MAmatrix, transf=log10, add=0.1, ...){
+plot_Amplicon_numbers <- function (MAmatrix, transf=function(x) log10(x+1), ...){
     if (nrow(MAmatrix) < 2 || ncol(MAmatrix) < 2) {
         stop(cat("No rawCounts found in MultiAmplicon object:
                   Run sortAmplicons to produce a MultiAmplicon with at least
                   two files and two samples"))
     } else {
         ## get the function name for display on the plot
-        transf_function <- deparse(transf)
+        transf_function <- deparse(transf)[length(deparse(transf))]
         if (is.primitive(transf)){
             transf_function <- gsub('\\.Primitive\\(\\"(.*)\\"\\)', "\\1",
                                     transf_function)
         }
-        pheatmap(transf(MAmatrix + add),
+        pheatmap(transf(MAmatrix),
                  main = paste(transf_function,
                               "transformed",
-                              "read number +", add),
+                              "read number"),
                      ...)
     }
 }
