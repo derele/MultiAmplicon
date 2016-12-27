@@ -6,21 +6,21 @@
 \alias{sortAmplicons-Method}
 \title{sortAmplicons}
 \usage{
-sortAmplicons(MA, ...)
+sortAmplicons(MA, n, ...)
 }
 \arguments{
 \item{MA}{MultiAmplicon-class object containing a set of paired
 end files and a primer-pairs set.}
 
-\item{...}{addtional parameter so be passed to
-Biostrings::isMatchingStartingAt. Be careful when using
-multiple starting positions or allowing error. This could lead
-to read pairs being assigned to multiple amplicons.}
-
 \item{n}{parameter passed to the yield functions of package
 ShortRead. This controls the memory consumption during
 streaming. Lower values mean lower memory but longer
 processing time.}
+
+\item{...}{addtional parameter so be passed to
+Biostrings::isMatchingStartingAt. Be careful when using
+multiple starting positions or allowing error. This could lead
+to read pairs being assigned to multiple amplicons.}
 }
 \value{
 MultiAmplicon: A MultiAmplicon-class object is returned
