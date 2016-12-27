@@ -69,7 +69,7 @@ setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
 ##' provided as character strings and will be converted to
 ##' \code{\link{DNAStringSet}} by the constructor function of the same
 ##' name. primerF and primerR have to be of the same length to specify
-##' primer pairs (primerF[i]:primerR[i]; for i in 1:length(PrimerF)).
+##' primer pairs (primerF[i].primerR[i]; for i in 1:length(PrimerF)).
 ##' Warnings are given if primer sequences are of unusal length (<16
 ##' or >26 bases).
 ##'
@@ -126,8 +126,8 @@ PrimerPairsSet <- function(primerF, primerR){
     ## if names exist construct primer names
     if(length(names(primerR)) == length(primerR) &&
        length(names(primerF))== length(primerF)) {
-        na <- paste0(names(primerF), ":", names(primerR))
-    } else {na <- paste0(primerF, ":", primerR)} ## otherwise use primer sequences
+        na <- paste0(names(primerF), ".", names(primerR))
+    } else {na <- paste0(primerF, ".", primerR)} # otherwise use primer sequences
     new("PrimerPairsSet",
         primerF = DNAStringSet(primerF),
         primerR = DNAStringSet(primerR),
