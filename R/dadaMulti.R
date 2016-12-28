@@ -13,8 +13,6 @@
 ##' @importFrom dada2 dada
 ##' @export
 ##' @author Emanuel Heitlinger
-
-
 dadaMulti <- function(MA, ...){
     Pdada <- lapply(seq_along(MA@PrimerPairsSet), function (i){
         cat("amplicon", rownames(MA)[i], "dada estimation of sequence variants from ",
@@ -27,11 +25,7 @@ dadaMulti <- function(MA, ...){
             dadaR = dadaR,
             names = rownames(MA)[i])
     })
-    new("MultiAmplicon",
-        PrimerPairsSet = MA@PrimerPairsSet,
-        PairedReadFileSet = MA@PairedReadFileSet,
-        stratifiedFiles = MA@stratifiedFiles,
-        derep = MA@derep,
+    initialize(MA,
         dada = new("PairedDadaSet", Pdada))
 }
 

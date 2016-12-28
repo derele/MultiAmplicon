@@ -24,9 +24,6 @@ derepMulti <- function(MA, ...){
             derepR = derepR,
             names = rownames(MA)[i])
     })
-    new("MultiAmplicon",
-        PrimerPairsSet = MA@PrimerPairsSet,
-        PairedReadFileSet = MA@PairedReadFileSet,
-        stratifiedFiles = MA@stratifiedFiles,
-        derep = new("PairedDerepSet", derep))
+    initialize(MA,
+               derep = new("PairedDerepSet", derep))
 }
