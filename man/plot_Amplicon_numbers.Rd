@@ -4,7 +4,7 @@
 \alias{plot_Amplicon_numbers}
 \title{plot_Amplicon_numbers}
 \usage{
-plot_Amplicon_numbers(MAmatrix, transf = log10, add = 0.1, ...)
+plot_Amplicon_numbers(MAmatrix, transf = function(x) log10(x + 1), ...)
 }
 \arguments{
 \item{MAmatrix}{The primer matching (amplicon) matrix of a
@@ -13,10 +13,10 @@ MultiAmplicon object.}
 \item{transf}{transformation to be applied, recommended default is
 log10}
 
+\item{...}{addtional parameter to be passed to pheatmap funciton}
+
 \item{add}{offset added to allow e.g. log10 transformation of zero
 values}
-
-\item{...}{addtional parameter to be passed to pheatmap funciton}
 }
 \value{
 just like the original \code{\link{pheatmap}} function, A
