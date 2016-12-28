@@ -29,19 +29,19 @@ setMethod("[", c("MultiAmplicon", "ANY", "ANY", "logical"),
           function(x, i=TRUE, j=TRUE, drop=FALSE){
               newPrimer <- x@PrimerPairsSet[i, drop=drop]
               newFiles <- x@PairedReadFileSet[j, drop=drop]
-              if(any(dim(x@rawCounts)>0)){
-                  newRC <- as.matrix(rawCounts(x)[i, j, drop=drop])
+#              if(any(dim(x@rawCounts)>0)){
+#                  newRC <- as.matrix(rawCounts(x)[i, j, drop=drop])
                   ## we drop empty files without a placeholder,
                   ## therefore we need to find a j fixed index
                   ## sapply(i, function (i){
                   ## new.j <- which((which(x@rawCounts>0))%in%j)
                   ## newSF <-
-              }
-              } else{newRC <- matrix()}
+              ##              }
+##              } else{newRC <- matrix()}
               new("MultiAmplicon",
                   PrimerPairsSet = newPrimer,
-                  PairedReadFileSet = newFiles,
-                  rawCounts = newRC #,
+                  PairedReadFileSet = newFiles#,
+##                  rawCounts = newRC #,
 ##                  stratifiedFiles = newSF
                   )
           })
