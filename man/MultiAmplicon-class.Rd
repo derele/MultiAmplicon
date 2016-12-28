@@ -68,9 +68,13 @@ reverse (sometimes called R2) files are stored as a (amplicons
 x samples) matrix of \code{\link{PairedReadFileSet-class}}
 objects.}
 
-\item{\code{derep}}{}
+\item{\code{derep}}{A \code{\link{PairedDerep}}-class object containing
+pairs of derep-class objects created by \code{\link{dada2}}’s
+\code{\link{derepFastq}} function}
 
-\item{\code{dada}}{}
+\item{\code{dadaderep}}{A \code{\link{PairedDada}}-class object containing
+pairs of dada-class objects created by \code{\link{dada2}}’s
+\code{\link{dada}} function}
 
 \item{\code{mergers}}{}
 

@@ -173,23 +173,16 @@ PairedDerep <- function(derepF, derepR, names){
         names = names)
 }
 
+setClass("PairedDerepSet", contains = "PairedDerep",
+         representation="list")
+
 
 ##' A pair of two dada objects and their names
 ##'
 ##' dada-class objects as defined by the package \code{\link{dada2}}
 ##' are bundeled as forward and reverse read pairs in this object
-##' @title dada-class
 ##'
-##' ## Constructors
-##'
-##' PairedDada(dadaF, dadaR, names)
-##' 
-##' @param dadaF dada object containing forward read pairs created by
-##'     \code{\link{dada2}}'s \code{\link{dada}} function
-##' @param dadaR dada object containing reverse read pairs created by
-##'     \code{\link{dada2}}'s \code{\link{dada}} function
-##' @param names names of e.g. the amplicon the read pairs are part of
-##' @return A PairedDada class object
+##' @title PairedDada-class
 ##' @author Emanuel Heitlinger
 
 setClass("PairedDada",
@@ -199,12 +192,9 @@ setClass("PairedDada",
                  "Same number of forward and reverse dada objects needed to constitute forward and reverse sequence read pairs"
              }})
 
-PairedDada <- function(dadaF, dadaR, names){
-    new("PairedDada",
-        dadaF = dadaF,
-        dadaR = dadaR,
-        names = names)
-}
+setClass("PairedDadaSet", contains = "PairedDada",
+         representation="list")
+
 
 ##' A class combining sequences of forward and reverse primers (in a
 ##' \code{\link{PrimerPairsSet-class}}) plus file names of paired end
@@ -290,8 +280,8 @@ setClass("MultiAmplicon",
                         PairedReadFileSet="PairedReadFileSet",
                         rawCounts="matrix",
                         stratifiedFiles="list",
-                        derep="PairedDerep",
-                        dada="PairedDada",
+                        derep="PairedDerepSet",
+                        dada="PairedDadaSet",
                         mergers="list",
                         sequenceTable="list",
                         sequenceTableNoChime="list"))

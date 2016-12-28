@@ -9,16 +9,19 @@ derepMulti(MA, ...)
 \arguments{
 \item{MA}{MultiAmplicon object to be dereplicated}
 
-\item{...}{arguments to be passed to dada2::derepFastq}
+\item{...}{arguments to be passed to \code{\link{derepFastq}}}
 }
 \value{
-MultiAmplicon object with derep slots filled
+MultiAmplicon object with derep slots (forward derepF and
+    reverse derepR) filled
 }
 \description{
-.. content for \description{} (no empty lines) ..
+Dereplicate sequences in fastq files
 }
 \details{
-.. content for \details{} ..
+An interface to \code{\link{derepFastq}} which itself uses
+\code{\link{FastqStreamer}} for dereplicating amplicon sequences
+from fastq or compressed fastq files.
 }
 \author{
 Emanuel Heitlinger

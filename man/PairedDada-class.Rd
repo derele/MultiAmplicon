@@ -3,23 +3,7 @@
 \docType{class}
 \name{PairedDada-class}
 \alias{PairedDada-class}
-\title{dada-class
-
-## Constructors
-
-PairedDada(dadaF, dadaR, names)}
-\arguments{
-\item{dadaF}{dada object containing forward read pairs created by
-\code{\link{dada2}}'s \code{\link{dada}} function}
-
-\item{dadaR}{dada object containing reverse read pairs created by
-\code{\link{dada2}}'s \code{\link{dada}} function}
-
-\item{names}{names of e.g. the amplicon the read pairs are part of}
-}
-\value{
-A PairedDada class object
-}
+\title{PairedDada-class}
 \description{
 A pair of two dada objects and their names
 }
