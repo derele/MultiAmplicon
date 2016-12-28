@@ -16,12 +16,12 @@
 
 
 dadaMulti <- function(MA, ...){
-    dada <- lapply(seq_along(MA@PrimerPairsSet), function (i){
-        cat("amplicon", rownames(MA)[i], "dada estimateion of sequence variants from ",
-            length(MA@derep@derepF[i]), " of ",
+    Pdada <- lapply(seq_along(MA@PrimerPairsSet), function (i){
+        cat("amplicon", rownames(MA)[i], "dada estimation of sequence variants from ",
+            length(MA@derep[[i]]@derepF), " of ",
             ncol(MA), "possible sample files\n")
-        dadaF <- dada(MA@derep@derepF[i], ...)
-        dadaR <- dada(MA@derep@derepR[i], ...)
+        dadaF <- dada(MA@derep[[i]]@derepF, ...)
+        dadaR <- dada(MA@derep[[i]]@derepR, ...)
         new("PairedDada",
             dadaF = dadaF,
             dadaR = dadaR,
@@ -32,6 +32,6 @@ dadaMulti <- function(MA, ...){
         PairedReadFileSet = MA@PairedReadFileSet,
         stratifiedFiles = MA@stratifiedFiles,
         derep = MA@derep,
-        dada = new("PairedDadaSet", dada))
+        dada = new("PairedDadaSet", Pdada))
 }
 
