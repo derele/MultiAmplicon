@@ -31,10 +31,12 @@ setMethod("[", c("MultiAmplicon", "ANY", "ANY", "logical"),
               newFiles <- x@PairedReadFileSet[j, drop=drop]
               if(any(dim(x@rawCounts)>0)){
                   newRC <- as.matrix(rawCounts(x)[i, j, drop=drop])
-##                   newSF <- x@stratifiedFiles[i] ## FIXME wrong
-                  ## because j are
-                  ## dropped without
-                  ## placeholder!!
+                  ## we drop empty files without a placeholder,
+                  ## therefore we need to find a j fixed index
+                  ## sapply(i, function (i){
+                  ## new.j <- which((which(x@rawCounts>0))%in%j)
+                  ## newSF <-
+              }
               } else{newRC <- matrix()}
               new("MultiAmplicon",
                   PrimerPairsSet = newPrimer,
