@@ -6,7 +6,7 @@
 \alias{sortAmplicons-Method}
 \title{sortAmplicons}
 \usage{
-sortAmplicons(MA, n = 1e+06, ...)
+sortAmplicons(MA, n = 1e+06, countOnly = FALSE, ...)
 }
 \arguments{
 \item{MA}{MultiAmplicon-class object containing a set of paired
@@ -18,17 +18,22 @@ streaming. Lower values result in lower memory requirements
 but might result longer processing time due to more repeated
 I/O operations reading the sequence files.}
 
+\item{countOnly}{logical argument if set TRUE only a matrix of
+read counts is returned}
+
 \item{...}{addtional parameter so be passed to
 Biostrings::isMatchingStartingAt. Be careful when using
 multiple starting positions or allowing error. This could lead
 to read pairs being assigned to multiple amplicons.}
 }
 \value{
-MultiAmplicon: A MultiAmplicon-class object is returned
-    with the stratifiedFiles slot populated. Stratified file names
-    are constructed using a unique string created by
+MultiAmplicon: By default (countOnly=FALSE) a
+    MultiAmplicon-class object is returned with the
+    stratifiedFiles slot populated. Stratified file names are
+    constructed using a unique string created by
     \code{\link{tempfile()}} and stored in R's
-    \code{\link{tempdir()}}
+    \code{\link{tempdir()}}. If the countOnly is set only a
+    numeric matrix of read counts is returned.
 }
 \description{
 Sort different amplicons into a fully stratified samples x

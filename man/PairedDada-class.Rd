@@ -5,7 +5,7 @@
 \alias{PairedDada-class}
 \title{PairedDada-class}
 \description{
-A pair of two dada objects and their names
+A pair of two dada objects
 }
 \details{
 dada-class objects as defined by the package \code{\link{dada2}}

@@ -30,9 +30,6 @@ setMethod("[", c("PairedDada", "ANY"), function(x, i){
         dadaF=newF, dadaR=newR)
 })
 
-
-
-
 ##' Convenient subsetting for MultiAmplicon objects
 ##'
 ##' Subset a MultiAmplicon object including all potentially filled

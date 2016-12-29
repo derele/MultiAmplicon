@@ -3,30 +3,26 @@
 \docType{class}
 \name{PairedDerep-class}
 \alias{PairedDerep-class}
-\title{derep-class
-
-## Constructors
-
-PairedDerep(derepF, derepR, names)}
-\arguments{
-\item{derepF}{derep object containing forward read pairs created
-by \code{\link{dada2}}'s \code{\link{derepFastq}} function}
-
-\item{derepR}{derep object containing reverse read pairscreated by
-\code{\link{dada2}}'s \code{\link{derepFastq}} function}
-
-\item{names}{names of e.g. the amplicon the read pairs are part of}
-}
+\title{derep-class}
 \value{
 A PairedDerep-class object
 }
 \description{
-A pair of two derep objects and their names
+A pair of two derep objects
 }
 \details{
 derep-class objects as defined by the package \code{\link{derep2}}
 are bundeled as forward and reverse read pairs in this object
 }
+\section{Slots}{
+
+\describe{
+\item{\code{derep}}{object containing forward read pairs created
+by \code{\link{dada2}}'s \code{\link{derepFastq}} function}
+
+\item{\code{derepR}}{derep object containing reverse read pairscreated by
+\code{\link{dada2}}'s \code{\link{derepFastq}} function}
+}}
 \author{
 Emanuel Heitlinger
 }
