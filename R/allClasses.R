@@ -143,41 +143,37 @@ setMethod(length, "PrimerPairsSet", function(x) length(x@primerF))
 
 setMethod(names, "PrimerPairsSet", function (x) x@names)
 
-##' A pair of two derep objects and their names
+##' A pair of two derep objects
 ##'
 ##' derep-class objects as defined by the package \code{\link{derep2}}
 ##' are bundeled as forward and reverse read pairs in this object
 ##' @title derep-class
 ##'
-##' ## Constructors
-##'
-##' PairedDerep(derepF, derepR, names)
-##' 
-##' @param derepF derep object containing forward read pairs created
+##' @slot derep object containing forward read pairs created
 ##'     by \code{\link{dada2}}'s \code{\link{derepFastq}} function
-##' @param derepR derep object containing reverse read pairscreated by
+##' @slot derepR derep object containing reverse read pairscreated by
 ##'     \code{\link{dada2}}'s \code{\link{derepFastq}} function
-##' @param names names of e.g. the amplicon the read pairs are part of
 ##' @return A PairedDerep-class object
 ##' @author Emanuel Heitlinger
+
 setClass("PairedDerep",
-         slots = c(derepF="list", derepR="list", names="character"),
+         slots = c(derepF="list", derepR="list"),
          validity=function(object) {
              if (length(object@derepF) != length(object@derepR)){
                  "Same number of forward and reverse derep objects needed to constitute forward and reverse sequence read pairs"
              }})
-PairedDerep <- function(derepF, derepR, names){
-    new("PairedDerep",
-        derepF = derepF,
-        derepR = derepR,
-        names = names)
-}
 
-setClass("PairedDerepSet", contains = "PairedDerep",
-         representation="list")
+setMethod("length", "PairedDerep", function(x){
+    length(x@derepF)
+})
+
+setClass("PairedDerepSet",
+         contains="list",
+         representation(),
+         prototype(elementType="PairedDerep"))
 
 
-##' A pair of two dada objects and their names
+##' A pair of two dada objects 
 ##'
 ##' dada-class objects as defined by the package \code{\link{dada2}}
 ##' are bundeled as forward and reverse read pairs in this object
@@ -186,14 +182,22 @@ setClass("PairedDerepSet", contains = "PairedDerep",
 ##' @author Emanuel Heitlinger
 
 setClass("PairedDada",
-         slots = c(dadaF="list", dadaR="list", names="character"),
+         slots = c(dadaF="list", dadaR="list"),
          validity=function(object) {
              if (length(object@dadaF) != length(object@dadaR)){
                  "Same number of forward and reverse dada objects needed to constitute forward and reverse sequence read pairs"
              }})
 
-setClass("PairedDadaSet", contains = "PairedDada",
-         representation="list")
+setMethod("length", "PairedDada", function(x){
+    length(x@dadaF)
+})
+
+
+setClass("PairedDadaSet",
+         contains="list",
+         representation(),
+         prototype(elementType="PairedDada"))
+
 
 
 ##' A class combining sequences of forward and reverse primers (in a

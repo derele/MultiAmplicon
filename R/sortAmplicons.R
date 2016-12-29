@@ -15,15 +15,19 @@
 ##'     streaming. Lower values result in lower memory requirements
 ##'     but might result longer processing time due to more repeated
 ##'     I/O operations reading the sequence files.
+##' @param countOnly logical argument if set TRUE only a matrix of
+##'     read counts is returned
 ##' @param ... addtional parameter so be passed to
 ##'     Biostrings::isMatchingStartingAt. Be careful when using
 ##'     multiple starting positions or allowing error. This could lead
 ##'     to read pairs being assigned to multiple amplicons.
-##' @return MultiAmplicon: A MultiAmplicon-class object is returned
-##'     with the stratifiedFiles slot populated. Stratified file names
-##'     are constructed using a unique string created by
+##' @return MultiAmplicon: By default (countOnly=FALSE) a
+##'     MultiAmplicon-class object is returned with the
+##'     stratifiedFiles slot populated. Stratified file names are
+##'     constructed using a unique string created by
 ##'     \code{\link{tempfile()}} and stored in R's
-##'     \code{\link{tempdir()}}
+##'     \code{\link{tempdir()}}. If the countOnly is set only a
+##'     numeric matrix of read counts is returned.
 ##' @rdname sortAmplicons
 ##' @author Emanuel Heitlinger
 ##' @importFrom ShortRead FastqStreamer yield narrow sread
@@ -31,11 +35,22 @@
 ##' @export sortAmplicons
 ##' @aliases sortAmplicons, sortAmplicons-Method
 setGeneric(name="sortAmplicons",
-           def=function(MA, n=1e6, ...) {
+           def=function(MA, n=1e6, countOnly=FALSE, ...) {
                standardGeneric("sortAmplicons")
            })
 ################################################################################
-setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, ...){
+##' .. content for \description{} (no empty lines) ..
+##'
+##' .. content for \details{} ..
+##' @title 
+##' @param MA 
+##' @param n 
+##' @param countOnly 
+##' @param ... 
+##' @return 
+##' @author Emanuel Heitlinger
+setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, countOnly=FALSE,
+                                                     ...){
     ## the data matrix of amplicons x samples stratified counts 
     NR <- length(MA@PrimerPairsSet@primerF)
     NC <- length(MA@PairedReadFileSet@readsF)
@@ -54,8 +69,10 @@ setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, ...){
         tmpbaseR <- paste0(tempfile(), basename(readsR[[x]]))
         if(!file.exists(readsF[[x]]) | !file.exists(readsR[[x]])){
             data[, names(readsF)[[x]]] <- 0
-            tmppathF[,x] <- paste0(tmpbaseF, names(MA@PrimerPairsSet), ".fastq.gz")
-            tmppathR[,x] <- paste0(tmpbaseR, names(MA@PrimerPairsSet), ".fastq.gz")
+            tmppathF[,x] <- paste0(tmpbaseF, names(MA@PrimerPairsSet),
+                                   ".fastq.gz")
+            tmppathR[,x] <- paste0(tmpbaseR, names(MA@PrimerPairsSet),
+                                   ".fastq.gz")
             next()
         }
         f <- ShortRead::FastqStreamer(readsF[[x]], n = n)
@@ -64,31 +81,43 @@ setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, ...){
          while(length(suppressWarnings(Ffq <- ShortRead::yield(f))) &&
                length(suppressWarnings(Rfq <- ShortRead::yield(r)))){
                    fM <- lapply(MA@PrimerPairsSet@.uniqueF, function(x){
-                       as.vector(Biostrings::isMatchingStartingAt(x,
-                                                                  ShortRead::sread(Ffq),
-                                                                  fixed=FALSE, ...))
+                       as.vector(
+                           Biostrings::isMatchingStartingAt(x,
+                                                            ShortRead::sread(Ffq),
+                                                            fixed=FALSE, ...))
                    })
                    rM <- lapply(MA@PrimerPairsSet@.uniqueR, function(x){
-                       as.vector(Biostrings::isMatchingStartingAt(x, ShortRead::sread(Rfq),
-                                                                  fixed=FALSE, ...))
+                       as.vector(
+                           Biostrings::isMatchingStartingAt(x,
+                                                            ShortRead::sread(Rfq),
+                                                            fixed=FALSE, ...))
                    })
                    matches <- numeric(length=length(MA@PrimerPairsSet))
                    ## add primer pair data and metadata in rows 
                    for(y in seq_along(MA@PrimerPairsSet)) {
                        map.primerF <- MA@PrimerPairsSet@.mapF[[y]]
                        map.primerR <- MA@PrimerPairsSet@.mapR[[y]]
-                       select <- fM[[map.primerF]] & rM[[map.primerR]]
-                       tmppathF[y, x] <- paste0(tmpbaseF, names(MA@PrimerPairsSet)[[y]], ".fastq.gz")
-                       tmppathR[y, x] <- paste0(tmpbaseR, names(MA@PrimerPairsSet)[[y]], ".fastq.gz")
-                       lengthF <- length(MA@PrimerPairsSet@primerF[[y]])
-                       lengthR <- length(MA@PrimerPairsSet@primerR[[y]])
-                       F <- ShortRead::narrow(Ffq[select],
-                                              lengthF, width(Ffq[select]))
-                       R <- Rfq[select]
-                       R <- ShortRead::narrow(Rfq[select],
+                       # is reverse and forward matched
+                       select <- fM[[map.primerF]] & rM[[map.primerR]] 
+                       if(!countOnly){ # file operations only if requested
+                           tmppathF[y, x] <-
+                               paste0(tmpbaseF,
+                                      names(MA@PrimerPairsSet)[[y]],
+                                      ".fastq.gz")
+                           tmppathR[y, x] <-
+                               paste0(tmpbaseR,
+                                      names(MA@PrimerPairsSet)[[y]],
+                                      ".fastq.gz")
+                           lengthF <- length(MA@PrimerPairsSet@primerF[[y]])
+                           lengthR <- length(MA@PrimerPairsSet@primerR[[y]])
+                           F <- ShortRead::narrow(Ffq[select],
+                                                  lengthF, width(Ffq[select]))
+                           R <- Rfq[select]
+                           R <- ShortRead::narrow(Rfq[select],
                                               lengthR, width(Rfq[select]))
-                       ShortRead::writeFastq(F, file=tmppathF[[y, x]], mode="a")
-                       ShortRead::writeFastq(R, file=tmppathR[[y, x]], mode="a")
+                           ShortRead::writeFastq(F, file=tmppathF[[y, x]], mode="a")
+                           ShortRead::writeFastq(R, file=tmppathR[[y, x]], mode="a")
+                       }
                        matches[y] <- length(select[select==TRUE])
                    }
                    ## need to add over the while loop because of fastq streaming 
@@ -97,7 +126,8 @@ setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, ...){
                }
         close(f)
         close(r)
-        cat("\n finished sorting", sum(data[, names(readsF)[[x]]]),
+        doing <- ifelse(countOnly, "counting", "sorting")
+        cat("\n finished ", doing, sum(data[, names(readsF)[[x]]]),
             "sequencing reads for", names(readsF)[[x]], "in",
             "\n ", readsF[[x]], " and \n ", readsR[[x]], "\n",
             " into ", sum(data[, names(readsF)[[x]]]>0), "amplicons \n" )
@@ -105,17 +135,18 @@ setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, ...){
     ## run only on existing files to avoid warnings for non-existing
     ## files. This means don't run on files corresponding to zeros
     ## read counts repored 
-    stratifiedFiles <- lapply(seq_along(MA@PrimerPairsSet),
-                              function(i){
-                                  existing <- which(data[i, ]>0)
-                                  PairedReadFileSet(tmppathF[i, existing],
-                                                    tmppathR[i, existing])
-                              })
-    return(new("MultiAmplicon",
-               PrimerPairsSet = MA@PrimerPairsSet,
-               PairedReadFileSet = MA@PairedReadFileSet,
-               rawCounts = data,
-               stratifiedFiles = stratifiedFiles
-               ))
+    if(!countOnly){
+        stratifiedFiles <- lapply(seq_along(MA@PrimerPairsSet),
+                                  function(i){
+                                      existing <- which(data[i, ]>0)
+                                      PairedReadFileSet(tmppathF[i, existing],
+                                                        tmppathR[i, existing])
+                                  })
+        new.MA <- initialize(MA, rawCounts = data,
+                             stratifiedFiles = stratifiedFiles)
+        return(new.MA)
+    }else{
+        return(data)
+    }
 })
 

@@ -21,8 +21,7 @@ derepMulti <- function(MA, ...){
         derepR <- derepFastq(MA@stratifiedFiles[[i]]@readsR, ...)
         new("PairedDerep",
             derepF = derepF,
-            derepR = derepR,
-            names = rownames(MA)[i])
+            derepR = derepR)
     })
     initialize(MA,
                derep = new("PairedDerepSet", derep))

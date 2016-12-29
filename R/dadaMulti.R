@@ -22,8 +22,7 @@ dadaMulti <- function(MA, ...){
         dadaR <- dada(MA@derep[[i]]@derepR, ...)
         new("PairedDada",
             dadaF = dadaF,
-            dadaR = dadaR,
-            names = rownames(MA)[i])
+            dadaR = dadaR)
     })
     initialize(MA,
         dada = new("PairedDadaSet", Pdada))
