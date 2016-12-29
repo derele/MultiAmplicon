@@ -38,17 +38,6 @@ setGeneric(name="sortAmplicons",
            def=function(MA, n=1e6, countOnly=FALSE, ...) {
                standardGeneric("sortAmplicons")
            })
-################################################################################
-##' .. content for \description{} (no empty lines) ..
-##'
-##' .. content for \details{} ..
-##' @title 
-##' @param MA 
-##' @param n 
-##' @param countOnly 
-##' @param ... 
-##' @return 
-##' @author Emanuel Heitlinger
 setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, countOnly=FALSE,
                                                      ...){
     ## the data matrix of amplicons x samples stratified counts 
