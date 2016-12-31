@@ -39,9 +39,8 @@ setMethod("[", c("PairedDada", "ANY"), function(x, i){
 ##' @return a subset of the original MultiAmplicon object
 ##' @export
 ##' @author Emanuel Heitlinger
-setMethod("[", c("MultiAmplicon", "integer", "missing"),
+setMethod("[", "MultiAmplicon",
           function(x, i=TRUE, j=TRUE, drop="missing"){
-              cat(paste("i is:", i, "j is:", j))
               newPrimer <- x@PrimerPairsSet[i]
               newFiles <- x@PairedReadFileSet[j]
               newRC <- matrix()
@@ -64,26 +63,30 @@ setMethod("[", c("MultiAmplicon", "integer", "missing"),
                           newSF[[length(newSF)+1]] <-
                               lapply(x@stratifiedFiles[ii], "[", newJ)
                       }
-                      ## if(length(x@derep)>0){
-                      ##     newderep[[length(newderep)+1]] <-
-                      ##         lapply(x@derep[ii], "[", newJ)
-                      ## }
-                      ## if(length(x@dada)>0){
-                      ##     newdada[[length(newdada)+1]] <-
-                      ##         lapply(x@dada[ii], "[", newJ)
-                      ## }
-                      ## if(length(x@mergers)>0){
-                      ##     newmergers[[length(newST)+1]] <-
-                      ##         lapply(x@mergers[ii], "[", newJ)
-                      ## }
-                      ## if(length(x@sequenceTable)>0){
-                      ##     newST[[length(newST)+1]] <-
-                      ##         lapply(x@sequenceTable[ii], "[", newJ)
-                      ## }
-                      ## if(length(x@sequenceTableNoChime)>0){
-                      ##     newSTnC[[length(newSTnC)+1]] <-
-                      ##         lapply(x@sequenceTableNoChime[ii], "[", newJ)
-                      ## }
+                      if(length(x@derep)>0){
+                          newderep[[length(newderep)+1]] <-
+                              lapply(x@derep[ii], "[", newJ)
+                      }
+                      if(length(x@dada)>0){
+                          newdada[[length(newdada)+1]] <-
+                              lapply(x@dada[ii], "[", newJ)
+                      }
+                      if(length(x@mergers)>0){
+                          newmergers[[length(newST)+1]] <-
+                              lapply(x@mergers[ii], "[", newJ)
+                      }
+                      if(length(x@sequenceTable)>0){
+                          newST[[length(newST)+1]] <-
+                              lapply(x@sequenceTable[ii], function (y){
+                                  y[newJ, ]
+                              })
+                      }
+                      if(length(x@sequenceTableNoChime)>0){
+                          newSTnC[[length(newSTnC)+1]] <-
+                              lapply(x@sequenceTableNoChime[ii], function(y){
+                                  y[newJ, ]
+                              })
+                      }
                   }
               }
           initialize(x,
