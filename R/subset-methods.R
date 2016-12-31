@@ -1,8 +1,7 @@
 setMethod("[", c("PrimerPairsSet", "ANY"),  function(x, i){
     newF <- x@primerF[i]
     newR <- x@primerR[i]
-    new("PrimerPairsSet",
-        primerF=newF, primerR=newR)
+    PrimerPairsSet(primerF=as.character(newF), primerR=as.character(newR))
 })
 
 setMethod("[", c("PairedReadFileSet", "ANY"), function(x, i){
