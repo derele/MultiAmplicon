@@ -13,16 +13,18 @@
 ##' @author Emanuel Heitlinger
 
 derepMulti <- function(MA, ...){
-    derep <- lapply(seq_along(MA@PrimerPairsSet), function (i){
+    PPderep <- lapply(seq_along(MA@PrimerPairsSet), function (i){
         cat("amplicon", rownames(MA)[i], "dereplicating for ",
             length(MA@stratifiedFiles[[i]]@readsF), " of ",
             ncol(MA), "possible sample files\n")
         derepF <- derepFastq(MA@stratifiedFiles[[i]]@readsF, ...)
         derepR <- derepFastq(MA@stratifiedFiles[[i]]@readsR, ...)
-        new("PairedDerep",
-            derepF = derepF,
-            derepR = derepR)
+        Pderep <- lapply(seq_along(derepF), function (w){
+            new("PairedDerep",
+                derepF = derepF[[w]],
+                derepR = derepR[[w]])
+        })
+        return(Pderep)
     })
-    initialize(MA,
-               derep = new("PairedDerepSet", derep))
+    return(PPderep)
 }

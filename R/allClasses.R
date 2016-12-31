@@ -167,10 +167,12 @@ setMethod("length", "PairedDerep", function(x){
     length(x@derepF)
 })
 
-setClass("PairedDerepSet",
-         contains="list",
-         representation(),
-         prototype(elementType="PairedDerep"))
+
+## completely useless list does it all
+## setClass("PairedDerepSet",
+##          contains="list",
+##          representation(),
+##          prototype(elementType="PairedDerep"))
 
 
 ##' A pair of two dada objects 
@@ -193,10 +195,11 @@ setMethod("length", "PairedDada", function(x){
 })
 
 
-setClass("PairedDadaSet",
-         contains="list",
-         representation(),
-         prototype(elementType="PairedDada"))
+## completely useless: list does it all
+## setClass("PairedDadaSet",
+##          contains="list",
+##          representation(),
+##          prototype(elementType="PairedDada"))
 
 
 

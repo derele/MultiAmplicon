@@ -18,11 +18,6 @@ setMethod("[", c("PairedDerep", "ANY"), function(x, i){
         derepF=newF, derepR=newR)
 })
 
-## setMethod("[", c("PairedDerepSet", "ANY"), function(x, i){
-##     new("PairedDerepSet", x[i])
-## })
-
-
 setMethod("[", c("PairedDada", "ANY"), function(x, i){
     newF <- x@dadaF[i]
     newR <- x@dadaR[i]
@@ -45,8 +40,9 @@ setMethod("[", c("PairedDada", "ANY"), function(x, i){
 ##' @return a subset of the original MultiAmplicon object
 ##' @export
 ##' @author Emanuel Heitlinger
-setMethod("[", "MultiAmplicon",
+setMethod("[", c("MultiAmplicon", "integer", "missing"),
           function(x, i=TRUE, j=TRUE, drop="missing"){
+              cat(paste("i is:", i, "j is:", j))
               newPrimer <- x@PrimerPairsSet[i]
               newFiles <- x@PairedReadFileSet[j]
               newRC <- matrix()
@@ -67,25 +63,27 @@ setMethod("[", "MultiAmplicon",
                       ## create updated objects for existing slots
                       if(length(x@stratifiedFiles)>0){
                           newSF[[length(newSF)+1]] <-
-                              MA@stratifiedFiles[[ii]][newJ]
+                              lapply(x@stratifiedFiles[ii], "[", newJ)
                       }
                       if(length(x@derep)>0){
-                          newderep[[length(newderep)+1]] <- MA@derep[[ii]][newJ]
+                          newderep[[length(newderep)+1]] <-
+                              lapply(x@derep[ii], "[", newJ)
                       }
                       if(length(x@dada)>0){
-                          newdada[[length(newdada)+1]] <- MA@dada[[ii]][newJ]
+                          newdada[[length(newdada)+1]] <-
+                              lapply(x@dada[ii], "[", newJ)
                       }
                       if(length(x@mergers)>0){
                           newmergers[[length(newST)+1]] <-
-                              MA@mergers[[ii]][newJ]
+                              lapply(x@mergers[ii], "[", newJ)
                       }
                       if(length(x@sequenceTable)>0){
                           newST[[length(newST)+1]] <-
-                              MA@sequenceTable[[ii]][newJ, ]
+                              lapply(x@sequenceTable[ii], "[", newJ)
                       }
                       if(length(x@sequenceTableNoChime)>0){
                           newSTnC[[length(newSTnC)+1]] <-
-                              MA@sequenceTableNoChime[[ii]][newJ,]
+                              lapply(x@sequenceTableNoChime[ii], "[", newJ)
                       }
                   }
               }
@@ -94,8 +92,8 @@ setMethod("[", "MultiAmplicon",
               PairedReadFileSet = newFiles,
               rawCounts = newRC,
               stratifiedFiles = newSF,
-              derep = new("PairedDerepSet", newderep),
-              dada = new("PairedDadaSet", newdada),
+              derep = newderep,
+              dada = newdada,
               mergers = newmergers,
               sequenceTable = newST,
               sequenceTableNoChime = newSTnC

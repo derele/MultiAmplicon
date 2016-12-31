@@ -1,3 +1,4 @@
+## @export
 noChimeMulti <- function(MA, mc.cores, ...){
     sequenceTableNoChime <-
         mclapply(MA@sequenceTable, function (x) { 

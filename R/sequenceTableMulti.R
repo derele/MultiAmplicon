@@ -1,3 +1,4 @@
+## @export
 sequenceTableMulti <- function(MA, ...){
     sequenceTable <- lapply(seq_along(MA@mergers), function (i){
         ST <- makeSequenceTable(MA@mergers[i], ...)
