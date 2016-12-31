@@ -64,26 +64,26 @@ setMethod("[", c("MultiAmplicon", "integer", "missing"),
                           newSF[[length(newSF)+1]] <-
                               lapply(x@stratifiedFiles[ii], "[", newJ)
                       }
-                      if(length(x@derep)>0){
-                          newderep[[length(newderep)+1]] <-
-                              lapply(x@derep[ii], "[", newJ)
-                      }
-                      if(length(x@dada)>0){
-                          newdada[[length(newdada)+1]] <-
-                              lapply(x@dada[ii], "[", newJ)
-                      }
-                      if(length(x@mergers)>0){
-                          newmergers[[length(newST)+1]] <-
-                              lapply(x@mergers[ii], "[", newJ)
-                      }
-                      if(length(x@sequenceTable)>0){
-                          newST[[length(newST)+1]] <-
-                              lapply(x@sequenceTable[ii], "[", newJ)
-                      }
-                      if(length(x@sequenceTableNoChime)>0){
-                          newSTnC[[length(newSTnC)+1]] <-
-                              lapply(x@sequenceTableNoChime[ii], "[", newJ)
-                      }
+                      ## if(length(x@derep)>0){
+                      ##     newderep[[length(newderep)+1]] <-
+                      ##         lapply(x@derep[ii], "[", newJ)
+                      ## }
+                      ## if(length(x@dada)>0){
+                      ##     newdada[[length(newdada)+1]] <-
+                      ##         lapply(x@dada[ii], "[", newJ)
+                      ## }
+                      ## if(length(x@mergers)>0){
+                      ##     newmergers[[length(newST)+1]] <-
+                      ##         lapply(x@mergers[ii], "[", newJ)
+                      ## }
+                      ## if(length(x@sequenceTable)>0){
+                      ##     newST[[length(newST)+1]] <-
+                      ##         lapply(x@sequenceTable[ii], "[", newJ)
+                      ## }
+                      ## if(length(x@sequenceTableNoChime)>0){
+                      ##     newSTnC[[length(newSTnC)+1]] <-
+                      ##         lapply(x@sequenceTableNoChime[ii], "[", newJ)
+                      ## }
                   }
               }
           initialize(x,
