@@ -9,6 +9,7 @@
 ##' @param ... arguments to be passed to \code{\link{derepFastq}}
 ##' @return MultiAmplicon object with derep slots (forward derepF and
 ##'     reverse derepR) filled
+##' @importFrom dada2 derepFastq
 ##' @export
 ##' @author Emanuel Heitlinger
 
@@ -26,5 +27,5 @@ derepMulti <- function(MA, ...){
         })
         return(Pderep)
     })
-    return(PPderep)
+    initialize(MA, derep=PPderep)
 }

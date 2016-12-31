@@ -14,12 +14,16 @@
 ##' @export
 ##' @author Emanuel Heitlinger
 dadaMulti <- function(MA, ...){
+    ## needs to be computed pair amplicon
     PPdada <- lapply(seq_along(MA@PrimerPairsSet), function (i){
-        cat("amplicon", rownames(MA)[i], "dada estimation of sequence variants from ",
-            length(MA@derep[[i]]@derepF), " of ",
-            ncol(MA), "possible sample files\n")
-        dadaF <- dada(MA@derep[[i]]@derepF, ...)
-        dadaR <- dada(MA@derep[[i]]@derepR, ...)
+       dF <- lapply(MA@derep[[i]], function (x) slot(x, "derepF"))
+       dR <- lapply(MA@derep[[i]], function (x) slot(x,  "derepR"))
+        cat("\n\namplicon", rownames(MA)[i], "dada estimation of sequence variants from ",
+            length(dF), " of ",
+            ncol(MA), "possible sample files\n\n")
+        ## run both functions
+        dadaF <- dada(dF, ...)
+        dadaR <- dada(dR, ...)
         Pdada <- lapply(seq_along(dadaF), function (w){
             new("PairedDada",
                 dadaF = dadaF[w],
@@ -27,6 +31,6 @@ dadaMulti <- function(MA, ...){
         })
         return(Pdada)
     })
-    return(PPdada)
+    initialize(MA, dada=PPdada)
 }
 
