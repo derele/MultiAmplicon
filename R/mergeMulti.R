@@ -24,7 +24,11 @@ mergeMulti <- function(MA, ...){
         deF <- lapply(MA@derep[[i]], "slot", "derepF")
         daR <- unlist(lapply(MA@dada[[i]], "slot", "dadaR"), recursive=FALSE)
         deR <- lapply(MA@derep[[i]], "slot", "derepR")
-        mergePairs(daF, deF, daR, deR, ...)
+        MP <- mergePairs(daF, deF, daR, deR, ...)
+        all.samples <- colnames(MA@rawCounts)[
+            MA@rawCounts[i, ]>0]
+        names(MP) <- all.samples
+        return(MP)
     })
     initialize(MA, mergers=mergers)
 }
