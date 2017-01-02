@@ -57,7 +57,7 @@ setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, countOnly=FALSE,
         tmpbaseF <- paste0(tempfile(), basename(readsF[[x]]))
         tmpbaseR <- paste0(tempfile(), basename(readsR[[x]]))
         if(!file.exists(readsF[[x]]) | !file.exists(readsR[[x]])){
-            data[, names(readsF)[[x]]] <- 0
+            data[, colnames(data)[[x]]] <- 0
             tmppathF[,x] <- paste0(tmpbaseF, names(MA@PrimerPairsSet),
                                    ".fastq.gz")
             tmppathR[,x] <- paste0(tmpbaseR, names(MA@PrimerPairsSet),
@@ -110,16 +110,16 @@ setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, countOnly=FALSE,
                        matches[y] <- length(select[select==TRUE])
                    }
                    ## need to add over the while loop because of fastq streaming 
-                   data[, names(readsF)[[x]]] <-
-                       data[, names(readsF)[[x]]] + matches
+                   data[, colnames(data)[[x]]] <-
+                       data[, colnames(data)[[x]]] + matches
                }
         close(f)
         close(r)
         doing <- ifelse(countOnly, "counting", "sorting")
-        cat("\n finished ", doing, sum(data[, names(readsF)[[x]]]),
-            "sequencing reads for", names(readsF)[[x]], "in",
+        cat("\n finished ", doing, sum(data[, colnames(data)[[x]]]),
+            "sequencing reads for", colnames(data)[[x]], "in",
             "\n ", readsF[[x]], " and \n ", readsR[[x]], "\n",
-            " into ", sum(data[, names(readsF)[[x]]]>0), "amplicons \n" )
+            " into ", sum(data[, colnames(data)[[x]]]>0), "amplicons \n" )
     }
     ## run only on existing files to avoid warnings for non-existing
     ## files. This means don't run on files corresponding to zeros
