@@ -12,7 +12,6 @@
 ##' @importFrom dada2 derepFastq
 ##' @export
 ##' @author Emanuel Heitlinger
-
 derepMulti <- function(MA, ...){
     PPderep <- lapply(seq_along(MA@PrimerPairsSet), function (i){
         cat("amplicon", rownames(MA)[i], "dereplicating for ",
