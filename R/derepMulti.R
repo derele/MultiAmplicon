@@ -14,9 +14,10 @@
 ##' @author Emanuel Heitlinger
 derepMulti <- function(MA, ...){
     PPderep <- lapply(seq_along(MA@PrimerPairsSet), function (i){
-        cat("amplicon", rownames(MA)[i], "dereplicating for ",
+        cat("amplicon", rownames(MA)[i],
+            "dereplicating for ",
             length(MA@stratifiedFiles[[i]]@readsF), " of ",
-            ncol(MA), "possible sample files\n")
+            length(MA@PairedReadFileSet@readsF), "possible sample files\n")
         derepF <- derepFastq(MA@stratifiedFiles[[i]]@readsF, ...)
         derepR <- derepFastq(MA@stratifiedFiles[[i]]@readsR, ...)
         Pderep <- lapply(seq_along(derepF), function (w){
