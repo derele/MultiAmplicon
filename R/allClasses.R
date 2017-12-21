@@ -45,17 +45,19 @@ setClass("PairedReadFileSet",
          })
 
 PairedReadFileSet <- function(readsF,
-                              readsR){
+                              readsR, names=character()){
     ## construct from names if they exist
     if(length(names(readsF)) == length(readsF)) {
         na <- names(readsF)
+    } ## overwrite if names are given as argument
+    if(length(names) == length(readsF)) {
+        na <- names
     } else { na <- basename(readsF)} ## otherwise use filenames
     new("PairedReadFileSet",
         readsF = readsF,
         readsR = readsR,
         names = na)
 }
-
 
 ## Methods
 setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
