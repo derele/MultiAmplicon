@@ -192,6 +192,12 @@ setClass("PairedDada",
                  "Same number of forward and reverse dada objects needed to constitute forward and reverse sequence read pairs"
              }})
 
+PairedDada <- function(dadaF=list(), dadaR=list()){
+    new("PairedDada",
+        dadaF = dadaF,
+        dadaR = dadaR)
+}
+
 setMethod("length", "PairedDada", function(x){
     length(x@dadaF)
 })
