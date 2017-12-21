@@ -18,18 +18,19 @@ dadaMulti <- function(MA, ...){
     PPdada <- lapply(seq_along(MA@PrimerPairsSet), function (i){
        dF <- lapply(MA@derep[[i]], function (x) slot(x, "derepF"))
        dR <- lapply(MA@derep[[i]], function (x) slot(x,  "derepR"))
-        cat("\n\namplicon", rownames(MA)[i], "dada estimation of sequence variants from ",
+       cat("\n\namplicon", MA@PrimerPairsSet@names[i],
+           "dada estimation of sequence variants from ",
             length(dF), " of ",
-            ncol(MA), "possible sample files\n\n")
-        ## run both functions
-        dadaF <- dada(dF, ...)
-        dadaR <- dada(dR, ...)
-        Pdada <- lapply(seq_along(dadaF), function (w){
-            new("PairedDada",
-                dadaF = dadaF[w],
-                dadaR = dadaR[w])
-        })
-        return(Pdada)
+           length(MA@PairedReadFileSet), "possible sample files\n\n")
+       if(length(dF)>0 && length(dR)>0){
+           ## run both functions
+           dadaF <- dada(dF, ...)
+           dadaR <- dada(dR, ...)
+           Pdada <- lapply(seq_along(dadaF), function (w){
+               PairedDada(dadaF = dadaF[w], dadaR = dadaR[w])
+           })
+       } else {Pdada <- PairedDada() cat("skipping amplicon")}
+       return(Pdada)
     })
     initialize(MA, dada=PPdada)
 }
