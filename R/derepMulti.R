@@ -1,8 +1,8 @@
 ##' Dereplicate sequences in fastq files
 ##'
-##' An interface to \code{\link{derepFastq}} which itself uses
-##' \code{\link{FastqStreamer}} for dereplicating amplicon sequences
-##' from fastq or compressed fastq files. 
+##' An interface to \code{\link[dada2]{derepFastq}} which itself uses
+##' \code{\link[ShortRead]{FastqStreamer}} for dereplicating amplicon
+##' sequences from fastq or compressed fastq files.
 ##'
 ##' @title derepMulti
 ##' @param MA MultiAmplicon object to be dereplicated

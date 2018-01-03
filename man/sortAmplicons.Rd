@@ -31,8 +31,8 @@ MultiAmplicon: By default (countOnly=FALSE) a
     MultiAmplicon-class object is returned with the
     stratifiedFiles slot populated. Stratified file names are
     constructed using a unique string created by
-    \code{\link{tempfile()}} and stored in R's
-    \code{\link{tempdir()}}. If the countOnly is set only a
+    \code{\link{[base]tempfile}} and stored in R's
+    \code{\link[base]{tempdir}}. If the countOnly is set only a
     numeric matrix of read counts is returned.
 }
 \description{

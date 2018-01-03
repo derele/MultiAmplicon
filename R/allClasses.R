@@ -66,14 +66,14 @@ setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
 ##' primers.
 ##'
 ##' The PrimerPairsSet class is a container for storing primer pairs.
-##' This means exactly two \code{\link{DNAStrinSet}} objects of the
-##' same length specifying primer-pairs. Primer sequences can be
-##' provided as character strings and will be converted to
-##' \code{\link{DNAStringSet}} by the constructor function of the same
-##' name. primerF and primerR have to be of the same length to specify
-##' primer pairs (primerF[i].primerR[i]; for i in 1:length(PrimerF)).
-##' Warnings are given if primer sequences are of unusal length (<16
-##' or >26 bases).
+##' This means exactly two \code{\link[Biostrings]{DNAStrinSet}}
+##' objects of the same length specifying primer-pairs. Primer
+##' sequences can be provided as character strings and will be
+##' converted to \code{\link[Biostrings]{DNAStringSet}} by the
+##' constructor function of the same name. primerF and primerR have to
+##' be of the same length to specify primer pairs
+##' (primerF[i].primerR[i]; for i in 1:length(PrimerF)).  Warnings are
+##' given if primer sequences are of unusal length (<16 or >26 bases).
 ##'
 ##' @slot primerF DNAStringSet. Can be named or unnamed.
 ##' @slot primerR DNAStringSet of the same length. Can be named or
@@ -100,7 +100,7 @@ setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
 ##' @param primerR Character vector or DNAStringSet of the same
 ##'     length. Can be named or unnamed.
 ##' 
-##' @seealso \code{\link{DNAStringSet}}
+##' @seealso \code{\link[Biostrings]{DNAStringSet}}
 ##' @importFrom Biostrings DNAStringSet
 ##' @rdname PrimerPairsSet-class
 ##' @title PrimerPairsSet-class
@@ -147,14 +147,15 @@ setMethod(names, "PrimerPairsSet", function (x) x@names)
 
 ##' A pair of two derep objects
 ##'
-##' derep-class objects as defined by the package \code{\link{derep2}}
-##' are bundeled as forward and reverse read pairs in this object
+##' derep-class objects as defined by the package
+##' \code{\link[dada2]{derepFastq}} are bundeled as forward and
+##' reverse read pairs in this object
 ##' @title derep-class
 ##'
-##' @slot derep object containing forward read pairs created
-##'     by \code{\link{dada2}}'s \code{\link{derepFastq}} function
+##' @slot derep object containing forward read pairs created by
+##'     \code{dada2}'s \code{\link[dada2]{derepFastq}} function
 ##' @slot derepR derep object containing reverse read pairscreated by
-##'     \code{\link{dada2}}'s \code{\link{derepFastq}} function
+##'     \code{dada2}'s \code{\link[dada2]{derepFastq}} function
 ##' @return A PairedDerep-class object
 ##' @author Emanuel Heitlinger
 
@@ -179,8 +180,9 @@ setMethod("length", "PairedDerep", function(x){
 
 ##' A pair of two dada objects 
 ##'
-##' dada-class objects as defined by the package \code{\link{dada2}}
-##' are bundeled as forward and reverse read pairs in this object
+##' dada-class objects as defined by the package
+##' \code{\link[dada2]{dada2}} are bundeled as forward and reverse
+##' read pairs in this object
 ##'
 ##' @title PairedDada-class
 ##' @author Emanuel Heitlinger
@@ -281,7 +283,7 @@ setMethod("length", "PairedDada", function(x){
 ##' a particular sample (input file pair) and amplicon (input primer
 ##' pair)
 ##' 
-##' @seealso \code{\link{derep}},\code{\link{dada}}
+##' @seealso \code{\link[dada2]{derep}},\code{\link[dada2]{dada}}
 ##' @importFrom dada2 derepFastq dada
 ##' @rdname MultiAmplicon-class
 ##' @title MultiAmplicon-class

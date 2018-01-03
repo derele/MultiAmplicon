@@ -11,17 +11,18 @@ A PairedDerep-class object
 A pair of two derep objects
 }
 \details{
-derep-class objects as defined by the package \code{\link{derep2}}
-are bundeled as forward and reverse read pairs in this object
+derep-class objects as defined by the package
+\code{\link[dada2]{derepFastq}} are bundeled as forward and
+reverse read pairs in this object
 }
 \section{Slots}{
 
 \describe{
-\item{\code{derep}}{object containing forward read pairs created
-by \code{\link{dada2}}'s \code{\link{derepFastq}} function}
+\item{\code{derep}}{object containing forward read pairs created by
+\code{dada2}'s \code{\link[dada2]{derepFastq}} function}
 
 \item{\code{derepR}}{derep object containing reverse read pairscreated by
-\code{\link{dada2}}'s \code{\link{derepFastq}} function}
+\code{dada2}'s \code{\link[dada2]{derepFastq}} function}
 }}
 \author{
 Emanuel Heitlinger

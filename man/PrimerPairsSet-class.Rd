@@ -25,14 +25,14 @@ primers.
 }
 \details{
 The PrimerPairsSet class is a container for storing primer pairs.
-This means exactly two \code{\link{DNAStrinSet}} objects of the
-same length specifying primer-pairs. Primer sequences can be
-provided as character strings and will be converted to
-\code{\link{DNAStringSet}} by the constructor function of the same
-name. primerF and primerR have to be of the same length to specify
-primer pairs (primerF[i].primerR[i]; for i in 1:length(PrimerF)).
-Warnings are given if primer sequences are of unusal length (<16
-or >26 bases).
+This means exactly two \code{\link[Biostrings]{DNAStrinSet}}
+objects of the same length specifying primer-pairs. Primer
+sequences can be provided as character strings and will be
+converted to \code{\link[Biostrings]{DNAStringSet}} by the
+constructor function of the same name. primerF and primerR have to
+be of the same length to specify primer pairs
+(primerF[i].primerR[i]; for i in 1:length(PrimerF)).  Warnings are
+given if primer sequences are of unusal length (<16 or >26 bases).
 }
 \section{Slots}{
 
@@ -62,6 +62,6 @@ character strings.}
 Emanuel Heitlinger
 }
 \seealso{
-\code{\link{DNAStringSet}}
+\code{\link[Biostrings]{DNAStringSet}}
 }
 

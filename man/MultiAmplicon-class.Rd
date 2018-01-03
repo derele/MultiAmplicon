@@ -86,6 +86,6 @@ pairs of dada-class objects created by \code{\link{dada2}}’s
 Emanuel Heitlinger
 }
 \seealso{
-\code{\link{derep}},\code{\link{dada}}
+\code{\link[dada2]{derep}},\code{\link[dada2]{dada}}
 }
 
