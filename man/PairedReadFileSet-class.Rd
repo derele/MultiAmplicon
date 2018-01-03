@@ -2,11 +2,14 @@
 % Please edit documentation in R/allClasses.R
 \docType{class}
 \name{PairedReadFileSet-class}
+\alias{PairedReadFileSet}
 \alias{PairedReadFileSet-class}
 \title{A class representing file paths to paired end reads.}
 \usage{
 ## Constructors:
 PairedReadFileSet(readsF, readsR)
+
+PairedReadFileSet(readsF, readsR, names = character())
 }
 \arguments{
 \item{readsF}{The path and filenames containing forward (R1) reads}
@@ -23,6 +26,11 @@ for their existence. Usually these are the filnames of quality
 filtered fastq files already stratified into samples (one file
 pair for each sample).
 }
+\section{Functions}{
+\itemize{
+\item \code{PairedReadFileSet}: Constructor for
+PairedReadFileSet-class
+}}
 \section{Slots}{
 
 \describe{

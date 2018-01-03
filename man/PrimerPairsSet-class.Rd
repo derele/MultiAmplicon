@@ -2,11 +2,14 @@
 % Please edit documentation in R/allClasses.R
 \docType{class}
 \name{PrimerPairsSet-class}
+\alias{PrimerPairsSet}
 \alias{PrimerPairsSet-class}
 \title{A class representing sequences of forward and reverse
 primers.}
 \usage{
 ## Constructor:
+
+PrimerPairsSet(primerF, primerR)
 
 PrimerPairsSet(primerF, primerR)
 }
@@ -31,6 +34,11 @@ be of the same length to specify primer pairs
 (primerF[i].primerR[i]; for i in 1:length(PrimerF)).  Warnings are
 given if primer sequences are of unusal length (<16 or >26 bases).
 }
+\section{Functions}{
+\itemize{
+\item \code{PrimerPairsSet}: Constructor for
+PrimerPairsSet-class
+}}
 \section{Slots}{
 
 \describe{

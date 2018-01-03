@@ -2,6 +2,7 @@
 % Please edit documentation in R/allClasses.R
 \docType{class}
 \name{MultiAmplicon-class}
+\alias{MultiAmplicon}
 \alias{MultiAmplicon-class}
 \title{A class combining sequences of forward and reverse primers (in a
 \code{\link{PrimerPairsSet-class}}) plus file names of paired end
@@ -10,6 +11,11 @@ sequencing files (in a \code{\link{PairedReadFileSet-class}}).}
 ## Constructors:
 
 MultiAmplicon(PrimerPairsSet, PairedReadFileSet)
+
+MultiAmplicon(PrimerPairsSet = PrimerPairsSet(),
+  PairedReadFileSet = PairedReadFileSet(), rawCounts = matrix(),
+  stratifiedFiles = list(), derep = list(), dada = list(),
+  mergers = list(), sequenceTable = list(), sequenceTableNoChime = list())
 }
 \arguments{
 \item{PrimerPairsSet}{a set of primer pairs specifiying your
@@ -45,6 +51,11 @@ The MultiAmplicon class is a container for storing primer pairs,
 read files and processed data in an 'amplicon x samples'
 format. Slots
 }
+\section{Functions}{
+\itemize{
+\item \code{MultiAmplicon}: Constructor for
+MultiAmplicon-class
+}}
 \section{Slots}{
 
 \describe{
