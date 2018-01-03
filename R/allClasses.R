@@ -42,6 +42,8 @@ setClass("PairedReadFileSet",
              else{TRUE}
          })
 
+##' @describeIn PairedReadFileSet-class Constructor for
+##'     PairedReadFileSet-class
 PairedReadFileSet <- function(readsF,
                               readsR, names=character()){
     ## construct from names if they exist
@@ -121,6 +123,8 @@ setClass("PrimerPairsSet", contains = "DNAStringSet",
                  "Same number of forward and reverse primer sequences needed to constitute Primer-Pairs"}
 })
 
+##' @describeIn PrimerPairsSet-class Constructor for
+##'     PrimerPairsSet-class
 PrimerPairsSet <- function(primerF, primerR){
     ## if names exist construct primer names
     if(length(names(primerR)) == length(primerR) &&
@@ -287,7 +291,6 @@ setMethod("length", "PairedDada", function(x){
 ##' @author Emanuel Heitlinger
 ##' @export MultiAmplicon
 ##' @exportClass MultiAmplicon
-
 setClass("MultiAmplicon",
          representation(PrimerPairsSet="PrimerPairsSet",
                         PairedReadFileSet="PairedReadFileSet",
@@ -299,7 +302,8 @@ setClass("MultiAmplicon",
                         sequenceTable="list",
                         sequenceTableNoChime="list"))
 
-
+##' @describeIn MultiAmplicon-class Constructor for
+##'     MultiAmplicon-class
 MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
                           PairedReadFileSet = PairedReadFileSet(),
                           rawCounts = matrix(),

@@ -1,8 +1,5 @@
 ################################################################################
-#' @title show-methods
-#' @name show-methods
-#' @rdname show-methods
-#' @param object A PairedReadFileSet-class object to be shown
+##' @rdname PairedReadFileSet-class
 setMethod("show", "PairedReadFileSet", function(object) {
     cat("  A ", class(object),
         " instance of length ", length(object@readsF), 
@@ -18,8 +15,7 @@ setMethod("show", "PairedReadFileSet", function(object) {
 })
 
 ################################################################################
-#' @rdname show-methods
-#' @param object A PrimerPairsSet-class object to be shown
+##' @rdname PrimerPairsSet-class
 setMethod("show", "PrimerPairsSet", function(object){
     cat("  A ", class(object),
         " instance of length ", length(object@primerF), 
@@ -34,8 +30,7 @@ setMethod("show", "PrimerPairsSet", function(object){
 
 
 ################################################################################
-#' @rdname show-methods
-#' @param object A MultiAmplicon-class object to be shown
+##' @rdname MultiAmplicon-class 
 setMethod("show", "MultiAmplicon", function(object){
     cat("  A ", class(object),
         " instance of dimensions ", length(object@PrimerPairsSet), " x ",
