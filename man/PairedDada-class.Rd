@@ -2,8 +2,15 @@
 % Please edit documentation in R/allClasses.R
 \docType{class}
 \name{PairedDada-class}
+\alias{PairedDada}
 \alias{PairedDada-class}
+\alias{length,PairedDada-method}
 \title{PairedDada-class}
+\usage{
+PairedDada(dadaF = list(), dadaR = list())
+
+\S4method{length}{PairedDada}(x)
+}
 \description{
 A pair of two dada objects
 }

@@ -3,7 +3,11 @@
 \docType{class}
 \name{PairedDerep-class}
 \alias{PairedDerep-class}
+\alias{length,PairedDerep-method}
 \title{PiredDerep-class}
+\usage{
+\S4method{length}{PairedDerep}(x)
+}
 \value{
 A PairedDerep-class object
 }

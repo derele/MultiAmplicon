@@ -4,6 +4,9 @@
 \name{MultiAmplicon-class}
 \alias{MultiAmplicon}
 \alias{MultiAmplicon-class}
+\alias{colnames,MultiAmplicon-method}
+\alias{ncol,MultiAmplicon-method}
+\alias{rownames,MultiAmplicon-method}
 \alias{show,MultiAmplicon-method}
 \title{A class combining sequences of forward and reverse primers (in a
 \code{\link{PrimerPairsSet-class}}) plus file names of paired end
@@ -17,6 +20,12 @@ MultiAmplicon(PrimerPairsSet = PrimerPairsSet(),
   PairedReadFileSet = PairedReadFileSet(), rawCounts = matrix(),
   stratifiedFiles = list(), derep = list(), dada = list(),
   mergers = list(), sequenceTable = list(), sequenceTableNoChime = list())
+
+\S4method{colnames}{MultiAmplicon}(x)
+
+\S4method{rownames}{MultiAmplicon}(x)
+
+\S4method{ncol}{MultiAmplicon}(x)
 
 \S4method{show}{MultiAmplicon}(object)
 }

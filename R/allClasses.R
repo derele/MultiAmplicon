@@ -60,6 +60,7 @@ PairedReadFileSet <- function(readsF,
 }
 
 ## Methods
+##' @rdname PairedReadFileSet-class
 setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
 
 ##' A class representing sequences of forward and reverse
@@ -106,7 +107,6 @@ setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
 ##' @author Emanuel Heitlinger
 ##' @export PrimerPairsSet
 ####  ##' @exportClass PrimerPairsSet-class
-
 setClass("PrimerPairsSet", contains = "DNAStringSet",
          representation(primerF="DNAStringSet", primerR="DNAStringSet",
                         names="character", 
@@ -142,8 +142,10 @@ PrimerPairsSet <- function(primerF, primerR){
 }
 
 ## Methods
+##' @rdname PrimerPairsSet-class
 setMethod(length, "PrimerPairsSet", function(x) length(x@primerF))
 
+##' @rdname PrimerPairsSet-class
 setMethod(names, "PrimerPairsSet", function (x) x@names)
 
 ##' A pair of two derep objects
@@ -159,7 +161,6 @@ setMethod(names, "PrimerPairsSet", function (x) x@names)
 ##'     \code{dada2}'s \code{\link[dada2]{derepFastq}} function
 ##' @return A PairedDerep-class object
 ##' @author Emanuel Heitlinger
-
 setClass("PairedDerep",
          slots = c(derepF="list", derepR="list"),
          validity=function(object) {
@@ -167,6 +168,7 @@ setClass("PairedDerep",
                  "Same number of forward and reverse derep objects needed to constitute forward and reverse sequence read pairs"
              }})
 
+##' @rdname PairedDerep-class
 setMethod("length", "PairedDerep", function(x){
     length(x@derepF)
 })
@@ -187,7 +189,6 @@ setMethod("length", "PairedDerep", function(x){
 ##'
 ##' @title PairedDada-class
 ##' @author Emanuel Heitlinger
-
 setClass("PairedDada",
          slots = c(dadaF="list", dadaR="list"),
          validity=function(object) {
@@ -195,12 +196,14 @@ setClass("PairedDada",
                  "Same number of forward and reverse dada objects needed to constitute forward and reverse sequence read pairs"
              }})
 
+##' @rdname PairedDada-class
 PairedDada <- function(dadaF=list(), dadaR=list()){
     new("PairedDada",
         dadaF = dadaF,
         dadaR = dadaR)
 }
 
+##' @rdname PairedDada-class
 setMethod("length", "PairedDada", function(x){
     length(x@dadaF)
 })
@@ -320,10 +323,16 @@ MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
         )
 }
 
+##' @rdname MultiAmplicon-class
 setMethod("colnames", "MultiAmplicon", function (x) x@PairedReadFileSet@names)
+
+##' @rdname MultiAmplicon-class
 setMethod("rownames", "MultiAmplicon", function (x) x@PrimerPairsSet@names)
 
+##' @rdname MultiAmplicon-class
 setMethod("ncol", "MultiAmplicon", function (x) length(x@PairedReadFileSet))
+
+
 setMethod("nrow", "MultiAmplicon", function (x) length(x@PrimerPairsSet))
 
 ##' Access rawCounts of a MultiAmplicon object
@@ -338,6 +347,8 @@ setMethod("nrow", "MultiAmplicon", function (x) length(x@PrimerPairsSet))
 ##' @author Emanuel Heitlinger
 ##' @export
 setGeneric("rawCounts", function(x){standardGeneric("rawCounts")})
+
+##' @rdname rawCounts
 setMethod("rawCounts", "MultiAmplicon", function(x) x@rawCounts)
 
 

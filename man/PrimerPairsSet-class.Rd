@@ -5,6 +5,8 @@
 \alias{PrimerPairsSet}
 \alias{PrimerPairsSet-class}
 \alias{[,PrimerPairsSet,ANY,ANY,ANY-method}
+\alias{length,PrimerPairsSet-method}
+\alias{names,PrimerPairsSet-method}
 \alias{show,PrimerPairsSet-method}
 \title{A class representing sequences of forward and reverse
 primers.}
@@ -14,6 +16,10 @@ primers.}
 PrimerPairsSet(primerF, primerR)
 
 PrimerPairsSet(primerF, primerR)
+
+\S4method{length}{PrimerPairsSet}(x)
+
+\S4method{names}{PrimerPairsSet}(x)
 
 \S4method{show}{PrimerPairsSet}(object)
 

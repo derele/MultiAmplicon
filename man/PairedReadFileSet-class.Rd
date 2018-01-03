@@ -4,6 +4,7 @@
 \name{PairedReadFileSet-class}
 \alias{PairedReadFileSet}
 \alias{PairedReadFileSet-class}
+\alias{length,PairedReadFileSet-method}
 \alias{show,PairedReadFileSet-method}
 \title{A class representing file paths to paired end reads.}
 \usage{
@@ -11,6 +12,8 @@
 PairedReadFileSet(readsF, readsR)
 
 PairedReadFileSet(readsF, readsR, names = character())
+
+\S4method{length}{PairedReadFileSet}(x)
 
 \S4method{show}{PairedReadFileSet}(object)
 }
