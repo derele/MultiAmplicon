@@ -38,10 +38,10 @@ plot_Amplicon_numbers <- function (MAmatrix, transf=function(x) log10(x+1), ...)
             transf_function <- gsub('\\.Primitive\\(\\"(.*)\\"\\)', "\\1",
                                     transf_function)
         }
-        pheatmap(transf(MAmatrix),
-                 main = paste(transf_function,
-                              "transformed",
-                              "read number"),
-                     ...)
+        pheatmap::pheatmap(transf(MAmatrix),
+                           main = paste(transf_function,
+                                        "transformed",
+                                        "read number"),
+                           ...)
     }
 }
