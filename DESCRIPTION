@@ -8,7 +8,7 @@ biocViews:
     Metagenomics, Clustering, Classification, MultipleComparison,
     GeneticVariability
 Imports:
-    Biostrings (>= 2.42.0)
+    Biostrings (>= 2.42.0), pheatmap
 Depends:
     R (>= 3.3.1),
     ShortRead (>= 1.30.0), 
