@@ -3,7 +3,9 @@
 \docType{class}
 \name{MultiAmplicon-class}
 \alias{MultiAmplicon-class}
-\title{MultiAmplicon-class}
+\title{A class combining sequences of forward and reverse primers (in a
+\code{\link{PrimerPairsSet-class}}) plus file names of paired end
+sequencing files (in a \code{\link{PairedReadFileSet-class}}).}
 \usage{
 ## Constructors:
 
@@ -11,15 +13,15 @@ MultiAmplicon(PrimerPairsSet, PairedReadFileSet)
 }
 \arguments{
 \item{PrimerPairsSet}{a set of primer pairs specifiying your
-amplicons see \code{\link{PrimerPairsSet}-class}}
+amplicons see \code{\link{PrimerPairsSet-class}}}
 
 \item{PairedReadFileSet}{a set of paired end sequencing data fiels
-    \code{\link{PairedReadFileSet}-class}
+    \code{\link{PairedReadFileSet-class}}
 
 Accessor-like methods:
 
 In the code snippets below, 'x' is an
-\code{\link{MultiAmplicon}-class} object.
+\code{\link{MultiAmplicon-class}} object.
 
 'nrow(x)' An integer giving the number of primer pairs in the
 object
@@ -38,15 +40,7 @@ read filnames (e.g. used to store sample names) see also
 a particular sample (input file pair) and amplicon (input primer
 pair)}
 }
-\value{
-MultiAmplicon-class
-}
 \description{
-A class combining sequences of forward and reverse primers (in a
-\code{\link{PrimerPairsSet}-class}) plus file names of paired end
-sequencing files (in a \code{\link{PairedReadFileSet}-class}).
-}
-\details{
 The MultiAmplicon class is a container for storing primer pairs,
 read files and processed data in an 'amplicon x samples'
 format. Slots
@@ -56,7 +50,7 @@ format. Slots
 \describe{
 \item{\code{PrimerPairsSet}}{The primer pairs used in your experiment to
 specify amplicons stored in a
-\code{\link{PrimerPairsSet}-class} object.}
+\code{\link{PrimerPairsSet-class}} object.}
 
 \item{\code{PairedReadFileSet}}{The (quality filtered) fastq files (one
 file pair for each sample) that store your sequencing data.}
@@ -67,14 +61,14 @@ file pair for each sample) that store your sequencing data.}
 into amplicons and samples using the function
 \code{\link{sortAmplicons}}. Forward (sometimes called R1) and
 reverse (sometimes called R2) files are stored as a (amplicons
-x samples) matrix of \code{\link{PairedReadFileSet}-class}
+x samples) matrix of \code{\link{PairedReadFileSet-class}}
 objects.}
 
-\item{\code{derep}}{A \code{\link{PairedDerep}-class} object containing
+\item{\code{derep}}{A \code{\link{PairedDerep-class}} object containing
 pairs of derep-class objects created by \code{dada2}’s
 \code{\link[dada2]{derepFastq}} function}
 
-\item{\code{dadaderep}}{A \code{\link{PairedDada}-class} object containing
+\item{\code{dadaderep}}{A \code{\link{PairedDada-class}} object containing
 pairs of dada-class objects created by \code{dada2}’s
 \code{\link[dada2]{dada}} function}
 

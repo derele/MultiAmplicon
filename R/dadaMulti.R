@@ -1,4 +1,4 @@
-##' A wrapper around \code{\link[dada2]{dada}} from \link{\code{dada2}}
+##' A wrapper around \code{\link[dada2]{dada}} from \code{dada2}
 ##'
 ##' The function runs \code{\link[dada2]{dada}} from
 ##' \code{\link[dada2]{dada}} to performe 'High resolution sample

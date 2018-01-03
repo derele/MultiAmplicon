@@ -8,8 +8,8 @@
 ##' fastq streaming).
 ##' 
 ##' @title sortAmplicons
-##' @param MA MultiAmplicon-class object containing a set of paired
-##'     end files and a primer-pairs set.
+##' @param MA \code{\link{MultiAmplicon-class}} object containing a
+##'     set of paired end files and a primer-pairs set.
 ##' @param n parameter passed to the yield functions of package
 ##'     ShortRead. This controls the memory consumption during
 ##'     streaming. Lower values result in lower memory requirements
@@ -22,10 +22,10 @@
 ##'     multiple starting positions or allowing error. This could lead
 ##'     to read pairs being assigned to multiple amplicons.
 ##' @return MultiAmplicon: By default (countOnly=FALSE) a
-##'     MultiAmplicon-class object is returned with the
+##'     \code{\link{MultiAmplicon-class}} object is returned with the
 ##'     stratifiedFiles slot populated. Stratified file names are
 ##'     constructed using a unique string created by
-##'     \code{\link{[base]{tempfile}} and stored in R's
+##'     \code{\link[base]{tempfile}} and stored in R's
 ##'     \code{\link[base]{tempdir}}. If the countOnly is set only a
 ##'     numeric matrix of read counts is returned.
 ##' @rdname sortAmplicons

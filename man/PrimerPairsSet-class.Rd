@@ -3,7 +3,8 @@
 \docType{class}
 \name{PrimerPairsSet-class}
 \alias{PrimerPairsSet-class}
-\title{PrimerPairsSet-class}
+\title{A class representing sequences of forward and reverse
+primers.}
 \usage{
 ## Constructor:
 
@@ -20,10 +21,6 @@ length. Can be named or unnamed.}
 PrimerPairsSet-class
 }
 \description{
-A class representing sequences of forward and reverse
-primers.
-}
-\details{
 The PrimerPairsSet class is a container for storing primer pairs.
 This means exactly two \code{\link[Biostrings]{DNAStringSet}}
 objects of the same length specifying primer-pairs. Primer

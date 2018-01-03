@@ -9,8 +9,8 @@
 sortAmplicons(MA, n = 1e+06, countOnly = FALSE, ...)
 }
 \arguments{
-\item{MA}{MultiAmplicon-class object containing a set of paired
-end files and a primer-pairs set.}
+\item{MA}{\code{\link{MultiAmplicon-class}} object containing a
+set of paired end files and a primer-pairs set.}
 
 \item{n}{parameter passed to the yield functions of package
 ShortRead. This controls the memory consumption during
@@ -25,6 +25,15 @@ read counts is returned}
 Biostrings::isMatchingStartingAt. Be careful when using
 multiple starting positions or allowing error. This could lead
 to read pairs being assigned to multiple amplicons.}
+}
+\value{
+MultiAmplicon: By default (countOnly=FALSE) a
+    \code{\link{MultiAmplicon-class}} object is returned with the
+    stratifiedFiles slot populated. Stratified file names are
+    constructed using a unique string created by
+    \code{\link[base]{tempfile}} and stored in R's
+    \code{\link[base]{tempdir}}. If the countOnly is set only a
+    numeric matrix of read counts is returned.
 }
 \description{
 Sort different amplicons into a fully stratified samples x

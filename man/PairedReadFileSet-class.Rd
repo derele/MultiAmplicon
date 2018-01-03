@@ -3,7 +3,7 @@
 \docType{class}
 \name{PairedReadFileSet-class}
 \alias{PairedReadFileSet-class}
-\title{PairedReadFileSet-class}
+\title{A class representing file paths to paired end reads.}
 \usage{
 ## Constructors:
 PairedReadFileSet(readsF, readsR)
@@ -17,9 +17,6 @@ PairedReadFileSet(readsF, readsR)
 PairedReadFileSet
 }
 \description{
-A class representing file paths to paired end reads.
-}
-\details{
 Two character vectors of the same length specifying file names of
 paired end reads can be stored in this class. Filenames a checked
 for their existence. Usually these are the filnames of quality
