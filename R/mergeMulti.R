@@ -20,12 +20,12 @@
 ##' @author Emanuel Heitlinger
 mergeMulti <- function(MA, ...){
     mergers <- lapply(seq_along(MA@PrimerPairsSet), function (i){     
-        if(length(MA3@dada[[i]]) > 0){
+        if(length(MA@dada[[i]]) > 0){
             daF <- unlist(lapply(MA@dada[[i]], "slot", "dadaF"), recursive=FALSE)
             deF <- lapply(MA@derep[[i]], "slot", "derepF")
             daR <- unlist(lapply(MA@dada[[i]], "slot", "dadaR"), recursive=FALSE)
             deR <- lapply(MA@derep[[i]], "slot", "derepR")
-            cat("merging sequences from " , length(MA3@dada[[i]]),
+            cat("merging sequences from " , length(MA@dada[[i]]),
                 "samples for amplicon ",
                 MA@PrimerPairsSet@names[[i]], "\n")
             MP <- mergePairs(daF, deF, daR, deR, ...)
@@ -35,7 +35,7 @@ mergeMulti <- function(MA, ...){
             cat("DONE\n\n")
             return(MP)} else{
                           cat("skipping empty amplicon (sequences for" ,
-                              length(MA3@dada[[i]]), "samples)  ",
+                              length(MA@dada[[i]]), "samples)  ",
                               MA@PrimerPairsSet@names[[i]], "\n\n")
                           return(list())}
     })
