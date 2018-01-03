@@ -6,14 +6,14 @@ setMethod("[", c("PrimerPairsSet", "ANY"),  function(x, i){
     PrimerPairsSet(primerF=as.character(newF), primerR=as.character(newR))
 })
 
-##' @rdname PairedReadFileSet
+##' @rdname PairedReadFileSet-class
 setMethod("[", c("PairedReadFileSet", "ANY"), function(x, i){
     newF <- x@readsF[i]
     newR <- x@readsR[i]
     PairedReadFileSet(newF, newR)
 })
 
-##' @rdname PairedDerep
+##' @rdname PairedDerep-class
 setMethod("[", c("PairedDerep", "ANY"), function(x, i){
     newF <- x@derepF[i]
     newR <- x@derepR[i]
@@ -21,7 +21,7 @@ setMethod("[", c("PairedDerep", "ANY"), function(x, i){
         derepF=newF, derepR=newR)
 })
 
-##' @rdname PairedDada
+##' @rdname PairedDada-class
 setMethod("[", c("PairedDada", "ANY"), function(x, i){
     newF <- x@dadaF[i]
     newR <- x@dadaR[i]
@@ -45,7 +45,7 @@ setMethod("[", c("PairedDada", "ANY"), function(x, i){
 ## ##' @export
 ## ##' @author Emanuel Heitlinger
 
-##' @rdname MultiAmplicon
+##' @rdname MultiAmplicon-class
 setMethod("[", "MultiAmplicon",
           function(x, i=TRUE, j=TRUE, drop="missing"){
               newPrimer <- x@PrimerPairsSet[i]

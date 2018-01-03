@@ -354,23 +354,14 @@ setMethod("rownames", "MultiAmplicon", function (x) x@PrimerPairsSet@names)
 ##' @rdname MultiAmplicon-class
 setMethod("ncol", "MultiAmplicon", function (x) length(x@PairedReadFileSet))
 
-
+##' @rdname MultiAmplicon-class
 setMethod("nrow", "MultiAmplicon", function (x) length(x@PrimerPairsSet))
 
-##' Access rawCounts of a MultiAmplicon object
-##'
-##' An accessor for the 'rawCounts' slot of a
-##' \code{\link{MultiAmplicon-class}} object
-##' 
-##' @title rawCounts
-##' @param x A \code{\link{MultiAmplicon-class}} object
-##' @return A numerical matrix of counts for each amplicon
-##'     (primer-pair) matched in each sample (paired read file)
-##' @author Emanuel Heitlinger
+##' @rdname MultiAmplicon-class
 ##' @export
 setGeneric("rawCounts", function(x){standardGeneric("rawCounts")})
 
-##' @rdname rawCounts
+##' @rdname MultiAmplicon-class
 setMethod("rawCounts", "MultiAmplicon", function(x) x@rawCounts)
 
 
