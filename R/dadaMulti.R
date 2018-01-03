@@ -29,7 +29,10 @@ dadaMulti <- function(MA, ...){
            Pdada <- lapply(seq_along(dadaF), function (w){
                PairedDada(dadaF = dadaF[w], dadaR = dadaR[w])
            })
-       } else {Pdada <- PairedDada() cat("skipping amplicon")}
+       } else {
+           Pdada <- PairedDada()
+           cat("skipping amplicon")
+       }
        return(Pdada)
     })
     initialize(MA, dada=PPdada)
