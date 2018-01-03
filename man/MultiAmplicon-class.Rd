@@ -34,7 +34,28 @@ MultiAmplicon(PrimerPairsSet = PrimerPairsSet(),
 amplicons see \code{\link{PrimerPairsSet-class}}}
 
 \item{PairedReadFileSet}{a set of paired end sequencing data fiels
-    \code{\link{PairedReadFileSet-class}}
+\code{\link{PairedReadFileSet-class}}}
+
+\item{rawCounts}{Users should not supply this prameter, the slot
+is created by \code{\link{sortAmplicons}}.}
+
+\item{stratifiedFiles}{Users should not supply this prameter, the
+slot is created by \code{\link{sortAmplicons}}.}
+
+\item{derep}{Users should not supply this prameter, the slot is
+created by \code{\link{derepMulti}}}
+
+\item{dada}{Users should not supply this prameter, the slot is
+created by \code{\link{dadaMulti}}}
+
+\item{mergers}{Users should not supply this prameter, the slot is
+created by \code{\link{mergeMulti}}}
+
+\item{sequenceTable}{Users should not supply this prameter, the
+slot is created by \code{\link{sequenceTableMulti}}}
+
+\item{sequenceTableNoChime}{Users should not supply this prameter,
+    the slot is created by \code{\link{noChimeMulti}}
 
 Accessor-like methods:
 
@@ -78,7 +99,8 @@ specify amplicons stored in a
 \item{\code{PairedReadFileSet}}{The (quality filtered) fastq files (one
 file pair for each sample) that store your sequencing data.}
 
-\item{\code{rawCounts}}{}
+\item{\code{rawCounts}}{A numeric matrix of sequencing read counts per
+amplicon and sample}
 
 \item{\code{stratifiedFiles}}{temporary files as a result of stratifying
 into amplicons and samples using the function
@@ -91,7 +113,7 @@ objects.}
 pairs of derep-class objects created by \code{dada2}’s
 \code{\link[dada2]{derepFastq}} function}
 
-\item{\code{dadaderep}}{A \code{\link{PairedDada-class}} object containing
+\item{\code{dada}}{A \code{\link{PairedDada-class}} object containing
 pairs of dada-class objects created by \code{dada2}’s
 \code{\link[dada2]{dada}} function}
 

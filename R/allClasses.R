@@ -232,7 +232,8 @@ setMethod("length", "PairedDada", function(x){
 ##' @slot PairedReadFileSet The (quality filtered) fastq files (one
 ##'     file pair for each sample) that store your sequencing data.
 ##'
-##' @slot rawCounts
+##' @slot rawCounts A numeric matrix of sequencing read counts per
+##'     amplicon and sample
 ##'
 ##' @slot stratifiedFiles temporary files as a result of stratifying
 ##'     into amplicons and samples using the function
@@ -245,7 +246,7 @@ setMethod("length", "PairedDada", function(x){
 ##'     pairs of derep-class objects created by \code{dada2}’s
 ##'     \code{\link[dada2]{derepFastq}} function
 ##'
-##' @slot dadaderep A \code{\link{PairedDada-class}} object containing
+##' @slot dada A \code{\link{PairedDada-class}} object containing
 ##'     pairs of dada-class objects created by \code{dada2}’s
 ##'     \code{\link[dada2]{dada}} function
 ##'
@@ -267,6 +268,27 @@ setMethod("length", "PairedDada", function(x){
 ##' @param PairedReadFileSet a set of paired end sequencing data fiels
 ##'     \code{\link{PairedReadFileSet-class}}
 ##'
+##' @param rawCounts Users should not supply this prameter, the slot
+##'     is created by \code{\link{sortAmplicons}}.
+##'
+##' @param stratifiedFiles Users should not supply this prameter, the
+##'     slot is created by \code{\link{sortAmplicons}}.
+##'
+##' @param derep Users should not supply this prameter, the slot is
+##'     created by \code{\link{derepMulti}}
+##'
+##' @param dada Users should not supply this prameter, the slot is
+##'     created by \code{\link{dadaMulti}}
+##' 
+##' @param mergers Users should not supply this prameter, the slot is
+##'     created by \code{\link{mergeMulti}}
+##'
+##' @param sequenceTable Users should not supply this prameter, the
+##'     slot is created by \code{\link{sequenceTableMulti}}
+##'
+##' @param sequenceTableNoChime Users should not supply this prameter,
+##'     the slot is created by \code{\link{noChimeMulti}}
+##' 
 ##' Accessor-like methods:
 ##' 
 ##' In the code snippets below, 'x' is an
