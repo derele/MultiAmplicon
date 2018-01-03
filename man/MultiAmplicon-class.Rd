@@ -16,10 +16,6 @@
 \code{\link{PrimerPairsSet-class}}) plus file names of paired end
 sequencing files (in a \code{\link{PairedReadFileSet-class}}).}
 \usage{
-## Constructors:
-
-MultiAmplicon(PrimerPairsSet, PairedReadFileSet)
-
 MultiAmplicon(PrimerPairsSet = PrimerPairsSet(),
   PairedReadFileSet = PairedReadFileSet(), rawCounts = matrix(),
   stratifiedFiles = list(), derep = list(), dada = list(),
@@ -88,14 +84,15 @@ object
 read filnames (e.g. used to store sample names) see also
 \code{\link{PairedReadFileSet}}
 
-'rawCounts(x)' A matrix of raw sequencing read counts assigned to
-a particular sample (input file pair) and amplicon (input primer
-pair)}
+'rawCounts(x)' An accessor for the slot of the same name, returns
+raw sequencing read counts assigned to a particular sample (input
+file pair) and amplicon (input primer pair)}
 }
 \description{
 The MultiAmplicon class is a container for storing primer pairs,
 read files and processed data in an 'amplicon x samples'
-format. Slots
+format. The object is incrementally filled by running functions
+(from the package \code{dada2}) with additional slots.
 }
 \section{Functions}{
 \itemize{
@@ -113,7 +110,8 @@ specify amplicons stored in a
 file pair for each sample) that store your sequencing data.}
 
 \item{\code{rawCounts}}{A numeric matrix of sequencing read counts per
-amplicon and sample}
+amplicon and sample. Created by the function
+\code{\link{sortAmplicons}}}
 
 \item{\code{stratifiedFiles}}{temporary files as a result of stratifying
 into amplicons and samples using the function
@@ -134,7 +132,7 @@ pairs of dada-class objects created by \code{dada2}’s
 
 \item{\code{sequenceTable}}{}
 
-\item{\code{sequenceTableNoChime}}{}
+\item{\code{sequenceTableNoChime}}{MultiAmplicon(PrimerPairsSet, PairedReadFileSet)}
 }}
 \author{
 Emanuel Heitlinger

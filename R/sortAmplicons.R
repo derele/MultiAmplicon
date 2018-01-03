@@ -38,6 +38,8 @@ setGeneric(name="sortAmplicons",
            def=function(MA, n=1e6, countOnly=FALSE, ...) {
                standardGeneric("sortAmplicons")
            })
+
+##' @rdname sortAmplicons
 setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, countOnly=FALSE,
                                                      ...){
     ## the data matrix of amplicons x samples stratified counts 

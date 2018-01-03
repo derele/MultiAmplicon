@@ -223,7 +223,8 @@ setMethod("length", "PairedDada", function(x){
 ##'
 ##' The MultiAmplicon class is a container for storing primer pairs,
 ##' read files and processed data in an 'amplicon x samples'
-##' format. Slots 
+##' format. The object is incrementally filled by running functions
+##' (from the package \code{dada2}) with additional slots.
 ##' 
 ##' @slot PrimerPairsSet The primer pairs used in your experiment to
 ##'     specify amplicons stored in a
@@ -233,7 +234,8 @@ setMethod("length", "PairedDada", function(x){
 ##'     file pair for each sample) that store your sequencing data.
 ##'
 ##' @slot rawCounts A numeric matrix of sequencing read counts per
-##'     amplicon and sample
+##'     amplicon and sample. Created by the function
+##'     \code{\link{sortAmplicons}}
 ##'
 ##' @slot stratifiedFiles temporary files as a result of stratifying
 ##'     into amplicons and samples using the function
@@ -256,9 +258,6 @@ setMethod("length", "PairedDada", function(x){
 ##'
 ##' @slot sequenceTableNoChime
 ##'
-##' 
-##' @usage
-##' ## Constructors:
 ##'
 ##' MultiAmplicon(PrimerPairsSet, PairedReadFileSet)
 ##' 
@@ -307,9 +306,9 @@ setMethod("length", "PairedDada", function(x){
 ##' read filnames (e.g. used to store sample names) see also
 ##' \code{\link{PairedReadFileSet}}
 ##'
-##' 'rawCounts(x)' A matrix of raw sequencing read counts assigned to
-##' a particular sample (input file pair) and amplicon (input primer
-##' pair)
+##' 'rawCounts(x)' An accessor for the slot of the same name, returns
+##' raw sequencing read counts assigned to a particular sample (input
+##' file pair) and amplicon (input primer pair)
 ##' 
 ##' @seealso \code{\link[dada2]{derepFastq}},\code{\link[dada2]{dada}}
 ##' @importFrom dada2 derepFastq dada
