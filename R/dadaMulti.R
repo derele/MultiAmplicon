@@ -11,6 +11,7 @@
 ##'     \code{\link{dada}} from \code{\link{dada}}
 ##' @return MultiAmplicon object with dadaF and dadaR slots filled
 ##' @importFrom dada2 dada
+##' @importFrom methods initialize new slot
 ##' @export
 ##' @author Emanuel Heitlinger
 dadaMulti <- function(MA, ...){
