@@ -20,7 +20,7 @@ A wrapper around \code{\link[dada2]{dada}} from \link{\code{dada2}}
 }
 \details{
 The function runs \code{\link[dada2]{dada}} from
-\code{\link[dada2]{dada2}} to performe 'High resolution sample
+\code{\link[dada2]{dada}} to performe 'High resolution sample
 inference from amplicon data' on multiple amplicons stored as
 dereplicated sequences in a MultiAmplicon-class object
 }

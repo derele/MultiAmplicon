@@ -25,8 +25,8 @@
 ##' @param readsR The path and filenames containing reverse (R2) reads
 ##' 
 ##' @return PairedReadFileSet
-##' @rdname PairedReadFileSet-class
-##' @title PairedReadFileSet-Class
+##' @rdname PairedReadFileSet
+##' @title PairedReadFileSet-class
 ##' @author Emanuel Heitlinger
 ##' @export PairedReadFileSet
 ##'
@@ -66,7 +66,7 @@ setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
 ##' primers.
 ##'
 ##' The PrimerPairsSet class is a container for storing primer pairs.
-##' This means exactly two \code{\link[Biostrings]{DNAStrinSet}}
+##' This means exactly two \code{\link[Biostrings]{DNAStringSet}}
 ##' objects of the same length specifying primer-pairs. Primer
 ##' sequences can be provided as character strings and will be
 ##' converted to \code{\link[Biostrings]{DNAStringSet}} by the
@@ -91,7 +91,7 @@ setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
 ##'     character strings.
 ##' 
 ##' @usage
-##' ## Constructors:
+##' ## Constructor:
 ##'
 ##' PrimerPairsSet(primerF, primerR)
 ##' 
@@ -102,11 +102,12 @@ setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
 ##' 
 ##' @seealso \code{\link[Biostrings]{DNAStringSet}}
 ##' @importFrom Biostrings DNAStringSet
-##' @rdname PrimerPairsSet-class
+##' @rdname PrimerPairsSet
 ##' @title PrimerPairsSet-class
 ##' @return PrimerPairsSet-class
 ##' @author Emanuel Heitlinger
 ##' @export PrimerPairsSet
+####  ##' @exportClass PrimerPairsSet-class
 
 setClass("PrimerPairsSet", contains = "DNAStringSet",
          representation(primerF="DNAStringSet", primerR="DNAStringSet",
@@ -147,10 +148,10 @@ setMethod(names, "PrimerPairsSet", function (x) x@names)
 
 ##' A pair of two derep objects
 ##'
-##' derep-class objects as defined by the package
-##' \code{\link[dada2]{derepFastq}} are bundeled as forward and
+##' derep-class objects as defined by the package \code{dada2}
+##' (\code{\link[dada2]{derepFastq}}] are bundeled as forward and
 ##' reverse read pairs in this object
-##' @title derep-class
+##' @title PiredDerep-class
 ##'
 ##' @slot derep object containing forward read pairs created by
 ##'     \code{dada2}'s \code{\link[dada2]{derepFastq}} function
@@ -180,9 +181,9 @@ setMethod("length", "PairedDerep", function(x){
 
 ##' A pair of two dada objects 
 ##'
-##' dada-class objects as defined by the package
-##' \code{\link[dada2]{dada2}} are bundeled as forward and reverse
-##' read pairs in this object
+##' dada-class objects as defined by the package \code{dada2}
+##' (function \code{\link[dada2]{dada}}) are bundeled as forward and
+##' reverse read pairs in this object
 ##'
 ##' @title PairedDada-class
 ##' @author Emanuel Heitlinger
@@ -214,15 +215,16 @@ setMethod("length", "PairedDada", function(x){
 
 
 ##' A class combining sequences of forward and reverse primers (in a
-##' \code{\link{PrimerPairsSet-class}}) plus file names of paired end
-##' sequencing files (in a \code{\link{PairedReadFileSet-class}}).
+##' \code{\link{PrimerPairsSet}-class}) plus file names of paired end
+##' sequencing files (in a \code{\link{PairedReadFileSet}-class}).
 ##'
 ##' The MultiAmplicon class is a container for storing primer pairs,
 ##' read files and processed data in an 'amplicon x samples'
 ##' format. Slots 
 ##' 
 ##' @slot PrimerPairsSet The primer pairs used in your experiment to
-##'     specify amplicons stored in a PrimerPairsSet-class object.
+##'     specify amplicons stored in a
+##'     \code{\link{PrimerPairsSet}-class} object.
 ##'
 ##' @slot PairedReadFileSet The (quality filtered) fastq files (one
 ##'     file pair for each sample) that store your sequencing data.
@@ -233,16 +235,16 @@ setMethod("length", "PairedDada", function(x){
 ##'     into amplicons and samples using the function
 ##'     \code{\link{sortAmplicons}}. Forward (sometimes called R1) and
 ##'     reverse (sometimes called R2) files are stored as a (amplicons
-##'     x samples) matrix of \code{\link{PairedReadFileSet-class}}
+##'     x samples) matrix of \code{\link{PairedReadFileSet}-class}
 ##'     objects.
 ##'
-##' @slot derep A \code{\link{PairedDerep}}-class object containing
-##'     pairs of derep-class objects created by \code{\link{dada2}}’s
-##'     \code{\link{derepFastq}} function
+##' @slot derep A \code{\link{PairedDerep}-class} object containing
+##'     pairs of derep-class objects created by \code{dada2}’s
+##'     \code{\link[dada2]{derepFastq}} function
 ##'
-##' @slot dadaderep A \code{\link{PairedDada}}-class object containing
-##'     pairs of dada-class objects created by \code{\link{dada2}}’s
-##'     \code{\link{dada}} function
+##' @slot dadaderep A \code{\link{PairedDada}-class} object containing
+##'     pairs of dada-class objects created by \code{dada2}’s
+##'     \code{\link[dada2]{dada}} function
 ##'
 ##' @slot mergers
 ##'
@@ -257,14 +259,15 @@ setMethod("length", "PairedDada", function(x){
 ##' MultiAmplicon(PrimerPairsSet, PairedReadFileSet)
 ##' 
 ##' @param PrimerPairsSet a set of primer pairs specifiying your
-##'     amplicons see \code{\link{PrimerPairsSet-class}}
+##'     amplicons see \code{\link{PrimerPairsSet}-class}
 ##' 
 ##' @param PairedReadFileSet a set of paired end sequencing data fiels
-##'     \code{\link{PairedReadFileSet-class}}
+##'     \code{\link{PairedReadFileSet}-class}
 ##'
 ##' Accessor-like methods:
 ##' 
-##' In the code snippets below, 'x' is an MultiAmplicon-class object.
+##' In the code snippets below, 'x' is an
+##' \code{\link{MultiAmplicon}-class} object.
 ##' 
 ##' 'nrow(x)' An integer giving the number of primer pairs in the
 ##' object
@@ -283,9 +286,9 @@ setMethod("length", "PairedDada", function(x){
 ##' a particular sample (input file pair) and amplicon (input primer
 ##' pair)
 ##' 
-##' @seealso \code{\link[dada2]{derep}},\code{\link[dada2]{dada}}
+##' @seealso \code{\link[dada2]{derepFastq}},\code{\link[dada2]{dada}}
 ##' @importFrom dada2 derepFastq dada
-##' @rdname MultiAmplicon-class
+##' @rdname MultiAmplicon
 ##' @title MultiAmplicon-class
 ##' @return MultiAmplicon-class
 ##' @author Emanuel Heitlinger
@@ -328,10 +331,11 @@ setMethod("nrow", "MultiAmplicon", function (x) length(x@PrimerPairsSet))
 
 ##' Access rawCounts of a MultiAmplicon object
 ##'
-##' An accessor for the 'rawCounts' slot of a MultiAmplicon-class object
+##' An accessor for the 'rawCounts' slot of a
+##' \code{\link{MultiAmplicon}-class} object
 ##' 
 ##' @title rawCounts
-##' @param x A MultiAmplicon-class object
+##' @param x A \code{\link{MultiAmplicon}-class} object
 ##' @return A numerical matrix of counts for each amplicon
 ##'     (primer-pair) matched in each sample (paired read file)
 ##' @author Emanuel Heitlinger

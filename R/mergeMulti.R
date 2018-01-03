@@ -4,7 +4,7 @@
 ##' This is a wrapper for \code{\link[dada2]{mergePairs}} from
 ##' \code{dada2}. It works on an \code{\link{MultiAmplicon-class}}
 ##' object with derep and dada slots filled. Use
-##' \code{\link{MultiDada}} and \code{\link{MultiDerep}} on a amplicon
+##' \code{\link{dadaMulti}} and \code{\link{derepMulti}} on a amplicon
 ##' sorted (see \code{\link{sortAmplicons}})
 ##' \code{\link{MultiAmplicon-class}} object to preprocess your
 ##' multi-marker data to this point.

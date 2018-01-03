@@ -3,7 +3,7 @@
 \docType{class}
 \name{PairedReadFileSet-class}
 \alias{PairedReadFileSet-class}
-\title{PairedReadFileSet-Class}
+\title{PairedReadFileSet-class}
 \usage{
 ## Constructors:
 PairedReadFileSet(readsF, readsR)

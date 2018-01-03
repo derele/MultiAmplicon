@@ -3,7 +3,7 @@
 \docType{class}
 \name{PairedDerep-class}
 \alias{PairedDerep-class}
-\title{derep-class}
+\title{PiredDerep-class}
 \value{
 A PairedDerep-class object
 }
@@ -11,8 +11,8 @@ A PairedDerep-class object
 A pair of two derep objects
 }
 \details{
-derep-class objects as defined by the package
-\code{\link[dada2]{derepFastq}} are bundeled as forward and
+derep-class objects as defined by the package \code{dada2}
+(\code{\link[dada2]{derepFastq}}] are bundeled as forward and
 reverse read pairs in this object
 }
 \section{Slots}{

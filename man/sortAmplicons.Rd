@@ -26,15 +26,6 @@ Biostrings::isMatchingStartingAt. Be careful when using
 multiple starting positions or allowing error. This could lead
 to read pairs being assigned to multiple amplicons.}
 }
-\value{
-MultiAmplicon: By default (countOnly=FALSE) a
-    MultiAmplicon-class object is returned with the
-    stratifiedFiles slot populated. Stratified file names are
-    constructed using a unique string created by
-    \code{\link{[base]tempfile}} and stored in R's
-    \code{\link[base]{tempdir}}. If the countOnly is set only a
-    numeric matrix of read counts is returned.
-}
 \description{
 Sort different amplicons into a fully stratified samples x
 amplicons structure based on primer matches.

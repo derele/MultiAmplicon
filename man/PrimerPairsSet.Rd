@@ -5,7 +5,7 @@
 \alias{PrimerPairsSet-class}
 \title{PrimerPairsSet-class}
 \usage{
-## Constructors:
+## Constructor:
 
 PrimerPairsSet(primerF, primerR)
 }
@@ -25,7 +25,7 @@ primers.
 }
 \details{
 The PrimerPairsSet class is a container for storing primer pairs.
-This means exactly two \code{\link[Biostrings]{DNAStrinSet}}
+This means exactly two \code{\link[Biostrings]{DNAStringSet}}
 objects of the same length specifying primer-pairs. Primer
 sequences can be provided as character strings and will be
 converted to \code{\link[Biostrings]{DNAStringSet}} by the

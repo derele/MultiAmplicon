@@ -7,7 +7,7 @@
 rawCounts(x)
 }
 \arguments{
-\item{x}{A MultiAmplicon-class object}
+\item{x}{A \code{\link{MultiAmplicon}-class} object}
 }
 \value{
 A numerical matrix of counts for each amplicon
@@ -17,7 +17,8 @@ A numerical matrix of counts for each amplicon
 Access rawCounts of a MultiAmplicon object
 }
 \details{
-An accessor for the 'rawCounts' slot of a MultiAmplicon-class object
+An accessor for the 'rawCounts' slot of a
+\code{\link{MultiAmplicon}-class} object
 }
 \author{
 Emanuel Heitlinger

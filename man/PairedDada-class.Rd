@@ -8,9 +8,9 @@
 A pair of two dada objects
 }
 \details{
-dada-class objects as defined by the package
-\code{\link[dada2]{dada2}} are bundeled as forward and reverse
-read pairs in this object
+dada-class objects as defined by the package \code{dada2}
+(function \code{\link[dada2]{dada}}) are bundeled as forward and
+reverse read pairs in this object
 }
 \author{
 Emanuel Heitlinger
