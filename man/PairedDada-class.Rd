@@ -15,6 +15,10 @@ PairedDada(dadaF = list(), dadaR = list())
 \S4method{[}{PairedDada,integer,missing,ANY}(x, i, j, ..., drop = TRUE)
 }
 \arguments{
+\item{dadaF}{a dada object of forward reads}
+
+\item{dadaR}{a dada object of reverse reads}
+
 \item{x}{PairedDada-class object}
 
 \item{i}{numeric to select}

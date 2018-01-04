@@ -14,9 +14,6 @@ MultiAmplicon object.}
 log10}
 
 \item{...}{addtional parameter to be passed to pheatmap funciton}
-
-\item{add}{offset added to allow e.g. log10 transformation of zero
-values}
 }
 \value{
 just like the original \code{\link{pheatmap}} function, A

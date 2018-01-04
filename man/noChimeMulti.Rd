@@ -16,7 +16,7 @@ to have a sequenceTableMulti populated}
 \code{\link[dada2]{removeBimeraDenovo}}}
 }
 \value{
-a code{\link{MulitAmplicon-class}} object with the
+a code{\link{MultiAmplicon-class}} object with the
     sequenceTableNoChime filled
 }
 \description{
