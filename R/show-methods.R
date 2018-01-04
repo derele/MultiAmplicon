@@ -1,4 +1,5 @@
-################################################################################
+##############################################################################
+##' @param object A \code{PairedReadFileSet-class} object.
 ##' @rdname PairedReadFileSet-class
 setMethod("show", "PairedReadFileSet", function(object) {
     cat("  A ", class(object),
@@ -29,7 +30,7 @@ setMethod("show", "PrimerPairsSet", function(object){
 })
 
 
-################################################################################
+################################################################################' @param object A \code{MultiAmplicon-class} object.
 ##' @rdname MultiAmplicon-class 
 setMethod("show", "MultiAmplicon", function(object){
     cat("  A ", class(object),

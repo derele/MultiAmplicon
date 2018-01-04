@@ -197,6 +197,8 @@ setClass("PairedDada",
                  "Same number of forward and reverse dada objects needed to constitute forward and reverse sequence read pairs"
              }})
 
+##' @param dadaF a dada object of forward reads
+##' @param dadaR a dada object of reverse reads
 ##' @rdname PairedDada-class
 PairedDada <- function(dadaF=list(), dadaR=list()){
     new("PairedDada",
