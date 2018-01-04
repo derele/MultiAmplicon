@@ -12,9 +12,6 @@
 ##' @param transf transformation to be applied, recommended default is
 ##'     log10
 ##' 
-##' @param add offset added to allow e.g. log10 transformation of zero
-##'     values
-##'
 ##' @importFrom pheatmap pheatmap
 ##' @param ... addtional parameter to be passed to pheatmap funciton
 ##' @return just like the original \code{\link{pheatmap}} function, A
