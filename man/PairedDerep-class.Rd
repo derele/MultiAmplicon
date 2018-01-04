@@ -3,8 +3,8 @@
 \docType{class}
 \name{PairedDerep-class}
 \alias{PairedDerep-class}
-\alias{[,PairedDerep,ANY,ANY,ANY-method}
 \alias{length,PairedDerep-method}
+\alias{[,PairedDerep,ANY,ANY,ANY-method}
 \title{PiredDerep-class}
 \usage{
 \S4method{length}{PairedDerep}(x)
@@ -31,7 +31,7 @@ reverse read pairs in this object
 \item{\code{derepR}}{derep object containing reverse read pairscreated by
 \code{dada2}'s \code{\link[dada2]{derepFastq}} function}
 }}
+
 \author{
 Emanuel Heitlinger
 }
-

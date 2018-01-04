@@ -17,12 +17,10 @@
 ##'     samples. Names of readF and readR should be identical in this
 ##'     case
 ##'
-##' @usage
-##' ## Constructors:
-##' PairedReadFileSet(readsF, readsR)
+## ##' @usage
+## ##' ## Constructors:
+## ##' PairedReadFileSet(readsF, readsR)
 ##'
-##' @param readsF The path and filenames containing forward (R1) reads
-##' @param readsR The path and filenames containing reverse (R2) reads
 ##' 
 ##' @return PairedReadFileSet
 ##' @author Emanuel Heitlinger
@@ -42,6 +40,12 @@ setClass("PairedReadFileSet",
              else{TRUE}
          })
 
+
+##' @param readsF The path and filenames containing forward (R1) reads
+##' @param readsR The path and filenames containing reverse (R2) reads
+##' @param names Optional vector of class character with same length
+##'     as sequencing read files. If empty constructed from basename
+##'     of forward read files (filename without directory).
 ##' @describeIn PairedReadFileSet-class Constructor for
 ##'     PairedReadFileSet-class
 PairedReadFileSet <- function(readsF,
@@ -63,8 +67,7 @@ PairedReadFileSet <- function(readsF,
 ##' @rdname PairedReadFileSet-class
 setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
 
-##' A class representing sequences of forward and reverse
-##' primers.
+##' A class representing sequences of forward and reverse primers.
 ##'
 ##' The PrimerPairsSet class is a container for storing primer pairs.
 ##' This means exactly two \code{\link[Biostrings]{DNAStringSet}}
@@ -72,16 +75,15 @@ setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
 ##' sequences can be provided as character strings and will be
 ##' converted to \code{\link[Biostrings]{DNAStringSet}} by the
 ##' constructor function of the same name. primerF and primerR have to
-##' be of the same length to specify primer pairs
-##' (primerF[i].primerR[i]; for i in 1:length(PrimerF)).  Warnings are
+##' be of the same length to specify primer pairs. Warnings are
 ##' given if primer sequences are of unusal length (<16 or >26 bases).
 ##'
 ##' @slot primerF DNAStringSet. Can be named or unnamed.
 ##' @slot primerR DNAStringSet of the same length. Can be named or
 ##'     unnnamed.
-##' @slot names Either constructed as a concatenation of names of
-##'     forward and reverse primers or of their sequences (if primer
-##'     sequences are unnamed)
+##' @slot names Character string. Either constructed as a
+##'     concatenation of names of forward and reverse primers or of
+##'     their sequences (if primer sequences are unnamed).
 ##' @slot .mapF (automatically generated) maps potentially duplicate
 ##'     entries in FW primers to unique entries.
 ##' @slot .mapR (auto-generated) maps potentially duplicate entries in
@@ -91,22 +93,11 @@ setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
 ##' @slot .uniqueR (auto-generated) unique reverse primers as
 ##'     character strings.
 ##' 
-##' @usage
-##' ## Constructor:
-##'
-##' PrimerPairsSet(primerF, primerR)
-##' 
-##' @param primerF Character vector or DNAStringSet. Can be named or
-##'     unnamed.
-##' @param primerR Character vector or DNAStringSet of the same
-##'     length. Can be named or unnamed.
-##' 
 ##' @seealso \code{\link[Biostrings]{DNAStringSet}}
 ##' @importFrom Biostrings DNAStringSet
 ##' @return PrimerPairsSet-class
 ##' @author Emanuel Heitlinger
 ##' @export PrimerPairsSet
-####  ##' @exportClass PrimerPairsSet-class
 setClass("PrimerPairsSet", contains = "DNAStringSet",
          representation(primerF="DNAStringSet", primerR="DNAStringSet",
                         names="character", 
@@ -123,8 +114,12 @@ setClass("PrimerPairsSet", contains = "DNAStringSet",
                  "Same number of forward and reverse primer sequences needed to constitute Primer-Pairs"}
 })
 
-##' @describeIn PrimerPairsSet-class Constructor for
-##'     PrimerPairsSet-class
+
+##' @param primerF Character vector or DNAStringSet. Can be named or
+##'     unnamed. 
+##' @param primerR Character vector or DNAStringSet of the same
+##'     length. Can be named or unnamed. 
+##' @rdname PrimerPairsSet-class
 PrimerPairsSet <- function(primerF, primerR){
     ## if names exist construct primer names
     if(length(names(primerR)) == length(primerR) &&
@@ -142,9 +137,15 @@ PrimerPairsSet <- function(primerF, primerR){
 }
 
 ## Methods
+##' Accessor like functions
+##' \code{length} gives the number of read paires in a
+##' \code{PrimerPairsSet-class} object
+##' @param x A \code{PrimerPairsSet-class} object.
 ##' @rdname PrimerPairsSet-class
 setMethod(length, "PrimerPairsSet", function(x) length(x@primerF))
 
+##' \code{names} of primer-pairs (amplicons) in a
+##' \code{PrimerPairsSet-class} object
 ##' @rdname PrimerPairsSet-class
 setMethod(names, "PrimerPairsSet", function (x) x@names)
 
@@ -288,27 +289,27 @@ setMethod("length", "PairedDada", function(x){
 ##' @param sequenceTableNoChime Users should not supply this prameter,
 ##'     the slot is created by \code{\link{noChimeMulti}}
 ##' 
-##' Accessor-like methods:
-##' 
-##' In the code snippets below, 'x' is an
-##' \code{\link{MultiAmplicon-class}} object.
-##' 
-##' 'nrow(x)' An integer giving the number of primer pairs in the
-##' object
-##'
-##' 'ncol(x)' An integer giving the number of paired read files
-##' (usually samples and their replicates) in the object
-##'
-##' 'rownames(x)' A character vector giving the primer-pair names see
-##' \code{\link{PrimerPairsSet}}
-##'
-##' 'colnames(x)' A character vector giving the names of the paired
-##' read filnames (e.g. used to store sample names) see also
-##' \code{\link{PairedReadFileSet}}
-##'
-##' 'rawCounts(x)' An accessor for the slot of the same name, returns
-##' raw sequencing read counts assigned to a particular sample (input
-##' file pair) and amplicon (input primer pair)
+## ##' Accessor-like methods:
+## ##' 
+## ##' In the code snippets below, 'x' is an
+## ##' \code{\link{MultiAmplicon-class}} object.
+## ##' 
+## ##' 'nrow(x)' An integer giving the number of primer pairs in the
+## ##' object
+## ##'
+## ##' 'ncol(x)' An integer giving the number of paired read files
+## ##' (usually samples and their replicates) in the object
+## ##'
+## ##' 'rownames(x)' A character vector giving the primer-pair names see
+## ##' \code{\link{PrimerPairsSet}}
+## ##'
+## ##' 'colnames(x)' A character vector giving the names of the paired
+## ##' read filnames (e.g. used to store sample names) see also
+## ##' \code{\link{PairedReadFileSet}}
+## ##'
+## ##' 'rawCounts(x)' An accessor for the slot of the same name, returns
+## ##' raw sequencing read counts assigned to a particular sample (input
+## ##' file pair) and amplicon (input primer pair)
 ##' 
 ##' @seealso \code{\link[dada2]{derepFastq}},\code{\link[dada2]{dada}}
 ##' @importFrom dada2 derepFastq dada

@@ -4,8 +4,8 @@
 \name{sortAmplicons}
 \alias{sortAmplicons}
 \alias{sortAmplicons,}
-\alias{sortAmplicons,MultiAmplicon-method}
 \alias{sortAmplicons-Method}
+\alias{sortAmplicons,MultiAmplicon-method}
 \title{sortAmplicons}
 \usage{
 sortAmplicons(MA, n = 1e+06, countOnly = FALSE, ...)
@@ -54,4 +54,3 @@ fastq streaming).
 \author{
 Emanuel Heitlinger
 }
-

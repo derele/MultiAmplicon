@@ -14,7 +14,7 @@ setMethod("show", "PairedReadFileSet", function(object) {
     }
 })
 
-################################################################################
+################################################################################' @param object A \code{PrimerPairsSet-class} object.
 ##' @rdname PrimerPairsSet-class
 setMethod("show", "PrimerPairsSet", function(object){
     cat("  A ", class(object),
@@ -22,7 +22,7 @@ setMethod("show", "PrimerPairsSet", function(object){
         "\n", sep = "")
     if (length(object@primerF) != 0) {
         cat("Forward:\n")
-        cat(Biostrings:::.XStringSet.show_frame(object@primerF))
+        cat(Biostrings:::.OBJECTStringSet.show_frame(object@primerF))
         cat("Reverse:\n")
         cat(Biostrings:::.XStringSet.show_frame(object@primerR))
     }

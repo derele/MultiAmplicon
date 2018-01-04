@@ -27,4 +27,3 @@ dereplicated sequences in a MultiAmplicon-class object
 \author{
 Emanuel Heitlinger
 }
-

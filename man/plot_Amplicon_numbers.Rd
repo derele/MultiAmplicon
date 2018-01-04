@@ -37,4 +37,3 @@ stored in the rawCounts slot of a MultiAmplicons-class object
 \author{
 Emanuel Heitlinger
 }
-

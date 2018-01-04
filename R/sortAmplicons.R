@@ -30,7 +30,7 @@
 ##'     numeric matrix of read counts is returned.
 ##' @rdname sortAmplicons
 ##' @author Emanuel Heitlinger
-##' @importFrom ShortRead FastqStreamer yield narrow sread
+##' @importFrom ShortRead FastqStreamer yield narrow sread width
 ##' @importFrom Biostrings isMatchingStartingAt
 ##' @export sortAmplicons
 ##' @aliases sortAmplicons, sortAmplicons-Method

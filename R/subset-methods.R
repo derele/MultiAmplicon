@@ -1,4 +1,7 @@
+### Subsetting methods
 
+##' @param x PrimerPairsSet-class object 
+##' @param i numeric to select
 ##' @rdname PrimerPairsSet-class
 setMethod("[", c("PrimerPairsSet", "ANY"),  function(x, i){
     newF <- x@primerF[i]
@@ -6,13 +9,16 @@ setMethod("[", c("PrimerPairsSet", "ANY"),  function(x, i){
     PrimerPairsSet(primerF=as.character(newF), primerR=as.character(newR))
 })
 
+##' @param x PairedReadFileSet-class object
+##' @param i numeric to select
 ##' @rdname PairedReadFileSet-class
 setMethod("[", c("PairedReadFileSet", "ANY"), function(x, i){
     newF <- x@readsF[i]
     newR <- x@readsR[i]
     PairedReadFileSet(newF, newR)
 })
-
+##' @param x PairedDerep-class
+##' @param i numeric to select
 ##' @rdname PairedDerep-class
 setMethod("[", c("PairedDerep", "ANY"), function(x, i){
     newF <- x@derepF[i]
@@ -21,6 +27,8 @@ setMethod("[", c("PairedDerep", "ANY"), function(x, i){
         derepF=newF, derepR=newR)
 })
 
+##' @param x PairedDada-class object
+##' @param i numeric to select
 ##' @rdname PairedDada-class
 setMethod("[", c("PairedDada", "ANY"), function(x, i){
     newF <- x@dadaF[i]
@@ -29,22 +37,18 @@ setMethod("[", c("PairedDada", "ANY"), function(x, i){
         dadaF=newF, dadaR=newR)
 })
 
-## ##' Convenient subsetting for MultiAmplicon objects
-## ##'
-## ##' Subset a MultiAmplicon object including all potentially filled
-## ##' slots
-## ##' 
-## ##' @title subset MultiAmplicon
-## ##' @param MultiAmplicon-class object
-## ##' @param i numeric, logical or names vector for subsetting rows (==
-## ##'     amplicons)
-## ##' @param j numeric, logical or names vector for subsetting columns
-## ##'     (== read files, corresponding usually to samples)
-## ##' @param drop should 
-## ##' @return a subset of the original MultiAmplicon object
-## ##' @export
-## ##' @author Emanuel Heitlinger
-
+##' Convenient subsetting for MultiAmplicon objects
+##'
+##' Subset a MultiAmplicon object including all potentially filled
+##' slots
+##' 
+##' @title subset MultiAmplicon
+##' @param x MultiAmplicon-class object
+##' @param i numeric, logical or names vector for subsetting rows (==
+##'     amplicons)
+##' @param j numeric, logical or names vector for subsetting columns
+##'     (== read files, corresponding usually to samples)
+##' @param drop should not be used
 ##' @rdname MultiAmplicon-class
 setMethod("[", "MultiAmplicon",
           function(x, i=TRUE, j=TRUE, drop="missing"){

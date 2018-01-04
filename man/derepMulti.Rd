@@ -26,4 +26,3 @@ sequences from fastq or compressed fastq files.
 \author{
 Emanuel Heitlinger
 }
-
