@@ -66,12 +66,28 @@ slot is created by \code{\link{sequenceTableMulti}}}
 
 \item{sequenceTableNoChime}{Users should not supply this prameter,
 the slot is created by \code{\link{noChimeMulti}}}
+
+\item{x}{MultiAmplicon-class object}
+
+\item{i}{numeric, logical or names vector for subsetting rows (==
+amplicons)}
+
+\item{j}{numeric, logical or names vector for subsetting columns
+(== read files, corresponding usually to samples)}
+
+\item{drop}{should not be used}
 }
 \description{
 The MultiAmplicon class is a container for storing primer pairs,
 read files and processed data in an 'amplicon x samples'
 format. The object is incrementally filled by running functions
 (from the package \code{dada2}) with additional slots.
+
+Convenient subsetting for MultiAmplicon objects
+}
+\details{
+Subset a MultiAmplicon object including all potentially filled
+slots
 }
 \section{Functions}{
 \itemize{

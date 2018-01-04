@@ -14,6 +14,11 @@ PairedDada(dadaF = list(), dadaR = list())
 
 \S4method{[}{PairedDada,ANY,ANY,ANY}(x, i)
 }
+\arguments{
+\item{x}{PairedDada-class object}
+
+\item{i}{numeric to select}
+}
 \description{
 A pair of two dada objects
 }

@@ -31,6 +31,10 @@ length. Can be named or unnamed.}
 \item{x}{A \code{PrimerPairsSet-class} object.}
 
 \item{object}{A \code{PrimerPairsSet-class} object.}
+
+\item{i}{numeric to select}
+
+\item{x}{PrimerPairsSet-class object}
 }
 \value{
 PrimerPairsSet-class

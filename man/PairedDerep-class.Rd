@@ -11,6 +11,11 @@
 
 \S4method{[}{PairedDerep,ANY,ANY,ANY}(x, i)
 }
+\arguments{
+\item{x}{PairedDerep-class}
+
+\item{i}{numeric to select}
+}
 \value{
 A PairedDerep-class object
 }

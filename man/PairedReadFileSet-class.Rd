@@ -10,9 +10,6 @@
 \alias{[,PairedReadFileSet,ANY,ANY,ANY-method}
 \title{A class representing file paths to paired end reads.}
 \usage{
-## Constructors:
-PairedReadFileSet(readsF, readsR)
-
 PairedReadFileSet(readsF, readsR, names = character())
 
 \S4method{length}{PairedReadFileSet}(x)
@@ -25,6 +22,14 @@ PairedReadFileSet(readsF, readsR, names = character())
 \item{readsF}{The path and filenames containing forward (R1) reads}
 
 \item{readsR}{The path and filenames containing reverse (R2) reads}
+
+\item{names}{Optional vector of class character with same length
+as sequencing read files. If empty constructed from basename
+of forward read files (filename without directory).}
+
+\item{x}{PairedReadFileSet-class object}
+
+\item{i}{numeric to select}
 }
 \value{
 PairedReadFileSet
