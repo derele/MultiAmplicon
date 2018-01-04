@@ -5,14 +5,14 @@
 \alias{PairedDada-class}
 \alias{PairedDada}
 \alias{length,PairedDada-method}
-\alias{[,PairedDada,ANY,ANY,ANY-method}
+\alias{[,PairedDada,integer,missing,ANY-method}
 \title{PairedDada-class}
 \usage{
 PairedDada(dadaF = list(), dadaR = list())
 
 \S4method{length}{PairedDada}(x)
 
-\S4method{[}{PairedDada,ANY,ANY,ANY}(x, i)
+\S4method{[}{PairedDada,integer,missing,ANY}(x, i, j, ..., drop = TRUE)
 }
 \arguments{
 \item{x}{PairedDada-class object}

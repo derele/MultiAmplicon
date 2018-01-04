@@ -4,12 +4,12 @@
 \name{PairedDerep-class}
 \alias{PairedDerep-class}
 \alias{length,PairedDerep-method}
-\alias{[,PairedDerep,ANY,ANY,ANY-method}
+\alias{[,PairedDerep,integer,missing,ANY-method}
 \title{PiredDerep-class}
 \usage{
 \S4method{length}{PairedDerep}(x)
 
-\S4method{[}{PairedDerep,ANY,ANY,ANY}(x, i)
+\S4method{[}{PairedDerep,integer,missing,ANY}(x, i, j, ..., drop = TRUE)
 }
 \arguments{
 \item{x}{PairedDerep-class}

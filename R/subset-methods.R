@@ -3,7 +3,8 @@
 ##' @param x PrimerPairsSet-class object 
 ##' @param i numeric to select
 ##' @rdname PrimerPairsSet-class
-setMethod("[", c("PrimerPairsSet", "ANY"),  function(x, i){
+setMethod("[", c("PrimerPairsSet", "integer", "missing", "ANY"),
+          function(x, i, j, ..., drop=TRUE){
     newF <- x@primerF[i]
     newR <- x@primerR[i]
     PrimerPairsSet(primerF=as.character(newF), primerR=as.character(newR))
@@ -12,7 +13,8 @@ setMethod("[", c("PrimerPairsSet", "ANY"),  function(x, i){
 ##' @param x PairedReadFileSet-class object
 ##' @param i numeric to select
 ##' @rdname PairedReadFileSet-class
-setMethod("[", c("PairedReadFileSet", "ANY"), function(x, i){
+setMethod("[", c("PairedReadFileSet", "integer", "missing", "ANY"),
+          function(x, i, j, ..., drop=TRUE){
     newF <- x@readsF[i]
     newR <- x@readsR[i]
     PairedReadFileSet(newF, newR)
@@ -20,7 +22,8 @@ setMethod("[", c("PairedReadFileSet", "ANY"), function(x, i){
 ##' @param x PairedDerep-class
 ##' @param i numeric to select
 ##' @rdname PairedDerep-class
-setMethod("[", c("PairedDerep", "ANY"), function(x, i){
+setMethod("[", c("PairedDerep", "integer", "missing", "ANY"),
+          function(x, i, j, ..., drop=TRUE){
     newF <- x@derepF[i]
     newR <- x@derepR[i]
     new("PairedDerep",
@@ -30,7 +33,8 @@ setMethod("[", c("PairedDerep", "ANY"), function(x, i){
 ##' @param x PairedDada-class object
 ##' @param i numeric to select
 ##' @rdname PairedDada-class
-setMethod("[", c("PairedDada", "ANY"), function(x, i){
+setMethod("[", c("PairedDada", "integer", "missing", "ANY"),
+          function(x, i, j, ..., drop=TRUE){
     newF <- x@dadaF[i]
     newR <- x@dadaR[i]
     new("PairedDada",
@@ -50,8 +54,8 @@ setMethod("[", c("PairedDada", "ANY"), function(x, i){
 ##'     (== read files, corresponding usually to samples)
 ##' @param drop should not be used
 ##' @rdname MultiAmplicon-class
-setMethod("[", "MultiAmplicon",
-          function(x, i=TRUE, j=TRUE, drop="missing"){
+setMethod("[", c("MultiAmplicon", "integer", "missing", "ANY"),
+          function(x, i, j, ..., drop=TRUE){
               newPrimer <- x@PrimerPairsSet[i]
               newFiles <- x@PairedReadFileSet[j]
               newRC <- matrix()
