@@ -76,6 +76,8 @@ amplicons)}
 \item{j}{numeric, logical or names vector for subsetting columns
 (== read files, corresponding usually to samples)}
 
+\item{...}{not used}
+
 \item{drop}{should not be used}
 }
 \description{

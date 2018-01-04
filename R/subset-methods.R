@@ -3,6 +3,10 @@
 ## already documented in accessors @param x PrimerPairsSet-class
 ## object
 ##' @param i numeric to select
+##' @param j not used
+##' @param ... not used
+##' @param drop not used
+
 ##' @rdname PrimerPairsSet-class
 setMethod("[", c("PrimerPairsSet", "integer", "missing", "ANY"),
           function(x, i, j, ..., drop=TRUE){
@@ -11,8 +15,10 @@ setMethod("[", c("PrimerPairsSet", "integer", "missing", "ANY"),
     PrimerPairsSet(primerF=as.character(newF), primerR=as.character(newR))
 })
 
-##' @param x PairedReadFileSet-class object
 ##' @param i numeric to select
+##' @param j not used
+##' @param ... not used
+##' @param drop not used
 ##' @rdname PairedReadFileSet-class
 setMethod("[", c("PairedReadFileSet", "integer", "missing", "ANY"),
           function(x, i, j, ..., drop=TRUE){
@@ -22,6 +28,10 @@ setMethod("[", c("PairedReadFileSet", "integer", "missing", "ANY"),
 })
 ##' @param x PairedDerep-class
 ##' @param i numeric to select
+##' ##' @param j not used
+##' @param ... not used
+##' @param drop not used
+
 ##' @rdname PairedDerep-class
 setMethod("[", c("PairedDerep", "integer", "missing", "ANY"),
           function(x, i, j, ..., drop=TRUE){
@@ -33,6 +43,9 @@ setMethod("[", c("PairedDerep", "integer", "missing", "ANY"),
 
 ##' @param x PairedDada-class object
 ##' @param i numeric to select
+##' @param j not used
+##' @param ... not used
+##' @param drop not used
 ##' @rdname PairedDada-class
 setMethod("[", c("PairedDada", "integer", "missing", "ANY"),
           function(x, i, j, ..., drop=TRUE){
@@ -53,6 +66,7 @@ setMethod("[", c("PairedDada", "integer", "missing", "ANY"),
 ##'     amplicons)
 ##' @param j numeric, logical or names vector for subsetting columns
 ##'     (== read files, corresponding usually to samples)
+##' @param ... not used
 ##' @param drop should not be used
 ##' @rdname MultiAmplicon-class
 setMethod("[", c("MultiAmplicon", "integer", "missing", "ANY"),

@@ -27,11 +27,15 @@ PairedReadFileSet(readsF, readsR, names = character())
 as sequencing read files. If empty constructed from basename
 of forward read files (filename without directory).}
 
-\item{x}{PairedReadFileSet-class object}
-
 \item{object}{A \code{PairedReadFileSet-class} object.}
 
 \item{i}{numeric to select}
+
+\item{j}{not used}
+
+\item{...}{not used}
+
+\item{drop}{not used}
 }
 \value{
 PairedReadFileSet

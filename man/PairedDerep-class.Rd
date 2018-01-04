@@ -14,7 +14,12 @@
 \arguments{
 \item{x}{PairedDerep-class}
 
-\item{i}{numeric to select}
+\item{i}{numeric to select
+##' @param j not used}
+
+\item{...}{not used}
+
+\item{drop}{not used}
 }
 \value{
 A PairedDerep-class object

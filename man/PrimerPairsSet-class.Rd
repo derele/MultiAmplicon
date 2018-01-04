@@ -33,6 +33,12 @@ length. Can be named or unnamed.}
 \item{object}{A \code{PrimerPairsSet-class} object.}
 
 \item{i}{numeric to select}
+
+\item{j}{not used}
+
+\item{...}{not used}
+
+\item{drop}{not used}
 }
 \value{
 PrimerPairsSet-class
