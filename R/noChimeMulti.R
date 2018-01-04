@@ -16,7 +16,7 @@
 ##' @param mc.cores integer number of cores to use for parallelization
 ##' @param ... paramter passed through to
 ##'     \code{\link[dada2]{removeBimeraDenovo}}
-##' @return a code{\link{MulitAmplicon-class}} object with the
+##' @return a code{\link{MultiAmplicon-class}} object with the
 ##'     sequenceTableNoChime filled
 ##' @importFrom dada2 removeBimeraDenovo
 ##' @importFrom parallel mclapply
