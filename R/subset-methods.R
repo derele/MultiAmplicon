@@ -1,6 +1,7 @@
 ### Subsetting methods
 
-##' @param x PrimerPairsSet-class object 
+## already documented in accessors @param x PrimerPairsSet-class
+## object
 ##' @param i numeric to select
 ##' @rdname PrimerPairsSet-class
 setMethod("[", c("PrimerPairsSet", "integer", "missing", "ANY"),
