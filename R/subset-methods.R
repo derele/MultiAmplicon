@@ -6,7 +6,6 @@
 ##' @param j not used
 ##' @param ... not used
 ##' @param drop not used
-
 ##' @rdname PrimerPairsSet-class
 setMethod("[", c("PrimerPairsSet", "integer", "missing", "ANY"),
           function(x, i, j, ..., drop=TRUE){
@@ -15,6 +14,7 @@ setMethod("[", c("PrimerPairsSet", "integer", "missing", "ANY"),
     PrimerPairsSet(primerF=as.character(newF), primerR=as.character(newR))
 })
 
+##' @param x PairedReadFileSet-class object
 ##' @param i numeric to select
 ##' @param j not used
 ##' @param ... not used
@@ -26,12 +26,12 @@ setMethod("[", c("PairedReadFileSet", "integer", "missing", "ANY"),
     newR <- x@readsR[i]
     PairedReadFileSet(newF, newR)
 })
+
 ##' @param x PairedDerep-class
 ##' @param i numeric to select
-##' ##' @param j not used
+##' @param j not used
 ##' @param ... not used
 ##' @param drop not used
-
 ##' @rdname PairedDerep-class
 setMethod("[", c("PairedDerep", "integer", "missing", "ANY"),
           function(x, i, j, ..., drop=TRUE){
