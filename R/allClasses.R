@@ -312,6 +312,26 @@ setMethod("length", "PairedDada", function(x){
 ## ##' 'rawCounts(x)' An accessor for the slot of the same name, returns
 ## ##' raw sequencing read counts assigned to a particular sample (input
 ## ##' file pair) and amplicon (input primer pair)
+##'
+##' @examples
+##'
+##' primerF <- c("AGAGTTTGATCCTGGCTCAG", "ACTCCTACGGGAGGCAGC",
+##'             "GAATTGACGGAAGGGCACC", "YGGTGRTGCATGGCCGYT")
+##' primerR <- c("CTGCWGCCNCCCGTAGG", "GACTACHVGGGTATCTAATCC",
+##'              "AAGGGCATCACAGACCTGTTAT", "TCCTTCTGCAGGTTCACCTAC")
+##'
+##' PPS <- PrimerPairsSet(primerF, primerR)
+##' 
+##' fastq.dir <- system.file("extdata", "fastq", package = "MultiAmplicon")
+##' fastq.files <- list.files(fastq.dir, full.names=TRUE)
+##' Ffastq.file <- fastq.files[grepl("F_filt", fastq.files)]
+##' Rfastq.file <- fastq.files[grepl("R_filt", fastq.files)]
+##'
+##' PRF <- PairedReadFileSet(Ffastq.file, Rfastq.file)
+##'
+##' MA <- MultiAmplicon(PPS, PRF)
+##' 
+##' 
 ##' 
 ##' @seealso \code{\link[dada2]{derepFastq}},\code{\link[dada2]{dada}}
 ##' @importFrom dada2 derepFastq dada
