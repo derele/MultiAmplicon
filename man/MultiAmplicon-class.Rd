@@ -169,7 +169,8 @@ MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
 
 MA5 <- sequenceTableMulti(MA4)
 
-MA6 <- MultiAmplicon:::noChimeMulti(MA5, mc.cores=20)
+MA6 <- noChimeMulti(MA5,
+                    mc.cores=min(nrow(MA5), detectCores()))
 
 }
 \seealso{

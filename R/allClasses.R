@@ -348,7 +348,8 @@ setMethod("length", "PairedDada", function(x){
 ##'
 ##' MA5 <- sequenceTableMulti(MA4)
 ##'
-##' MA6 <- MultiAmplicon:::noChimeMulti(MA5, mc.cores=20)
+##' MA6 <- noChimeMulti(MA5,
+##'                     mc.cores=min(nrow(MA5), detectCores()))
 ##' 
 ##' @seealso \code{\link[dada2]{derepFastq}},\code{\link[dada2]{dada}}
 ##' @importFrom dada2 derepFastq dada
