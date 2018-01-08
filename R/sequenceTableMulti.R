@@ -17,6 +17,7 @@
 ##'     \code{dada2}
 ##' @return A MultiAmplicon-class object with the sequenceTable slot
 ##'     filled
+##' @importFrom dada2 makeSequenceTable
 ##' @export
 ##' @author Emanuel Heitlinger
 sequenceTableMulti <- function(MA, ...){
