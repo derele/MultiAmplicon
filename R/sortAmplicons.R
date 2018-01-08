@@ -28,6 +28,28 @@
 ##'     \code{\link[base]{tempfile}} and stored in R's
 ##'     \code{\link[base]{tempdir}}. If the countOnly is set only a
 ##'     numeric matrix of read counts is returned.
+##'
+##' @examples
+##'
+##' primerF <- c("AGAGTTTGATCCTGGCTCAG", "ACTCCTACGGGAGGCAGC",
+##'             "GAATTGACGGAAGGGCACC", "YGGTGRTGCATGGCCGYT")
+##' primerR <- c("CTGCWGCCNCCCGTAGG", "GACTACHVGGGTATCTAATCC",
+##'              "AAGGGCATCACAGACCTGTTAT", "TCCTTCTGCAGGTTCACCTAC")
+##'
+##' PPS <- PrimerPairsSet(primerF, primerR)
+##' 
+##' fastq.dir <- system.file("extdata", "fastq", package = "MultiAmplicon")
+##' fastq.files <- list.files(fastq.dir, full.names=TRUE)
+##' Ffastq.file <- fastq.files[grepl("F_filt", fastq.files)]
+##' Rfastq.file <- fastq.files[grepl("R_filt", fastq.files)]
+##'
+##' PRF <- PairedReadFileSet(Ffastq.file, Rfastq.file)
+##'
+##' MA <- MultiAmplicon(PPS, PRF)
+##'
+##' ## sort into amplicons
+##' MA1 <- sortAmplicons(MA)
+##'
 ##' @rdname sortAmplicons
 ##' @author Emanuel Heitlinger
 ##' @importFrom ShortRead FastqStreamer yield narrow sread width
