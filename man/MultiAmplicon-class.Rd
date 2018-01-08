@@ -152,7 +152,24 @@ PRF <- PairedReadFileSet(Ffastq.file, Rfastq.file)
 
 MA <- MultiAmplicon(PPS, PRF)
 
+## the number of amplicons (primer pairs)
+nrow(MA)
 
+## the number of samples (sequencing read file pairs)
+ncol(MA)
+
+## sort into amplicons
+MA1 <- sortAmplicons(MA)
+
+MA2 <- derepMulti(MA1)
+
+MA3 <- dadaMulti(MA2, selfConsist = TRUE, err = NULL)
+
+MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
+
+MA5 <- sequenceTableMulti(MA4)
+
+MA6 <- MultiAmplicon:::noChimeMulti(MA5, mc.cores=20)
 
 }
 \seealso{

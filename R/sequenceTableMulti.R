@@ -17,6 +17,7 @@
 ##'     \code{dada2}
 ##' @return A MultiAmplicon-class object with the sequenceTable slot
 ##'     filled
+##' @export
 ##' @author Emanuel Heitlinger
 sequenceTableMulti <- function(MA, ...){
     sequenceTable <- lapply(seq_along(MA@mergers), function (i){
