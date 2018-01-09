@@ -8,10 +8,10 @@
 \alias{sortAmplicons,MultiAmplicon-method}
 \title{sortAmplicons}
 \usage{
-sortAmplicons(MA, n = 1e+06, countOnly = FALSE, ...)
+sortAmplicons(MA, n = 1e+06, countOnly = FALSE, filedir = tmpdir(), ...)
 
 \S4method{sortAmplicons}{MultiAmplicon}(MA, n = 1e+06, countOnly = FALSE,
-  ...)
+  filedir = tmpdir(), ...)
 }
 \arguments{
 \item{MA}{\code{\link{MultiAmplicon-class}} object containing a
@@ -25,6 +25,11 @@ I/O operations reading the sequence files.}
 
 \item{countOnly}{logical argument if set TRUE only a matrix of
 read counts is returned}
+
+\item{filedir}{path to an existing or newly to be created folder
+on your computer. \code{\link[base]{tempfile}} is used within
+this folder to creat unique filnames trying to avoid problems
+in case the folder has been used before.}
 
 \item{...}{addtional parameter so be passed to
 Biostrings::isMatchingStartingAt. Be careful when using

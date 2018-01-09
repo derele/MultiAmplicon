@@ -17,6 +17,10 @@
 ##'     I/O operations reading the sequence files.
 ##' @param countOnly logical argument if set TRUE only a matrix of
 ##'     read counts is returned
+##' @param filedir path to an existing or newly to be created folder
+##'     on your computer. \code{\link[base]{tempfile}} is used within
+##'     this folder to creat unique filnames trying to avoid problems
+##'     in case the folder has been used before. 
 ##' @param ... addtional parameter so be passed to
 ##'     Biostrings::isMatchingStartingAt. Be careful when using
 ##'     multiple starting positions or allowing error. This could lead
@@ -57,13 +61,13 @@
 ##' @export sortAmplicons
 ##' @aliases sortAmplicons, sortAmplicons-Method
 setGeneric(name="sortAmplicons",
-           def=function(MA, n=1e6, countOnly=FALSE, ...) {
+           def=function(MA, n=1e6, countOnly=FALSE, filedir=tmpdir(), ...) {
                standardGeneric("sortAmplicons")
            })
 
 ##' @rdname sortAmplicons
 setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, countOnly=FALSE,
-                                                     ...){
+                                                     filedir=tmpdir(), ...){
     ## the data matrix of amplicons x samples stratified counts 
     NR <- length(MA@PrimerPairsSet@primerF)
     NC <- length(MA@PairedReadFileSet@readsF)
@@ -76,10 +80,21 @@ setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, countOnly=FALSE,
     tmppathR <- matrix("", nrow=NR, ncol=NC)
     readsF <- MA@PairedReadFileSet@readsF
     readsR <- MA@PairedReadFileSet@readsR
+    ## test whether filedir exists
+    if(!dir.exists(filedir)) {
+        cat("creating directory ", filedir,
+            "and adding specific prefixes to avoid problems when running code twice \n")
+        dir.create(filedir)
+    } else {
+        cat("using existing directory ", filedir,
+            "and adding specific prefixes to avoid problems when running code twice \n")
+    }
     ## add sample data and metadata in columns
     for(x in seq_along(readsF)) {
-        tmpbaseF <- paste0(tempfile(), basename(readsF[[x]]))
-        tmpbaseR <- paste0(tempfile(), basename(readsR[[x]]))
+        tmpbaseF <- paste(tempfile(tmpdir=filedir),
+                          basename(readsF[[x]]), sep="_")
+        tmpbaseR <- paste(tempfile(tmpdir=filedir),
+                          basename(readsR[[x]]), sep="_")
         if(!file.exists(readsF[[x]]) | !file.exists(readsR[[x]])){
             data[, colnames(data)[[x]]] <- 0
             tmppathF[,x] <- paste0(tmpbaseF, names(MA@PrimerPairsSet),
@@ -162,4 +177,5 @@ setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, countOnly=FALSE,
         return(data)
     }
 })
+
 
