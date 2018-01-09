@@ -169,8 +169,7 @@ MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
 
 MA5 <- sequenceTableMulti(MA4)
 
-MA6 <- noChimeMulti(MA5,
-                    mc.cores=min(nrow(MA5), detectCores()))
+MA6 <- noChimeMulti(MA5, mc.cores=1)
 
 }
 \seealso{
