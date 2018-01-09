@@ -16,16 +16,9 @@
 ##'     reads. This vector can be named to store short short-name of
 ##'     samples. Names of readF and readR should be identical in this
 ##'     case
-##'
-## ##' @usage
-## ##' ## Constructors:
-## ##' PairedReadFileSet(readsF, readsR)
-##'
 ##' 
 ##' @return PairedReadFileSet
 ##' @author Emanuel Heitlinger
-##' @export PairedReadFileSet
-##'
 setClass("PairedReadFileSet",
          slots = c(readsF="character", readsR="character", names="character"),
          contains = c(readsF="character", readsR="character", names="character"),
@@ -46,6 +39,7 @@ setClass("PairedReadFileSet",
 ##' @param names Optional vector of class character with same length
 ##'     as sequencing read files. If empty constructed from basename
 ##'     of forward read files (filename without directory).
+##' @export PairedReadFileSet
 ##' @describeIn PairedReadFileSet-class Constructor for
 ##'     PairedReadFileSet-class
 PairedReadFileSet <- function(readsF,
@@ -97,7 +91,6 @@ setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
 ##' @importFrom Biostrings DNAStringSet
 ##' @return PrimerPairsSet-class
 ##' @author Emanuel Heitlinger
-##' @export PrimerPairsSet
 setClass("PrimerPairsSet", contains = "DNAStringSet",
          representation(primerF="DNAStringSet", primerR="DNAStringSet",
                         names="character", 
@@ -118,7 +111,8 @@ setClass("PrimerPairsSet", contains = "DNAStringSet",
 ##' @param primerF Character vector or DNAStringSet. Can be named or
 ##'     unnamed. 
 ##' @param primerR Character vector or DNAStringSet of the same
-##'     length. Can be named or unnamed. 
+##'     length. Can be named or unnamed.
+##' @export PrimerPairsSet
 ##' @rdname PrimerPairsSet-class
 PrimerPairsSet <- function(primerF, primerR){
     ## if names exist construct primer names
@@ -354,7 +348,6 @@ setMethod("length", "PairedDada", function(x){
 ##' @seealso \code{\link[dada2]{derepFastq}},\code{\link[dada2]{dada}}
 ##' @importFrom dada2 derepFastq dada
 ##' @author Emanuel Heitlinger
-##' @export MultiAmplicon
 ##' @exportClass MultiAmplicon
 setClass("MultiAmplicon",
          representation(PrimerPairsSet="PrimerPairsSet",
@@ -367,6 +360,8 @@ setClass("MultiAmplicon",
                         sequenceTable="list",
                         sequenceTableNoChime="list"))
 
+
+##' @export MultiAmplicon
 ##' @describeIn MultiAmplicon-class Constructor for
 ##'     MultiAmplicon-class
 MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
