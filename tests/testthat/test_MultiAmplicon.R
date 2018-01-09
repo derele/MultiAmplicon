@@ -42,7 +42,6 @@ test_that("N statified files is N of non-zero samples x amplicons",{
 
 
 test_that("files for each amplicon contain the number of reads reported", {
-    lapply(MA1@stratifiedFiles, function (x) length(readFastq(x@readsR)))
     expect_equivalent(
         unlist(lapply(MA1@stratifiedFiles,
                       function (x) length(readFastq(x@readsR)))),
