@@ -26,21 +26,18 @@ test_that("rowCounts is zero for nonsensical primer", {
 })
 
 context("SortAmplcion produced two files for each non-empty sample and amplicon?")
-
-
-## This test is dangerous (?) it fails when running in an session in
-## which sortAmplicons has already been called once (produced tmp files)
-## the number of temporary files produced
-n.files <- length(list.files(tempdir(), pattern="fastq.gz"))/2
+F.files <- unlist(lapply(MA1@stratifiedFiles, function (x) x@readsF))
+R.files <- unlist(lapply(MA1@stratifiedFiles, function (x) x@readsF))
+                   
 ## get only non empty samples raw counts
-non.empty.samples <- rawCounts(MA1)[, colSums(rawCounts(MA1))>0]
-test_that("number of files written equals rawCounts for non-zero samples", {
-    expect_equivalent(length(non.empty.samples), n.files)
+test_that("number of files written equals non-zero samples in rawCounts", {
+    expect_equal(sum(rawCounts(MA1)>0), length(F.files))
+    expect_equal(sum(rawCounts(MA1)>0), length(R.files))
 })
 
 test_that("N statified files is N of non-zero samples x amplicons",{
-    expect_equivalent(sum(rawCounts(MA1)>0),
-                      sum(unlist(lapply(MA1@stratifiedFiles, length))))
+    expect_equal(unname(rowSums(rawCounts(MA1)>0)), 
+                 unlist(lapply(MA1@stratifiedFiles, length)))
 })
 
 
