@@ -8,10 +8,10 @@
 \alias{sortAmplicons,MultiAmplicon-method}
 \title{sortAmplicons}
 \usage{
-sortAmplicons(MA, n = 1e+06, countOnly = FALSE, filedir = tmpdir(), ...)
+sortAmplicons(MA, n = 1e+06, countOnly = FALSE, filedir = tempdir(), ...)
 
 \S4method{sortAmplicons}{MultiAmplicon}(MA, n = 1e+06, countOnly = FALSE,
-  filedir = tmpdir(), ...)
+  filedir = tempdir(), ...)
 }
 \arguments{
 \item{MA}{\code{\link{MultiAmplicon-class}} object containing a
@@ -41,9 +41,9 @@ MultiAmplicon: By default (countOnly=FALSE) a
     \code{\link{MultiAmplicon-class}} object is returned with the
     stratifiedFiles slot populated. Stratified file names are
     constructed using a unique string created by
-    \code{\link[base]{tempfile}} and stored in R's
-    \code{\link[base]{tempdir}}. If the countOnly is set only a
-    numeric matrix of read counts is returned.
+    \code{\link[base]{tempfile}} and stored in the given filedir
+    (by default R's \code{\link[base]{tempdir}}). If the countOnly
+    is set only a numeric matrix of read counts is returned.
 }
 \description{
 Sort different amplicons into a fully stratified samples x

@@ -20,7 +20,7 @@
 ##' @param filedir path to an existing or newly to be created folder
 ##'     on your computer. \code{\link[base]{tempfile}} is used within
 ##'     this folder to creat unique filnames trying to avoid problems
-##'     in case the folder has been used before. 
+##'     in case the folder has been used before.
 ##' @param ... addtional parameter so be passed to
 ##'     Biostrings::isMatchingStartingAt. Be careful when using
 ##'     multiple starting positions or allowing error. This could lead
@@ -29,9 +29,9 @@
 ##'     \code{\link{MultiAmplicon-class}} object is returned with the
 ##'     stratifiedFiles slot populated. Stratified file names are
 ##'     constructed using a unique string created by
-##'     \code{\link[base]{tempfile}} and stored in R's
-##'     \code{\link[base]{tempdir}}. If the countOnly is set only a
-##'     numeric matrix of read counts is returned.
+##'     \code{\link[base]{tempfile}} and stored in the given filedir
+##'     (by default R's \code{\link[base]{tempdir}}). If the countOnly
+##'     is set only a numeric matrix of read counts is returned.
 ##'
 ##' @examples
 ##'
@@ -61,13 +61,13 @@
 ##' @export sortAmplicons
 ##' @aliases sortAmplicons, sortAmplicons-Method
 setGeneric(name="sortAmplicons",
-           def=function(MA, n=1e6, countOnly=FALSE, filedir=tmpdir(), ...) {
+           def=function(MA, n=1e6, countOnly=FALSE, filedir=tempdir(), ...) {
                standardGeneric("sortAmplicons")
            })
 
 ##' @rdname sortAmplicons
 setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, countOnly=FALSE,
-                                                     filedir=tmpdir(), ...){
+                                                     filedir=tempdir(), ...){
     ## the data matrix of amplicons x samples stratified counts 
     NR <- length(MA@PrimerPairsSet@primerF)
     NC <- length(MA@PairedReadFileSet@readsF)
