@@ -23,35 +23,63 @@ SA1 <- sortAmplicons(SA)
 
 context("Do empty files produce empty data?")
 test_that("rowCounts is zero for empty file", {
+    ## For multi amplicon objects
     expect_equal(colSums(rawCounts(MA1))[["S00_F_filt.fastq.gz"]], 0)
+    ## For single amplicon objects
+    expect_equal(colSums(rawCounts(SA1))[["S00_F_filt.fastq.gz"]], 0)
 })
 
 context("Do nonsensical primers result in zero matches?")
 test_that("rowCounts is zero for nonsensical primer", {
+    ## For multi amplicon objects
     expect_equal(rowSums(rawCounts(MA1))[["Amp5F.Amp5R"]], 0)
+    ## For single amplicon objects ... no empty amplicon used
+    ##    expect_equal(rowSums(rawCounts(SA1))[["Amp5F.Amp5R"]], 0)
 })
 
 context("SortAmplcion produced two files for each non-empty sample and amplicon?")
-F.files <- unlist(lapply(MA1@stratifiedFiles, function (x) x@readsF))
-R.files <- unlist(lapply(MA1@stratifiedFiles, function (x) x@readsF))
                    
 ## get only non empty samples raw counts
 test_that("number of files written equals non-zero samples in rawCounts", {
+    ## For multi amplicon objects
+    F.files <- unlist(lapply(MA1@stratifiedFiles, function (x) x@readsF))
+    R.files <- unlist(lapply(MA1@stratifiedFiles, function (x) x@readsF))
     expect_equal(sum(rawCounts(MA1)>0), length(F.files))
     expect_equal(sum(rawCounts(MA1)>0), length(R.files))
+    ## For single amplicon objects
+    F.files <- unlist(lapply(SA1@stratifiedFiles, function (x) x@readsF))
+    R.files <- unlist(lapply(SA1@stratifiedFiles, function (x) x@readsF))
+    expect_equal(sum(rawCounts(SA1)>0), length(F.files))
+    expect_equal(sum(rawCounts(SA1)>0), length(R.files))
 })
 
 test_that("N statified files is N of non-zero samples x amplicons",{
+    ## For multi amplicon objects
     expect_equal(unname(rowSums(rawCounts(MA1)>0)), 
                  unlist(lapply(MA1@stratifiedFiles, length)))
+    ## For single amplicon objects
+    expect_equal(unname(rowSums(rawCounts(SA1)>0)), 
+                 unlist(lapply(SA1@stratifiedFiles, length)))
+
 })
 
-
 test_that("files for each amplicon contain the number of reads reported", {
+    ## For multi amplicon objects
     expect_equivalent(
         unlist(lapply(MA1@stratifiedFiles,
                       function (x) length(readFastq(x@readsR)))),
-      rowSums(rawCounts(MA1)))
+        rowSums(rawCounts(MA1)))
+    ## For single amplicon objects
+    expect_equivalent(
+        unlist(lapply(SA1@stratifiedFiles,
+                      function (x) length(readFastq(x@readsR)))),
+        rowSums(rawCounts(SA1)))
 })
 
-
+context("SortAmplcion can be made less stringent?")
+test_that("less stringent sorting results in more reads accepted", {
+    expect_true(all(sortAmplicons(MA, countOnly=TRUE, starting.at=1:2) >=
+                    rawCounts(MA1)))
+    expect_true(all(sortAmplicons(MA, countOnly=TRUE, max.mismatch=1) >=
+                   rawCounts(MA1)))
+})
