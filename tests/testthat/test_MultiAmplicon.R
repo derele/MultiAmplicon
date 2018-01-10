@@ -12,8 +12,14 @@ Ffastq.file <- fastq.files[grepl("F_filt", fastq.files)]
 Rfastq.file <- fastq.files[grepl("R_filt", fastq.files)]
 PRF <- PairedReadFileSet(Ffastq.file, Rfastq.file)
 
+## Creating multi amplicon object
 MA <- MultiAmplicon(PPS, PRF)
 MA1 <- sortAmplicons(MA)
+
+## Creating single amplicon object
+SA <- MultiAmplicon(PrimerPairsSet(primerF[1], primerR[1]), PRF)
+SA1 <- sortAmplicons(SA)
+
 
 context("Do empty files produce empty data?")
 test_that("rowCounts is zero for empty file", {
