@@ -88,4 +88,4 @@ test_that("less stringent sorting results in more reads accepted", {
 context("SortAmplcion can be made less stringent?")
 test_that("multiDerep Works", {
         MA2 <- derepMulti(MA1)
-}
+})

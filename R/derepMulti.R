@@ -20,6 +20,9 @@ derepMulti <- function(MA, ...){
             length(MA@PairedReadFileSet@readsF), "possible sample files\n")
         derepF <- derepFastq(MA@stratifiedFiles[[i]]@readsF, ...)
         derepR <- derepFastq(MA@stratifiedFiles[[i]]@readsR, ...)
+        ## make it a list even if only one sample was dereplicated
+        if (class(derepF)%in%"derep") {derepF <- list(derepF)}
+        if (class(derepR)%in%"derep") {derepR <- list(derepR)} 
         Pderep <- lapply(seq_along(derepF), function (w){
             new("PairedDerep",
                 derepF = derepF[[w]],
