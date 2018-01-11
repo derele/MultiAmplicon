@@ -1,10 +1,10 @@
 
 primerF <- c(Amp1F = "AGAGTTTGATCCTGGCTCAG", Amp2F = "ACTCCTACGGGAGGCAGC",
              Amp3F = "GAATTGACGGAAGGGCACC", Amp4F = "YGGTGRTGCATGGCCGYT",
-             Amp5F = "AAAAACCCCGGGGGGTTTTT")
+             Amp5F = "AAAAACCCCGGGGGGTTTTT", Amp6F = "AGAGTTTGATCCTGCCTCAG")
 primerR <- c(Amp1R = "CTGCWGCCNCCCGTAGG", Amp2R = "GACTACHVGGGTATCTAATCC",
              Amp3R = "AAGGGCATCACAGACCTGTTAT", Amp4R = "TCCTTCTGCAGGTTCACCTAC",
-             Amp5R = "AAAAACCCCGGGGGGTTTTT")
+             Amp5R = "AAAAACCCCGGGGGGTTTTT", Amp6R = "CCTACGGGTGGCAGATGCAG")
 PPS <- PrimerPairsSet(primerF, primerR)
 fastq.dir <- system.file("extdata", "fastq", package = "MultiAmplicon")
 fastq.files <- list.files(fastq.dir, full.names=TRUE)
@@ -14,7 +14,7 @@ PRF <- PairedReadFileSet(Ffastq.file, Rfastq.file)
 
 ## Creating multi amplicon object
 MA <- MultiAmplicon(PPS, PRF)
-MA1 <- sortAmplicons(MA)
+MA1 <- sortAmplicons(MA, max.mismatch=1)
 
 ## Creating single amplicon object
 SA <- MultiAmplicon(PrimerPairsSet(primerF[1], primerR[1]), PRF)
@@ -83,3 +83,9 @@ test_that("less stringent sorting results in more reads accepted", {
     expect_true(all(sortAmplicons(MA, countOnly=TRUE, max.mismatch=1) >=
                    rawCounts(MA1)))
 })
+
+
+context("SortAmplcion can be made less stringent?")
+test_that("multiDerep Works", {
+        MA2 <- derepMulti(MA1)
+}
