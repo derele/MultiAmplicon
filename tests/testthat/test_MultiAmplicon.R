@@ -12,12 +12,10 @@ Ffastq.file <- fastq.files[grepl("F_filt", fastq.files)]
 Rfastq.file <- fastq.files[grepl("R_filt", fastq.files)]
 PRF <- PairedReadFileSet(Ffastq.file, Rfastq.file)
 
-## Creating multi amplicon object
 MA <- MultiAmplicon(PPS, PRF)
-MA1 <- sortAmplicons(MA, max.mismatch=1)
-
-## Creating single amplicon object
 SA <- MultiAmplicon(PrimerPairsSet(primerF[1], primerR[1]), PRF)
+
+MA1 <- sortAmplicons(MA)
 SA1 <- sortAmplicons(SA)
 
 
@@ -85,7 +83,4 @@ test_that("less stringent sorting results in more reads accepted", {
 })
 
 
-context("SortAmplcion can be made less stringent?")
-test_that("multiDerep Works", {
-        MA2 <- derepMulti(MA1)
-})
+MA2 <- derepMulti(MA1)
