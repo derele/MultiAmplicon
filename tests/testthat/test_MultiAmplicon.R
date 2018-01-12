@@ -15,7 +15,16 @@ PRF <- PairedReadFileSet(Ffastq.file, Rfastq.file)
 MA <- MultiAmplicon(PPS, PRF)
 SA <- MultiAmplicon(PrimerPairsSet(primerF[1], primerR[1]), PRF)
 
+
+context("sortAmplicons resut doesn't change results over executions")
 MA1 <- sortAmplicons(MA)
+test_that("sortAmplicons resut doesn't change over executions", {
+    ## For multi amplicon objects
+    expect_known_output(MA, system.file("testdata", "MA_sorted.rda",
+                                        package = "MultiAmplicon"))
+})
+
+
 SA1 <- sortAmplicons(SA)
 
 
@@ -84,3 +93,10 @@ test_that("less stringent sorting results in more reads accepted", {
 
 
 MA2 <- derepMulti(MA1)
+
+MA3 <- dadaMulti(MA2, err=NULL, selfConsist=TRUE,
+                 multithread=TRUE)
+
+## bugging here...
+## MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
+
