@@ -24,9 +24,7 @@ test_that("sortAmplicons resut doesn't change over executions", {
                                         package = "MultiAmplicon"))
 })
 
-
 SA1 <- sortAmplicons(SA)
-
 
 context("Do empty files produce empty data?")
 test_that("rowCounts is zero for empty file", {
