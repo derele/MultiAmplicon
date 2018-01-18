@@ -29,9 +29,8 @@ mergeMulti <- function(MA, ...){
                 "samples for amplicon ",
                 MA@PrimerPairsSet@names[[i]], "\n")
             MP <- mergePairs(daF, deF, daR, deR, ...)
-            all.samples <- colnames(MA@rawCounts)[
-                MA@rawCounts[i, ]>0]
-            names(MP) <- all.samples
+            ## correct the case of one sample / amplicon 
+            if(class(MP)%in%"data.frame"){MP <- list(MP)}
             cat("DONE\n\n")
             return(MP)} else{
                           cat("skipping empty amplicon (sequences for" ,

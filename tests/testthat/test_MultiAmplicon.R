@@ -98,3 +98,6 @@ MA3 <- dadaMulti(MA2, err=NULL, selfConsist=TRUE,
 ## bugging here...
 MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
 
+MA5 <- sequenceTableMulti(MA4)
+
+MA6 <- noChimeMulti(MA5, mc.cores=20)
