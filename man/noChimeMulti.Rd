@@ -4,7 +4,7 @@
 \alias{noChimeMulti}
 \title{noChimeMulti}
 \usage{
-noChimeMulti(MA, mc.cores, ...)
+noChimeMulti(MA, mc.cores = getOption("mc.cores", 2L), ...)
 }
 \arguments{
 \item{MA}{A \code{\link{MultiAmplicon-class}} object pre-processed
@@ -36,4 +36,3 @@ object to preprocess your multi-marker data to this point.
 \author{
 Emanuel Heitlinger
 }
-

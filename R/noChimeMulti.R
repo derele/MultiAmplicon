@@ -22,7 +22,7 @@
 ##' @importFrom parallel mclapply
 ##' @export
 ##' @author Emanuel Heitlinger
-noChimeMulti <- function(MA, mc.cores, ...){
+noChimeMulti <- function(MA, mc.cores=getOption("mc.cores", 2L), ...){
     sequenceTableNoChime <-
         mclapply(MA@sequenceTable, function (x) { 
             removeBimeraDenovo(x, ...)

@@ -6,14 +6,16 @@
 ##'
 ##' @title derepMulti
 ##' @param MA MultiAmplicon object to be dereplicated
+##' @param mc.cores number or compute cores for parallel processing
 ##' @param ... arguments to be passed to \code{\link{derepFastq}}
 ##' @return MultiAmplicon object with derep slots (forward derepF and
 ##'     reverse derepR) filled
 ##' @importFrom dada2 derepFastq
+##' @importFrom parallel mclapply
 ##' @export
 ##' @author Emanuel Heitlinger
-derepMulti <- function(MA, ...){
-    PPderep <- lapply(seq_along(MA@PrimerPairsSet), function (i){
+derepMulti <- function(MA, mc.cores=getOption("mc.cores", 2L), ...){
+    PPderep <- mclapply(seq_along(MA@PrimerPairsSet), function (i){
         cat("amplicon", rownames(MA)[i],
             "dereplicating for ",
             length(MA@stratifiedFiles[[i]]@readsF), " of ",
@@ -29,6 +31,6 @@ derepMulti <- function(MA, ...){
                 derepR = derepR[[w]])
         })
         return(Pderep)
-    })
+    }, mc.cores=mc.cores)
     initialize(MA, derep=PPderep)
 }

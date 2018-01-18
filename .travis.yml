@@ -5,6 +5,9 @@ use_bioc: true
 cache: packages
 sudo: false
 
+before_script:
+  - echo "BiocParallel::register(BiocParallel::SerialParam())" > ~/.Rprofile
+
 r_packages:
   - covr
 

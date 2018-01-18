@@ -4,10 +4,12 @@
 \alias{derepMulti}
 \title{derepMulti}
 \usage{
-derepMulti(MA, ...)
+derepMulti(MA, mc.cores = getOption("mc.cores", 2L), ...)
 }
 \arguments{
 \item{MA}{MultiAmplicon object to be dereplicated}
+
+\item{mc.cores}{number or compute cores for parallel processing}
 
 \item{...}{arguments to be passed to \code{\link{derepFastq}}}
 }
@@ -26,4 +28,3 @@ sequences from fastq or compressed fastq files.
 \author{
 Emanuel Heitlinger
 }
-
