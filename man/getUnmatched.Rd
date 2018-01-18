@@ -32,3 +32,4 @@ matched by primer pairs after running \code{\link{sortAmplicons}}
 \author{
 Emanuel Heitlinger
 }
+

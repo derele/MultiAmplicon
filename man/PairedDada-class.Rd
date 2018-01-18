@@ -2,10 +2,10 @@
 % Please edit documentation in R/allClasses.R, R/subset-methods.R
 \docType{class}
 \name{PairedDada-class}
-\alias{PairedDada-class}
 \alias{PairedDada}
-\alias{length,PairedDada-method}
+\alias{PairedDada-class}
 \alias{[,PairedDada,integer,missing,ANY-method}
+\alias{length,PairedDada-method}
 \title{PairedDada-class}
 \usage{
 PairedDada(dadaF = list(), dadaR = list())
@@ -40,3 +40,4 @@ reverse read pairs in this object
 \author{
 Emanuel Heitlinger
 }
+

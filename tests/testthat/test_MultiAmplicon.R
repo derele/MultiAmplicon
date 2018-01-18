@@ -96,5 +96,5 @@ MA3 <- dadaMulti(MA2, err=NULL, selfConsist=TRUE,
                  multithread=TRUE)
 
 ## bugging here...
-## MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
+MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
 

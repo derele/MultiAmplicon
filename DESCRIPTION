@@ -2,21 +2,24 @@ Package: MultiAmplicon
 Title: Run metabarcoding alalyses for multiple amplicons
 Version: 0.0.0.9000
 Authors@R: person("Emanuel", "Heitlinger", email = "emanuelheitlinger@gmail.com", role = c("aut", "cre"))
-Description: The pagages allows to run a typical R/bioconductor workflow on multiple amplicons defined by different primer pairs (e.g. on the 16S or 18S genes and COI).
-biocViews:
-    Metagenomics,  Genetics, Sequencing, Microbiome,
+Description: The pagages allows to run a typical R/bioconductor workflow on
+    multiple amplicons defined by different primer pairs (e.g. on the 16S or 18S
+    genes and COI).
+biocViews: Metagenomics,  Genetics, Sequencing, Microbiome,
     Metagenomics, Clustering, Classification, MultipleComparison,
     GeneticVariability
 Imports:
-    Biostrings (>= 2.42.0), pheatmap, methods
+    Biostrings (>= 2.42.0),
+    pheatmap,
+    methods
 Depends:
     R (>= 3.3.1),
-    ShortRead (>= 1.30.0), 
+    ShortRead (>= 1.30.0),
     dada2 (>= 1.2.0)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1.9000
-Suggests: 
+RoxygenNote: 5.0.1
+Suggests:
     testthat,
     covr
