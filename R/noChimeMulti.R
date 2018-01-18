@@ -25,7 +25,9 @@
 noChimeMulti <- function(MA, mc.cores=getOption("mc.cores", 2L), ...){
     sequenceTableNoChime <-
         mclapply(MA@sequenceTable, function (x) { 
-            removeBimeraDenovo(x, ...)
+            if (nrow(x)>0 && ncol(x)>0){
+                removeBimeraDenovo(x, ...)
+            } else {matrix()}
         },
         mc.cores=mc.cores)
             ## fix me to get the correct rownames on those...
