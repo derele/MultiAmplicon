@@ -189,7 +189,11 @@ setClass("PairedDada",
          validity=function(object) {
              if (length(object@dadaF) != length(object@dadaR)){
                  "Same number of forward and reverse dada objects needed to constitute forward and reverse sequence read pairs"
-             }})
+             }
+             if (!all(unlist(lapply(object@dadaF, class))%in%"dada")){
+                 "only lists of dada class objects can from PairdDada-class objects"
+             }
+         })
 
 ##' @param dadaF a dada object of forward reads
 ##' @param dadaR a dada object of reverse reads

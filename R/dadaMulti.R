@@ -24,15 +24,18 @@ dadaMulti <- function(MA, ...){
             length(dF), " of ",
            length(MA@PairedReadFileSet), "possible sample files\n\n")
        if(length(dF)>0 && length(dR)>0){
-           ## run both functions
+           ## run functions for reverse and forward
            dadaF <- dada(dF, ...)
+           ## make it a list of length 1 in case of only one sample,
+           ## otherwise it is simplified and can't be handled
+           if (class(dadaF)%in%"dada"){dadaF <- list(dadaF)}
            dadaR <- dada(dR, ...)
-           Pdada <- lapply(seq_along(dadaF), function (w){
-               PairedDada(dadaF = dadaF[w], dadaR = dadaR[w])
-           })
+           ## make it a list in case of only one sample
+           if (class(dadaR)%in%"dada"){dadaR <- list(dadaR)}
+           Pdada <- PairedDada(dadaF = dadaF, dadaR = dadaR)
        } else {
            Pdada <- PairedDada()
-           cat("skipping amplicon")
+           cat("skipping empty amplicon")
        }
        return(Pdada)
     })

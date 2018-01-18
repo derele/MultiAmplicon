@@ -21,9 +21,9 @@
 mergeMulti <- function(MA, ...){
     mergers <- lapply(seq_along(MA@PrimerPairsSet), function (i){     
         if(length(MA@dada[[i]]) > 0){
-            daF <- unlist(lapply(MA@dada[[i]], "slot", "dadaF"), recursive=FALSE)
+            daF <- slot(MA@dada[[i]], "dadaF")
+            daR <- slot(MA@dada[[i]], "dadaR")
             deF <- lapply(MA@derep[[i]], "slot", "derepF")
-            daR <- unlist(lapply(MA@dada[[i]], "slot", "dadaR"), recursive=FALSE)
             deR <- lapply(MA@derep[[i]], "slot", "derepR")
             cat("merging sequences from " , length(MA@dada[[i]]),
                 "samples for amplicon ",
