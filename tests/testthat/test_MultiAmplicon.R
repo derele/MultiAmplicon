@@ -90,7 +90,7 @@ test_that("less stringent sorting results in more reads accepted", {
 })
 
 
-MA2 <- derepMulti(MA1, mc.cores=6)
+MA2 <- derepMulti(MA1, mc.cores=1)
 
 MA3 <- dadaMulti(MA2, err=NULL, selfConsist=TRUE,
                  multithread=TRUE)
@@ -100,4 +100,4 @@ MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
 
 MA5 <- sequenceTableMulti(MA4)
 
-MA6 <- noChimeMulti(MA5, mc.cores=6)
+MA6 <- noChimeMulti(MA5, mc.cores=1)
