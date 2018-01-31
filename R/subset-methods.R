@@ -51,8 +51,31 @@ setMethod("[", c("PairedReadFileSet", "integer", "missing", "ANY"),
               PairedReadFileSet(newF, newR)
 })
 
+##' @rdname PairedReadFileSet-class
+setMethod("[", c("PairedReadFileSet", "logical", "missing", "ANY"),
+          function(x, i, j, ..., drop=NA){
+              if (length(i)!=length(x)){
+                  warning("logical subscript is recycled to match length of",
+                          "PairedReadFileSet")}
+              if (length(x)%%length(i)!=0) {
+                  stop("length of PairedReadFileSet (", 
+                       length(x),
+                       ") is not multiple of length of logical subscript (",
+                       length(i), ")")
+              }
+              index <- rep_len(i, length.out=length(x))
+              x[which(index)]
+          })
+
+##' @rdname PairedReadFileSet-class
+setMethod("[", c("PairedReadFileSet", "character", "missing", "ANY"),
+          function(x, i, j, ..., drop=NA){
+              x[which(names(x)%in%i)]
+          })
+
 ##' @param x PairedDerep-class
-##' @param i numeric to select
+##' @param i integer or logical indicating which sequencing read file
+##'     pair to select or character string giving its name
 ##' @param j not used
 ##' @param ... not used
 ##' @param drop not used
