@@ -2,17 +2,41 @@
 
 ## already documented in accessors @param x PrimerPairsSet-class
 ## object
-##' @param i numeric to select
+##' @param i integer, or logical value which primer pairs to select or
+##'     character string giving the name of the primer pair
 ##' @param j not used
 ##' @param ... not used
 ##' @param drop not used
 ##' @rdname PrimerPairsSet-class
 setMethod("[", c("PrimerPairsSet", "integer", "missing", "ANY"),
-          function(x, i, j, ..., drop=TRUE){
-    newF <- x@primerF[i]
-    newR <- x@primerR[i]
-    PrimerPairsSet(primerF=as.character(newF), primerR=as.character(newR))
+          function(x, i, j, ..., drop=NA){
+              newF <- x@primerF[as.integer(i)]
+              newR <- x@primerR[as.integer(i)]
+              PrimerPairsSet(primerF=as.character(newF),
+                             primerR=as.character(newR))
 })
+
+##' @rdname PrimerPairsSet-class
+setMethod("[", c("PrimerPairsSet", "logical", "missing", "ANY"),
+          function(x, i, j, ..., drop=NA){
+              if (length(i)!=length(x)){
+                  warning("logical subscript is recycled to match length of",
+                          "PrimerPairsSet")}
+              if (length(x)%%length(i)!=0) {
+                  stop("length of PrimerPairsSet (", 
+                       length(x),
+                       ") is not multiple of length of logical subscript (",
+                       length(i), ")")
+              }
+              index <- rep_len(i, length.out=length(x))
+              x[which(index)]
+          })
+
+##' @rdname PrimerPairsSet-class
+setMethod("[", c("PrimerPairsSet", "character", "missing", "ANY"),
+          function(x, i, j, ..., drop=NA){
+              x[which(names(x)%in%i)]
+          })
 
 ##' @param x PairedReadFileSet-class object
 ##' @param i numeric to select
@@ -22,9 +46,9 @@ setMethod("[", c("PrimerPairsSet", "integer", "missing", "ANY"),
 ##' @rdname PairedReadFileSet-class
 setMethod("[", c("PairedReadFileSet", "integer", "missing", "ANY"),
           function(x, i, j, ..., drop=TRUE){
-    newF <- x@readsF[i]
-    newR <- x@readsR[i]
-    PairedReadFileSet(newF, newR)
+              newF <- x@readsF[i]
+              newR <- x@readsR[i]
+              PairedReadFileSet(newF, newR)
 })
 
 ##' @param x PairedDerep-class
