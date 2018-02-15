@@ -396,6 +396,12 @@ setMethod("ncol", "MultiAmplicon", function (x) length(x@PairedReadFileSet))
 setMethod("nrow", "MultiAmplicon", function (x) length(x@PrimerPairsSet))
 
 ##' @rdname MultiAmplicon-class
+setMethod("dim", "MultiAmplicon", function (x) {
+    as.integer(c(length(x@PrimerPairsSet), length(x@PairedReadFileSet)))
+})
+
+
+##' @rdname MultiAmplicon-class
 ##' @export
 setGeneric("rawCounts", function(x){standardGeneric("rawCounts")})
 
