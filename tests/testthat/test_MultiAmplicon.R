@@ -114,4 +114,17 @@ test_that("stratified files result in the number of columns of sequence tables "
 MA6 <- noChimeMulti(MA5, mc.cores=1)
 
 context("Subsetting MultiAmplicon objects")
+
 MA1[1:2, 1:2]
+
+MA2[1:2, 1:2]
+
+MA3[1:2, 1:2]
+
+MA4[1:2, 1:2]
+
+MA5[1:2, 1:2]
+
+MA6[1:2, 1:2]
+
+
