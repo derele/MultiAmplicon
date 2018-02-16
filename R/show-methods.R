@@ -1,4 +1,5 @@
 ##############################################################################
+
 ##' @param object A \code{PairedReadFileSet-class} object.
 ##' @rdname PairedReadFileSet-class
 setMethod("show", "PairedReadFileSet", function(object) {
@@ -15,7 +16,9 @@ setMethod("show", "PairedReadFileSet", function(object) {
     }
 })
 
-################################################################################' @param object A \code{PrimerPairsSet-class} object.
+################################################################################
+
+##' @param object A \code{PrimerPairsSet-class} object.
 ##' @rdname PrimerPairsSet-class
 setMethod("show", "PrimerPairsSet", function(object){
     cat("  A ", class(object),
@@ -30,12 +33,14 @@ setMethod("show", "PrimerPairsSet", function(object){
 })
 
 
-################################################################################' @param object A \code{MultiAmplicon-class} object.
+################################################################################
+
+##' @param object A \code{MultiAmplicon-class} object.
 ##' @rdname MultiAmplicon-class 
 setMethod("show", "MultiAmplicon", function(object){
     cat("  A ", class(object),
-        " instance of dimensions ", length(object@PrimerPairsSet), " x ",
-        length(object@PairedReadFileSet),
+        " instance of dimensions ", dim(object)[1], " x ",
+        dim(object)[2],
         "\n", sep = "")
     if (length(object@PairedReadFileSet) != 0 &&
         length(object@PrimerPairsSet) !=0) {
