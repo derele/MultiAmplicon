@@ -9,10 +9,11 @@
 \alias{rownames,MultiAmplicon-method}
 \alias{ncol,MultiAmplicon-method}
 \alias{nrow,MultiAmplicon-method}
+\alias{dim,MultiAmplicon-method}
 \alias{rawCounts}
 \alias{rawCounts,MultiAmplicon-method}
 \alias{show,MultiAmplicon-method}
-\alias{[,MultiAmplicon,integer,missing,ANY-method}
+\alias{[,MultiAmplicon,integer,integer,ANY-method}
 \title{A class combining sequences of forward and reverse primers (in a
 \code{\link{PrimerPairsSet-class}}) plus file names of paired end
 sequencing files (in a \code{\link{PairedReadFileSet-class}}).}
@@ -30,13 +31,15 @@ MultiAmplicon(PrimerPairsSet = PrimerPairsSet(),
 
 \S4method{nrow}{MultiAmplicon}(x)
 
+\S4method{dim}{MultiAmplicon}(x)
+
 rawCounts(x)
 
 \S4method{rawCounts}{MultiAmplicon}(x)
 
 \S4method{show}{MultiAmplicon}(object)
 
-\S4method{[}{MultiAmplicon,integer,missing,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{MultiAmplicon,integer,integer,ANY}(x, i, j, ..., drop = TRUE)
 }
 \arguments{
 \item{PrimerPairsSet}{a set of primer pairs specifiying your

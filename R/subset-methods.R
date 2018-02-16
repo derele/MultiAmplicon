@@ -116,7 +116,7 @@ setMethod("[", c("PairedDada", "integer", "missing", "ANY"),
 ##' @param ... not used
 ##' @param drop should not be used
 ##' @rdname MultiAmplicon-class
-setMethod("[", c("MultiAmplicon", "integer", "missing", "ANY"),
+setMethod("[", c("MultiAmplicon", "integer", "integer", "ANY"),
           function(x, i, j, ..., drop=TRUE){
               newPrimer <- x@PrimerPairsSet[i]
               newFiles <- x@PairedReadFileSet[j]
@@ -129,43 +129,43 @@ setMethod("[", c("MultiAmplicon", "integer", "missing", "ANY"),
               newSTnC <- list()
               if(all(dim(x@rawCounts)>0)){
                   newRC <- as.matrix(rawCounts(x)[i, j])
-                  ## we drop empty files (i.e. also empty "samples" in
-                  ## derep, dada, etc objects) without a placeholder,
-                  for(ii in i){
-                      ## therefore we need to find new, fixed j indices
-                      zero.indices <- which(x@rawCounts[ii, ]>0)
-                      newJ <- which(zero.indices%in%j)
-                      ## create updated objects for existing slots
-                      if(length(x@stratifiedFiles)>0){
-                          newSF[[length(newSF)+1]] <-
-                              lapply(x@stratifiedFiles[ii], "[", newJ)
-                      }
-                      if(length(x@derep)>0){
-                          newderep[[length(newderep)+1]] <-
-                              lapply(x@derep[ii], "[", newJ)
-                      }
-                      if(length(x@dada)>0){
-                          newdada[[length(newdada)+1]] <-
-                              lapply(x@dada[ii], "[", newJ)
-                      }
-                      if(length(x@mergers)>0){
-                          newmergers[[length(newST)+1]] <-
-                              lapply(x@mergers[ii], "[", newJ)
-                      }
-                      if(length(x@sequenceTable)>0){
-                          newST[[length(newST)+1]] <-
-                              lapply(x@sequenceTable[ii], function (y){
-                                  y[newJ, ]
-                              })
-                      }
-                      if(length(x@sequenceTableNoChime)>0){
-                          newSTnC[[length(newSTnC)+1]] <-
-                              lapply(x@sequenceTableNoChime[ii], function(y){
-                                  y[newJ, ]
-                              })
-                      }
-                  }
+                  ## we drop empty files from statified files
+                  ## therefore we have to find new indices j. These
+                  ## later have to be used also for the columns of
+                  ## sequence tables.
+                  new.j <- lapply(seq_along(i), function (ii) {
+                      zero.i <- which(x@rawCounts[ii, ]>0)
+                      which(zero.i%in%j)
+                  })
+                  newSF <-  lapply(seq_along(i), function (ii) {
+                      x@stratifiedFiles[[ii]][new.j[[ii]]]
+                  })
               }
+          ##     if(length(x@derep)>0){
+          ##         newderep[[length(newderep)+1]] <-
+          ##             lapply(x@derep[ii], "[", newJ)
+          ##     }
+          ##     if(length(x@dada)>0){
+          ##         newdada[[length(newdada)+1]] <-
+          ##             lapply(x@dada[ii], "[", newJ)
+          ##     }
+          ##     if(length(x@mergers)>0){
+          ##         newmergers[[length(newST)+1]] <-
+          ##             lapply(x@mergers[ii], "[", newJ)
+          ##     }
+          ##     if(length(x@sequenceTable)>0){
+          ##         newST[[length(newST)+1]] <-
+          ##             lapply(x@sequenceTable[ii], function (y){
+          ##                 y[newJ, ]
+          ##             })
+          ##     }
+          ##     if(length(x@sequenceTableNoChime)>0){
+          ##         newSTnC[[length(newSTnC)+1]] <-
+          ##             lapply(x@sequenceTableNoChime[ii], function(y){
+          ##                 y[newJ, ]
+          ##             })
+          ##     }
+          ## }
           initialize(x,
               PrimerPairsSet = newPrimer,
               PairedReadFileSet = newFiles,
@@ -177,5 +177,5 @@ setMethod("[", c("MultiAmplicon", "integer", "missing", "ANY"),
               sequenceTable = newST,
               sequenceTableNoChime = newSTnC
               )
-})
-
+          }
+)

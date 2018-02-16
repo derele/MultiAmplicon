@@ -4,12 +4,20 @@
 \alias{derepMulti}
 \title{derepMulti}
 \usage{
-derepMulti(MA, mc.cores = getOption("mc.cores", 2L), ...)
+derepMulti(MA, mc.cores = getOption("mc.cores", 2L),
+  keep.single.singlets = FALSE, ...)
 }
 \arguments{
 \item{MA}{MultiAmplicon object to be dereplicated}
 
 \item{mc.cores}{number or compute cores for parallel processing}
+
+\item{keep.single.singlets}{logical argument indicationg whether a
+derep slot should be filled with a single sequence recovered
+in only one sample. Defaults to FALSE meaning that such empty
+derep objects are created in such a case. Keeping such derep
+objects (setting this to TRUE) might result in downstream
+problems (Errors) in dada inference.}
 
 \item{...}{arguments to be passed to \code{\link{derepFastq}}}
 }

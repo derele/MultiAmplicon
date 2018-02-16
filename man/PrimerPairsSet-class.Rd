@@ -9,6 +9,8 @@
 \alias{names,PrimerPairsSet-method}
 \alias{show,PrimerPairsSet-method}
 \alias{[,PrimerPairsSet,integer,missing,ANY-method}
+\alias{[,PrimerPairsSet,logical,missing,ANY-method}
+\alias{[,PrimerPairsSet,character,missing,ANY-method}
 \title{A class representing sequences of forward and reverse primers.}
 \usage{
 PrimerPairsSet(primerF, primerR)
@@ -19,7 +21,11 @@ PrimerPairsSet(primerF, primerR)
 
 \S4method{show}{PrimerPairsSet}(object)
 
-\S4method{[}{PrimerPairsSet,integer,missing,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{PrimerPairsSet,integer,missing,ANY}(x, i, j, ..., drop = NA)
+
+\S4method{[}{PrimerPairsSet,logical,missing,ANY}(x, i, j, ..., drop = NA)
+
+\S4method{[}{PrimerPairsSet,character,missing,ANY}(x, i, j, ..., drop = NA)
 }
 \arguments{
 \item{primerF}{Character vector or DNAStringSet. Can be named or
@@ -32,7 +38,8 @@ length. Can be named or unnamed.}
 
 \item{object}{A \code{PrimerPairsSet-class} object.}
 
-\item{i}{numeric to select}
+\item{i}{integer, or logical value which primer pairs to select or
+character string giving the name of the primer pair}
 
 \item{j}{not used}
 

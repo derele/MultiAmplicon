@@ -92,7 +92,7 @@ test_that("less stringent sorting results in more reads accepted", {
 
 MA2 <- derepMulti(MA1, mc.cores=1)
 
-MA3 <- dadaMulti(MA2, err=NULL, selfConsist=TRUE,
+MA3 <- dadaMulti(MA2, err=NULL, selfConsist=TRUE, pool=FALSE, 
                  multithread=TRUE)
 
 ## bugging here...
@@ -100,4 +100,18 @@ MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
 
 MA5 <- sequenceTableMulti(MA4)
 
+context("Sequence table has entries corresponding to stratified files ")
+test_that("stratified files result in the number of columns of sequence tables ",
+{
+    expect_true(all(unlist(lapply(MA5@stratifiedFiles, length)) ==
+                    unlist(lapply(MA5@sequenceTable, nrow)) |
+                    unlist(lapply(MA5@stratifiedFiles, length)) ==
+                    unlist(lapply(MA5@sequenceTable, nrow))+1))
+    ## last case for if a single sequence was dropped derep object
+
+})
+
 MA6 <- noChimeMulti(MA5, mc.cores=1)
+
+context("Subsetting MultiAmplicon objects")
+MA1[1:2, 1:2]
