@@ -3,9 +3,7 @@
 ##' @param object A \code{PairedReadFileSet-class} object.
 ##' @rdname PairedReadFileSet-class
 setMethod("show", "PairedReadFileSet", function(object) {
-    cat("  A ", class(object),
-        " instance of length ", length(object@readsF), 
-        "\n", sep = "")
+    cat("A", class(object), "instance of length", length(object@readsF), "\n")
     if (length(object@readsF) != 0) {
         cat("\n", length(object@readsF), " Forward read files:",
             substr(paste(object@readsF, collapse=" "), 1, 180),
@@ -21,9 +19,8 @@ setMethod("show", "PairedReadFileSet", function(object) {
 ##' @param object A \code{PrimerPairsSet-class} object.
 ##' @rdname PrimerPairsSet-class
 setMethod("show", "PrimerPairsSet", function(object){
-    cat("  A ", class(object),
-        " instance of length ", length(object@primerF), 
-        "\n", sep = "")
+    cat("A", class(object),
+        "instance of length", length(object@primerF), "\n")
     if (length(object@primerF) != 0) {
         cat("Forward:\n")
         cat(Biostrings:::.XStringSet.show_frame(object@primerF))
@@ -38,22 +35,23 @@ setMethod("show", "PrimerPairsSet", function(object){
 ##' @param object A \code{MultiAmplicon-class} object.
 ##' @rdname MultiAmplicon-class 
 setMethod("show", "MultiAmplicon", function(object){
-    cat("  A ", class(object),
-        " instance of dimensions ", dim(object)[1], " x ",
-        dim(object)[2],
-        "\n", sep = "")
-    if (length(object@PairedReadFileSet) != 0 &&
-        length(object@PrimerPairsSet) !=0) {
-        cat("Forward Primers:\n")
-        cat(Biostrings:::.XStringSet.show_frame(object@PrimerPairsSet@primerF))
-        cat("Reverse Primers:\n")
-        cat(Biostrings:::.XStringSet.show_frame(object@PrimerPairsSet@primerR))
-        cat("\n", length(object@PairedReadFileSet), " Forward read files:",
-            substr(paste(object@PairedReadFileSet@readsF, collapse=" "), 1, 180),
-            "... \n")
-        cat(length(object@PairedReadFileSet), " Reverse read files:",
-            substr(paste(object@PairedReadFileSet@readsR, collapse=" "), 1, 180),
-            "... \n")
-    }
+    cat("A", class(object), "instance of dimensions", dim(object)[1], "x",
+        dim(object)[2],"\n")
+    cat("\nContaining slot PrimerPairsSet: \n")
+    show(object@PrimerPairsSet)
+    cat("\nContaining slot PairedReadFileSet: \n")
+    show(object@PairedReadFileSet)
+    cat("\nContaining slot stratifiedFiles of length:",
+        length(object@stratifiedFiles), "\n")
+    cat("\nContaining slot derep of length:",
+        length(object@derep), "\n")
+    cat("\nContaining slot dada of length:",
+        length(object@dada), "\n")
+    cat("\nContaining slot mergers of length:",
+        length(object@mergers), "\n")
+    cat("\nContaining slot sequenceTable of length:",
+        length(object@sequenceTable), "\n")
+    cat("\nContaining slot sequenceTableNoChime of length:",
+        length(object@sequenceTableNoChime), "\n")
 })
 
