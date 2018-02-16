@@ -168,6 +168,11 @@ setMethod("length", "PairedDerep", function(x){
     length(x@derepF)
 })
 
+setMethod("names", "PairedDerep", function(x){
+    names(x)
+})
+
+
 
 ## completely useless list does it all
 ## setClass("PairedDerepSet",
