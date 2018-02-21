@@ -170,6 +170,7 @@ setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, countOnly=FALSE,
                                       PairedReadFileSet(tmppathF[i, existing],
                                                         tmppathR[i, existing])
                                   })
+        names(stratifiedFiles) <- names(MA@PrimerPairsSet)
         new.MA <- initialize(MA, rawCounts = data,
                              stratifiedFiles = stratifiedFiles)
         return(new.MA)
