@@ -1,6 +1,6 @@
 ##############################################################################
-
 ##' @param object A \code{PairedReadFileSet-class} object.
+##' @importFrom methods show
 ##' @rdname PairedReadFileSet-class
 setMethod("show", "PairedReadFileSet", function(object) {
     cat("A", class(object), "instance of length", length(object@readsF), "\n")
@@ -17,6 +17,7 @@ setMethod("show", "PairedReadFileSet", function(object) {
 ################################################################################
 
 ##' @param object A \code{PrimerPairsSet-class} object.
+##' @importFrom methods show
 ##' @rdname PrimerPairsSet-class
 setMethod("show", "PrimerPairsSet", function(object){
     cat("A", class(object),
@@ -33,6 +34,7 @@ setMethod("show", "PrimerPairsSet", function(object){
 ################################################################################
 
 ##' @param object A \code{MultiAmplicon-class} object.
+##' @importFrom methods show
 ##' @rdname MultiAmplicon-class 
 setMethod("show", "MultiAmplicon", function(object){
     cat("A", class(object), "instance of dimensions", dim(object)[1], "x",
