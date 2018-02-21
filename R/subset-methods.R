@@ -117,7 +117,7 @@ setMethod("[", c("PairedDada", "integer", "missing", "ANY"),
 ##' @param drop should not be used
 ##' @rdname MultiAmplicon-class
 setMethod("[", c("MultiAmplicon", "integer", "integer", "ANY"),
-          function(x, i, j, ..., drop=TRUE){
+          function(x, i, j, ..., drop=FALSE){
               newPrimer <- x@PrimerPairsSet[i]
               newFiles <- x@PairedReadFileSet[j]
               newRC <- matrix()
@@ -128,7 +128,7 @@ setMethod("[", c("MultiAmplicon", "integer", "integer", "ANY"),
               newST <- list()
               newSTnC <- list()
               if(all(dim(x@rawCounts)>0)){
-                  newRC <- as.matrix(rawCounts(x)[i, j])
+                  newRC <- as.matrix(rawCounts(x)[i, j, drop=FALSE])
                   ## we drop empty files from statified files
                   ## therefore we have to find new indices j. These
                   ## later have to be used also for the columns of
@@ -158,12 +158,12 @@ setMethod("[", c("MultiAmplicon", "integer", "integer", "ANY"),
               }
               if(length(x@sequenceTable)>0){
                   newST <- lapply(seq_along(i), function (ii){
-                      x@sequenceTable[[ii]][new.j[[ii]], ]
+                      x@sequenceTable[[ii]][new.j[[ii]], , drop=FALSE]
                   })
               }
               if(length(x@sequenceTableNoChime)>0){
                   newSTnC <- lapply(seq_along(i), function (ii){
-                      x@sequenceTableNoChime[[ii]][new.j[[ii]], ]
+                      x@sequenceTableNoChime[[ii]][new.j[[ii]], , drop=FALSE]
                   })
               }
           initialize(x,
