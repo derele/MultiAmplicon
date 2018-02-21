@@ -17,7 +17,9 @@ SA <- MultiAmplicon(PrimerPairsSet(primerF[1], primerR[1]), PRF)
 
 
 context("sortAmplicons resut doesn't change results over executions")
+
 MA1 <- sortAmplicons(MA)
+
 test_that("sortAmplicons resut doesn't change over executions", {
     ## For multi amplicon objects
     expect_known_output(MA, system.file("testdata", "MA_sorted.rda",
@@ -25,6 +27,9 @@ test_that("sortAmplicons resut doesn't change over executions", {
 })
 
 SA1 <- sortAmplicons(SA)
+
+## this need major debuggin!!!
+## getUnmatched(MA1)
 
 context("Do empty files produce empty data?")
 test_that("rowCounts is zero for empty file", {
@@ -95,6 +100,9 @@ MA2 <- derepMulti(MA1, mc.cores=1)
 MA3 <- dadaMulti(MA2, err=NULL, selfConsist=TRUE, pool=FALSE, 
                  multithread=TRUE)
 
+MA3P <- dadaMulti(MA2, err=NULL, selfConsist=TRUE, pool=TRUE, 
+                 multithread=TRUE)
+
 ## bugging here...
 MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
 
@@ -113,23 +121,34 @@ test_that("stratified files result in the number of columns of sequence tables "
 
 MA6 <- noChimeMulti(MA5, mc.cores=1)
 
-context("Subsetting MultiAmplicon objects")
+## context("Subsetting MultiAmplicon objects")
 
-MA1[1:2, 1:2]
+## MA6[1:2, 1:2]
 
-MA2[1:2, 1:2]
+## colnames(MA6[1:2, 1:2])
 
-MA3[1:2, 1:2]
+## rownames(MA6[1:2, 1:2])
 
-MA4[1:2, 1:2]
+## MA6[1:2, 1:2]@sequencetable
 
-MA5[1:2, 1:2]
+## lapply(MA6[1:2, 1:2]@sequenceTable, class)
 
-MA6[1:2, 1:2]
+## lapply(MA6[1:2, 1:2]@sequenceTable, dim)
 
-colnames(MA6[1:2, 1:2])
-rownames(MA6[1:2, 1:2])
+## MA6[1:6, 3L]
+
+## lapply(MA6[1:6, c(1:2, 4:8)]@sequenceTable, dim)
+
+## lapply(MA6@sequenceTable, dim)
+
+## names(MA6[1:6, c(1:2, 4:8)]@sequenceTable)
+
+## names(MA6[1:6, c(1:2, 4:8)]@derep)
+
+## names(MA6[1:6, c(1:2, 4:8)]@stratifiedFiles)
 
 ## colnames(MA6[c(TRUE, FALSE), c(FALSE, TRUE)])
+
+
 
 
