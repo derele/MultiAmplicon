@@ -21,7 +21,7 @@
 ##'     on your computer. \code{\link[base]{tempfile}} is used within
 ##'     this folder to creat unique filnames trying to avoid problems
 ##'     in case the folder has been used before.
-##' @mc.cores integer number of compute cores to use for processing
+##' @param mc.cores integer number of compute cores to use for processing
 ##'     multiple amplicons in parallel
 ##' @param ... addtional parameter so be passed to
 ##'     Biostrings::isMatchingStartingAt. Be careful when using

@@ -39,7 +39,7 @@ rawCounts(x)
 
 \S4method{show}{MultiAmplicon}(object)
 
-\S4method{[}{MultiAmplicon,integer,integer,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{MultiAmplicon,integer,integer,ANY}(x, i, j, ..., drop = FALSE)
 }
 \arguments{
 \item{PrimerPairsSet}{a set of primer pairs specifiying your
