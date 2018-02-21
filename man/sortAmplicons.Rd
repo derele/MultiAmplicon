@@ -11,7 +11,7 @@
 sortAmplicons(MA, n = 1e+06, countOnly = FALSE, filedir = tempdir(), ...)
 
 \S4method{sortAmplicons}{MultiAmplicon}(MA, n = 1e+06, countOnly = FALSE,
-  filedir = tempdir(), mc.cores = 1, ...)
+  filedir = tempdir(), ...)
 }
 \arguments{
 \item{MA}{\code{\link{MultiAmplicon-class}} object containing a
@@ -35,9 +35,6 @@ in case the folder has been used before.}
 Biostrings::isMatchingStartingAt. Be careful when using
 multiple starting positions or allowing error. This could lead
 to read pairs being assigned to multiple amplicons.}
-
-\item{mc.cores}{integer number of compute cores to use for processing
-multiple amplicons in parallel}
 }
 \value{
 MultiAmplicon: By default (countOnly=FALSE) a
