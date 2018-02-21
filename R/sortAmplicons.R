@@ -21,8 +21,11 @@
 ##'     on your computer. \code{\link[base]{tempfile}} is used within
 ##'     this folder to creat unique filnames trying to avoid problems
 ##'     in case the folder has been used before.
+<<<<<<< HEAD
 ##' @param mc.cores integer number of compute cores to use for processing
 ##'     multiple amplicons in parallel
+=======
+>>>>>>> parent of f068a7f... parallelized sortAmplicons over multiple amplicons
 ##' @param ... addtional parameter so be passed to
 ##'     Biostrings::isMatchingStartingAt. Be careful when using
 ##'     multiple starting positions or allowing error. This could lead
@@ -68,9 +71,9 @@ setGeneric(name="sortAmplicons",
            })
 
 ##' @rdname sortAmplicons
-setMethod("sortAmplicons", "MultiAmplicon",
-          function(MA, n=1e6, countOnly=FALSE, filedir=tempdir(), mc.cores=1, ...){
-              ## the data matrix of amplicons x samples stratified counts 
+setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, countOnly=FALSE,
+                                                     filedir=tempdir(), ...){
+    ## the data matrix of amplicons x samples stratified counts 
     NR <- length(MA@PrimerPairsSet@primerF)
     NC <- length(MA@PairedReadFileSet@readsF)
     data <- matrix(0, nrow=NR, ncol=NC)
@@ -92,7 +95,7 @@ setMethod("sortAmplicons", "MultiAmplicon",
             "and adding specific prefixes to avoid problems when running code twice \n")
     }
     ## add sample data and metadata in columns
-    mclapply(seq_along(readsF), function (x) {
+    for(x in seq_along(readsF)) {
         tmpbaseF <- paste(tempfile(tmpdir=filedir),
                           basename(readsF[[x]]), sep="_")
         tmpbaseR <- paste(tempfile(tmpdir=filedir),
@@ -161,7 +164,7 @@ setMethod("sortAmplicons", "MultiAmplicon",
             "sequencing reads for", colnames(data)[[x]], "in",
             "\n ", readsF[[x]], " and \n ", readsR[[x]], "\n",
             " into ", sum(data[, colnames(data)[[x]]]>0), "amplicons \n" )
-    }, mc.cores=mc.cores)
+    }
     ## run only on existing files to avoid warnings for non-existing
     ## files. This means don't run on files corresponding to zeros
     ## read counts repored 
