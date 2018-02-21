@@ -127,4 +127,9 @@ MA5[1:2, 1:2]
 
 MA6[1:2, 1:2]
 
+colnames(MA6[1:2, 1:2])
+rownames(MA6[1:2, 1:2])
+
+## colnames(MA6[c(TRUE, FALSE), c(FALSE, TRUE)])
+
 

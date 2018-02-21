@@ -31,5 +31,6 @@ noChimeMulti <- function(MA, mc.cores=getOption("mc.cores", 2L), ...){
         },
         mc.cores=mc.cores)
             ## fix me to get the correct rownames on those...
+    names(sequenceTableNoChime) <- MA@PrimerPairsSet@names
     initialize(MA, sequenceTableNoChime = sequenceTableNoChime)
 }

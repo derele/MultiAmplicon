@@ -24,5 +24,6 @@ sequenceTableMulti <- function(MA, ...){
     sequenceTable <- lapply(seq_along(MA@mergers), function (i){
         makeSequenceTable(MA@mergers[[i]], ...)
     })
+    names(sequenceTable) <- MA@PrimerPairsSet@names
     initialize(MA, sequenceTable = sequenceTable)
 }

@@ -38,5 +38,6 @@ mergeMulti <- function(MA, ...){
                               MA@PrimerPairsSet@names[[i]], "\n\n")
                           return(list())}
     })
+    names(mergers) <- MA@PrimerPairsSet@names
     initialize(MA, mergers=mergers)
 }

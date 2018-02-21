@@ -35,10 +35,11 @@ dadaMulti <- function(MA, ...){
            Pdada <- PairedDada(dadaF = dadaF, dadaR = dadaR)
        } else {
            Pdada <- PairedDada()
-           cat("skipping empty amplicon")
+           cat("skipping empty amplicon\n")
        }
        return(Pdada)
     })
+    names(PPdada) <- MA@PrimerPairsSet@names
     initialize(MA, dada=PPdada)
 }
 
