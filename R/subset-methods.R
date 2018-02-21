@@ -140,31 +140,37 @@ setMethod("[", c("MultiAmplicon", "integer", "integer", "ANY"),
                   newSF <-  lapply(seq_along(i), function (ii) {
                       x@stratifiedFiles[[ii]][new.j[[ii]]]
                   })
+                  names(newSF) <- names(x@stratifiedFiles[i])
               }
               if(length(x@derep)>0){
                   newderep <- lapply(seq_along(i), function (ii){
                       x@derep[[ii]][new.j[[ii]]]
                   })
+                  names(newderep) <- names(x@derep[i])
               }
               if(length(x@dada)>0){
                   newdada <- lapply(seq_along(i), function (ii){
                       x@dada[[ii]][new.j[[ii]]]
                   })
+                  names(newdada) <- names(x@dada[i])
               }
               if(length(x@mergers)>0){
                   newmergers <- lapply(seq_along(i), function (ii){
                       x@mergers[[ii]][new.j[[ii]]]
                   })
+                  names(newmergers) <- names(x@mergers[i])
               }
               if(length(x@sequenceTable)>0){
                   newST <- lapply(seq_along(i), function (ii){
                       x@sequenceTable[[ii]][new.j[[ii]], , drop=FALSE]
                   })
+                  names(newST) <- names(x@sequenceTable[i])
               }
               if(length(x@sequenceTableNoChime)>0){
                   newSTnC <- lapply(seq_along(i), function (ii){
                       x@sequenceTableNoChime[[ii]][new.j[[ii]], , drop=FALSE]
                   })
+                  names(newSTnC) <- names(x@sequenceTableNoChime[i])
               }
           initialize(x,
               PrimerPairsSet = newPrimer,
