@@ -168,19 +168,6 @@ setMethod("length", "PairedDerep", function(x){
     length(x@derepF)
 })
 
-setMethod("names", "PairedDerep", function(x){
-    names(x)
-})
-
-
-
-## completely useless list does it all
-## setClass("PairedDerepSet",
-##          contains="list",
-##          representation(),
-##          prototype(elementType="PairedDerep"))
-
-
 ##' A pair of two dada objects 
 ##'
 ##' dada-class objects as defined by the package \code{dada2}
