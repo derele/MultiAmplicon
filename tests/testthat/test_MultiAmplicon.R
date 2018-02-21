@@ -65,10 +65,10 @@ test_that("number of files written equals non-zero samples in rawCounts", {
 
 test_that("N statified files is N of non-zero samples x amplicons",{
     ## For multi amplicon objects
-    expect_equal(unname(rowSums(rawCounts(MA1)>0)), 
+    expect_equal(rowSums(rawCounts(MA1)>0), 
                  unlist(lapply(MA1@stratifiedFiles, length)))
     ## For single amplicon objects
-    expect_equal(unname(rowSums(rawCounts(SA1)>0)), 
+    expect_equal(rowSums(rawCounts(SA1)>0), 
                  unlist(lapply(SA1@stratifiedFiles, length)))
 
 })
@@ -119,7 +119,7 @@ test_that("stratified files result in the number of columns of sequence tables "
 
 })
 
-MA6 <- noChimeMulti(MA5, mc.cores=1)
+MA6 <- noChimeMulti(MA5)
 
 ## context("Subsetting MultiAmplicon objects")
 
