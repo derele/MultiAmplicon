@@ -10,8 +10,14 @@ mergeMulti(MA, ...)
 \item{MA}{\code{\link{MultiAmplicon-class}} object with derep and
 dada slots filled.}
 
-\item{...}{additional parameters to be passed to the
-\code{\link[dada2]{mergePairs}} function of \code{dada2}}
+\item{...}{additional arguments to be passed to the
+\code{\link[dada2]{mergePairs}} function of \code{dada2}, all
+arguments to the function can be given as a vector of the same
+length as the number of primer pairs in the MultiAmplicon
+object, allowing to specify e.g. justConcatenate to be set
+TRUE for only some of the amplicons, or to specify different
+minOverlap for each amplicon. If a shorter vector is given it
+will be recycled to match the number of ampicons.}
 }
 \value{
 A MultiAmplicon-class object with the mergers slot filled

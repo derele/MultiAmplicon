@@ -103,8 +103,8 @@ MA3 <- dadaMulti(MA2, err=NULL, selfConsist=TRUE, pool=FALSE,
 MA3P <- dadaMulti(MA2, err=NULL, selfConsist=TRUE, pool=TRUE, 
                  multithread=TRUE)
 
-## bugging here...
-MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
+MA4 <- mergeMulti(MA3, justConcatenate=c(TRUE, FALSE),
+                  verbose=FALSE, maxMismatch = c(15, 20, 18))
 
 MA5 <- sequenceTableMulti(MA4)
 
@@ -116,7 +116,6 @@ test_that("stratified files result in the number of columns of sequence tables "
                     unlist(lapply(MA5@stratifiedFiles, length)) ==
                     unlist(lapply(MA5@sequenceTable, nrow))+1))
     ## last case for if a single sequence was dropped derep object
-
 })
 
 MA6 <- noChimeMulti(MA5)
