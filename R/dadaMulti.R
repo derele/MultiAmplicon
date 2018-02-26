@@ -34,7 +34,7 @@ dadaMulti <- function(MA, ...){
            if (class(dadaR)%in%"dada"){dadaR <- list(dadaR)}
            ## naming the dada objects
            names(dadaF) <- names(dadaR) <-
-               names(rawCounts(MA)[i, ])[rawCounts(MA1)[i, ]>0]
+               names(rawCounts(MA)[i, ])[rawCounts(MA)[i, ]>0]
            Pdada <- PairedDada(dadaF = dadaF, dadaR = dadaR)
        } else {
            Pdada <- PairedDada()
