@@ -100,9 +100,6 @@ MA2 <- derepMulti(MA1, mc.cores=1)
 MA3 <- dadaMulti(MA2, err=NULL, selfConsist=TRUE, pool=FALSE, 
                  multithread=TRUE)
 
-MA3P <- dadaMulti(MA2, err=NULL, selfConsist=TRUE, pool=TRUE, 
-                 multithread=TRUE)
-
 MA4 <- mergeMulti(MA3, justConcatenate=c(TRUE, FALSE),
                   verbose=FALSE, maxMismatch = c(15, 20, 18))
 
