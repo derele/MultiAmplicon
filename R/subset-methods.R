@@ -82,8 +82,8 @@ setMethod("[", c("PairedReadFileSet", "character", "missing", "ANY"),
 ##' @rdname PairedDerep-class
 setMethod("[", c("PairedDerep", "integer", "missing", "ANY"),
           function(x, i, j, ..., drop=TRUE){
-    newF <- x@derepF[i]
-    newR <- x@derepR[i]
+    newF <- slot(x, "derepF")[i]
+    newR <- slot(x, "derepR")[i]
     new("PairedDerep",
         derepF=newF, derepR=newR)
 })
@@ -96,11 +96,27 @@ setMethod("[", c("PairedDerep", "integer", "missing", "ANY"),
 ##' @rdname PairedDada-class
 setMethod("[", c("PairedDada", "integer", "missing", "ANY"),
           function(x, i, j, ..., drop=TRUE){
-    newF <- x@dadaF[i]
-    newR <- x@dadaR[i]
+    newF <- slot(x, "dadaF")[i]
+    newR <- slot(x, "dadaR")[i]
     new("PairedDada",
         dadaF=newF, dadaR=newR)
 })
+
+## ##' @param x PairedDada-class object
+## ##' @param i integer to select
+## ##' @param j integer to select
+## ##' @param ... not used
+## ##' @param drop not used
+## ##' @rdname PairedDada-class
+## setMethod("[", c("PairedDada", "integer", "integer", "ANY"),
+##           function(x, i, j, ..., drop=TRUE){
+##     newF <- lapply(x@dadaF[i], "[", j)
+##     newR <- lapply(x@dadaR[i], "[", j)
+##     new("PairedDada",
+##         dadaF=newF, dadaR=newR)
+## })
+
+
 
 ##' Convenient subsetting for MultiAmplicon objects
 ##'
@@ -134,41 +150,41 @@ setMethod("[", c("MultiAmplicon", "integer", "integer", "ANY"),
                   ## later have to be used also for the columns of
                   ## sequence tables.
                   new.j <- lapply(seq_along(i), function (ii) {
-                      zero.i <- which(x@rawCounts[ii, ]>0)
+                      zero.i <- which(x@rawCounts[ii, ]>1) # >1 singl seq rm
                       which(zero.i%in%j)
                   })
                   newSF <-  lapply(seq_along(i), function (ii) {
-                      x@stratifiedFiles[[ii]][new.j[[ii]]]
+                      x@stratifiedFiles[[i[[ii]]]][new.j[[ii]]]
                   })
                   names(newSF) <- names(x@stratifiedFiles[i])
               }
               if(length(x@derep)>0){
                   newderep <- lapply(seq_along(i), function (ii){
-                      x@derep[[ii]][new.j[[ii]]]
+                      x@derep[[i[[ii]]]][new.j[[ii]]]
                   })
                   names(newderep) <- names(x@derep[i])
               }
               if(length(x@dada)>0){
                   newdada <- lapply(seq_along(i), function (ii){
-                      x@dada[[ii]][new.j[[ii]]]
+                      x@dada[[i[[ii]]]][new.j[[ii]]]
                   })
                   names(newdada) <- names(x@dada[i])
               }
               if(length(x@mergers)>0){
                   newmergers <- lapply(seq_along(i), function (ii){
-                      x@mergers[[ii]][new.j[[ii]]]
+                      x@mergers[[i[[ii]]]][new.j[[ii]]]
                   })
                   names(newmergers) <- names(x@mergers[i])
               }
               if(length(x@sequenceTable)>0){
                   newST <- lapply(seq_along(i), function (ii){
-                      x@sequenceTable[[ii]][new.j[[ii]], , drop=FALSE]
+                      x@sequenceTable[[i[[ii]]]][new.j[[ii]], , drop=FALSE]
                   })
                   names(newST) <- names(x@sequenceTable[i])
               }
               if(length(x@sequenceTableNoChime)>0){
                   newSTnC <- lapply(seq_along(i), function (ii){
-                      x@sequenceTableNoChime[[ii]][new.j[[ii]], , drop=FALSE]
+                      x@sequenceTableNoChime[[i[[ii]]]][new.j[[ii]], , drop=FALSE]
                   })
                   names(newSTnC) <- names(x@sequenceTableNoChime[i])
               }
@@ -185,3 +201,35 @@ setMethod("[", c("MultiAmplicon", "integer", "integer", "ANY"),
               )
           }
 )
+
+##' @rdname MultiAmplicon-class
+setMethod("[", c("MultiAmplicon", "logical", "logical", "ANY"),
+          function(x, i, j, ..., drop=NA){
+              if (length(i)!=nrow(x)){
+                  warning("logical subscript is recycled to match number of ",
+                          "amplicons in object")}
+              if (length(j)!=ncol(x)){
+                  warning("logical subscript is recycled to match number of ",
+                          "samples in object")}
+              if (nrow(x)%%length(i)!=0) {
+                  stop("number of Amplicons (", 
+                       nrow(x),
+                       ") is not multiple of length of logical subscript (",
+                       length(i), ")")
+              }
+              if (ncol(x)%%length(j)!=0) {
+                  stop("number of samples (", 
+                       ncol(x),
+                       ") is not multiple of length of logical subscript (",
+                       length(j), ")")
+              }
+              index_i <- rep_len(i, length.out=nrow(x))
+              index_j <- rep_len(j, length.out=ncol(x))
+              x[which(index_i), which(index_j)]
+          })
+
+##' @rdname MultiAmplicon-class
+setMethod("[", c("MultiAmplicon", "character", "character", "ANY"),
+          function(x, i, j, ..., drop=NA){
+              x[which(rownames(x)%in%i), which(colnames(x)%in%j)]
+          })
