@@ -104,7 +104,7 @@ test_that("dereplication produces a list of derep objects ", {
                  rowSums(rawCounts(MA2)>1)) # >1 singl seq rm
 })
 
-up1.counts <- t(rawCounts(MA2))[t(rawCounts(MA2))>1]
+up1.counts <- t(rawCounts(MA2))[t(rawCounts(MA2))>1] # >1 singl seq rm
 
 up1.dereps <- unname(unlist(lapply(MA2@derep, function (x){
     lapply(x, function (y) sum(slot(y, "derepF")$uniques))
@@ -134,7 +134,7 @@ test_that("all sequences are dereplicated ", {
     expect_equal(up1.counts, up1.dadas)
 })
 
-MA4 <- mergeMulti(MA3, justConcatenate=c(TRUE, FALSE),
+MA4 <- mergeMulti(MA3, justConcatenate=c(TRUE, TRUE),
                   verbose=FALSE, maxMismatch = c(15, 20, 18))
 
 context("Merging works?")
@@ -148,6 +148,8 @@ test_that("merging produces a list of derep objects ", {
 up1.merge <- unname(unlist(lapply(MA4@mergers, function (x)
     lapply(x, function (y) sum(getUniques(y))))))
 
+## this is only expected when concantenating during merge, otherwise
+## non-merging sequences would be removed
 test_that("all sequences are dereplicated ", {
     expect_equal(up1.counts, up1.merge)
 })
@@ -177,29 +179,46 @@ test_that("merging produces a list of derep objects ", {
 
 ## context("Subsetting MultiAmplicon objects")
 
-## MA6[1:2, 1:2]
+MA6[1:2, 1:2]
 
-## colnames(MA6[1:2, 1:2])
+## killed the bug!
+MA6[1:6, 1:8]
 
-## rownames(MA6[1:2, 1:2])
+rownames(MA6[1:6, 1:8])
+colnames(MA6[1:6, 1:8])
 
-## MA6[1:2, 1:2]@sequencetable
 
-## lapply(MA6[1:2, 1:2]@sequenceTable, class)
+names(MA6[1:6, c(1:2, 4:8)]@stratifiedFiles)
 
-## lapply(MA6[1:2, 1:2]@sequenceTable, dim)
 
-## MA6[1:6, 3L]
+## This is still bugging
+## rownames(MA6[c(TRUE, FALSE), c(TRUE, FALSE)])
 
-## lapply(MA6[1:6, c(1:2, 4:8)]@sequenceTable, dim)
+## this is good
+expect_identical(MA6[TRUE, TRUE], MA6[1:6, 1:8])
 
-## lapply(MA6@sequenceTable, dim)
+## this has a names problem 
+## expect_identical(MA6, MA6[1:6, 1:8])
 
-## names(MA6[1:6, c(1:2, 4:8)]@sequenceTable)
+## this works
+MA6[c(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE),
+    TRUE]
 
-## names(MA6[1:6, c(1:2, 4:8)]@derep)
+## this is wrong... without an error!
+foo <- MA6[c("Amp1F.Amp1R","Amp2F.Amp2R"),
+    c("S144_F_filt.fastq.gz", "S22_F_filt.fastq.gz", "S8_F_filt.fastq.gz", "S91_F_filt.fastq.gz")]
 
-## names(MA6[1:6, c(1:2, 4:8)]@stratifiedFiles)
+## lost the sample names in rownames
+lapply(MA6[1:2, 1:2]@sequenceTable, rownames)
+
+lapply(MA6[1:6, c(1L, 4L)]@sequenceTableNoChime, dim)
+
+## here I have them back
+lapply(MA6[1:6, c(1L, 4L, 5L)]@sequenceTableNoChime, rownames)
+
+## seems to work
+MA6[1:6, 5L]@derep
+
 
 ## colnames(MA6[c(TRUE, FALSE), c(FALSE, TRUE)])
 
