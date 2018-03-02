@@ -70,7 +70,6 @@ test_that("N statified files is N of non-zero samples x amplicons",{
     ## For single amplicon objects
     expect_equal(rowSums(rawCounts(SA1)>0), 
                  unlist(lapply(SA1@stratifiedFiles, length)))
-
 })
 
 test_that("files for each amplicon contain the number of reads reported", {
@@ -97,11 +96,61 @@ test_that("less stringent sorting results in more reads accepted", {
 
 MA2 <- derepMulti(MA1, mc.cores=1)
 
+context("Dereplication works?")
+test_that("dereplication produces a list of derep objects ", {
+    expect_equal(length(MA2@derep), nrow(MA2))
+    expect_equal(length(MA2@derep), nrow(rawCounts(MA2)))
+    expect_equal(unlist(lapply(MA2@derep, length)),
+                 rowSums(rawCounts(MA2)>1)) # >1 singl seq rm
+})
+
+up1.counts <- t(rawCounts(MA2))[t(rawCounts(MA2))>1]
+
+up1.dereps <- unname(unlist(lapply(MA2@derep, function (x){
+    lapply(x, function (y) sum(slot(y, "derepF")$uniques))
+})))
+
+test_that("all sequences are dereplicated ", {
+expect_equal(up1.counts, up1.dereps)
+})
+
+
 MA3 <- dadaMulti(MA2, err=NULL, selfConsist=TRUE, pool=FALSE, 
                  multithread=TRUE)
 
+context("Denoising works?")
+test_that("dada2 denoising produces a list of derep objects ", {
+    expect_equal(length(MA3@derep), nrow(MA3))
+    expect_equal(length(MA3@derep), nrow(rawCounts(MA3)))
+    expect_equal(unlist(lapply(MA3@derep, length)),
+                 rowSums(rawCounts(MA3)>1)) # >1 singl seq rm
+})
+
+up1.dadas <- unname(unlist(lapply(MA3@dada, function (x)
+    lapply(slot(x, "dadaF"), function (y) sum(getUniques(y))))))
+
+
+test_that("all sequences are dereplicated ", {
+    expect_equal(up1.counts, up1.dadas)
+})
+
 MA4 <- mergeMulti(MA3, justConcatenate=c(TRUE, FALSE),
                   verbose=FALSE, maxMismatch = c(15, 20, 18))
+
+context("Merging works?")
+test_that("merging produces a list of derep objects ", {
+    expect_equal(length(MA4@mergers), nrow(MA3))
+    expect_equal(length(MA4@mergers), nrow(rawCounts(MA3)))
+    expect_equal(unlist(lapply(MA4@mergers, length)),
+                 rowSums(rawCounts(MA3)>1)) # >1 singl seq rm
+})
+
+up1.merge <- unname(unlist(lapply(MA4@mergers, function (x)
+    lapply(x, function (y) sum(getUniques(y))))))
+
+test_that("all sequences are dereplicated ", {
+    expect_equal(up1.counts, up1.merge)
+})
 
 MA5 <- sequenceTableMulti(MA4)
 
@@ -116,6 +165,15 @@ test_that("stratified files result in the number of columns of sequence tables "
 })
 
 MA6 <- noChimeMulti(MA5)
+
+context("Merging works?")
+test_that("merging produces a list of derep objects ", {
+    expect_equal(length(MA4@mergers), nrow(MA3))
+    expect_equal(length(MA4@mergers), nrow(rawCounts(MA3)))
+    expect_equal(unlist(lapply(MA4@mergers, length)),
+                 rowSums(rawCounts(MA3)>1)) # >1 singl seq rm
+})
+
 
 ## context("Subsetting MultiAmplicon objects")
 
