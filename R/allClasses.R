@@ -186,7 +186,7 @@ setClass("PairedDada",
                  "all forward and reverse dada objects needed to be named exactly the same (being produced from the same samples"
              }
              if (!all(unlist(lapply(object@dadaF, class))%in%"dada")){
-                 "only lists of dada class objects can form PairdDada-class objects"
+                 "only lists of dada class objects can form PairedDada-class objects"
              }
          })
 
