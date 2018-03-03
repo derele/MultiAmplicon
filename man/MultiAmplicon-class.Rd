@@ -13,7 +13,7 @@
 \alias{rawCounts}
 \alias{rawCounts,MultiAmplicon-method}
 \alias{show,MultiAmplicon-method}
-\alias{[,MultiAmplicon,integer,integer,ANY-method}
+\alias{[,MultiAmplicon,index,index,ANY-method}
 \alias{[,MultiAmplicon,logical,logical,ANY-method}
 \alias{[,MultiAmplicon,character,character,ANY-method}
 \title{A class combining sequences of forward and reverse primers (in a
@@ -41,7 +41,7 @@ rawCounts(x)
 
 \S4method{show}{MultiAmplicon}(object)
 
-\S4method{[}{MultiAmplicon,integer,integer,ANY}(x, i, j, ..., drop = FALSE)
+\S4method{[}{MultiAmplicon,index,index,ANY}(x, i, j, ..., drop = FALSE)
 
 \S4method{[}{MultiAmplicon,logical,logical,ANY}(x, i, j, ..., drop = NA)
 

@@ -5,14 +5,14 @@
 \alias{PairedDada-class}
 \alias{PairedDada}
 \alias{length,PairedDada-method}
-\alias{[,PairedDada,integer,missing,ANY-method}
+\alias{[,PairedDada,index,missing,ANY-method}
 \title{PairedDada-class}
 \usage{
 PairedDada(dadaF = list(), dadaR = list())
 
 \S4method{length}{PairedDada}(x)
 
-\S4method{[}{PairedDada,integer,missing,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{PairedDada,index,missing,ANY}(x, i, j, ..., drop = TRUE)
 }
 \arguments{
 \item{dadaF}{a dada object of forward reads}

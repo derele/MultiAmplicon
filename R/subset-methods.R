@@ -7,8 +7,9 @@
 ##' @param j not used
 ##' @param ... not used
 ##' @param drop not used
+##' @importClassesFrom Matrix index 
 ##' @rdname PrimerPairsSet-class
-setMethod("[", c("PrimerPairsSet", "integer", "missing", "ANY"),
+setMethod("[", c("PrimerPairsSet", "index", "missing", "ANY"),
           function(x, i, j, ..., drop=NA){
               newF <- x@primerF[as.integer(i)]
               newR <- x@primerR[as.integer(i)]
@@ -44,7 +45,7 @@ setMethod("[", c("PrimerPairsSet", "character", "missing", "ANY"),
 ##' @param ... not used
 ##' @param drop not used
 ##' @rdname PairedReadFileSet-class
-setMethod("[", c("PairedReadFileSet", "integer", "missing", "ANY"),
+setMethod("[", c("PairedReadFileSet", "index", "missing", "ANY"),
           function(x, i, j, ..., drop=TRUE){
               newF <- x@readsF[i]
               newR <- x@readsR[i]
@@ -74,13 +75,13 @@ setMethod("[", c("PairedReadFileSet", "character", "missing", "ANY"),
           })
 
 ##' @param x PairedDerep-class
-##' @param i integer or logical indicating which sequencing read file
+##' @param i index or logical indicating which sequencing read file
 ##'     pair to select or character string giving its name
 ##' @param j not used
 ##' @param ... not used
 ##' @param drop not used
 ##' @rdname PairedDerep-class
-setMethod("[", c("PairedDerep", "integer", "missing", "ANY"),
+setMethod("[", c("PairedDerep", "index", "missing", "ANY"),
           function(x, i, j, ..., drop=TRUE){
     newF <- slot(x, "derepF")[i]
     newR <- slot(x, "derepR")[i]
@@ -94,10 +95,15 @@ setMethod("[", c("PairedDerep", "integer", "missing", "ANY"),
 ##' @param ... not used
 ##' @param drop not used
 ##' @rdname PairedDada-class
-setMethod("[", c("PairedDada", "integer", "missing", "ANY"),
+setMethod("[", c("PairedDada", "index", "missing", "ANY"),
           function(x, i, j, ..., drop=TRUE){
     newF <- slot(x, "dadaF")[i]
     newR <- slot(x, "dadaR")[i]
+    ## if we get a single object, but  need a list of them
+    if(class(newF)%in%"dada"){
+        newF <- list(newF)
+        newR <- list(newR)
+    }
     new("PairedDada",
         dadaF=newF, dadaR=newR)
 })
@@ -108,13 +114,13 @@ setMethod("[", c("PairedDada", "integer", "missing", "ANY"),
 ## ##' @param ... not used
 ## ##' @param drop not used
 ## ##' @rdname PairedDada-class
-## setMethod("[", c("PairedDada", "integer", "integer", "ANY"),
-##           function(x, i, j, ..., drop=TRUE){
-##     newF <- lapply(x@dadaF[i], "[", j)
-##     newR <- lapply(x@dadaR[i], "[", j)
-##     new("PairedDada",
-##         dadaF=newF, dadaR=newR)
-## })
+setMethod("[", c("PairedDada", "integer", "integer", "ANY"),
+          function(x, i, j, ..., drop=TRUE){
+    newF <- lapply(x@dadaF[i], "[", j)
+    newR <- lapply(x@dadaR[i], "[", j)
+    new("PairedDada",
+        dadaF=newF, dadaR=newR)
+})
 
 
 
@@ -132,7 +138,7 @@ setMethod("[", c("PairedDada", "integer", "missing", "ANY"),
 ##' @param ... not used
 ##' @param drop should not be used
 ##' @rdname MultiAmplicon-class
-setMethod("[", c("MultiAmplicon", "integer", "integer", "ANY"),
+setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
           function(x, i, j, ..., drop=FALSE){
               newPrimer <- x@PrimerPairsSet[i]
               newFiles <- x@PairedReadFileSet[j]
@@ -153,6 +159,10 @@ setMethod("[", c("MultiAmplicon", "integer", "integer", "ANY"),
                       zero.i <- which(x@rawCounts[ii, ]>1) # >1 singl seq rm
                       which(zero.i%in%j)
                   })
+                  new.j.nonZero <- lapply(seq_along(i), function (ii) {
+                      zero.i <- which(x@rawCounts[ii, ]>0) # >1 singl seq rm
+                      which(zero.i%in%j)
+                  })
                   newSF <-  lapply(seq_along(i), function (ii) {
                       x@stratifiedFiles[[i[[ii]]]][new.j[[ii]]]
                   })
@@ -160,7 +170,7 @@ setMethod("[", c("MultiAmplicon", "integer", "integer", "ANY"),
               }
               if(length(x@derep)>0){
                   newderep <- lapply(seq_along(i), function (ii){
-                      x@derep[[i[[ii]]]][new.j[[ii]]]
+                      x@derep[[i[[ii]]]][new.j.nonZero[[ii]]]
                   })
                   names(newderep) <- names(x@derep[i])
               }

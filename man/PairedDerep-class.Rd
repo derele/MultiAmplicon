@@ -4,17 +4,17 @@
 \name{PairedDerep-class}
 \alias{PairedDerep-class}
 \alias{length,PairedDerep-method}
-\alias{[,PairedDerep,integer,missing,ANY-method}
+\alias{[,PairedDerep,index,missing,ANY-method}
 \title{PiredDerep-class}
 \usage{
 \S4method{length}{PairedDerep}(x)
 
-\S4method{[}{PairedDerep,integer,missing,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{PairedDerep,index,missing,ANY}(x, i, j, ..., drop = TRUE)
 }
 \arguments{
 \item{x}{PairedDerep-class}
 
-\item{i}{integer or logical indicating which sequencing read file
+\item{i}{index or logical indicating which sequencing read file
 pair to select or character string giving its name}
 
 \item{j}{not used}

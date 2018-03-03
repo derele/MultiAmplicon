@@ -8,7 +8,7 @@
 \alias{length,PrimerPairsSet-method}
 \alias{names,PrimerPairsSet-method}
 \alias{show,PrimerPairsSet-method}
-\alias{[,PrimerPairsSet,integer,missing,ANY-method}
+\alias{[,PrimerPairsSet,index,missing,ANY-method}
 \alias{[,PrimerPairsSet,logical,missing,ANY-method}
 \alias{[,PrimerPairsSet,character,missing,ANY-method}
 \title{A class representing sequences of forward and reverse primers.}
@@ -21,7 +21,7 @@ PrimerPairsSet(primerF, primerR)
 
 \S4method{show}{PrimerPairsSet}(object)
 
-\S4method{[}{PrimerPairsSet,integer,missing,ANY}(x, i, j, ..., drop = NA)
+\S4method{[}{PrimerPairsSet,index,missing,ANY}(x, i, j, ..., drop = NA)
 
 \S4method{[}{PrimerPairsSet,logical,missing,ANY}(x, i, j, ..., drop = NA)
 
