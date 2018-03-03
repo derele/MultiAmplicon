@@ -149,6 +149,17 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
               newmergers <- list()
               newST <- list()
               newSTnC <- list()
+              if(class(i)!=class(j)){
+                  stop("both indices should be off the same class")
+              }
+              if(class(i)=="logical"){
+                  i <- logical.to.numeric(i, nrow(x))
+                  j <- logical.to.numeric(j, ncol(x))
+              }
+              if(class(i)=="character"){
+                  i <- name.to.numeric(i, rownames(x))
+                  j <- name.to.numeric(j, colnames(x))
+              }
               if(all(dim(x@rawCounts)>0)){
                   newRC <- as.matrix(rawCounts(x)[i, j, drop=FALSE])
                   ## we drop empty files from statified files
@@ -156,13 +167,15 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                   ## later have to be used also for the columns of
                   ## sequence tables.
                   new.j <- lapply(seq_along(i), function (ii) {
-                      zero.i <- which(x@rawCounts[ii, ]>1) # >1 singl seq rm
+                      zero.i <- which(x@rawCounts[i[[ii]], ]>1) # >1 singl seq rm
                       which(zero.i%in%j)
                   })
                   new.j.nonZero <- lapply(seq_along(i), function (ii) {
-                      zero.i <- which(x@rawCounts[ii, ]>0) # >1 singl seq rm
+                      zero.i <- which(x@rawCounts[i[[ii]], ]>0) # >1 singl seq rm
                       which(zero.i%in%j)
                   })
+                  cat("\nNEW J: new.j", unlist(new.j) , "\n")
+                  cat("\nNEW J non Zero: new.jnonZero", unlist(new.j.nonZero) , "\n\n")
                   newSF <-  lapply(seq_along(i), function (ii) {
                       x@stratifiedFiles[[i[[ii]]]][new.j[[ii]]]
                   })
@@ -212,34 +225,20 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
           }
 )
 
-##' @rdname MultiAmplicon-class
-setMethod("[", c("MultiAmplicon", "logical", "logical", "ANY"),
-          function(x, i, j, ..., drop=NA){
-              if (length(i)!=nrow(x)){
+logical.to.numeric <- function(x, n){
+              if (length(x)!=n){
                   warning("logical subscript is recycled to match number of ",
                           "amplicons in object")}
-              if (length(j)!=ncol(x)){
-                  warning("logical subscript is recycled to match number of ",
-                          "samples in object")}
-              if (nrow(x)%%length(i)!=0) {
-                  stop("number of Amplicons (", 
-                       nrow(x),
-                       ") is not multiple of length of logical subscript (",
-                       length(i), ")")
+              if (n%%length(x)!=0) {
+                  stop("number of logical indices (", 
+                       length(i),
+                       ") is not multiple of subsetted object (",
+                       n, ")")
               }
-              if (ncol(x)%%length(j)!=0) {
-                  stop("number of samples (", 
-                       ncol(x),
-                       ") is not multiple of length of logical subscript (",
-                       length(j), ")")
-              }
-              index_i <- rep_len(i, length.out=nrow(x))
-              index_j <- rep_len(j, length.out=ncol(x))
-              x[which(index_i), which(index_j)]
-          })
+              index_i <- rep_len(i, length.out=n)
+              return(index_i)
+}
 
-##' @rdname MultiAmplicon-class
-setMethod("[", c("MultiAmplicon", "character", "character", "ANY"),
-          function(x, i, j, ..., drop=NA){
-              x[which(rownames(x)%in%i), which(colnames(x)%in%j)]
-          })
+name.to.numeric <- function(x, names){
+    which(names%in%x)
+}
