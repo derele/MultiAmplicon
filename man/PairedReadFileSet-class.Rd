@@ -8,8 +8,6 @@
 \alias{length,PairedReadFileSet-method}
 \alias{show,PairedReadFileSet-method}
 \alias{[,PairedReadFileSet,index,missing,ANY-method}
-\alias{[,PairedReadFileSet,logical,missing,ANY-method}
-\alias{[,PairedReadFileSet,character,missing,ANY-method}
 \title{A class representing file paths to paired end reads.}
 \usage{
 PairedReadFileSet(readsF, readsR, names = character())
@@ -19,10 +17,6 @@ PairedReadFileSet(readsF, readsR, names = character())
 \S4method{show}{PairedReadFileSet}(object)
 
 \S4method{[}{PairedReadFileSet,index,missing,ANY}(x, i, j, ..., drop = TRUE)
-
-\S4method{[}{PairedReadFileSet,logical,missing,ANY}(x, i, j, ..., drop = NA)
-
-\S4method{[}{PairedReadFileSet,character,missing,ANY}(x, i, j, ..., drop = NA)
 }
 \arguments{
 \item{readsF}{The path and filenames containing forward (R1) reads}

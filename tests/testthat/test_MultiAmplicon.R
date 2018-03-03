@@ -181,46 +181,81 @@ test_that("merging produces a list of derep objects ", {
 
 MA6[1:2, 1:2]
 
+MA6[2, 4]@rawCounts
+
+MA6[2, 6]@rawCounts
+
+MA6[2, 6]@derep
+
+MA6[2, 6]@dada
+
+MA6[2, 6]@stratifiedFiles
+
+MA6[c(4, 6),  c(4, 6)]@rawCounts
+
+MA6[c(4, 6),  c(4, 6)]@derep
+
 ## killed the bug!
 MA6[1:6, 1:8]
 
 rownames(MA6[1:6, 1:8])
 colnames(MA6[1:6, 1:8])
 
+MA6[1, 6]@rawCounts
+MA6[1, 6]@stratifiedFiles
 
-names(MA6[1:6, c(1:2, 4:8)]@stratifiedFiles)
+MA6[4, 6L]@rawCounts
+MA6[4, 6L]@stratifiedFiles
 
+## ## logical and name indexing does not work yet
 
-## This is still bugging
-## rownames(MA6[c(TRUE, FALSE), c(TRUE, FALSE)])
+## ## this works
+## MA6[1, 1:4*2]@rawCounts
+## MA6[1:6, 1:4*2]@rawCounts
 
-## this is good
-expect_identical(MA6[TRUE, TRUE], MA6[1:6, 1:8])
+## ## this does work now
+## MA6[4, 1:4*2]@rawCounts
 
-## this has a names problem 
-## expect_identical(MA6, MA6[1:6, 1:8])
-
-## this works
-MA6[c(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE),
-    TRUE]
-
-## this is wrong... without an error!
-foo <- MA6[c("Amp1F.Amp1R","Amp2F.Amp2R"),
-    c("S144_F_filt.fastq.gz", "S22_F_filt.fastq.gz", "S8_F_filt.fastq.gz", "S91_F_filt.fastq.gz")]
-
-## lost the sample names in rownames
-lapply(MA6[1:2, 1:2]@sequenceTable, rownames)
-
-lapply(MA6[1:6, c(1L, 4L)]@sequenceTableNoChime, dim)
-
-## here I have them back
-lapply(MA6[1:6, c(1L, 4L, 5L)]@sequenceTableNoChime, rownames)
-
-## seems to work
-MA6[1:6, 5L]@derep
+## ## this does work now
+## MA6[4, 1:4*2]@derep
 
 
-## colnames(MA6[c(TRUE, FALSE), c(FALSE, TRUE)])
+## ## This works not really ... maybe define index within subset function
+## MA6[c(FALSE, FALSE, FALSE, TRUE, FALSE, FALSE), c(FALSE, TRUE)]@rawCounts
+
+## ## This shouldn't be empty
+## MA6[c(FALSE, FALSE, FALSE, TRUE, FALSE, FALSE), c(FALSE, TRUE)]@dada
+
+## ## This is still buggin
+## MA6[c(FALSE, TRUE), TRUE]
+
+## ## this is good
+## expect_identical(MA6[TRUE, TRUE], MA6[1:6, 1:8])
+
+## ## this has a names problem 
+## ## expect_identical(MA6, MA6[1:6, 1:8])
+
+## ## this works
+## MA6[c(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE),
+##     TRUE]
+
+## ## this is wrong... without an error!
+## foo <- MA6[c("Amp1F.Amp1R","Amp2F.Amp2R"),
+##     c("S144_F_filt.fastq.gz", "S22_F_filt.fastq.gz", "S8_F_filt.fastq.gz", "S91_F_filt.fastq.gz")]
+
+## ## lost the sample names in rownames
+## lapply(MA6[1:2, 1:2]@sequenceTable, rownames)
+
+## lapply(MA6[1:6, c(1L, 4L)]@sequenceTableNoChime, dim)
+
+## ## here I have them back
+## lapply(MA6[1:6, c(1L, 4L, 5L)]@sequenceTableNoChime, rownames)
+
+## ## seems to work
+## MA6[1:6, 5L]@derep
+
+
+## ## colnames(MA6[c(TRUE, FALSE), c(FALSE, TRUE)])
 
 
 

@@ -14,8 +14,6 @@
 \alias{rawCounts,MultiAmplicon-method}
 \alias{show,MultiAmplicon-method}
 \alias{[,MultiAmplicon,index,index,ANY-method}
-\alias{[,MultiAmplicon,logical,logical,ANY-method}
-\alias{[,MultiAmplicon,character,character,ANY-method}
 \title{A class combining sequences of forward and reverse primers (in a
 \code{\link{PrimerPairsSet-class}}) plus file names of paired end
 sequencing files (in a \code{\link{PairedReadFileSet-class}}).}
@@ -42,10 +40,6 @@ rawCounts(x)
 \S4method{show}{MultiAmplicon}(object)
 
 \S4method{[}{MultiAmplicon,index,index,ANY}(x, i, j, ..., drop = FALSE)
-
-\S4method{[}{MultiAmplicon,logical,logical,ANY}(x, i, j, ..., drop = NA)
-
-\S4method{[}{MultiAmplicon,character,character,ANY}(x, i, j, ..., drop = NA)
 }
 \arguments{
 \item{PrimerPairsSet}{a set of primer pairs specifiying your

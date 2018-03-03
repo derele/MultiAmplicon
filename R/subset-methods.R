@@ -11,32 +11,16 @@
 ##' @rdname PrimerPairsSet-class
 setMethod("[", c("PrimerPairsSet", "index", "missing", "ANY"),
           function(x, i, j, ..., drop=NA){
-              newF <- x@primerF[as.integer(i)]
-              newR <- x@primerR[as.integer(i)]
+              if(class(i)=="logical"){
+                  i <- logical.to.numeric(i, length(x))
+              }
+              if(class(i)=="character"){
+                  i <- name.to.numeric(i, names(x))
+              }
+              newF <- x@primerF[i]
+              newR <- x@primerR[i]
               PrimerPairsSet(primerF=as.character(newF),
                              primerR=as.character(newR))
-})
-
-##' @rdname PrimerPairsSet-class
-setMethod("[", c("PrimerPairsSet", "logical", "missing", "ANY"),
-          function(x, i, j, ..., drop=NA){
-              if (length(i)!=length(x)){
-                  warning("logical subscript is recycled to match length of",
-                          "PrimerPairsSet")}
-              if (length(x)%%length(i)!=0) {
-                  stop("length of PrimerPairsSet (", 
-                       length(x),
-                       ") is not multiple of length of logical subscript (",
-                       length(i), ")")
-              }
-              index <- rep_len(i, length.out=length(x))
-              x[which(index)]
-          })
-
-##' @rdname PrimerPairsSet-class
-setMethod("[", c("PrimerPairsSet", "character", "missing", "ANY"),
-          function(x, i, j, ..., drop=NA){
-              x[which(names(x)%in%i)]
           })
 
 ##' @param x PairedReadFileSet-class object
@@ -47,31 +31,15 @@ setMethod("[", c("PrimerPairsSet", "character", "missing", "ANY"),
 ##' @rdname PairedReadFileSet-class
 setMethod("[", c("PairedReadFileSet", "index", "missing", "ANY"),
           function(x, i, j, ..., drop=TRUE){
+              if(class(i)=="logical"){
+                  i <- logical.to.numeric(i, length(x))
+              }
+              if(class(i)=="character"){
+                  i <- name.to.numeric(i, names(x))
+              }
               newF <- x@readsF[i]
               newR <- x@readsR[i]
               PairedReadFileSet(newF, newR)
-})
-
-##' @rdname PairedReadFileSet-class
-setMethod("[", c("PairedReadFileSet", "logical", "missing", "ANY"),
-          function(x, i, j, ..., drop=NA){
-              if (length(i)!=length(x)){
-                  warning("logical subscript is recycled to match length of",
-                          "PairedReadFileSet")}
-              if (length(x)%%length(i)!=0) {
-                  stop("length of PairedReadFileSet (", 
-                       length(x),
-                       ") is not multiple of length of logical subscript (",
-                       length(i), ")")
-              }
-              index <- rep_len(i, length.out=length(x))
-              x[which(index)]
-          })
-
-##' @rdname PairedReadFileSet-class
-setMethod("[", c("PairedReadFileSet", "character", "missing", "ANY"),
-          function(x, i, j, ..., drop=NA){
-              x[which(names(x)%in%i)]
           })
 
 ##' @param x PairedDerep-class
@@ -83,11 +51,17 @@ setMethod("[", c("PairedReadFileSet", "character", "missing", "ANY"),
 ##' @rdname PairedDerep-class
 setMethod("[", c("PairedDerep", "index", "missing", "ANY"),
           function(x, i, j, ..., drop=TRUE){
-    newF <- slot(x, "derepF")[i]
-    newR <- slot(x, "derepR")[i]
-    new("PairedDerep",
-        derepF=newF, derepR=newR)
-})
+              if(class(i)=="logical"){
+                  i <- logical.to.numeric(i, length(x))
+              }
+              if(class(i)=="character"){
+                  i <- name.to.numeric(i, names(x))
+              }
+              newF <- slot(x, "derepF")[i]
+              newR <- slot(x, "derepR")[i]
+              new("PairedDerep",
+                  derepF=newF, derepR=newR)
+          })
 
 ##' @param x PairedDada-class object
 ##' @param i numeric to select
@@ -97,16 +71,22 @@ setMethod("[", c("PairedDerep", "index", "missing", "ANY"),
 ##' @rdname PairedDada-class
 setMethod("[", c("PairedDada", "index", "missing", "ANY"),
           function(x, i, j, ..., drop=TRUE){
-    newF <- slot(x, "dadaF")[i]
-    newR <- slot(x, "dadaR")[i]
-    ## if we get a single object, but  need a list of them
-    if(class(newF)%in%"dada"){
-        newF <- list(newF)
-        newR <- list(newR)
-    }
-    new("PairedDada",
-        dadaF=newF, dadaR=newR)
-})
+              if(class(i)=="logical"){
+                  i <- logical.to.numeric(i, length(x))
+              }
+              if(class(i)=="character"){
+                  i <- name.to.numeric(i, names(x))
+              }
+              newF <- slot(x, "dadaF")[i]
+              newR <- slot(x, "dadaR")[i]
+              ## if we get a single object, but  need a list of them
+              if(class(newF)%in%"dada"){
+                  newF <- list(newF)
+                  newR <- list(newR)
+              }
+              new("PairedDada",
+                  dadaF=newF, dadaR=newR)
+          })
 
 ## ##' @param x PairedDada-class object
 ## ##' @param i integer to select
@@ -114,14 +94,13 @@ setMethod("[", c("PairedDada", "index", "missing", "ANY"),
 ## ##' @param ... not used
 ## ##' @param drop not used
 ## ##' @rdname PairedDada-class
-setMethod("[", c("PairedDada", "integer", "integer", "ANY"),
-          function(x, i, j, ..., drop=TRUE){
-    newF <- lapply(x@dadaF[i], "[", j)
-    newR <- lapply(x@dadaR[i], "[", j)
-    new("PairedDada",
-        dadaF=newF, dadaR=newR)
-})
-
+## setMethod("[", c("PairedDada", "integer", "integer", "ANY"),
+##           function(x, i, j, ..., drop=TRUE){
+##     newF <- lapply(x@dadaF[i], "[", j)
+##     newR <- lapply(x@dadaR[i], "[", j)
+##     new("PairedDada",
+##         dadaF=newF, dadaR=newR)
+## })
 
 
 ##' Convenient subsetting for MultiAmplicon objects
@@ -228,11 +207,11 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
 logical.to.numeric <- function(x, n){
               if (length(x)!=n){
                   warning("logical subscript is recycled to match number of ",
-                          "amplicons in object")}
+                          "slots in object")}
               if (n%%length(x)!=0) {
                   stop("number of logical indices (", 
                        length(i),
-                       ") is not multiple of subsetted object (",
+                       ") is not multiple of slots in object (",
                        n, ")")
               }
               index_i <- rep_len(i, length.out=n)
