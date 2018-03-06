@@ -202,20 +202,10 @@ MA6[1:6, 1:8]
 
 ## ## logical and name indexing does not work yet
 
-## ## this works
-MA6[1, 1:4*2]@rawCounts
+## ## this works because class(1:5) "integer" and class(1:4*2)
+## "numeric" by my own error message
 
-## why on earth does this not work?
-MA6[1:5, 1:4*2]@rawCounts
-MA6[1:6, 1:8]@rawCounts
-
-## ## this does work now
-MA6[4, 1:4*2]@rawCounts
-MA6[4, 1:4*2]@derep
-
-## ## this does work now
-## MA6[4, 1:4*2]@derep
-
+## MA6[1:5, 1:4*2]@rawCounts
 
 ## ## This works not really ... maybe define index within subset function
 ## MA6[c(FALSE, FALSE, FALSE, TRUE, FALSE, FALSE), c(FALSE, TRUE)]@rawCounts
