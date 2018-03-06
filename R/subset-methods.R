@@ -7,7 +7,7 @@
 ##' @param j not used
 ##' @param ... not used
 ##' @param drop not used
-##' @importClassesFrom Matrix index 
+## ##' @importClassesFrom Matrix index 
 ##' @rdname PrimerPairsSet-class
 setMethod("[", c("PrimerPairsSet", "index", "missing", "ANY"),
           function(x, i, j, ..., drop=NA){
