@@ -178,6 +178,7 @@ test_that("merging produces a list of derep objects ", {
 
 
 ## context("Subsetting MultiAmplicon objects")
+## ToDO: proper tests from the below... 
 
 MA6[1:2, 1:2]
 
@@ -198,23 +199,19 @@ MA6[c(4, 6),  c(4, 6)]@derep
 ## killed the bug!
 MA6[1:6, 1:8]
 
-rownames(MA6[1:6, 1:8])
-colnames(MA6[1:6, 1:8])
-
-MA6[1, 6]@rawCounts
-MA6[1, 6]@stratifiedFiles
-
-MA6[4, 6L]@rawCounts
-MA6[4, 6L]@stratifiedFiles
 
 ## ## logical and name indexing does not work yet
 
 ## ## this works
-## MA6[1, 1:4*2]@rawCounts
-## MA6[1:6, 1:4*2]@rawCounts
+MA6[1, 1:4*2]@rawCounts
+
+## why on earth does this not work?
+MA6[1:5, 1:4*2]@rawCounts
+MA6[1:6, 1:8]@rawCounts
 
 ## ## this does work now
-## MA6[4, 1:4*2]@rawCounts
+MA6[4, 1:4*2]@rawCounts
+MA6[4, 1:4*2]@derep
 
 ## ## this does work now
 ## MA6[4, 1:4*2]@derep

@@ -140,7 +140,7 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                   j <- name.to.numeric(j, colnames(x))
               }
               if(all(dim(x@rawCounts)>0)){
-                  newRC <- as.matrix(rawCounts(x)[i, j, drop=FALSE])
+                  newRC <- as.matrix(x@rawCounts[i, j, drop=FALSE])
                   ## we drop empty files from statified files
                   ## therefore we have to find new indices j. These
                   ## later have to be used also for the columns of
@@ -153,71 +153,74 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                       zero.i <- which(x@rawCounts[i[[ii]], ]>0) # >1 singl seq rm
                       which(zero.i%in%j)
                   })
-                  cat("\nNEW J: new.j", unlist(new.j) , "\n")
-                  cat("\nNEW J non Zero: new.jnonZero", unlist(new.j.nonZero) , "\n\n")
-                  newSF <-  lapply(seq_along(i), function (ii) {
-                      x@stratifiedFiles[[i[[ii]]]][new.j[[ii]]]
-                  })
-                  names(newSF) <- names(x@stratifiedFiles[i])
-              }
-              if(length(x@derep)>0){
-                  newderep <- lapply(seq_along(i), function (ii){
-                      x@derep[[i[[ii]]]][new.j.nonZero[[ii]]]
-                  })
-                  names(newderep) <- names(x@derep[i])
-              }
-              if(length(x@dada)>0){
-                  newdada <- lapply(seq_along(i), function (ii){
-                      x@dada[[i[[ii]]]][new.j[[ii]]]
-                  })
-                  names(newdada) <- names(x@dada[i])
-              }
-              if(length(x@mergers)>0){
-                  newmergers <- lapply(seq_along(i), function (ii){
-                      x@mergers[[i[[ii]]]][new.j[[ii]]]
-                  })
-                  names(newmergers) <- names(x@mergers[i])
-              }
-              if(length(x@sequenceTable)>0){
-                  newST <- lapply(seq_along(i), function (ii){
-                      x@sequenceTable[[i[[ii]]]][new.j[[ii]], , drop=FALSE]
-                  })
-                  names(newST) <- names(x@sequenceTable[i])
-              }
-              if(length(x@sequenceTableNoChime)>0){
-                  newSTnC <- lapply(seq_along(i), function (ii){
-                      x@sequenceTableNoChime[[i[[ii]]]][new.j[[ii]], , drop=FALSE]
-                  })
-                  names(newSTnC) <- names(x@sequenceTableNoChime[i])
-              }
-          initialize(x,
-              PrimerPairsSet = newPrimer,
-              PairedReadFileSet = newFiles,
-              rawCounts = newRC,
-              stratifiedFiles = newSF,
-              derep = newderep,
-              dada = newdada,
-              mergers = newmergers,
-              sequenceTable = newST,
-              sequenceTableNoChime = newSTnC
-              )
+                  ## cat("\nNEW J: new.j", unlist(new.j) , "\n")
+                  ## cat("\nNEW J non Zero: new.jnonZero",
+                  ## unlist(new.j.nonZero) , "\n\n")
+              newSF <-  lapply(seq_along(i), function (ii) {
+                  x@stratifiedFiles[[i[[ii]]]][new.j[[ii]]]
+              })
+              names(newSF) <- names(x@stratifiedFiles[i])
           }
+          if(length(x@derep)>0){
+              newderep <- lapply(seq_along(i), function (ii){
+                  x@derep[[i[[ii]]]][new.j.nonZero[[ii]]]
+              })
+              names(newderep) <- names(x@derep[i])
+          }
+          if(length(x@dada)>0){
+              newdada <- lapply(seq_along(i), function (ii){
+                  x@dada[[i[[ii]]]][new.j[[ii]]]
+              })
+              names(newdada) <- names(x@dada[i])
+          }
+          if(length(x@mergers)>0){
+              newmergers <- lapply(seq_along(i), function (ii){
+                  x@mergers[[i[[ii]]]][new.j[[ii]]]
+              })
+              names(newmergers) <- names(x@mergers[i])
+          }
+          if(length(x@sequenceTable)>0){
+              newST <- lapply(seq_along(i), function (ii){
+                  x@sequenceTable[[i[[ii]]]][new.j[[ii]], , drop=FALSE]
+              })
+              names(newST) <- names(x@sequenceTable[i])
+          }
+          if(length(x@sequenceTableNoChime)>0){
+              newSTnC <- lapply(seq_along(i), function (ii){
+                  x@sequenceTableNoChime[[i[[ii]]]][new.j[[ii]], , drop=FALSE]
+              })
+              names(newSTnC) <- names(x@sequenceTableNoChime[i])
+          }
+          initialize(x,
+                     PrimerPairsSet = newPrimer,
+                     PairedReadFileSet = newFiles,
+                     rawCounts = newRC,
+                     stratifiedFiles = newSF,
+                     derep = newderep,
+                     dada = newdada,
+                     mergers = newmergers,
+                     sequenceTable = newST,
+                     sequenceTableNoChime = newSTnC
+                     )
+}
 )
 
 logical.to.numeric <- function(x, n){
-              if (length(x)!=n){
-                  warning("logical subscript is recycled to match number of ",
-                          "slots in object")}
-              if (n%%length(x)!=0) {
-                  stop("number of logical indices (", 
-                       length(i),
-                       ") is not multiple of slots in object (",
-                       n, ")")
-              }
-              index_i <- rep_len(i, length.out=n)
-              return(index_i)
-}
+    stop("only numeric/ingeger indices are currently supported for indexing")
+         ## if (length(x)!=n){
+         ##     warning("logical subscript is recycled to match number of ",
+         ##             "slots in object")}
+         ## if (n%%length(x)!=0) {
+         ##     stop("number of logical indices (", 
+         ##          length(i),
+         ##          ") is not multiple of slots in object (",
+         ##          n, ")")
+         ## }
+         ## index_i <- rep_len(i, length.out=n)
+         ## return(index_i)
+    }
 
 name.to.numeric <- function(x, names){
-    which(names%in%x)
+        stop("only numeric/ingeger indices are currently supported for indexing")
+##     which(names%in%x)
 }

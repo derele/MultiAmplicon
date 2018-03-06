@@ -401,6 +401,6 @@ setMethod("dim", "MultiAmplicon", function (x) {
 setGeneric("rawCounts", function(x){standardGeneric("rawCounts")})
 
 ##' @rdname MultiAmplicon-class
-setMethod("rawCounts", "MultiAmplicon", function(x) x@rawCounts)
+setMethod("rawCounts", "MultiAmplicon", function(x) slot(x, "rawCounts"))
 
 
