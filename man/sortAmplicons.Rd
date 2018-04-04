@@ -8,10 +8,11 @@
 \alias{sortAmplicons,MultiAmplicon-method}
 \title{sortAmplicons}
 \usage{
-sortAmplicons(MA, n = 1e+06, countOnly = FALSE, filedir = tempdir(), ...)
+sortAmplicons(MA, n = 1e+06, countOnly = FALSE, rmPrimer = TRUE,
+  filedir = tempdir(), ...)
 
 \S4method{sortAmplicons}{MultiAmplicon}(MA, n = 1e+06, countOnly = FALSE,
-  filedir = tempdir(), ...)
+  rmPrimer = TRUE, filedir = tempdir(), ...)
 }
 \arguments{
 \item{MA}{\code{\link{MultiAmplicon-class}} object containing a
@@ -25,6 +26,9 @@ I/O operations reading the sequence files.}
 
 \item{countOnly}{logical argument if set TRUE only a matrix of
 read counts is returned}
+
+\item{rmPrimer}{logical, indicating whehter primer sequences
+should be removed during sorting}
 
 \item{filedir}{path to an existing or newly to be created folder
 on your computer. \code{\link[base]{tempfile}} is used within

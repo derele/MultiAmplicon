@@ -17,6 +17,8 @@
 ##'     I/O operations reading the sequence files.
 ##' @param countOnly logical argument if set TRUE only a matrix of
 ##'     read counts is returned
+##' @param rmPrimer logical, indicating whehter primer sequences
+##'     should be removed during sorting 
 ##' @param filedir path to an existing or newly to be created folder
 ##'     on your computer. \code{\link[base]{tempfile}} is used within
 ##'     this folder to creat unique filnames trying to avoid problems
@@ -61,13 +63,14 @@
 ##' @export sortAmplicons
 ##' @aliases sortAmplicons, sortAmplicons-Method
 setGeneric(name="sortAmplicons",
-           def=function(MA, n=1e6, countOnly=FALSE, filedir=tempdir(), ...) {
+           def=function(MA, n=1e6, countOnly=FALSE, rmPrimer=TRUE,
+                        filedir=tempdir(), ...) {
                standardGeneric("sortAmplicons")
            })
 
 ##' @rdname sortAmplicons
-setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, countOnly=FALSE,
-                                                     filedir=tempdir(), ...){
+setMethod("sortAmplicons", "MultiAmplicon",
+          function(MA, n=1e6, countOnly=FALSE, rmPrimer=TRUE, filedir=tempdir(), ...){
     ## the data matrix of amplicons x samples stratified counts 
     NR <- length(MA@PrimerPairsSet@primerF)
     NC <- length(MA@PairedReadFileSet@readsF)
@@ -138,13 +141,20 @@ setMethod("sortAmplicons", "MultiAmplicon", function(MA, n=1e6, countOnly=FALSE,
                                       ".fastq.gz")
                            lengthF <- length(MA@PrimerPairsSet@primerF[[y]])
                            lengthR <- length(MA@PrimerPairsSet@primerR[[y]])
-                           F <- ShortRead::narrow(Ffq[select],
-                                                  lengthF, width(Ffq[select]))
+                           F <- Ffq[select]
                            R <- Rfq[select]
-                           R <- ShortRead::narrow(Rfq[select],
-                                              lengthR, width(Rfq[select]))
-                           ShortRead::writeFastq(F, file=tmppathF[[y, x]], mode="a")
-                           ShortRead::writeFastq(R, file=tmppathR[[y, x]], mode="a")
+                           if (rmPrimer){
+                               F <- ShortRead::narrow(F,
+                                                      lengthF,
+                                                      width(Ffq[select]))
+                               R <- ShortRead::narrow(R,
+                                                      lengthR,
+                                                      width(Rfq[select]))
+                           }
+                           ShortRead::writeFastq(F, file=tmppathF[[y, x]],
+                                                 mode="a")
+                           ShortRead::writeFastq(R, file=tmppathR[[y, x]],
+                                                 mode="a")
                        }
                        matches[y] <- length(select[select==TRUE])
                    }
