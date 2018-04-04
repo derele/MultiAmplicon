@@ -5,3 +5,4 @@
 *.R~
 *~
 MA_sorted.rda
+inst/doc

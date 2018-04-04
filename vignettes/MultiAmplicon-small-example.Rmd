@@ -1,0 +1,87 @@
+---
+title: "Multi Amplicon - a small example"
+author: "Emanuel Heitlinger"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Multi Amplicon - a small example
+
+## Preparing sequencing read files and a primer set
+
+The MultiAmplicon package used dedicated classes to ensure that input
+to it's `sortAmplicons` function is provided correctly. This means for
+the user that file names (and complete paths the directory they are
+stored in) of forward and reverse read files should mussed be provided
+as a `PairedReadFileSet`. Similarly, primer pairs must be provided in
+a `PrimerPairsSet`. We first have a look at how these are generated.
+
+```{r buildup}
+library(MultiAmplicon)
+
+primerF <- c(Amp1F = "AGAGTTTGATCCTGGCTCAG", Amp2F = "ACTCCTACGGGAGGCAGC",
+             Amp3F = "GAATTGACGGAAGGGCACC", Amp4F = "YGGTGRTGCATGGCCGYT",
+             Amp5F = "AAAAACCCCGGGGGGTTTTT", Amp6F = "AGAGTTTGATCCTGCCTCAG")
+
+primerR <- c(Amp1R = "CTGCWGCCNCCCGTAGG", Amp2R = "GACTACHVGGGTATCTAATCC",
+             Amp3R = "AAGGGCATCACAGACCTGTTAT", Amp4R = "TCCTTCTGCAGGTTCACCTAC",
+             Amp5R = "AAAAACCCCGGGGGGTTTTT", Amp6R = "CCTACGGGTGGCAGATGCAG")
+
+PPS <- PrimerPairsSet(primerF, primerR)
+
+fastq.dir <- system.file("extdata", "fastq", package = "MultiAmplicon")
+fastq.files <- list.files(fastq.dir, full.names=TRUE)
+
+Ffastq.file <- fastq.files[grepl("F_filt", fastq.files)]
+Rfastq.file <- fastq.files[grepl("R_filt", fastq.files)]
+
+PRF <- PairedReadFileSet(Ffastq.file, Rfastq.file)
+
+MA <- MultiAmplicon(PPS, PRF)
+
+```
+
+## Sorting into multiple amplicons 
+
+Based on the primer sequences we can now sort the sequences into
+amplicons. This is done by the function `sortAmplicons`. 
+
+
+```{r plot, fig.show='hold'}
+plot(1:10)
+plot(10:1)
+```
+
+## Preparing sequencing read files and a primer set
+
+Now wer are 
+
+
+You can enable figure captions by `fig_caption: yes` in YAML:
+
+    output:
+      rmarkdown::html_vignette:
+        fig_caption: yes
+
+Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+
+## More Examples
+
+You can write math expressions, e.g. $Y = X\beta + \epsilon$,
+footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(head(mtcars, 10))
+```
+
