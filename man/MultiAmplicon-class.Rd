@@ -14,6 +14,9 @@
 \alias{rawCounts,MultiAmplicon-method}
 \alias{show,MultiAmplicon-method}
 \alias{[,MultiAmplicon,index,index,ANY-method}
+\alias{[,MultiAmplicon,index,missing,ANY-method}
+\alias{[,MultiAmplicon,missing,index,ANY-method}
+\alias{[,MultiAmplicon,missing,missing,ANY-method}
 \title{A class combining sequences of forward and reverse primers (in a
 \code{\link{PrimerPairsSet-class}}) plus file names of paired end
 sequencing files (in a \code{\link{PairedReadFileSet-class}}).}
@@ -40,6 +43,12 @@ rawCounts(x)
 \S4method{show}{MultiAmplicon}(object)
 
 \S4method{[}{MultiAmplicon,index,index,ANY}(x, i, j, ..., drop = FALSE)
+
+\S4method{[}{MultiAmplicon,index,missing,ANY}(x, i, j, ..., drop = FALSE)
+
+\S4method{[}{MultiAmplicon,missing,index,ANY}(x, i, j, ..., drop = FALSE)
+
+\S4method{[}{MultiAmplicon,missing,missing,ANY}(x, i, j, ..., drop = FALSE)
 }
 \arguments{
 \item{PrimerPairsSet}{a set of primer pairs specifiying your
@@ -89,11 +98,8 @@ read files and processed data in an 'amplicon x samples'
 format. The object is incrementally filled by running functions
 (from the package \code{dada2}) with additional slots.
 
-Convenient subsetting for MultiAmplicon objects
-}
-\details{
-Subset a MultiAmplicon object including all potentially filled
-slots
+Subsetting for MultiAmplicon objects should conveniently subset
+all (potentially) filled slots
 }
 \section{Functions}{
 \itemize{

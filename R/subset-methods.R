@@ -103,10 +103,8 @@ setMethod("[", c("PairedDada", "index", "missing", "ANY"),
 ## })
 
 
-##' Convenient subsetting for MultiAmplicon objects
-##'
-##' Subset a MultiAmplicon object including all potentially filled
-##' slots
+##' Subsetting for MultiAmplicon objects should conveniently subset
+##' all (potentially) filled slots
 ##' 
 ##' @title subset MultiAmplicon
 ##' @param x MultiAmplicon-class object
@@ -202,8 +200,33 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                      sequenceTable = newST,
                      sequenceTableNoChime = newSTnC
                      )
-}
+          }
 )
+
+## empty column
+##' @rdname MultiAmplicon-class
+setMethod("[", c("MultiAmplicon", "index", "missing", "ANY"),
+          function(x, i, j, ..., drop=FALSE){
+          x[i, 1:ncol(x)]    
+          }
+)
+
+## empty row
+##' @rdname MultiAmplicon-class
+setMethod("[", c("MultiAmplicon", "missing", "index", "ANY"),
+          function(x, i, j, ..., drop=FALSE){
+          x[1:nrow(x), j]    
+          }
+)
+
+## all empty
+##' @rdname MultiAmplicon-class
+setMethod("[", c("MultiAmplicon", "missing", "missing", "ANY"),
+          function(x, i, j, ..., drop=FALSE){
+          x
+          }
+)
+
 
 logical.to.numeric <- function(x, n){
     stop("only numeric/ingeger indices are currently supported for indexing")
