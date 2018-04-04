@@ -18,14 +18,37 @@ knitr::opts_chunk$set(
 
 # Multi Amplicon - a small example
 
+The MultiAmplicon-package allows the matching and removal of primer
+sequences from sequencing reads. Amplicons, here defined as the
+sequences amplified by particular combionation of forward and reverse
+primer, can then be further processed. The package further guiedes
+downstream analysis of multiple amplicons in a bioconductor workflow
+wrapped around the package dada2 (and phyloseq).
+
 ## Preparing sequencing read files and a primer set
 
-The MultiAmplicon package used dedicated classes to ensure that input
-to its `sortAmplicons` function is provided correctly. This means for
-the user that file names (and complete paths the directory they are
-stored in) of forward and reverse read files must be provided as a
-`PairedReadFileSet`. Similarly, primer pairs must be provided in a
-`PrimerPairsSet`. We first have a look at how these are generated.
+The MultiAmplicon package uses dedicated classes to ensure that input
+to its `sortAmplicons` function is provided correctly. Concerning
+input files, this means for the user that file names (including paths
+to the directory they are stored in) of forward and reverse sequencing
+read files must be provided as a `PairedReadFileSet`. These files can
+contain reads in fastq or in gzipped fastq format. We focus as a
+default use case on (non-interleaved) paired-end reads, as these are
+the most common format Illumina sequencing reads are currently
+produced in (but see vignette xyz as an example how to process
+single-end sequencing data).
+
+Similarly, primer pairs must be provided in a `PrimerPairsSet`. We
+then match forward and reverse primers at the start of forward and
+reverse reads, respectively. The maximal number of missmatches and the
+maximal distance from the start of the read can be supplied as
+arguments to the function. The primer sequences are trimmed from the
+reads and the read-pair is associated with the amplicon defined by the
+primer-pair. While we focus on this default use case, the package can
+als be used adaptor trimming with a single primer (see vignette xyz).
+
+But to go on with our main intended use case example first have a look
+at how `PairedReadFileSet` and `PrimerPairsSet` are generated.
 
 ```{r buildup}
 suppressMessages(library(MultiAmplicon))
@@ -51,7 +74,16 @@ PRF <- PairedReadFileSet(Ffastq.file, Rfastq.file)
 MA <- MultiAmplicon(PPS, PRF)
 ```
 
-## Sorting into multiple amplicons 
+Note that the primer pairs in the `PrimerPairsSet` can be named and
+the same also is true for the sequencing read file pairs (although not
+in our example above). This results in names for primer-pairs and for
+samples.
+
+
+
+
+
+## Sorting into multiple amplicons
 
 Based on the primer sequences we can now sort the sequences into
 amplicons. This is done by the function `sortAmplicons`, which updates

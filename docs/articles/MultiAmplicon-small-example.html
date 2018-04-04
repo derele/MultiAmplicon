@@ -74,10 +74,13 @@
 <div id="multi-amplicon---a-small-example" class="section level1">
 <h1 class="hasAnchor">
 <a href="#multi-amplicon---a-small-example" class="anchor"></a>Multi Amplicon - a small example</h1>
+<p>The MultiAmplicon-package allows the matching and removal of primer sequences from sequencing reads. Amplicons, here defined as the sequences amplified by particular combionation of forward and reverse primer, can then be further processed. The package further guiedes downstream analysis of multiple amplicons in a bioconductor workflow wrapped around the package dada2 (and phyloseq).</p>
 <div id="preparing-sequencing-read-files-and-a-primer-set" class="section level2">
 <h2 class="hasAnchor">
 <a href="#preparing-sequencing-read-files-and-a-primer-set" class="anchor"></a>Preparing sequencing read files and a primer set</h2>
-<p>The MultiAmplicon package used dedicated classes to ensure that input to its <code>sortAmplicons</code> function is provided correctly. This means for the user that file names (and complete paths the directory they are stored in) of forward and reverse read files must be provided as a <code>PairedReadFileSet</code>. Similarly, primer pairs must be provided in a <code>PrimerPairsSet</code>. We first have a look at how these are generated.</p>
+<p>The MultiAmplicon package uses dedicated classes to ensure that input to its <code>sortAmplicons</code> function is provided correctly. Concerning input files, this means for the user that file names (including paths to the directory they are stored in) of forward and reverse sequencing read files must be provided as a <code>PairedReadFileSet</code>. These files can contain reads in fastq or in gzipped fastq format. We focus as a default use case on (non-interleaved) paired-end reads, as these are the most common format Illumina sequencing reads are currently produced in (but see vignette xyz as an example how to process single-end sequencing data).</p>
+<p>Similarly, primer pairs must be provided in a <code>PrimerPairsSet</code>. We then match forward and reverse primers at the start of forward and reverse reads, respectively. The maximal number of missmatches and the maximal distance from the start of the read can be supplied as arguments to the function. The primer sequences are trimmed from the reads and the read-pair is associated with the amplicon defined by the primer-pair. While we focus on this default use case, the package can als be used adaptor trimming with a single primer (see vignette xyz).</p>
+<p>But to go on with our main intended use case example first have a look at how <code>PairedReadFileSet</code> and <code>PrimerPairsSet</code> are generated.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressMessages</span>(<span class="kw">library</span>(MultiAmplicon))
 
 primerF &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">Amp1F =</span> <span class="st">"AGAGTTTGATCCTGGCTCAG"</span>, <span class="dt">Amp2F =</span> <span class="st">"ACTCCTACGGGAGGCAGC"</span>,
@@ -99,6 +102,7 @@ Rfastq.file &lt;-<span class="st"> </span>fastq.files[<span class="kw">grepl</sp
 PRF &lt;-<span class="st"> </span><span class="kw"><a href="../reference/PairedReadFileSet-class.html">PairedReadFileSet</a></span>(Ffastq.file, Rfastq.file)
 
 MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAmplicon-class.html">MultiAmplicon</a></span>(PPS, PRF)</code></pre></div>
+<p>Note that the primer pairs in the <code>PrimerPairsSet</code> can be named and the same also is true for the sequencing read file pairs (although not in our example above). This results in names for primer-pairs and for samples.</p>
 </div>
 <div id="sorting-into-multiple-amplicons" class="section level2">
 <h2 class="hasAnchor">
@@ -106,7 +110,7 @@ MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAmp
 <p>Based on the primer sequences we can now sort the sequences into amplicons. This is done by the function <code>sortAmplicons</code>, which updates the MultiAmplicon object with the sorted amplicons.</p>
 <p>For this small example dataset we can look at the resuling <code>rawCounts</code> i.e. the number of sequences for each of the fully stratified amplicon x sample matrix.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sortAmplicons.html">sortAmplicons</a></span>(MA)
-<span class="co">#&gt; using existing directory  /tmp/RtmpJ8JLNl and adding specific prefixes to avoid problems when running code twice </span>
+<span class="co">#&gt; using existing directory  /tmp/RtmpWgTP1D and adding specific prefixes to avoid problems when running code twice </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;  finished  sorting 0 sequencing reads for S0_F_filt.fastq.gz in </span>
 <span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S0_F_filt.fastq.gz  and </span>
