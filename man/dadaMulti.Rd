@@ -19,10 +19,11 @@ MultiAmplicon object with dadaF and dadaR slots filled
 A wrapper around \code{\link[dada2]{dada}} from \code{dada2}
 }
 \details{
-The function runs \code{\link[dada2]{dada}} from
-\code{\link[dada2]{dada}} to performe 'High resolution sample
-inference from amplicon data' on multiple amplicons stored as
-dereplicated sequences in a MultiAmplicon-class object
+The function runs \code{\link[dada2]{dada}} from the package
+\code{dada2} \url{https://benjjneb.github.io/dada2/} to performe
+'High resolution sample inference from amplicon data' on multiple
+amplicons stored as dereplicated sequences in a
+MultiAmplicon-class object
 }
 \author{
 Emanuel Heitlinger
