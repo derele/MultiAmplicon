@@ -18,12 +18,14 @@ SA <- MultiAmplicon(PrimerPairsSet(primerF[1], primerR[1]), PRF)
 
 context("sortAmplicons resut doesn't change results over executions")
 
+## MA1 <- sortAmplicons(MA, max.mismatch=3)
+
 MA1 <- sortAmplicons(MA)
 
 test_that("sortAmplicons resut doesn't change over executions", {
     ## For multi amplicon objects
-    expect_known_output(MA, system.file("testdata", "MA_sorted.rda",
-                                        package = "MultiAmplicon"))
+    expect_known_output(MA1, system.file("testdata", "MA_sorted.rda",
+                                         package = "MultiAmplicon"))
 })
 
 SA1 <- sortAmplicons(SA)
