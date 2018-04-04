@@ -2,7 +2,7 @@ Package: MultiAmplicon
 Title: Run metabarcoding alalyses for multiple amplicons
 Version: 0.0.0.9000
 Authors@R: person("Emanuel", "Heitlinger", email = "emanuelheitlinger@gmail.com", role = c("aut", "cre"))
-Description: The pagages allows to run a typical R/bioconductor workflow on
+Description: This package allows to run a typical R/bioconductor (i.e. dada2) workflow on
     multiple amplicons defined by different primer pairs (e.g. on the 16S or 18S
     genes and COI).
 biocViews: Metagenomics,  Genetics, Sequencing, Microbiome,
@@ -22,4 +22,7 @@ LazyData: true
 RoxygenNote: 6.0.1
 Suggests:
     testthat,
-    covr
+    covr,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
