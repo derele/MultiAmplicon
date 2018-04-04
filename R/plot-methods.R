@@ -4,13 +4,13 @@
 ##' The function uses pheatmap to plot the primer matching statistics
 ##' stored in the rawCounts slot of a MultiAmplicons-class object
 ##' 
-##' @title plot_Amplicon_numbers
+##' @title plotAmpliconNumbers
 ##' 
-##' @param MAmatrix The primer matching (amplicon) matrix of a
-##'     MultiAmplicon object.
+##' @param MA The primer matching (amplicon) matrix of a
+##'     MultiAmplicon object or the object itself
 ##' 
 ##' @param transf transformation to be applied, recommended default is
-##'     log10
+##'     log10(x+1)
 ##' 
 ##' @importFrom pheatmap pheatmap
 ##' @param ... addtional parameter to be passed to pheatmap funciton
@@ -22,23 +22,33 @@
 ##'     rows if parameter kmeans_k was specified.
 ##' @export
 ##' @author Emanuel Heitlinger
+setGeneric(name="plotAmpliconNumbers",
+           def=function(MA, transf=function(x) log10(x+1), ...) {
+               standardGeneric("plotAmpliconNumbers")
+           })
 
-plot_Amplicon_numbers <- function (MAmatrix, transf=function(x) log10(x+1), ...){
-    if (nrow(MAmatrix) < 2 || ncol(MAmatrix) < 2) {
-        stop(cat("No rawCounts found in MultiAmplicon object:
-                  Run sortAmplicons to produce a MultiAmplicon with at least
-                  two files and two samples"))
-    } else {
-        ## get the function name for display on the plot
-        transf_function <- deparse(transf)[length(deparse(transf))]
-        if (is.primitive(transf)){
-            transf_function <- gsub('\\.Primitive\\(\\"(.*)\\"\\)', "\\1",
-                                    transf_function)
-        }
-        pheatmap::pheatmap(transf(MAmatrix),
-                           main = paste(transf_function,
-                                        "transformed",
-                                        "read number"),
-                           ...)
-    }
-}
+setMethod("plotAmpliconNumbers", c("matrix", "ANY"),
+          function (MA, transf=function(x) log10(x+1), ...){
+              ## get the function name for display on the plot
+              transf_function <- deparse(transf)[length(deparse(transf))]
+              if (is.primitive(transf)){
+                  transf_function <- gsub('\\.Primitive\\(\\"(.*)\\"\\)', "\\1",
+                                          transf_function)
+              }
+              pheatmap::pheatmap(transf(MA),
+                                 main = paste(transf_function,
+                                              "transformed number of",
+                                              "sequencing reads"),
+                                 ...)
+          }
+)
+
+setMethod("plotAmpliconNumbers", c("MultiAmplicon", "ANY"),
+          function (MA, transf=function(x) log10(x+1), ...){
+              MA <- rawCounts(MA)
+              if (nrow(MA) < 2 || ncol(MA) < 2) {
+                  stop("No rawCounts found in MultiAmplicon object:
+                  Run sortAmplicons to produce a MultiAmplicon-object
+                  with at least wo files and two samples")}
+              else {plotAmpliconNumbers(MA, transf)}
+          })
