@@ -77,7 +77,7 @@
 <div id="preparing-sequencing-read-files-and-a-primer-set" class="section level2">
 <h2 class="hasAnchor">
 <a href="#preparing-sequencing-read-files-and-a-primer-set" class="anchor"></a>Preparing sequencing read files and a primer set</h2>
-<p>The MultiAmplicon package used dedicated classes to ensure that input to it’s <code>sortAmplicons</code> function is provided correctly. This means for the user that file names (and complete paths the directory they are stored in) of forward and reverse read files should mussed be provided as a <code>PairedReadFileSet</code>. Similarly, primer pairs must be provided in a <code>PrimerPairsSet</code>. We first have a look at how these are generated.</p>
+<p>The MultiAmplicon package used dedicated classes to ensure that input to its <code>sortAmplicons</code> function is provided correctly. This means for the user that file names (and complete paths the directory they are stored in) of forward and reverse read files must be provided as a <code>PairedReadFileSet</code>. Similarly, primer pairs must be provided in a <code>PrimerPairsSet</code>. We first have a look at how these are generated.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressMessages</span>(<span class="kw">library</span>(MultiAmplicon))
 
 primerF &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">Amp1F =</span> <span class="st">"AGAGTTTGATCCTGGCTCAG"</span>, <span class="dt">Amp2F =</span> <span class="st">"ACTCCTACGGGAGGCAGC"</span>,
@@ -105,18 +105,49 @@ MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAmp
 <a href="#sorting-into-multiple-amplicons" class="anchor"></a>Sorting into multiple amplicons</h2>
 <p>Based on the primer sequences we can now sort the sequences into amplicons. This is done by the function <code>sortAmplicons</code>, which updates the MultiAmplicon object with the sorted amplicons.</p>
 <p>For this small example dataset we can look at the resuling <code>rawCounts</code> i.e. the number of sequences for each of the fully stratified amplicon x sample matrix.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sortAmplicons.html">sortAmplicons</a></span>(MA)</code></pre></div>
-<p>using existing directory /tmp/RtmpqaUVNh and adding specific prefixes to avoid problems when running code twice</p>
-<p>finished sorting 0 sequencing reads for S0_F_filt.fastq.gz in /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S0_F_filt.fastq.gz and /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S0_R_filt.fastq.gz into 0 amplicons</p>
-<p>finished sorting 0 sequencing reads for S00_F_filt.fastq.gz in /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S00_F_filt.fastq.gz and /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S00_R_filt.fastq.gz into 0 amplicons</p>
-<p>finished sorting 1 sequencing reads for S01_F_filt.fastq.gz in /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S01_F_filt.fastq.gz and /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S01_R_filt.fastq.gz into 1 amplicons</p>
-<p>finished sorting 9348 sequencing reads for S121_F_filt.fastq.gz in /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S121_F_filt.fastq.gz and /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S121_R_filt.fastq.gz into 4 amplicons</p>
-<p>finished sorting 5 sequencing reads for S144_F_filt.fastq.gz in /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S144_F_filt.fastq.gz and /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S144_R_filt.fastq.gz into 1 amplicons</p>
-<p>finished sorting 16 sequencing reads for S22_F_filt.fastq.gz in /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S22_F_filt.fastq.gz and /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S22_R_filt.fastq.gz into 4 amplicons</p>
-<p>finished sorting 63448 sequencing reads for S8_F_filt.fastq.gz in /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S8_F_filt.fastq.gz and /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S8_R_filt.fastq.gz into 4 amplicons</p>
-<p>finished sorting 7108 sequencing reads for S91_F_filt.fastq.gz in /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S91_F_filt.fastq.gz and /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S91_R_filt.fastq.gz into 4 amplicons</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-knitr::<span class="kw">kable</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">rawCounts</a></span>(MA1))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sortAmplicons.html">sortAmplicons</a></span>(MA)
+<span class="co">#&gt; using existing directory  /tmp/RtmpJ8JLNl and adding specific prefixes to avoid problems when running code twice </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  finished  sorting 0 sequencing reads for S0_F_filt.fastq.gz in </span>
+<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S0_F_filt.fastq.gz  and </span>
+<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S0_R_filt.fastq.gz </span>
+<span class="co">#&gt;   into  0 amplicons </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  finished  sorting 0 sequencing reads for S00_F_filt.fastq.gz in </span>
+<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S00_F_filt.fastq.gz  and </span>
+<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S00_R_filt.fastq.gz </span>
+<span class="co">#&gt;   into  0 amplicons </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  finished  sorting 1 sequencing reads for S01_F_filt.fastq.gz in </span>
+<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S01_F_filt.fastq.gz  and </span>
+<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S01_R_filt.fastq.gz </span>
+<span class="co">#&gt;   into  1 amplicons </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  finished  sorting 9348 sequencing reads for S121_F_filt.fastq.gz in </span>
+<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S121_F_filt.fastq.gz  and </span>
+<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S121_R_filt.fastq.gz </span>
+<span class="co">#&gt;   into  4 amplicons </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  finished  sorting 5 sequencing reads for S144_F_filt.fastq.gz in </span>
+<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S144_F_filt.fastq.gz  and </span>
+<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S144_R_filt.fastq.gz </span>
+<span class="co">#&gt;   into  1 amplicons </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  finished  sorting 16 sequencing reads for S22_F_filt.fastq.gz in </span>
+<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S22_F_filt.fastq.gz  and </span>
+<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S22_R_filt.fastq.gz </span>
+<span class="co">#&gt;   into  4 amplicons </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  finished  sorting 63448 sequencing reads for S8_F_filt.fastq.gz in </span>
+<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S8_F_filt.fastq.gz  and </span>
+<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S8_R_filt.fastq.gz </span>
+<span class="co">#&gt;   into  4 amplicons </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  finished  sorting 7108 sequencing reads for S91_F_filt.fastq.gz in </span>
+<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S91_F_filt.fastq.gz  and </span>
+<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S91_R_filt.fastq.gz </span>
+<span class="co">#&gt;   into  4 amplicons</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">rawCounts</a></span>(MA1))</code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th></th>
@@ -201,6 +232,7 @@ knitr::<span class="kw">kable</span>(<span class="kw"><a href="../reference/Mult
 <p>Now we can plot the result. The function plotAmpliconNumbers allows us also to store clustering information (see ). Which can afterwards be used to filter data.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clusters &lt;-<span class="st"> </span><span class="kw"><a href="../reference/plotAmpliconNumbers.html">plotAmpliconNumbers</a></span>(MA1)</code></pre></div>
 <p><img src="MultiAmplicon-small-example_files/figure-html/plotAmpliconNumbers-1.png" width="672"></p>
+<p>We can use this clustering information to subset our MultiAmplicon object.</p>
 <p>You can enable figure captions by <code>fig_caption: yes</code> in YAML:</p>
 <pre><code>output:
   rmarkdown::html_vignette:

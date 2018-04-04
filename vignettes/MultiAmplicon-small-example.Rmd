@@ -21,11 +21,11 @@ knitr::opts_chunk$set(
 ## Preparing sequencing read files and a primer set
 
 The MultiAmplicon package used dedicated classes to ensure that input
-to it's `sortAmplicons` function is provided correctly. This means for
+to its `sortAmplicons` function is provided correctly. This means for
 the user that file names (and complete paths the directory they are
-stored in) of forward and reverse read files should mussed be provided
-as a `PairedReadFileSet`. Similarly, primer pairs must be provided in
-a `PrimerPairsSet`. We first have a look at how these are generated.
+stored in) of forward and reverse read files must be provided as a
+`PairedReadFileSet`. Similarly, primer pairs must be provided in a
+`PrimerPairsSet`. We first have a look at how these are generated.
 
 ```{r buildup}
 suppressMessages(library(MultiAmplicon))
@@ -61,9 +61,11 @@ For this small example dataset we can look at the resuling `rawCounts`
 i.e. the number of sequences for each of the fully stratified amplicon
 x sample matrix. 
 
-```{r sortAmplicon, results='asis'}
+```{r sortAmplicon, message = FALSE}
 MA1 <- sortAmplicons(MA)
+```
 
+```{r showRC, results='asis'}
 knitr::kable(rawCounts(MA1))
 ```
 
@@ -74,6 +76,9 @@ afterwards be used to filter data.
 ```{r plotAmpliconNumbers, fig.show='hold'}
 clusters <- plotAmpliconNumbers(MA1)
 ```
+
+We can use this clustering information to subset our MultiAmplicon
+object. 
 
 
 You can enable figure captions by `fig_caption: yes` in YAML:
