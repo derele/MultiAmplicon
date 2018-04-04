@@ -28,7 +28,7 @@ as a `PairedReadFileSet`. Similarly, primer pairs must be provided in
 a `PrimerPairsSet`. We first have a look at how these are generated.
 
 ```{r buildup}
-library(MultiAmplicon)
+suppressMessages(library(MultiAmplicon))
 
 primerF <- c(Amp1F = "AGAGTTTGATCCTGGCTCAG", Amp2F = "ACTCCTACGGGAGGCAGC",
              Amp3F = "GAATTGACGGAAGGGCACC", Amp4F = "YGGTGRTGCATGGCCGYT",
@@ -49,23 +49,31 @@ Rfastq.file <- fastq.files[grepl("R_filt", fastq.files)]
 PRF <- PairedReadFileSet(Ffastq.file, Rfastq.file)
 
 MA <- MultiAmplicon(PPS, PRF)
-
 ```
 
 ## Sorting into multiple amplicons 
 
 Based on the primer sequences we can now sort the sequences into
-amplicons. This is done by the function `sortAmplicons`. 
+amplicons. This is done by the function `sortAmplicons`, which updates
+the MultiAmplicon object with the sorted amplicons.
 
+For this small example dataset we can look at the resuling `rawCounts`
+i.e. the number of sequences for each of the fully stratified amplicon
+x sample matrix. 
 
-```{r plot, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+```{r sortAmplicon, results='asis'}
+MA1 <- sortAmplicons(MA)
+
+knitr::kable(rawCounts(MA1))
 ```
 
-## Preparing sequencing read files and a primer set
+Now we can plot the result. The function plotAmpliconNumbers allows us
+also to store clustering information (see \code{pheatmap}). Which can
+afterwards be used to filter data.
 
-Now wer are 
+```{r plotAmpliconNumbers, fig.show='hold'}
+clusters <- plotAmpliconNumbers(MA1)
+```
 
 
 You can enable figure captions by `fig_caption: yes` in YAML:
@@ -76,12 +84,4 @@ You can enable figure captions by `fig_caption: yes` in YAML:
 
 Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
 
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$,
-footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
-```
 

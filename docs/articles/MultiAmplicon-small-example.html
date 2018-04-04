@@ -78,76 +78,7 @@
 <h2 class="hasAnchor">
 <a href="#preparing-sequencing-read-files-and-a-primer-set" class="anchor"></a>Preparing sequencing read files and a primer set</h2>
 <p>The MultiAmplicon package used dedicated classes to ensure that input to it’s <code>sortAmplicons</code> function is provided correctly. This means for the user that file names (and complete paths the directory they are stored in) of forward and reverse read files should mussed be provided as a <code>PairedReadFileSet</code>. Similarly, primer pairs must be provided in a <code>PrimerPairsSet</code>. We first have a look at how these are generated.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(MultiAmplicon)
-<span class="co">#&gt; Loading required package: ShortRead</span>
-<span class="co">#&gt; Loading required package: BiocGenerics</span>
-<span class="co">#&gt; Loading required package: parallel</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'BiocGenerics'</span>
-<span class="co">#&gt; The following objects are masked from 'package:parallel':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,</span>
-<span class="co">#&gt;     clusterExport, clusterMap, parApply, parCapply, parLapply,</span>
-<span class="co">#&gt;     parLapplyLB, parRapply, parSapply, parSapplyLB</span>
-<span class="co">#&gt; The following objects are masked from 'package:stats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     IQR, mad, sd, var, xtabs</span>
-<span class="co">#&gt; The following objects are masked from 'package:base':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     anyDuplicated, append, as.data.frame, cbind, colMeans,</span>
-<span class="co">#&gt;     colnames, colSums, do.call, duplicated, eval, evalq, Filter,</span>
-<span class="co">#&gt;     Find, get, grep, grepl, intersect, is.unsorted, lapply,</span>
-<span class="co">#&gt;     lengths, Map, mapply, match, mget, order, paste, pmax,</span>
-<span class="co">#&gt;     pmax.int, pmin, pmin.int, Position, rank, rbind, Reduce,</span>
-<span class="co">#&gt;     rowMeans, rownames, rowSums, sapply, setdiff, sort, table,</span>
-<span class="co">#&gt;     tapply, union, unique, unsplit, which, which.max, which.min</span>
-<span class="co">#&gt; Loading required package: BiocParallel</span>
-<span class="co">#&gt; Loading required package: Biostrings</span>
-<span class="co">#&gt; Loading required package: S4Vectors</span>
-<span class="co">#&gt; Loading required package: stats4</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'S4Vectors'</span>
-<span class="co">#&gt; The following object is masked from 'package:base':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     expand.grid</span>
-<span class="co">#&gt; Loading required package: IRanges</span>
-<span class="co">#&gt; Loading required package: XVector</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'Biostrings'</span>
-<span class="co">#&gt; The following object is masked from 'package:base':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     strsplit</span>
-<span class="co">#&gt; Loading required package: Rsamtools</span>
-<span class="co">#&gt; Loading required package: GenomeInfoDb</span>
-<span class="co">#&gt; Loading required package: GenomicRanges</span>
-<span class="co">#&gt; Loading required package: GenomicAlignments</span>
-<span class="co">#&gt; Loading required package: SummarizedExperiment</span>
-<span class="co">#&gt; Loading required package: Biobase</span>
-<span class="co">#&gt; Welcome to Bioconductor</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     Vignettes contain introductory material; view with</span>
-<span class="co">#&gt;     'browseVignettes()'. To cite Bioconductor, see</span>
-<span class="co">#&gt;     'citation("Biobase")', and for packages 'citation("pkgname")'.</span>
-<span class="co">#&gt; Loading required package: DelayedArray</span>
-<span class="co">#&gt; Loading required package: matrixStats</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'matrixStats'</span>
-<span class="co">#&gt; The following objects are masked from 'package:Biobase':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     anyMissing, rowMedians</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'DelayedArray'</span>
-<span class="co">#&gt; The following objects are masked from 'package:matrixStats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     colMaxs, colMins, colRanges, rowMaxs, rowMins, rowRanges</span>
-<span class="co">#&gt; The following object is masked from 'package:Biostrings':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     type</span>
-<span class="co">#&gt; The following object is masked from 'package:base':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     apply</span>
-<span class="co">#&gt; Loading required package: dada2</span>
-<span class="co">#&gt; Loading required package: Rcpp</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressMessages</span>(<span class="kw">library</span>(MultiAmplicon))
 
 primerF &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">Amp1F =</span> <span class="st">"AGAGTTTGATCCTGGCTCAG"</span>, <span class="dt">Amp2F =</span> <span class="st">"ACTCCTACGGGAGGCAGC"</span>,
              <span class="dt">Amp3F =</span> <span class="st">"GAATTGACGGAAGGGCACC"</span>, <span class="dt">Amp4F =</span> <span class="st">"YGGTGRTGCATGGCCGYT"</span>,
@@ -172,190 +103,110 @@ MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAmp
 <div id="sorting-into-multiple-amplicons" class="section level2">
 <h2 class="hasAnchor">
 <a href="#sorting-into-multiple-amplicons" class="anchor"></a>Sorting into multiple amplicons</h2>
-<p>Based on the primer sequences we can now sort the sequences into amplicons. This is done by the function <code>sortAmplicons</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(<span class="dv">1</span>:<span class="dv">10</span>)
-<span class="kw">plot</span>(<span class="dv">10</span>:<span class="dv">1</span>)</code></pre></div>
-<p><img src="MultiAmplicon-small-example_files/figure-html/plot-1.png" width="672"><img src="MultiAmplicon-small-example_files/figure-html/plot-2.png" width="672"></p>
-</div>
-<div id="preparing-sequencing-read-files-and-a-primer-set-1" class="section level2">
-<h2 class="hasAnchor">
-<a href="#preparing-sequencing-read-files-and-a-primer-set-1" class="anchor"></a>Preparing sequencing read files and a primer set</h2>
-<p>Now wer are</p>
+<p>Based on the primer sequences we can now sort the sequences into amplicons. This is done by the function <code>sortAmplicons</code>, which updates the MultiAmplicon object with the sorted amplicons.</p>
+<p>For this small example dataset we can look at the resuling <code>rawCounts</code> i.e. the number of sequences for each of the fully stratified amplicon x sample matrix.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sortAmplicons.html">sortAmplicons</a></span>(MA)</code></pre></div>
+<p>using existing directory /tmp/RtmpqaUVNh and adding specific prefixes to avoid problems when running code twice</p>
+<p>finished sorting 0 sequencing reads for S0_F_filt.fastq.gz in /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S0_F_filt.fastq.gz and /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S0_R_filt.fastq.gz into 0 amplicons</p>
+<p>finished sorting 0 sequencing reads for S00_F_filt.fastq.gz in /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S00_F_filt.fastq.gz and /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S00_R_filt.fastq.gz into 0 amplicons</p>
+<p>finished sorting 1 sequencing reads for S01_F_filt.fastq.gz in /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S01_F_filt.fastq.gz and /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S01_R_filt.fastq.gz into 1 amplicons</p>
+<p>finished sorting 9348 sequencing reads for S121_F_filt.fastq.gz in /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S121_F_filt.fastq.gz and /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S121_R_filt.fastq.gz into 4 amplicons</p>
+<p>finished sorting 5 sequencing reads for S144_F_filt.fastq.gz in /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S144_F_filt.fastq.gz and /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S144_R_filt.fastq.gz into 1 amplicons</p>
+<p>finished sorting 16 sequencing reads for S22_F_filt.fastq.gz in /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S22_F_filt.fastq.gz and /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S22_R_filt.fastq.gz into 4 amplicons</p>
+<p>finished sorting 63448 sequencing reads for S8_F_filt.fastq.gz in /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S8_F_filt.fastq.gz and /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S8_R_filt.fastq.gz into 4 amplicons</p>
+<p>finished sorting 7108 sequencing reads for S91_F_filt.fastq.gz in /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S91_F_filt.fastq.gz and /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S91_R_filt.fastq.gz into 4 amplicons</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+knitr::<span class="kw">kable</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">rawCounts</a></span>(MA1))</code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th></th>
+<th align="right">S0_F_filt.fastq.gz</th>
+<th align="right">S00_F_filt.fastq.gz</th>
+<th align="right">S01_F_filt.fastq.gz</th>
+<th align="right">S121_F_filt.fastq.gz</th>
+<th align="right">S144_F_filt.fastq.gz</th>
+<th align="right">S22_F_filt.fastq.gz</th>
+<th align="right">S8_F_filt.fastq.gz</th>
+<th align="right">S91_F_filt.fastq.gz</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Amp1F.Amp1R</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">3495</td>
+<td align="right">5</td>
+<td align="right">5</td>
+<td align="right">29310</td>
+<td align="right">2569</td>
+</tr>
+<tr class="even">
+<td>Amp2F.Amp2R</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">2949</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">20391</td>
+<td align="right">2690</td>
+</tr>
+<tr class="odd">
+<td>Amp3F.Amp3R</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1817</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">11671</td>
+<td align="right">1421</td>
+</tr>
+<tr class="even">
+<td>Amp4F.Amp4R</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1087</td>
+<td align="right">0</td>
+<td align="right">7</td>
+<td align="right">2076</td>
+<td align="right">428</td>
+</tr>
+<tr class="odd">
+<td>Amp5F.Amp5R</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td>Amp6F.Amp6R</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p>Now we can plot the result. The function plotAmpliconNumbers allows us also to store clustering information (see ). Which can afterwards be used to filter data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clusters &lt;-<span class="st"> </span><span class="kw"><a href="../reference/plotAmpliconNumbers.html">plotAmpliconNumbers</a></span>(MA1)</code></pre></div>
+<p><img src="MultiAmplicon-small-example_files/figure-html/plotAmpliconNumbers-1.png" width="672"></p>
 <p>You can enable figure captions by <code>fig_caption: yes</code> in YAML:</p>
 <pre><code>output:
   rmarkdown::html_vignette:
     fig_caption: yes</code></pre>
 <p>Then you can use the chunk option <code>fig.cap = "Your figure caption."</code> in <strong>knitr</strong>.</p>
 </div>
-<div id="more-examples" class="section level2">
-<h2 class="hasAnchor">
-<a href="#more-examples" class="anchor"></a>More Examples</h2>
-<p>You can write math expressions, e.g. <span class="math inline">\(Y = X\beta + \epsilon\)</span>, footnotes<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>, and tables, e.g. using <code><a href="http://www.rdocumentation.org/packages/knitr/topics/kable">knitr::kable()</a></code>.</p>
-<table class="table">
-<thead><tr class="header">
-<th></th>
-<th align="right">mpg</th>
-<th align="right">cyl</th>
-<th align="right">disp</th>
-<th align="right">hp</th>
-<th align="right">drat</th>
-<th align="right">wt</th>
-<th align="right">qsec</th>
-<th align="right">vs</th>
-<th align="right">am</th>
-<th align="right">gear</th>
-<th align="right">carb</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>Mazda RX4</td>
-<td align="right">21.0</td>
-<td align="right">6</td>
-<td align="right">160.0</td>
-<td align="right">110</td>
-<td align="right">3.90</td>
-<td align="right">2.620</td>
-<td align="right">16.46</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">4</td>
-<td align="right">4</td>
-</tr>
-<tr class="even">
-<td>Mazda RX4 Wag</td>
-<td align="right">21.0</td>
-<td align="right">6</td>
-<td align="right">160.0</td>
-<td align="right">110</td>
-<td align="right">3.90</td>
-<td align="right">2.875</td>
-<td align="right">17.02</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">4</td>
-<td align="right">4</td>
-</tr>
-<tr class="odd">
-<td>Datsun 710</td>
-<td align="right">22.8</td>
-<td align="right">4</td>
-<td align="right">108.0</td>
-<td align="right">93</td>
-<td align="right">3.85</td>
-<td align="right">2.320</td>
-<td align="right">18.61</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">4</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td>Hornet 4 Drive</td>
-<td align="right">21.4</td>
-<td align="right">6</td>
-<td align="right">258.0</td>
-<td align="right">110</td>
-<td align="right">3.08</td>
-<td align="right">3.215</td>
-<td align="right">19.44</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">3</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td>Hornet Sportabout</td>
-<td align="right">18.7</td>
-<td align="right">8</td>
-<td align="right">360.0</td>
-<td align="right">175</td>
-<td align="right">3.15</td>
-<td align="right">3.440</td>
-<td align="right">17.02</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">3</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td>Valiant</td>
-<td align="right">18.1</td>
-<td align="right">6</td>
-<td align="right">225.0</td>
-<td align="right">105</td>
-<td align="right">2.76</td>
-<td align="right">3.460</td>
-<td align="right">20.22</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">3</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td>Duster 360</td>
-<td align="right">14.3</td>
-<td align="right">8</td>
-<td align="right">360.0</td>
-<td align="right">245</td>
-<td align="right">3.21</td>
-<td align="right">3.570</td>
-<td align="right">15.84</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">3</td>
-<td align="right">4</td>
-</tr>
-<tr class="even">
-<td>Merc 240D</td>
-<td align="right">24.4</td>
-<td align="right">4</td>
-<td align="right">146.7</td>
-<td align="right">62</td>
-<td align="right">3.69</td>
-<td align="right">3.190</td>
-<td align="right">20.00</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">4</td>
-<td align="right">2</td>
-</tr>
-<tr class="odd">
-<td>Merc 230</td>
-<td align="right">22.8</td>
-<td align="right">4</td>
-<td align="right">140.8</td>
-<td align="right">95</td>
-<td align="right">3.92</td>
-<td align="right">3.150</td>
-<td align="right">22.90</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">4</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td>Merc 280</td>
-<td align="right">19.2</td>
-<td align="right">6</td>
-<td align="right">167.6</td>
-<td align="right">123</td>
-<td align="right">3.92</td>
-<td align="right">3.440</td>
-<td align="right">18.30</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">4</td>
-<td align="right">4</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="footnotes">
-<hr>
-<ol>
-<li id="fn1"><p>A footnote here.<a href="#fnref1">↩</a></p></li>
-</ol>
 </div>
 </div>
   </div>
@@ -369,8 +220,6 @@ MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAmp
 <a href="#multi-amplicon---a-small-example">Multi Amplicon - a small example</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#preparing-sequencing-read-files-and-a-primer-set">Preparing sequencing read files and a primer set</a></li>
       <li><a href="#sorting-into-multiple-amplicons">Sorting into multiple amplicons</a></li>
-      <li><a href="#preparing-sequencing-read-files-and-a-primer-set-1">Preparing sequencing read files and a primer set</a></li>
-      <li><a href="#more-examples">More Examples</a></li>
       </ul>
 </li>
       </ul>
