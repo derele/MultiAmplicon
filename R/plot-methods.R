@@ -26,7 +26,7 @@ setGeneric(name="plotAmpliconNumbers",
            def=function(MA, transf=function(x) log10(x+1), ...) {
                standardGeneric("plotAmpliconNumbers")
            })
-
+##' @rdname plotAmpliconNumbers
 setMethod("plotAmpliconNumbers", c("matrix", "ANY"),
           function (MA, transf=function(x) log10(x+1), ...){
               ## get the function name for display on the plot
@@ -43,6 +43,7 @@ setMethod("plotAmpliconNumbers", c("matrix", "ANY"),
           }
 )
 
+##' @rdname plotAmpliconNumbers
 setMethod("plotAmpliconNumbers", c("MultiAmplicon", "ANY"),
           function (MA, transf=function(x) log10(x+1), ...){
               MA <- rawCounts(MA)
