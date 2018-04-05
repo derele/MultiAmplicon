@@ -24,8 +24,8 @@ MA1 <- sortAmplicons(MA)
 
 test_that("sortAmplicons resut doesn't change over executions", {
     ## For multi amplicon objects
-    expect_known_output(MA1, system.file("testdata", "MA_sorted.rda",
-                                         package = "MultiAmplicon"))
+    tmp <- tempfile()
+    expect_known_output(MA1, tmp, print=TRUE)
 })
 
 SA1 <- sortAmplicons(SA)
