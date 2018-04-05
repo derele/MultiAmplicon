@@ -199,7 +199,7 @@ MA6[c(4, 6),  c(4, 6)]@rawCounts
 MA6[c(4, 6),  c(4, 6)]@derep
 
 ## killed the bug!
-MA6[1:6, 1:8]
+MA6[1:6, 1:7]
 
 
 ## ## logical and name indexing does not work yet
@@ -219,10 +219,10 @@ MA6[1:6, 1:8]
 ## MA6[c(FALSE, TRUE), TRUE]
 
 ## ## this is good
-## expect_identical(MA6[TRUE, TRUE], MA6[1:6, 1:8])
+## expect_identical(MA6[TRUE, TRUE], MA6[1:6, 1:7])
 
 ## ## this has a names problem 
-## ## expect_identical(MA6, MA6[1:6, 1:8])
+## ## expect_identical(MA6, MA6[1:6, 1:7])
 
 ## ## this works
 ## MA6[c(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE),
@@ -230,7 +230,6 @@ MA6[1:6, 1:8]
 
 ## ## this is wrong... without an error!
 ## foo <- MA6[c("Amp1F.Amp1R","Amp2F.Amp2R"),
-##     c("S144_F_filt.fastq.gz", "S22_F_filt.fastq.gz", "S8_F_filt.fastq.gz", "S91_F_filt.fastq.gz")]
 
 ## ## lost the sample names in rownames
 ## lapply(MA6[1:2, 1:2]@sequenceTable, rownames)
