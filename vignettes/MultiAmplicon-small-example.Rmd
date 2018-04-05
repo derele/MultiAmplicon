@@ -80,9 +80,6 @@ in our example above). This results in names for primer-pairs and for
 samples.
 
 
-
-
-
 ## Sorting into multiple amplicons
 
 Based on the primer sequences we can now sort the sequences into
@@ -101,6 +98,8 @@ MA1 <- sortAmplicons(MA)
 knitr::kable(rawCounts(MA1))
 ```
 
+## Visualizing read numbers per amplicon and filtering based on these
+
 Now we can plot the result. The function plotAmpliconNumbers allows us
 also to store clustering information (see \code{pheatmap}). Which can
 afterwards be used to filter data.
@@ -113,8 +112,48 @@ We can use this clustering information now to subset our MultiAmplicon
 object.
 
 
-```{r subsetCluster}
+```{r subsetCluster, result='asis'}
 two.clusters.row <- cutree(clusters$tree_row, k=2)
 two.clusters.col <- cutree(clusters$tree_col, k=2)
+
+knitr::kable(two.clusters.row)
+knitr::kable(two.clusters.col)
+
+MA.sub <- MA1[which(two.clusters.row==1), which(two.clusters.col==2)]
+
+knitr::kable(rawCounts(MA.sub))
 ```
 
+In real world applications (see vignette xyz) the samples to be
+excluded from further analysis can be selected based on clustering
+with negative controls (similar to the example data here where S00 is
+an empty file and S01 contains one sequence).
+
+## Running the amplicon sequencing pipline 
+
+We can now run the pipeline of the dada2 package in parallel over the
+different amplicons.
+
+```{r runPipe, result='asis', cache=TRUE}
+MA2 <- derepMulti(MA.sub)
+
+MA3 <- dadaMulti(MA2, err=NULL, selfConsist=TRUE, pool=FALSE)
+
+MA4 <- mergeMulti(MA3)
+
+MA5 <- sequenceTableMulti(MA4)
+
+MA6 <- noChimeMulti(MA5)
+```
+
+Ready! This was *easy*, right?
+
+## Using different parameters for each amplicon
+
+In some real world applications it is desireable to have more control
+over paramters used in the pipeline for different amplicons. 
+
+We use ellipsis (aka "...", dots, dot-dot-dot or three-dots) to pass
+parameters on to the underlying dada2 functions. The MultiAmplicon
+package allows all those arguments to be vectors with values varying
+for different amplicons.

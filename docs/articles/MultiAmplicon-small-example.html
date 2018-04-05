@@ -110,7 +110,7 @@ MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAmp
 <p>Based on the primer sequences we can now sort the sequences into amplicons. This is done by the function <code>sortAmplicons</code>, which updates the MultiAmplicon object with the sorted amplicons.</p>
 <p>For this small example dataset we can look at the resuling <code>rawCounts</code> i.e. the number of sequences for each of the fully stratified amplicon x sample matrix.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sortAmplicons.html">sortAmplicons</a></span>(MA)
-<span class="co">#&gt; using existing directory  /tmp/RtmpItzhEn and adding specific prefixes to avoid problems when running code twice </span>
+<span class="co">#&gt; using existing directory  /tmp/Rtmp9cxs0N and adding specific prefixes to avoid problems when running code twice </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;  finished  sorting 0 sequencing reads for S00_F_filt.fastq.gz in </span>
 <span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S00_F_filt.fastq.gz  and </span>
@@ -221,12 +221,247 @@ MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAmp
 </tr>
 </tbody>
 </table>
+</div>
+<div id="visualizing-read-numbers-per-amplicon-and-filtering-based-on-these" class="section level2">
+<h2 class="hasAnchor">
+<a href="#visualizing-read-numbers-per-amplicon-and-filtering-based-on-these" class="anchor"></a>Visualizing read numbers per amplicon and filtering based on these</h2>
 <p>Now we can plot the result. The function plotAmpliconNumbers allows us also to store clustering information (see ). Which can afterwards be used to filter data.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clusters &lt;-<span class="st"> </span><span class="kw"><a href="../reference/plotAmpliconNumbers.html">plotAmpliconNumbers</a></span>(MA1)</code></pre></div>
 <p><img src="MultiAmplicon-small-example_files/figure-html/plotAmpliconNumbers-1.png" width="672"></p>
 <p>We can use this clustering information now to subset our MultiAmplicon object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">two.clusters.row &lt;-<span class="st"> </span><span class="kw">cutree</span>(clusters$tree_row, <span class="dt">k=</span><span class="dv">2</span>)
-two.clusters.col &lt;-<span class="st"> </span><span class="kw">cutree</span>(clusters$tree_col, <span class="dt">k=</span><span class="dv">2</span>)</code></pre></div>
+two.clusters.col &lt;-<span class="st"> </span><span class="kw">cutree</span>(clusters$tree_col, <span class="dt">k=</span><span class="dv">2</span>)
+
+knitr::<span class="kw">kable</span>(two.clusters.row)</code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th></th>
+<th align="right">x</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Amp1F.Amp1R</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td>Amp2F.Amp2R</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td>Amp3F.Amp3R</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td>Amp4F.Amp4R</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td>Amp5F.Amp5R</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td>Amp6F.Amp6R</td>
+<td align="right">2</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(two.clusters.col)</code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th></th>
+<th align="right">x</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>S00_F_filt.fastq.gz</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td>S01_F_filt.fastq.gz</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td>S02_F_filt.fastq.gz</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td>S03_F_filt.fastq.gz</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td>S04_F_filt.fastq.gz</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td>S05_F_filt.fastq.gz</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td>S06_F_filt.fastq.gz</td>
+<td align="right">2</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+MA.sub &lt;-<span class="st"> </span>MA1[<span class="kw">which</span>(two.clusters.row==<span class="dv">1</span>), <span class="kw">which</span>(two.clusters.col==<span class="dv">2</span>)]
+
+knitr::<span class="kw">kable</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">rawCounts</a></span>(MA.sub))</code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th></th>
+<th align="right">S02_F_filt.fastq.gz</th>
+<th align="right">S05_F_filt.fastq.gz</th>
+<th align="right">S06_F_filt.fastq.gz</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Amp1F.Amp1R</td>
+<td align="right">3495</td>
+<td align="right">29310</td>
+<td align="right">2569</td>
+</tr>
+<tr class="even">
+<td>Amp2F.Amp2R</td>
+<td align="right">2949</td>
+<td align="right">20391</td>
+<td align="right">2690</td>
+</tr>
+<tr class="odd">
+<td>Amp3F.Amp3R</td>
+<td align="right">1817</td>
+<td align="right">2</td>
+<td align="right">11671</td>
+</tr>
+<tr class="even">
+<td>Amp4F.Amp4R</td>
+<td align="right">1087</td>
+<td align="right">2076</td>
+<td align="right">428</td>
+</tr>
+</tbody>
+</table>
+<p>In real world applications (see vignette xyz) the samples to be excluded from further analysis can be selected based on clustering with negative controls (similar to the example data here where S00 is an empty file and S01 contains one sequence).</p>
+</div>
+<div id="running-the-amplicon-sequencing-pipline" class="section level2">
+<h2 class="hasAnchor">
+<a href="#running-the-amplicon-sequencing-pipline" class="anchor"></a>Running the amplicon sequencing pipline</h2>
+<p>We can now run the pipeline of the dada2 package in parallel over the different amplicons.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/derepMulti.html">derepMulti</a></span>(MA.sub)
+
+MA3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/dadaMulti.html">dadaMulti</a></span>(MA2, <span class="dt">err=</span><span class="ot">NULL</span>, <span class="dt">selfConsist=</span><span class="ot">TRUE</span>, <span class="dt">pool=</span><span class="ot">FALSE</span>)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; amplicon Amp1F.Amp1R dada estimation of sequence variants from  3  of  3 possible sample files</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
+<span class="co">#&gt; Sample 1 - 3495 reads in 1493 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 29310 reads in 7224 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 2569 reads in 1053 unique sequences.</span>
+<span class="co">#&gt;    selfConsist step 2 </span>
+<span class="co">#&gt;    selfConsist step 3 </span>
+<span class="co">#&gt;    selfConsist step 4 </span>
+<span class="co">#&gt;    selfConsist step 5 </span>
+<span class="co">#&gt;    selfConsist step 6 </span>
+<span class="co">#&gt; Convergence after  6  rounds.</span>
+<span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
+<span class="co">#&gt; Sample 1 - 3495 reads in 1535 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 29310 reads in 8273 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 2569 reads in 994 unique sequences.</span>
+<span class="co">#&gt;    selfConsist step 2 </span>
+<span class="co">#&gt;    selfConsist step 3 </span>
+<span class="co">#&gt;    selfConsist step 4 </span>
+<span class="co">#&gt;    selfConsist step 5 </span>
+<span class="co">#&gt; Convergence after  5  rounds.</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; amplicon Amp2F.Amp2R dada estimation of sequence variants from  3  of  3 possible sample files</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
+<span class="co">#&gt; Sample 1 - 2949 reads in 1142 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 20391 reads in 4136 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 2690 reads in 968 unique sequences.</span>
+<span class="co">#&gt;    selfConsist step 2 </span>
+<span class="co">#&gt;    selfConsist step 3 </span>
+<span class="co">#&gt;    selfConsist step 4 </span>
+<span class="co">#&gt; Convergence after  4  rounds.</span>
+<span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
+<span class="co">#&gt; Sample 1 - 2949 reads in 1290 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 20391 reads in 5719 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 2690 reads in 1100 unique sequences.</span>
+<span class="co">#&gt;    selfConsist step 2 </span>
+<span class="co">#&gt;    selfConsist step 3 </span>
+<span class="co">#&gt;    selfConsist step 4 </span>
+<span class="co">#&gt;    selfConsist step 5 </span>
+<span class="co">#&gt; Convergence after  5  rounds.</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; amplicon Amp3F.Amp3R dada estimation of sequence variants from  3  of  3 possible sample files</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
+<span class="co">#&gt; Sample 1 - 1817 reads in 589 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 2 reads in 2 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 11671 reads in 3783 unique sequences.</span>
+<span class="co">#&gt;    selfConsist step 2 </span>
+<span class="co">#&gt;    selfConsist step 3 </span>
+<span class="co">#&gt;    selfConsist step 4 </span>
+<span class="co">#&gt; Convergence after  4  rounds.</span>
+<span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
+<span class="co">#&gt; Sample 1 - 1817 reads in 547 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 2 reads in 2 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 11671 reads in 4054 unique sequences.</span>
+<span class="co">#&gt;    selfConsist step 2 </span>
+<span class="co">#&gt;    selfConsist step 3 </span>
+<span class="co">#&gt;    selfConsist step 4 </span>
+<span class="co">#&gt; Convergence after  4  rounds.</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; amplicon Amp4F.Amp4R dada estimation of sequence variants from  3  of  3 possible sample files</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
+<span class="co">#&gt; Sample 1 - 1087 reads in 394 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 2076 reads in 959 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 428 reads in 166 unique sequences.</span>
+<span class="co">#&gt;    selfConsist step 2 </span>
+<span class="co">#&gt;    selfConsist step 3 </span>
+<span class="co">#&gt;    selfConsist step 4 </span>
+<span class="co">#&gt; Convergence after  4  rounds.</span>
+<span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
+<span class="co">#&gt; Sample 1 - 1087 reads in 433 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 2076 reads in 962 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 428 reads in 183 unique sequences.</span>
+<span class="co">#&gt;    selfConsist step 2 </span>
+<span class="co">#&gt;    selfConsist step 3 </span>
+<span class="co">#&gt;    selfConsist step 4 </span>
+<span class="co">#&gt; Convergence after  4  rounds.</span>
+
+MA4 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mergeMulti.html">mergeMulti</a></span>(MA3)
+<span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp1F.Amp1R </span>
+<span class="co">#&gt; calling merge Pairs with parameters  </span>
+<span class="co">#&gt; DONE</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp2F.Amp2R </span>
+<span class="co">#&gt; calling merge Pairs with parameters  </span>
+<span class="co">#&gt; DONE</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp3F.Amp3R </span>
+<span class="co">#&gt; calling merge Pairs with parameters  </span>
+<span class="co">#&gt; DONE</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp4F.Amp4R </span>
+<span class="co">#&gt; calling merge Pairs with parameters  </span>
+<span class="co">#&gt; DONE</span>
+
+MA5 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sequenceTableMulti.html">sequenceTableMulti</a></span>(MA4)
+<span class="co">#&gt; The sequences being tabled vary in length.</span>
+
+MA6 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noChimeMulti.html">noChimeMulti</a></span>(MA5)</code></pre></div>
+<p>Ready! This was <em>easy</em>, right?</p>
+</div>
+<div id="using-different-parameters-for-each-amplicon" class="section level2">
+<h2 class="hasAnchor">
+<a href="#using-different-parameters-for-each-amplicon" class="anchor"></a>Using different parameters for each amplicon</h2>
+<p>In some real world applications it is desireable to have more control over paramters used in the pipeline for different amplicons.</p>
+<p>We use ellipsis (aka “…”, dots, dot-dot-dot or three-dots) to pass parameters on to the underlying dada2 functions. The MultiAmplicon package allows all those arguments to be vectors with values varying for different amplicons.</p>
 </div>
 </div>
 </div>
@@ -241,6 +476,9 @@ two.clusters.col &lt;-<span class="st"> </span><span class="kw">cutree</span>(cl
 <a href="#multi-amplicon---a-small-example">Multi Amplicon - a small example</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#preparing-sequencing-read-files-and-a-primer-set">Preparing sequencing read files and a primer set</a></li>
       <li><a href="#sorting-into-multiple-amplicons">Sorting into multiple amplicons</a></li>
+      <li><a href="#visualizing-read-numbers-per-amplicon-and-filtering-based-on-these">Visualizing read numbers per amplicon and filtering based on these</a></li>
+      <li><a href="#running-the-amplicon-sequencing-pipline">Running the amplicon sequencing pipline</a></li>
+      <li><a href="#using-different-parameters-for-each-amplicon">Using different parameters for each amplicon</a></li>
       </ul>
 </li>
       </ul>
