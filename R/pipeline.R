@@ -13,7 +13,12 @@
 ##'     objects (setting this to TRUE) might result in downstream
 ##'     problems (Errors) in dada inference.
 ##' @param mc.cores number or compute cores for parallel processing
-##' @param ... arguments to be passed to \code{\link{derepFastq}}
+##' @param ... arguments to be passed to \code{\link{derepFastq}}. All
+##'     arguments to the function can be given as a vector of the same
+##'     length as the number of primer pairs in the MultiAmplicon
+##'     object, allowing to specify different parameters for each
+##'     amplicon. If a shorter vector is given it will be recycled to
+##'     match the number of ampicons.  
 ##' @return MultiAmplicon object with derep slots (forward derepF and
 ##'     reverse derepR) filled
 ##' @importFrom dada2 derepFastq
@@ -75,14 +80,19 @@ derepMulti <- function(MA, mc.cores=getOption("mc.cores", 2L),
 ##' @title dadaMulti
 ##' @param MA MultiAmplicon-class object
 ##' @param ... additional parameters to be passed to
-##'     \code{\link[dada2]{dada}} from \code{\link[dada2]{dada}}
+##'     \code{\link[dada2]{dada}} from \code{\link[dada2]{dada}}. All
+##'     arguments to the function can be given as a vector of the same
+##'     length as the number of primer pairs in the MultiAmplicon
+##'     object, allowing to specify different parameters for each
+##'     amplicon. If a shorter vector is given it will be recycled to
+##'     match the number of ampicons.
 ##' @return MultiAmplicon object with dadaF and dadaR slots filled
 ##' @importFrom dada2 dada
 ##' @importFrom methods initialize new slot
 ##' @export
 ##' @author Emanuel Heitlinger
 dadaMulti <- function(MA, ...){
-##    exp.args <- extract.ellipsis(list(...), nrow(MA))
+    exp.args <- extract.ellipsis(list(...), nrow(MA))
     ## needs to be computed on pairs of amplicons
     PPdada <- lapply(seq_along(MA@PrimerPairsSet), function (i){
        dF <- lapply(MA@derep[[i]], function (x) slot(x, "derepF"))
@@ -93,11 +103,14 @@ dadaMulti <- function(MA, ...){
            length(MA@PairedReadFileSet), "possible sample files\n\n")
        if(length(dF)>0 && length(dR)>0){
            ## run functions for reverse and forward
-           dadaF <- dada(dF, ...)
+           ## work on possilbe different paramters for this particular amplicon
+           args.here <- lapply(exp.args, "[", i)
+           param.message("dada", args.here)
+           dadaF <- do.call(dada, c(list(derep=dF), args.here))
            ## make it a list of length 1 in case of only one sample,
            ## otherwise it is simplified and can't be handled
            if (class(dadaF)%in%"dada"){dadaF <- list(dadaF)}
-           dadaR <- dada(dR, ...)
+           dadaR <- do.call(dada, c(list(derep=dR), args.here))
            ## make it a list in case of only one sample
            if (class(dadaR)%in%"dada"){dadaR <- list(dadaR)}
            ## naming the dada objects
@@ -135,7 +148,7 @@ dadaMulti <- function(MA, ...){
 ##'     object, allowing to specify e.g. justConcatenate to be set
 ##'     TRUE for only some of the amplicons, or to specify different
 ##'     minOverlap for each amplicon. If a shorter vector is given it
-##'     will be recycled to match the number of ampicons.
+##'     will be recycled to match the number of amplicons.
 ##' @return A MultiAmplicon-class object with the mergers slot filled
 ##' @importFrom dada2 mergePairs
 ##' @export
@@ -187,21 +200,28 @@ mergeMulti <- function(MA, ...){
 ##'     slot filled
 ##' @param ... additional parameters to be passed to the
 ##'     \code{\link[dada2]{makeSequenceTable}} function of
-##'     \code{dada2}
+##'     \code{dada2}. All arguments to the function can be given as a
+##'     vector of the same length as the number of primer pairs in the
+##'     MultiAmplicon object, allowing to specify different parameters
+##'     for each amplicon. If a shorter vector is given it will be
+##'     recycled to match the number of ampicons.
 ##' @return A MultiAmplicon-class object with the sequenceTable slot
 ##'     filled
 ##' @importFrom dada2 makeSequenceTable
 ##' @export
 ##' @author Emanuel Heitlinger
 sequenceTableMulti <- function(MA, ...){
+    exp.args <- extract.ellipsis(list(...), nrow(MA))
     sequenceTable <- lapply(seq_along(MA@mergers), function (i){
-        makeSequenceTable(MA@mergers[[i]], ...)
+        args.here <- lapply(exp.args, "[", i)
+        param.message("makeSequenceTable", args.here)
+        do.call(makeSequenceTable, c(list(MA@mergers[[i]]), args.here))
     })
     names(sequenceTable) <- MA@PrimerPairsSet@names
     initialize(MA, sequenceTable = sequenceTable)
 }
 
-##' Remove chimeric sequencing read pairs from a MultiAmplcion
+##' Remove chimeric sequencing read pairs from a MultiAmplicon
 ##' object.
 ##'
 ##' This is a wrapper for the \code{\link[dada2]{removeBimeraDenovo}}
@@ -218,22 +238,29 @@ sequenceTableMulti <- function(MA, ...){
 ##'     to have a sequenceTableMulti populated
 ##' @param mc.cores integer number of cores to use for parallelization
 ##' @param ... paramter passed through to
-##'     \code{\link[dada2]{removeBimeraDenovo}}
-##' @return a code{\link{MultiAmplicon-class}} object with the
+##'     \code{\link[dada2]{removeBimeraDenovo}}. All arguments to the
+##'     function can be given as a vector of the same length as the
+##'     number of primer pairs in the MultiAmplicon object, allowing
+##'     to specify different parameters for each amplicon. If a
+##'     shorter vector is given it will be recycled to match the
+##'     number of ampicons.
+##' @return a \code{\link{MultiAmplicon-class}} object with the
 ##'     sequenceTableNoChime filled
 ##' @importFrom dada2 removeBimeraDenovo
 ##' @importFrom parallel mclapply
 ##' @export
 ##' @author Emanuel Heitlinger
 noChimeMulti <- function(MA, mc.cores=getOption("mc.cores", 2L), ...){
+    exp.args <- extract.ellipsis(list(...), nrow(MA))
     sequenceTableNoChime <-
-        mclapply(MA@sequenceTable, function (x) { 
-            if (nrow(x)>0 && ncol(x)>0){
-                removeBimeraDenovo(x, ...)
+    mclapply(seq_along(MA@sequenceTable), function (i) { 
+            if (nrow(MA@sequenceTable[[i]])>0 && ncol(MA@sequenceTable[[i]])>0){
+                args.here <- lapply(exp.args, "[", i)
+                param.message("removeBimeraDenovo", args.here)
+                do.call(removeBimeraDenovo, c(list(MA@sequenceTable[[i]]), args.here))
             } else {matrix()}
         },
         mc.cores=mc.cores)
-            ## fix me to get the correct rownames on those...
     names(sequenceTableNoChime) <- MA@PrimerPairsSet@names
     initialize(MA, sequenceTableNoChime = sequenceTableNoChime)
 }
@@ -241,21 +268,29 @@ noChimeMulti <- function(MA, mc.cores=getOption("mc.cores", 2L), ...){
 
 extract.ellipsis <- function(dotargs, n) {
     exp.args <- lapply(dotargs, function (x) {
-        if(n%%length(x)>0){
-            stop("argument of length ", length(x),
-                 " can't be recycled to number of amplicons (",
-                 n, ")\n")
-        } else{
-            rep(x, times=n/length(x))
+        if(length(x)){
+            if(n%%length(x)>0){
+                stop("argument of length ", length(x),
+                     " can't be recycled to number of amplicons (",
+                     n, ")\n")
+            } else{
+                rep(x, times=n/length(x))
+            }
         }
     })
     exp.args
 }
 
 param.message <- function(what, args){
+    ### would be better to print the do.call call directly... this
+    ### hack to help with it as not implemented
+    ## NULL as character
+    args[unlist(lapply(args, is.null))] <- "NULL"
+    ## other values as character
+    args <- lapply(args, as.character)
     print.args.here <- paste(names(args), unlist(args),
                              sep="=")
-    if(length(print.args.here)<1) {print.args.here <- "default"}
+    if(!length(print.args.here)) {print.args.here <- "default"}
     cat("calling", what, "with", print.args.here, "parameters\n")
 }
 

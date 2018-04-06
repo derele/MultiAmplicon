@@ -10,7 +10,12 @@ dadaMulti(MA, ...)
 \item{MA}{MultiAmplicon-class object}
 
 \item{...}{additional parameters to be passed to
-\code{\link[dada2]{dada}} from \code{\link[dada2]{dada}}}
+\code{\link[dada2]{dada}} from \code{\link[dada2]{dada}}. All
+arguments to the function can be given as a vector of the same
+length as the number of primer pairs in the MultiAmplicon
+object, allowing to specify different parameters for each
+amplicon. If a shorter vector is given it will be recycled to
+match the number of ampicons.}
 }
 \value{
 MultiAmplicon object with dadaF and dadaR slots filled

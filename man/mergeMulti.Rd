@@ -17,7 +17,7 @@ length as the number of primer pairs in the MultiAmplicon
 object, allowing to specify e.g. justConcatenate to be set
 TRUE for only some of the amplicons, or to specify different
 minOverlap for each amplicon. If a shorter vector is given it
-will be recycled to match the number of ampicons.}
+will be recycled to match the number of amplicons.}
 }
 \value{
 A MultiAmplicon-class object with the mergers slot filled

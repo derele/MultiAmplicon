@@ -19,7 +19,12 @@ derep objects are created in such a case. Keeping such derep
 objects (setting this to TRUE) might result in downstream
 problems (Errors) in dada inference.}
 
-\item{...}{arguments to be passed to \code{\link{derepFastq}}}
+\item{...}{arguments to be passed to \code{\link{derepFastq}}. All
+arguments to the function can be given as a vector of the same
+length as the number of primer pairs in the MultiAmplicon
+object, allowing to specify different parameters for each
+amplicon. If a shorter vector is given it will be recycled to
+match the number of ampicons.}
 }
 \value{
 MultiAmplicon object with derep slots (forward derepF and

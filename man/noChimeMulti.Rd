@@ -13,14 +13,19 @@ to have a sequenceTableMulti populated}
 \item{mc.cores}{integer number of cores to use for parallelization}
 
 \item{...}{paramter passed through to
-\code{\link[dada2]{removeBimeraDenovo}}}
+\code{\link[dada2]{removeBimeraDenovo}}. All arguments to the
+function can be given as a vector of the same length as the
+number of primer pairs in the MultiAmplicon object, allowing
+to specify different parameters for each amplicon. If a
+shorter vector is given it will be recycled to match the
+number of ampicons.}
 }
 \value{
-a code{\link{MultiAmplicon-class}} object with the
+a \code{\link{MultiAmplicon-class}} object with the
     sequenceTableNoChime filled
 }
 \description{
-Remove chimeric sequencing read pairs from a MultiAmplcion
+Remove chimeric sequencing read pairs from a MultiAmplicon
 object.
 }
 \details{

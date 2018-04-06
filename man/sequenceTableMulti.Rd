@@ -12,7 +12,11 @@ slot filled}
 
 \item{...}{additional parameters to be passed to the
 \code{\link[dada2]{makeSequenceTable}} function of
-\code{dada2}}
+\code{dada2}. All arguments to the function can be given as a
+vector of the same length as the number of primer pairs in the
+MultiAmplicon object, allowing to specify different parameters
+for each amplicon. If a shorter vector is given it will be
+recycled to match the number of ampicons.}
 }
 \value{
 A MultiAmplicon-class object with the sequenceTable slot
