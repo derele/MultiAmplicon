@@ -25,11 +25,11 @@
 ##' @importFrom parallel mclapply
 ##' @export
 ##' @author Emanuel Heitlinger
-derepMulti <- function(MA, mc.cores=getOption("mc.cores", 2L),
-                       keep.single.singlets=FALSE, ...){
+derepMulti <- function(MA, mc.cores = getOption("mc.cores", 2L),
+                       keep.single.singlets = FALSE, ...){
     exp.args <- extract.ellipsis(list(...), nrow(MA))    
     PPderep <- mclapply(seq_along(MA@PrimerPairsSet), function (i){
-        cat("amplicon", MA@PrimerPairsSet@names[i],
+        cat("amplicon", names(MA@PrimerPairsSet)[i],
             "dereplicating for ",
             length(MA@stratifiedFiles[[i]]@readsF), " of ",
             length(MA@PairedReadFileSet@readsF), "possible sample files\n")
@@ -44,11 +44,11 @@ derepMulti <- function(MA, mc.cores=getOption("mc.cores", 2L),
         if (class(derepF)%in%"derep") {
             ## the same must be true for the revers then to keep them
             ## in the same lenghth
-            if(length(derepF$map)==1 && keep.single.singlets==FALSE){
+            if(length(derepF$map) == 1 && keep.single.singlets == FALSE){
                 derepF <- list()
                 derepR <- list()
                 cat("\nproducing empty derep object for amplicon",
-                    MA@PrimerPairsSet@names[i],
+                    names(MA@PrimerPairsSet)[i],
                     "as only one sequence is reported for one sample ",
                     "set keep.single.singlets to TRUE to change this behaviour,",
                     "but be warned that this may lead to downstream errors\n\n" )
@@ -63,9 +63,9 @@ derepMulti <- function(MA, mc.cores=getOption("mc.cores", 2L),
                 derepR = derepR[[w]])
         })
         return(Pderep)
-    }, mc.cores=mc.cores)
-    names(PPderep) <- MA@PrimerPairsSet@names
-    initialize(MA, derep=PPderep)
+    }, mc.cores = mc.cores)
+    names(PPderep) <- names(MA@PrimerPairsSet)
+    initialize(MA, derep = PPderep)
 }
 
 
@@ -97,7 +97,7 @@ dadaMulti <- function(MA, ...){
     PPdada <- lapply(seq_along(MA@PrimerPairsSet), function (i){
        dF <- lapply(MA@derep[[i]], function (x) slot(x, "derepF"))
        dR <- lapply(MA@derep[[i]], function (x) slot(x,  "derepR"))
-       cat("\n\namplicon", MA@PrimerPairsSet@names[i],
+       cat("\n\namplicon", names(MA@PrimerPairsSet)[i],
            "dada estimation of sequence variants from ",
             length(dF), " of ",
            length(MA@PairedReadFileSet), "possible sample files\n\n")
@@ -106,11 +106,11 @@ dadaMulti <- function(MA, ...){
            ## work on possilbe different paramters for this particular amplicon
            args.here <- lapply(exp.args, "[", i)
            param.message("dada", args.here)
-           dadaF <- do.call(dada, c(list(derep=dF), args.here))
+           dadaF <- do.call(dada, c(list(derep = dF), args.here))
            ## make it a list of length 1 in case of only one sample,
            ## otherwise it is simplified and can't be handled
            if (class(dadaF)%in%"dada"){dadaF <- list(dadaF)}
-           dadaR <- do.call(dada, c(list(derep=dR), args.here))
+           dadaR <- do.call(dada, c(list(derep = dR), args.here))
            ## make it a list in case of only one sample
            if (class(dadaR)%in%"dada"){dadaR <- list(dadaR)}
            ## naming the dada objects
@@ -123,8 +123,8 @@ dadaMulti <- function(MA, ...){
        }
        return(Pdada)
     })
-    names(PPdada) <- MA@PrimerPairsSet@names
-    initialize(MA, dada=PPdada)
+    names(PPdada) <- names(MA@PrimerPairsSet)
+    initialize(MA, dada = PPdada)
 }
 
 ##' merge denoised pairs of forward and reverse reads inside an
@@ -156,7 +156,7 @@ dadaMulti <- function(MA, ...){
 mergeMulti <- function(MA, ...){
     exp.args <- extract.ellipsis(list(...), nrow(MA))
     mergers <- lapply(seq_along(MA@PrimerPairsSet), function (i){     
-        if(length(MA@dada[[i]]) > 0){
+        if(length(MA@dada[[i]])){
             daF <- slot(MA@dada[[i]], "dadaF")
             daR <- slot(MA@dada[[i]], "dadaR")
             deF <- lapply(MA@derep[[i]], "slot", "derepF")
@@ -169,8 +169,8 @@ mergeMulti <- function(MA, ...){
             args.here <- lapply(exp.args, "[", i)
             param.message("mergePairs", args.here)
             MP <- do.call(mergePairs,
-                          c(list(dadaF=daF, derepF=deF,
-                                 dadaR=daR, derepR=deR), args.here))
+                          c(list(dadaF = daF, derepF = deF,
+                                 dadaR = daR, derepR = deR), args.here))
             ## correct the case of one sample / amplicon 
             if(class(MP)%in%"data.frame"){MP <- list(MP)}
             cat("DONE\n\n")
@@ -180,8 +180,8 @@ mergeMulti <- function(MA, ...){
                               MA@PrimerPairsSet@names[[i]], "\n\n")
                           return(list())}
     })
-    names(mergers) <- MA@PrimerPairsSet@names
-    initialize(MA, mergers=mergers)
+    names(mergers) <- names(MA@PrimerPairsSet)
+    initialize(MA, mergers = mergers)
 }
 
 ##' Create a sequence table inside a MultiAmplcion object.
@@ -250,7 +250,7 @@ sequenceTableMulti <- function(MA, ...){
 ##' @importFrom parallel mclapply
 ##' @export
 ##' @author Emanuel Heitlinger
-noChimeMulti <- function(MA, mc.cores=getOption("mc.cores", 2L), ...){
+noChimeMulti <- function(MA, mc.cores = getOption("mc.cores", 2L), ...){
     exp.args <- extract.ellipsis(list(...), nrow(MA))
     sequenceTableNoChime <-
     mclapply(seq_along(MA@sequenceTable), function (i) { 
@@ -260,7 +260,7 @@ noChimeMulti <- function(MA, mc.cores=getOption("mc.cores", 2L), ...){
                 do.call(removeBimeraDenovo, c(list(MA@sequenceTable[[i]]), args.here))
             } else {matrix()}
         },
-        mc.cores=mc.cores)
+        mc.cores = mc.cores)
     names(sequenceTableNoChime) <- MA@PrimerPairsSet@names
     initialize(MA, sequenceTableNoChime = sequenceTableNoChime)
 }
@@ -289,7 +289,7 @@ param.message <- function(what, args){
     ## other values as character
     args <- lapply(args, as.character)
     print.args.here <- paste(names(args), unlist(args),
-                             sep="=")
+                             sep = "=")
     if(!length(print.args.here)) {print.args.here <- "default"}
     cat("calling", what, "with", print.args.here, "parameters\n")
 }
