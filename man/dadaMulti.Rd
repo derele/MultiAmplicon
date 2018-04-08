@@ -4,10 +4,16 @@
 \alias{dadaMulti}
 \title{dadaMulti}
 \usage{
-dadaMulti(MA, ...)
+dadaMulti(MA, Ferr = NULL, Rerr = NULL, ...)
 }
 \arguments{
 \item{MA}{MultiAmplicon-class object}
+
+\item{Ferr}{As in the "err" parameter of dada: the matrix of
+estimated rates for each possible nucleotide change. In this
+case for forward reads.}
+
+\item{Rerr}{the same for the reverse reads.}
 
 \item{...}{additional parameters to be passed to
 \code{\link[dada2]{dada}} from \code{\link[dada2]{dada}}. All

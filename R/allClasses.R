@@ -404,3 +404,12 @@ setGeneric("rawCounts", function(x){standardGeneric("rawCounts")})
 setMethod("rawCounts", "MultiAmplicon", function(x) slot(x, "rawCounts"))
 
 
+## accessors for the stratified files
+
+##' @rdname MultiAmplicon-class
+##' @export
+stratifiedFilesF <- function(MA) lapply(MA@stratifiedFiles, slot, "readsF")
+
+##' @rdname MultiAmplicon-class
+##' @export
+stratifiedFilesR <- function(MA) lapply(MA@stratifiedFiles, slot, "readsR")

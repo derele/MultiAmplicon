@@ -117,7 +117,7 @@ expect_equal(up1.counts, up1.dereps)
 })
 
 
-MA3 <- dadaMulti(MA2, err=NULL, selfConsist=TRUE, pool=FALSE, 
+MA3 <- dadaMulti(MA2, selfConsist=TRUE, pool=FALSE, 
                  multithread=TRUE)
 
 context("Denoising works?")
@@ -179,27 +179,17 @@ test_that("merging produces a list of derep objects ", {
 })
 
 
-## context("Subsetting MultiAmplicon objects")
-## ToDO: proper tests from the below... 
+context("Subsetting MultiAmplicon objects")
 
-MA6[1:2, 1:2]
 
-MA6[2, 4]@rawCounts
+test_that("subsetting leaves rawCounts intact", {
+    expect_equal(rawCounts(MA6[2, 6]), rawCounts(MA6)[2, 6])
+    expect_equal(rawCounts(MA6[3:4, 2:5]), rawCounts(MA6)[3:4, 2:5])
+    })
 
-MA6[2, 6]@rawCounts
+MA.alt <- sortAmplicons(MA[2, 4])
+MA.alt <- derepMulti(MA.alt)
 
-MA6[2, 6]@derep
-
-MA6[2, 6]@dada
-
-MA6[2, 6]@stratifiedFiles
-
-MA6[c(4, 6),  c(4, 6)]@rawCounts
-
-MA6[c(4, 6),  c(4, 6)]@derep
-
-## killed the bug!
-MA6[1:6, 1:7]
 
 
 ## ## logical and name indexing does not work yet

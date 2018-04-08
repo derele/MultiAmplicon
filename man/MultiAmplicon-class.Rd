@@ -12,6 +12,8 @@
 \alias{dim,MultiAmplicon-method}
 \alias{rawCounts}
 \alias{rawCounts,MultiAmplicon-method}
+\alias{stratifiedFilesF}
+\alias{stratifiedFilesR}
 \alias{show,MultiAmplicon-method}
 \alias{[,MultiAmplicon,index,index,ANY-method}
 \alias{[,MultiAmplicon,index,missing,ANY-method}
@@ -39,6 +41,10 @@ MultiAmplicon(PrimerPairsSet = PrimerPairsSet(),
 rawCounts(x)
 
 \S4method{rawCounts}{MultiAmplicon}(x)
+
+stratifiedFilesF(MA)
+
+stratifiedFilesR(MA)
 
 \S4method{show}{MultiAmplicon}(object)
 

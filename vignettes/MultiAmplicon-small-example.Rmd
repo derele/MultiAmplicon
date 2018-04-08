@@ -50,6 +50,12 @@ als be used adaptor trimming with a single primer (see vignette xyz).
 But to go on with our main intended use case example first have a look
 at how `PairedReadFileSet` and `PrimerPairsSet` are generated.
 
+Please use files containing quality filtered sequencing reads for the
+steps below. See the
+[dada2 tutorial](https://benjjneb.github.io/dada2/tutorial.html) or
+our [real-world data vignette](https:/foobarXYZXYZ.foo).
+
+
 ```{r buildup}
 suppressMessages(library(MultiAmplicon))
 
@@ -131,13 +137,27 @@ an empty file and S01 contains one sequence).
 
 ## Running the amplicon sequencing pipline 
 
-We can now run the pipeline of the dada2 package in parallel over the
-different amplicons.
 
-```{r runPipe, result='asis', cache=TRUE}
+We first estimate the errors seperately for both for dada's
+probabilistic sequence variant inference. We do this here on the
+combined statified files for different amplicons. This should be done
+separately for forward ad reverse sequence though!
+
+```{r errEst, cache=TRUE}
+errF <- learnErrors(unlist(stratifiedFilesF(MA1)), nread=1e6)
+errR <- learnErrors(unlist(stratifiedFilesR(MA1)), nread=1e6)
+```
+
+We can now run the pipeline of the dada2 package in parallel over the
+different amplicons. We update our object from each previous step and
+safe it under a new name, here for illustration. In your own workflow
+you can also overwrite the old object.
+
+
+```{r pipeline, cache=TRUE}
 MA2 <- derepMulti(MA.sub)
 
-MA3 <- dadaMulti(MA2, err=NULL, selfConsist=TRUE, pool=FALSE)
+MA3 <- dadaMulti(MA2, Ferr=errF, Rerr=errR,  pool=FALSE)
 
 MA4 <- mergeMulti(MA3)
 
@@ -148,12 +168,47 @@ MA6 <- noChimeMulti(MA5)
 
 Ready! This was *easy*, right?
 
+
+## A word on dada2 sequence inference
+
+The above workflow assumes that errors could be estimated for each
+amplicon together. This would be beneficial if erros were largely
+similar between different amplicons (i.e. not influenced by the primer
+starting the sequence). Below an alternative approach is demonstrated
+with error probabilities estimated seperately for each amplicon (here
+also overwrite objects from each previous processing steps).
+
+
+```{r altdada, cache=TRUE}
+MA.alt <- dadaMulti(MA2, selfConsist=TRUE, pool=FALSE)
+
+MA.alt <- mergeMulti(MA.alt)
+
+MA.alt <- sequenceTableMulti(MA.alt)
+
+MA.alt <- noChimeMulti(MA.alt)
+```
+
+
+
 ## Using different parameters for each amplicon
 
-In some real world applications it is desireable to have more control
-over paramters used in the pipeline for different amplicons. 
+In some real world applications it might be desireable to have more
+control over paramters used in the pipeline for different amplicons.
 
 We use ellipsis (aka "...", dots, dot-dot-dot or three-dots) to pass
 parameters on to the underlying dada2 functions. The MultiAmplicon
 package allows all those arguments to be vectors with values varying
 for different amplicons.
+
+Let's suppose for this we e.g. want to merge a subset of our
+amplicons, while we concatenate others using N's. 
+
+
+```{r mixdata, cache=TRUE}
+MA.mixed <- mergeMulti(MA3, justConcatenate=c(TRUE, FALSE, FALSE, TRUE))
+```
+The above example would make sense if amlicons Amp1F.Amp1R and
+Amp4F.Amp4R (1st and 4th in our object) had too little overalap
+between forward and revese reads to be merged and would better be
+concatenated.

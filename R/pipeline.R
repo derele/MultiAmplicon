@@ -79,6 +79,10 @@ derepMulti <- function(MA, mc.cores = getOption("mc.cores", 2L),
 ##' 
 ##' @title dadaMulti
 ##' @param MA MultiAmplicon-class object
+##' @param Ferr As in the "err" parameter of dada: the matrix of
+##'     estimated rates for each possible nucleotide change. In this
+##'     case for forward reads.
+##' @param Rerr the same for the reverse reads. 
 ##' @param ... additional parameters to be passed to
 ##'     \code{\link[dada2]{dada}} from \code{\link[dada2]{dada}}. All
 ##'     arguments to the function can be given as a vector of the same
@@ -91,7 +95,7 @@ derepMulti <- function(MA, mc.cores = getOption("mc.cores", 2L),
 ##' @importFrom methods initialize new slot
 ##' @export
 ##' @author Emanuel Heitlinger
-dadaMulti <- function(MA, ...){
+dadaMulti <- function(MA, Ferr=NULL, Rerr=NULL, ...){
     exp.args <- extract.ellipsis(list(...), nrow(MA))
     ## needs to be computed on pairs of amplicons
     PPdada <- lapply(seq_along(MA@PrimerPairsSet), function (i){
@@ -106,11 +110,11 @@ dadaMulti <- function(MA, ...){
            ## work on possilbe different paramters for this particular amplicon
            args.here <- lapply(exp.args, "[", i)
            param.message("dada", args.here)
-           dadaF <- do.call(dada, c(list(derep = dF), args.here))
+           dadaF <- do.call(dada, c(list(derep = dF, err=Ferr), args.here))
            ## make it a list of length 1 in case of only one sample,
            ## otherwise it is simplified and can't be handled
            if (class(dadaF)%in%"dada"){dadaF <- list(dadaF)}
-           dadaR <- do.call(dada, c(list(derep = dR), args.here))
+           dadaR <- do.call(dada, c(list(derep = dR, err=Rerr), args.here))
            ## make it a list in case of only one sample
            if (class(dadaR)%in%"dada"){dadaR <- list(dadaR)}
            ## naming the dada objects
