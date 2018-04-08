@@ -178,7 +178,7 @@ MA1 <- sortAmplicons(MA)
 
 MA2 <- derepMulti(MA1)
 
-MA3 <- dadaMulti(MA2, selfConsist = TRUE, err = NULL)
+MA3 <- dadaMulti(MA2, selfConsist = TRUE)
 
 MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
 
