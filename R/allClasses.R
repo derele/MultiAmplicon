@@ -407,9 +407,11 @@ setMethod("rawCounts", "MultiAmplicon", function(x) slot(x, "rawCounts"))
 ## accessors for the stratified files
 
 ##' @rdname MultiAmplicon-class
+##' @param MA MultiAmplicon-class object
 ##' @export
 stratifiedFilesF <- function(MA) lapply(MA@stratifiedFiles, slot, "readsF")
 
 ##' @rdname MultiAmplicon-class
+##' @param MA MultiAmplicon-class object
 ##' @export
 stratifiedFilesR <- function(MA) lapply(MA@stratifiedFiles, slot, "readsR")
