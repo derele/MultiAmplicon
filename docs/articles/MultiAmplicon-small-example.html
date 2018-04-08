@@ -65,7 +65,7 @@
       <h1>Multi Amplicon - a small example</h1>
                         <h4 class="author">Emanuel Heitlinger</h4>
             
-            <h4 class="date">2018-04-06</h4>
+            <h4 class="date">2018-04-08</h4>
           </div>
 
     
@@ -81,6 +81,7 @@
 <p>The MultiAmplicon package uses dedicated classes to ensure that input to its <code>sortAmplicons</code> function is provided correctly. Concerning input files, this means for the user that file names (including paths to the directory they are stored in) of forward and reverse sequencing read files must be provided as a <code>PairedReadFileSet</code>. These files can contain reads in fastq or in gzipped fastq format. We focus as a default use case on (non-interleaved) paired-end reads, as these are the most common format Illumina sequencing reads are currently produced in (but see vignette xyz as an example how to process single-end sequencing data).</p>
 <p>Similarly, primer pairs must be provided in a <code>PrimerPairsSet</code>. We then match forward and reverse primers at the start of forward and reverse reads, respectively. The maximal number of missmatches and the maximal distance from the start of the read can be supplied as arguments to the function. The primer sequences are trimmed from the reads and the read-pair is associated with the amplicon defined by the primer-pair. While we focus on this default use case, the package can als be used adaptor trimming with a single primer (see vignette xyz).</p>
 <p>But to go on with our main intended use case example first have a look at how <code>PairedReadFileSet</code> and <code>PrimerPairsSet</code> are generated.</p>
+<p>Please use files containing quality filtered sequencing reads for the steps below. See the <a href="https://benjjneb.github.io/dada2/tutorial.html">dada2 tutorial</a> or our <a href="https:/foobarXYZXYZ.foo">real-world data vignette</a>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressMessages</span>(<span class="kw">library</span>(MultiAmplicon))
 
 primerF &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">Amp1F =</span> <span class="st">"AGAGTTTGATCCTGGCTCAG"</span>, <span class="dt">Amp2F =</span> <span class="st">"ACTCCTACGGGAGGCAGC"</span>,
@@ -110,7 +111,7 @@ MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAmp
 <p>Based on the primer sequences we can now sort the sequences into amplicons. This is done by the function <code>sortAmplicons</code>, which updates the MultiAmplicon object with the sorted amplicons.</p>
 <p>For this small example dataset we can look at the resuling <code>rawCounts</code> i.e. the number of sequences for each of the fully stratified amplicon x sample matrix.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sortAmplicons.html">sortAmplicons</a></span>(MA)
-<span class="co">#&gt; using existing directory  /tmp/RtmpQLLiGh and adding specific prefixes to avoid problems when running code twice </span>
+<span class="co">#&gt; using existing directory  /tmp/RtmpJUH0fy and adding specific prefixes to avoid problems when running code twice </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;  finished  sorting 0 sequencing reads for S00_F_filt.fastq.gz in </span>
 <span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S00_F_filt.fastq.gz  and </span>
@@ -345,14 +346,143 @@ knitr::<span class="kw">kable</span>(<span class="kw"><a href="../reference/Mult
 <div id="running-the-amplicon-sequencing-pipline" class="section level2">
 <h2 class="hasAnchor">
 <a href="#running-the-amplicon-sequencing-pipline" class="anchor"></a>Running the amplicon sequencing pipline</h2>
-<p>We can now run the pipeline of the dada2 package in parallel over the different amplicons.</p>
+<p>We first estimate the errors seperately for both for dada’s probabilistic sequence variant inference. We do this here on the combined statified files for different amplicons. This should be done separately for forward ad reverse sequence though!</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">errF &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">stratifiedFilesF</a></span>(MA1)), <span class="dt">nread=</span><span class="fl">1e6</span>)
+<span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
+<span class="co">#&gt; Sample 1 - 3495 reads in 1493 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 5 reads in 5 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 5 reads in 5 unique sequences.</span>
+<span class="co">#&gt; Sample 4 - 29310 reads in 7224 unique sequences.</span>
+<span class="co">#&gt; Sample 5 - 2569 reads in 1053 unique sequences.</span>
+<span class="co">#&gt; Sample 6 - 2949 reads in 1142 unique sequences.</span>
+<span class="co">#&gt; Sample 7 - 2 reads in 2 unique sequences.</span>
+<span class="co">#&gt; Sample 8 - 20391 reads in 4136 unique sequences.</span>
+<span class="co">#&gt; Sample 9 - 2690 reads in 968 unique sequences.</span>
+<span class="co">#&gt; Sample 10 - 1817 reads in 589 unique sequences.</span>
+<span class="co">#&gt; Sample 11 - 2 reads in 2 unique sequences.</span>
+<span class="co">#&gt; Sample 12 - 11671 reads in 3783 unique sequences.</span>
+<span class="co">#&gt; Sample 13 - 1087 reads in 394 unique sequences.</span>
+<span class="co">#&gt; Sample 14 - 7 reads in 6 unique sequences.</span>
+<span class="co">#&gt; Sample 15 - 2076 reads in 959 unique sequences.</span>
+<span class="co">#&gt; Sample 16 - 428 reads in 166 unique sequences.</span>
+<span class="co">#&gt; Sample 17 - 1 reads in 1 unique sequences.</span>
+<span class="co">#&gt;    selfConsist step 2 </span>
+<span class="co">#&gt;    selfConsist step 3 </span>
+<span class="co">#&gt;    selfConsist step 4 </span>
+<span class="co">#&gt;    selfConsist step 5 </span>
+<span class="co">#&gt; Convergence after  5  rounds.</span>
+<span class="co">#&gt; Total reads used:  78505</span>
+errR &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">stratifiedFilesR</a></span>(MA1)), <span class="dt">nread=</span><span class="fl">1e6</span>)
+<span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
+<span class="co">#&gt; Sample 1 - 3495 reads in 1535 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 5 reads in 5 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 5 reads in 4 unique sequences.</span>
+<span class="co">#&gt; Sample 4 - 29310 reads in 8273 unique sequences.</span>
+<span class="co">#&gt; Sample 5 - 2569 reads in 994 unique sequences.</span>
+<span class="co">#&gt; Sample 6 - 2949 reads in 1290 unique sequences.</span>
+<span class="co">#&gt; Sample 7 - 2 reads in 2 unique sequences.</span>
+<span class="co">#&gt; Sample 8 - 20391 reads in 5719 unique sequences.</span>
+<span class="co">#&gt; Sample 9 - 2690 reads in 1100 unique sequences.</span>
+<span class="co">#&gt; Sample 10 - 1817 reads in 547 unique sequences.</span>
+<span class="co">#&gt; Sample 11 - 2 reads in 2 unique sequences.</span>
+<span class="co">#&gt; Sample 12 - 11671 reads in 4054 unique sequences.</span>
+<span class="co">#&gt; Sample 13 - 1087 reads in 433 unique sequences.</span>
+<span class="co">#&gt; Sample 14 - 7 reads in 5 unique sequences.</span>
+<span class="co">#&gt; Sample 15 - 2076 reads in 962 unique sequences.</span>
+<span class="co">#&gt; Sample 16 - 428 reads in 183 unique sequences.</span>
+<span class="co">#&gt; Sample 17 - 1 reads in 1 unique sequences.</span>
+<span class="co">#&gt;    selfConsist step 2 </span>
+<span class="co">#&gt;    selfConsist step 3 </span>
+<span class="co">#&gt;    selfConsist step 4 </span>
+<span class="co">#&gt;    selfConsist step 5 </span>
+<span class="co">#&gt; Convergence after  5  rounds.</span>
+<span class="co">#&gt; Total reads used:  78505</span></code></pre></div>
+<p>We can now run the pipeline of the dada2 package in parallel over the different amplicons. We update our object from each previous step and safe it under a new name, here for illustration. In your own workflow you can also overwrite the old object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/derepMulti.html">derepMulti</a></span>(MA.sub)
 
-MA3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/dadaMulti.html">dadaMulti</a></span>(MA2, <span class="dt">err=</span><span class="ot">NULL</span>, <span class="dt">selfConsist=</span><span class="ot">TRUE</span>, <span class="dt">pool=</span><span class="ot">FALSE</span>)
+MA3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/dadaMulti.html">dadaMulti</a></span>(MA2, <span class="dt">Ferr=</span>errF, <span class="dt">Rerr=</span>errR,  <span class="dt">pool=</span><span class="ot">FALSE</span>)
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; amplicon Amp1F.Amp1R dada estimation of sequence variants from  3  of  3 possible sample files</span>
 <span class="co">#&gt; </span>
+<span class="co">#&gt; calling dada with pool=FALSE parameters</span>
+<span class="co">#&gt; Sample 1 - 3495 reads in 1493 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 29310 reads in 7224 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 2569 reads in 1053 unique sequences.</span>
+<span class="co">#&gt; Sample 1 - 3495 reads in 1535 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 29310 reads in 8273 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 2569 reads in 994 unique sequences.</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; amplicon Amp2F.Amp2R dada estimation of sequence variants from  3  of  3 possible sample files</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; calling dada with pool=FALSE parameters</span>
+<span class="co">#&gt; Sample 1 - 2949 reads in 1142 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 20391 reads in 4136 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 2690 reads in 968 unique sequences.</span>
+<span class="co">#&gt; Sample 1 - 2949 reads in 1290 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 20391 reads in 5719 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 2690 reads in 1100 unique sequences.</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; amplicon Amp3F.Amp3R dada estimation of sequence variants from  3  of  3 possible sample files</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; calling dada with pool=FALSE parameters</span>
+<span class="co">#&gt; Sample 1 - 1817 reads in 589 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 2 reads in 2 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 11671 reads in 3783 unique sequences.</span>
+<span class="co">#&gt; Sample 1 - 1817 reads in 547 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 2 reads in 2 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 11671 reads in 4054 unique sequences.</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; amplicon Amp4F.Amp4R dada estimation of sequence variants from  3  of  3 possible sample files</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; calling dada with pool=FALSE parameters</span>
+<span class="co">#&gt; Sample 1 - 1087 reads in 394 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 2076 reads in 959 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 428 reads in 166 unique sequences.</span>
+<span class="co">#&gt; Sample 1 - 1087 reads in 433 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 2076 reads in 962 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 428 reads in 183 unique sequences.</span>
+
+MA4 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mergeMulti.html">mergeMulti</a></span>(MA3)
+<span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp1F.Amp1R </span>
+<span class="co">#&gt; calling mergePairs with default parameters</span>
+<span class="co">#&gt; DONE</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp2F.Amp2R </span>
+<span class="co">#&gt; calling mergePairs with default parameters</span>
+<span class="co">#&gt; DONE</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp3F.Amp3R </span>
+<span class="co">#&gt; calling mergePairs with default parameters</span>
+<span class="co">#&gt; DONE</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp4F.Amp4R </span>
+<span class="co">#&gt; calling mergePairs with default parameters</span>
+<span class="co">#&gt; DONE</span>
+
+MA5 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sequenceTableMulti.html">sequenceTableMulti</a></span>(MA4)
+<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
+<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
+<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
+<span class="co">#&gt; The sequences being tabled vary in length.</span>
+<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
+
+MA6 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noChimeMulti.html">noChimeMulti</a></span>(MA5)</code></pre></div>
+<p>Ready! This was <em>easy</em>, right?</p>
+</div>
+<div id="a-word-on-dada2-sequence-inference" class="section level2">
+<h2 class="hasAnchor">
+<a href="#a-word-on-dada2-sequence-inference" class="anchor"></a>A word on dada2 sequence inference</h2>
+<p>The above workflow assumes that errors could be estimated for each amplicon together. This would be beneficial if erros were largely similar between different amplicons (i.e. not influenced by the primer starting the sequence). Below an alternative approach is demonstrated with error probabilities estimated seperately for each amplicon (here also overwrite objects from each previous processing steps).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/dadaMulti.html">dadaMulti</a></span>(MA2, <span class="dt">selfConsist=</span><span class="ot">TRUE</span>, <span class="dt">pool=</span><span class="ot">FALSE</span>)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; amplicon Amp1F.Amp1R dada estimation of sequence variants from  3  of  3 possible sample files</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; calling dada with selfConsist=TRUE pool=FALSE parameters</span>
 <span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
 <span class="co">#&gt; Sample 1 - 3495 reads in 1493 unique sequences.</span>
 <span class="co">#&gt; Sample 2 - 29310 reads in 7224 unique sequences.</span>
@@ -376,6 +506,7 @@ MA3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/dadaMul
 <span class="co">#&gt; </span>
 <span class="co">#&gt; amplicon Amp2F.Amp2R dada estimation of sequence variants from  3  of  3 possible sample files</span>
 <span class="co">#&gt; </span>
+<span class="co">#&gt; calling dada with selfConsist=TRUE pool=FALSE parameters</span>
 <span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
 <span class="co">#&gt; Sample 1 - 2949 reads in 1142 unique sequences.</span>
 <span class="co">#&gt; Sample 2 - 20391 reads in 4136 unique sequences.</span>
@@ -397,6 +528,7 @@ MA3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/dadaMul
 <span class="co">#&gt; </span>
 <span class="co">#&gt; amplicon Amp3F.Amp3R dada estimation of sequence variants from  3  of  3 possible sample files</span>
 <span class="co">#&gt; </span>
+<span class="co">#&gt; calling dada with selfConsist=TRUE pool=FALSE parameters</span>
 <span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
 <span class="co">#&gt; Sample 1 - 1817 reads in 589 unique sequences.</span>
 <span class="co">#&gt; Sample 2 - 2 reads in 2 unique sequences.</span>
@@ -417,6 +549,7 @@ MA3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/dadaMul
 <span class="co">#&gt; </span>
 <span class="co">#&gt; amplicon Amp4F.Amp4R dada estimation of sequence variants from  3  of  3 possible sample files</span>
 <span class="co">#&gt; </span>
+<span class="co">#&gt; calling dada with selfConsist=TRUE pool=FALSE parameters</span>
 <span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
 <span class="co">#&gt; Sample 1 - 1087 reads in 394 unique sequences.</span>
 <span class="co">#&gt; Sample 2 - 2076 reads in 959 unique sequences.</span>
@@ -434,34 +567,55 @@ MA3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/dadaMul
 <span class="co">#&gt;    selfConsist step 4 </span>
 <span class="co">#&gt; Convergence after  4  rounds.</span>
 
-MA4 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mergeMulti.html">mergeMulti</a></span>(MA3)
+MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mergeMulti.html">mergeMulti</a></span>(MA.alt)
 <span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp1F.Amp1R </span>
-<span class="co">#&gt; calling merge Pairs with parameters  </span>
+<span class="co">#&gt; calling mergePairs with default parameters</span>
 <span class="co">#&gt; DONE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp2F.Amp2R </span>
-<span class="co">#&gt; calling merge Pairs with parameters  </span>
+<span class="co">#&gt; calling mergePairs with default parameters</span>
 <span class="co">#&gt; DONE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp3F.Amp3R </span>
-<span class="co">#&gt; calling merge Pairs with parameters  </span>
+<span class="co">#&gt; calling mergePairs with default parameters</span>
 <span class="co">#&gt; DONE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp4F.Amp4R </span>
-<span class="co">#&gt; calling merge Pairs with parameters  </span>
+<span class="co">#&gt; calling mergePairs with default parameters</span>
 <span class="co">#&gt; DONE</span>
 
-MA5 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sequenceTableMulti.html">sequenceTableMulti</a></span>(MA4)
+MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sequenceTableMulti.html">sequenceTableMulti</a></span>(MA.alt)
+<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
+<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
+<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
 <span class="co">#&gt; The sequences being tabled vary in length.</span>
+<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
 
-MA6 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noChimeMulti.html">noChimeMulti</a></span>(MA5)</code></pre></div>
-<p>Ready! This was <em>easy</em>, right?</p>
+MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noChimeMulti.html">noChimeMulti</a></span>(MA.alt)</code></pre></div>
 </div>
 <div id="using-different-parameters-for-each-amplicon" class="section level2">
 <h2 class="hasAnchor">
 <a href="#using-different-parameters-for-each-amplicon" class="anchor"></a>Using different parameters for each amplicon</h2>
-<p>In some real world applications it is desireable to have more control over paramters used in the pipeline for different amplicons.</p>
+<p>In some real world applications it might be desireable to have more control over paramters used in the pipeline for different amplicons.</p>
 <p>We use ellipsis (aka “…”, dots, dot-dot-dot or three-dots) to pass parameters on to the underlying dada2 functions. The MultiAmplicon package allows all those arguments to be vectors with values varying for different amplicons.</p>
+<p>Let’s suppose for this we e.g. want to merge a subset of our amplicons, while we concatenate others using N’s.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA.mixed &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mergeMulti.html">mergeMulti</a></span>(MA3, <span class="dt">justConcatenate=</span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>))
+<span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp1F.Amp1R </span>
+<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
+<span class="co">#&gt; DONE</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp2F.Amp2R </span>
+<span class="co">#&gt; calling mergePairs with justConcatenate=FALSE parameters</span>
+<span class="co">#&gt; DONE</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp3F.Amp3R </span>
+<span class="co">#&gt; calling mergePairs with justConcatenate=FALSE parameters</span>
+<span class="co">#&gt; DONE</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp4F.Amp4R </span>
+<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
+<span class="co">#&gt; DONE</span></code></pre></div>
+<p>The above example would make sense if amlicons Amp1F.Amp1R and Amp4F.Amp4R (1st and 4th in our object) had too little overalap between forward and revese reads to be merged and would better be concatenated.</p>
 </div>
 </div>
 </div>
@@ -478,6 +632,7 @@ MA6 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noChime
       <li><a href="#sorting-into-multiple-amplicons">Sorting into multiple amplicons</a></li>
       <li><a href="#visualizing-read-numbers-per-amplicon-and-filtering-based-on-these">Visualizing read numbers per amplicon and filtering based on these</a></li>
       <li><a href="#running-the-amplicon-sequencing-pipline">Running the amplicon sequencing pipline</a></li>
+      <li><a href="#a-word-on-dada2-sequence-inference">A word on dada2 sequence inference</a></li>
       <li><a href="#using-different-parameters-for-each-amplicon">Using different parameters for each amplicon</a></li>
       </ul>
 </li>
