@@ -63,14 +63,15 @@
 ##' @export sortAmplicons
 ##' @aliases sortAmplicons, sortAmplicons-Method
 setGeneric(name="sortAmplicons",
-           def=function(MA, n=1e6, countOnly=FALSE, rmPrimer=TRUE,
-                        filedir=tempdir(), ...) {
+           def=function(MA, n = 1e6, countOnly = FALSE, rmPrimer = TRUE,
+                        filedir = tempdir(), ...) {
                standardGeneric("sortAmplicons")
            })
 
 ##' @rdname sortAmplicons
 setMethod("sortAmplicons", "MultiAmplicon",
-          function(MA, n=1e6, countOnly=FALSE, rmPrimer=TRUE, filedir=tempdir(), ...){
+          function(MA, n = 1e6, countOnly = FALSE, rmPrimer = TRUE,
+                   filedir = tempdir(), ...){
     ## the data matrix of amplicons x samples stratified counts 
     NR <- length(MA@PrimerPairsSet@primerF)
     NC <- length(MA@PairedReadFileSet@readsF)
