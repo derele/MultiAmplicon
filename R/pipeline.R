@@ -221,7 +221,7 @@ sequenceTableMulti <- function(MA, ...){
         param.message("makeSequenceTable", args.here)
         do.call(makeSequenceTable, c(list(MA@mergers[[i]]), args.here))
     })
-    names(sequenceTable) <- MA@PrimerPairsSet@names
+    names(sequenceTable) <- names(MA@PrimerPairsSet)
     initialize(MA, sequenceTable = sequenceTable)
 }
 
