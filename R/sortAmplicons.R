@@ -86,12 +86,14 @@ setMethod("sortAmplicons", "MultiAmplicon",
     readsR <- MA@PairedReadFileSet@readsR
     ## test whether filedir exists
     if(!dir.exists(filedir)) {
-        cat("creating directory ", filedir,
-            "and adding specific prefixes to avoid problems when running code twice \n")
+        message("creating directory ", filedir,
+                " and adding specific prefixes to avoid problems ",
+                "when running code twice")
         dir.create(filedir)
     } else {
-        cat("using existing directory ", filedir,
-            "and adding specific prefixes to avoid problems when running code twice \n")
+        message("using existing directory ", filedir,
+                " and adding specific prefixes to avoid problems",
+                " when running code twice")
     }
     ## add sample data and metadata in columns
     for(x in seq_along(readsF)) {
@@ -165,11 +167,11 @@ setMethod("sortAmplicons", "MultiAmplicon",
                }
         close(f)
         close(r)
-        doing <- ifelse(countOnly, "counting", "sorting")
-        cat("\n finished ", doing, sum(data[, colnames(data)[[x]]]),
-            "sequencing reads for", colnames(data)[[x]], "in",
+        doing <- ifelse(countOnly, "counting ", "sorting ")
+        message("finished ", doing, sum(data[, colnames(data)[[x]]]),
+            " sequencing reads for ", colnames(data)[[x]], " in",
             "\n ", readsF[[x]], " and \n ", readsR[[x]], "\n",
-            " into ", sum(data[, colnames(data)[[x]]]>0), "amplicons \n" )
+            " into ", sum(data[, colnames(data)[[x]]]>0), " amplicons" )
     }
     ## run only on existing files to avoid warnings for non-existing
     ## files. This means don't run on files corresponding to zeros
