@@ -167,8 +167,14 @@ if(!<span class="kw">file.exists</span>(<span class="st">"SRAmetadb.sqlite"</spa
 }
 
 sra_con &lt;-<span class="st"> </span><span class="kw">dbConnect</span>(<span class="kw">SQLite</span>(), sqlfile)
-carnivoreSeqRuns &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/SRAdb/topics/getSRA">getSRA</a></span>(<span class="dt">search_terms =</span> <span class="st">'"Intestinal biome sequencing of carnivores"'</span>,
+
+carnivoreSeqRuns &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/SRAdb/topics/getSRA">getSRA</a></span>(<span class="dt">search_terms =</span>
+                               <span class="st">'"Intestinal biome sequencing of carnivores"'</span>,
                            <span class="dt">sra_con=</span>sra_con, <span class="dt">acc_only=</span><span class="ot">FALSE</span>)
+
+
+carnivoreSeqRuns &lt;-<span class="st"> </span>carnivoreSeqRuns[, <span class="kw">c</span>(<span class="st">'run'</span>,<span class="st">'study'</span>,<span class="st">'sample'</span>,
+                                         <span class="st">'experiment'</span>, <span class="st">'sample_attribute'</span>)]
 
 runs &lt;-<span class="st"> </span><span class="kw">tail</span>(carnivoreSeqRuns$run, <span class="dt">n=</span><span class="dv">50</span>)
 
