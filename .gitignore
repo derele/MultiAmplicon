@@ -14,3 +14,4 @@ filtered/*
 /vignettes/SRAmetadb.sqlite.gz
 docs/articles/download/
 docs/articles/filtered/
+/inst/SRAmetadb.sqlite.gz

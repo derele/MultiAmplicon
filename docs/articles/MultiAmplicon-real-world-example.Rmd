@@ -29,14 +29,13 @@ vignette locally.
 library(SRAdb) 
 library(MultiAmplicon)
 
-file.string <- paste0(system.file(package = "MultiAmplicon"),
-                      "SRAmetadb.sqlite")
-
-if(!file.exists(file.string)){
-    getSRAdbFile(destdir=system.file(package = "MultiAmplicon"))
+if(!file.exists("SRAmetadb.sqlite")){
+    sqlfile <- getSRAdbFile()
+} else {
+    sqlfile <- "SRAmetadb.sqlite"
 }
 
-sra_con <- dbConnect(SQLite(), file.string)
+sra_con <- dbConnect(SQLite(), sqlfile)
 
 carnivoreSeqRuns <- getSRA(search_terms =
                                '"Intestinal biome sequencing of carnivores"',
