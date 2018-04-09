@@ -13,3 +13,8 @@ r_packages:
 
 after_success:
   - Rscript -e 'library(covr); codecov()'
+
+test:
+  adapter: sqlite3
+  database: ":memory:"
+  timeout: 500
