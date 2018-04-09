@@ -41,6 +41,7 @@ carnivoreSeqRuns <- getSRA(search_terms =
                                '"Intestinal biome sequencing of carnivores"',
                            sra_con=sra_con, acc_only=FALSE)
 
+
 carnivoreSeqRuns <- carnivoreSeqRuns[, c('run','study','sample',
                                          'experiment', 'sample_attribute')]
 

@@ -68,6 +68,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/MultiAmplicon-real-world-example.html">Multi Amplicon - a real world example</a>
+    </li>
+    <li>
       <a href="../articles/MultiAmplicon-small-example.html">Multi Amplicon - a small example</a>
     </li>
   </ul>
@@ -94,7 +97,7 @@
     <p>A wrapper around <code><a href='http://www.rdocumentation.org/packages/dada2/topics/dada'>dada</a></code> from <code>dada2</code></p>
     
 
-    <pre class="usage"><span class='fu'>dadaMulti</span>(<span class='no'>MA</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>dadaMulti</span>(<span class='no'>MA</span>, <span class='kw'>Ferr</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>Rerr</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -104,9 +107,24 @@
       <td><p>MultiAmplicon-class object</p></td>
     </tr>
     <tr>
+      <th>Ferr</th>
+      <td><p>As in the "err" parameter of dada: the matrix of
+estimated rates for each possible nucleotide change. In this
+case for forward reads.</p></td>
+    </tr>
+    <tr>
+      <th>Rerr</th>
+      <td><p>the same for the reverse reads.</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>additional parameters to be passed to
-<code><a href='http://www.rdocumentation.org/packages/dada2/topics/dada'>dada</a></code> from <code><a href='http://www.rdocumentation.org/packages/dada2/topics/dada'>dada</a></code></p></td>
+<code><a href='http://www.rdocumentation.org/packages/dada2/topics/dada'>dada</a></code> from <code><a href='http://www.rdocumentation.org/packages/dada2/topics/dada'>dada</a></code>. All
+arguments to the function can be given as a vector of the same
+length as the number of primer pairs in the MultiAmplicon
+object, allowing to specify different parameters for each
+amplicon. If a shorter vector is given it will be recycled to
+match the number of ampicons.</p></td>
     </tr>
     </table>
     

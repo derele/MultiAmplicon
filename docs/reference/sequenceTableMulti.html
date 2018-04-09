@@ -68,6 +68,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/MultiAmplicon-real-world-example.html">Multi Amplicon - a real world example</a>
+    </li>
+    <li>
       <a href="../articles/MultiAmplicon-small-example.html">Multi Amplicon - a small example</a>
     </li>
   </ul>
@@ -108,7 +111,11 @@ slot filled</p></td>
       <th>...</th>
       <td><p>additional parameters to be passed to the
 <code><a href='http://www.rdocumentation.org/packages/dada2/topics/makeSequenceTable'>makeSequenceTable</a></code> function of
-<code>dada2</code></p></td>
+<code>dada2</code>. All arguments to the function can be given as a
+vector of the same length as the number of primer pairs in the
+MultiAmplicon object, allowing to specify different parameters
+for each amplicon. If a shorter vector is given it will be
+recycled to match the number of ampicons.</p></td>
     </tr>
     </table>
     

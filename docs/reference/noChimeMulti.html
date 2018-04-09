@@ -68,6 +68,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/MultiAmplicon-real-world-example.html">Multi Amplicon - a real world example</a>
+    </li>
+    <li>
       <a href="../articles/MultiAmplicon-small-example.html">Multi Amplicon - a small example</a>
     </li>
   </ul>
@@ -91,7 +94,7 @@
     </div>
 
     
-    <p>Remove chimeric sequencing read pairs from a MultiAmplcion
+    <p>Remove chimeric sequencing read pairs from a MultiAmplicon
 object.</p>
     
 
@@ -112,13 +115,18 @@ to have a sequenceTableMulti populated</p></td>
     <tr>
       <th>...</th>
       <td><p>paramter passed through to
-<code><a href='http://www.rdocumentation.org/packages/dada2/topics/removeBimeraDenovo'>removeBimeraDenovo</a></code></p></td>
+<code><a href='http://www.rdocumentation.org/packages/dada2/topics/removeBimeraDenovo'>removeBimeraDenovo</a></code>. All arguments to the
+function can be given as a vector of the same length as the
+number of primer pairs in the MultiAmplicon object, allowing
+to specify different parameters for each amplicon. If a
+shorter vector is given it will be recycled to match the
+number of ampicons.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a code<a href='MultiAmplicon-class.html'>MultiAmplicon-class</a> object with the
+    <p>a <code><a href='MultiAmplicon-class.html'>MultiAmplicon-class</a></code> object with the
     sequenceTableNoChime filled</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>

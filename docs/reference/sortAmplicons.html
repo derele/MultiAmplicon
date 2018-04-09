@@ -68,6 +68,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/MultiAmplicon-real-world-example.html">Multi Amplicon - a real world example</a>
+    </li>
+    <li>
       <a href="../articles/MultiAmplicon-small-example.html">Multi Amplicon - a small example</a>
     </li>
   </ul>
@@ -95,11 +98,12 @@
 amplicons structure based on primer matches.</p>
     
 
-    <pre class="usage"><span class='fu'>sortAmplicons</span>(<span class='no'>MA</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>1e+06</span>, <span class='kw'>countOnly</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>filedir</span> <span class='kw'>=</span> <span class='fu'>tempdir</span>(), <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>sortAmplicons</span>(<span class='no'>MA</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>1e+06</span>, <span class='kw'>countOnly</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>rmPrimer</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>filedir</span> <span class='kw'>=</span> <span class='fu'>tempdir</span>(), <span class='no'>...</span>)
 
 <span class='co'># S4 method for MultiAmplicon</span>
 <span class='fu'>sortAmplicons</span>(<span class='no'>MA</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>1e+06</span>, <span class='kw'>countOnly</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>filedir</span> <span class='kw'>=</span> <span class='fu'>tempdir</span>(), <span class='no'>...</span>)</pre>
+  <span class='kw'>rmPrimer</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>filedir</span> <span class='kw'>=</span> <span class='fu'>tempdir</span>(), <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -121,6 +125,11 @@ I/O operations reading the sequence files.</p></td>
       <th>countOnly</th>
       <td><p>logical argument if set TRUE only a matrix of
 read counts is returned</p></td>
+    </tr>
+    <tr>
+      <th>rmPrimer</th>
+      <td><p>logical, indicating whehter primer sequences
+should be removed during sorting</p></td>
     </tr>
     <tr>
       <th>filedir</th>
@@ -176,47 +185,28 @@ fastq streaming).</p>
 <span class='no'>MA</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='MultiAmplicon-class.html'>MultiAmplicon</a></span>(<span class='no'>PPS</span>, <span class='no'>PRF</span>)
 
 <span class='co'>## sort into amplicons</span>
-<span class='no'>MA1</span> <span class='kw'>&lt;-</span> <span class='fu'>sortAmplicons</span>(<span class='no'>MA</span>)</div><div class='output co'>#&gt; using existing directory  /tmp/RtmpFePLS8 and adding specific prefixes to avoid problems when running code twice 
-#&gt; 
-#&gt;  finished  sorting 0 sequencing reads for S0_F_filt.fastq.gz in 
-#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S0_F_filt.fastq.gz  and 
-#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S0_R_filt.fastq.gz 
-#&gt;   into  0 amplicons 
-#&gt; 
-#&gt;  finished  sorting 0 sequencing reads for S00_F_filt.fastq.gz in 
-#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S00_F_filt.fastq.gz  and 
-#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S00_R_filt.fastq.gz 
-#&gt;   into  0 amplicons 
-#&gt; 
-#&gt;  finished  sorting 0 sequencing reads for S01_F_filt.fastq.gz in 
-#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S01_F_filt.fastq.gz  and 
-#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S01_R_filt.fastq.gz 
-#&gt;   into  0 amplicons 
-#&gt; 
-#&gt;  finished  sorting 9348 sequencing reads for S121_F_filt.fastq.gz in 
-#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S121_F_filt.fastq.gz  and 
-#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S121_R_filt.fastq.gz 
-#&gt;   into  4 amplicons 
-#&gt; 
-#&gt;  finished  sorting 5 sequencing reads for S144_F_filt.fastq.gz in 
-#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S144_F_filt.fastq.gz  and 
-#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S144_R_filt.fastq.gz 
-#&gt;   into  1 amplicons 
-#&gt; 
-#&gt;  finished  sorting 16 sequencing reads for S22_F_filt.fastq.gz in 
-#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S22_F_filt.fastq.gz  and 
-#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S22_R_filt.fastq.gz 
-#&gt;   into  4 amplicons 
-#&gt; 
-#&gt;  finished  sorting 63448 sequencing reads for S8_F_filt.fastq.gz in 
-#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S8_F_filt.fastq.gz  and 
-#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S8_R_filt.fastq.gz 
-#&gt;   into  4 amplicons 
-#&gt; 
-#&gt;  finished  sorting 7108 sequencing reads for S91_F_filt.fastq.gz in 
-#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S91_F_filt.fastq.gz  and 
-#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S91_R_filt.fastq.gz 
-#&gt;   into  4 amplicons </div><div class='input'>
+<span class='no'>MA1</span> <span class='kw'>&lt;-</span> <span class='fu'>sortAmplicons</span>(<span class='no'>MA</span>)</div><div class='output co'>#&gt; <span class='message'>using existing directory /tmp/Rtmpqo5OfC and adding specific prefixes to avoid problems when running code twice</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 0 sequencing reads for S00_F_filt.fastq.gz in</span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S00_F_filt.fastq.gz and </span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S00_R_filt.fastq.gz</span>
+#&gt; <span class='message'> into 0 amplicons</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 0 sequencing reads for S01_F_filt.fastq.gz in</span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S01_F_filt.fastq.gz and </span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S01_R_filt.fastq.gz</span>
+#&gt; <span class='message'> into 0 amplicons</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 9348 sequencing reads for S02_F_filt.fastq.gz in</span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S02_F_filt.fastq.gz and </span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S02_R_filt.fastq.gz</span>
+#&gt; <span class='message'> into 4 amplicons</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 5 sequencing reads for S03_F_filt.fastq.gz in</span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S03_F_filt.fastq.gz and </span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S03_R_filt.fastq.gz</span>
+#&gt; <span class='message'> into 1 amplicons</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 14 sequencing reads for S04_F_filt.fastq.gz in</span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S04_F_filt.fastq.gz and </span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S04_R_filt.fastq.gz</span>
+#&gt; <span class='message'> into 3 amplicons</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 51779 sequencing reads for S05_F_filt.fastq.gz in</span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S05_F_filt.fastq.gz and </span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S05_R_filt.fastq.gz</span>
+#&gt; <span class='message'> into 4 amplicons</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 17358 sequencing reads for S06_F_filt.fastq.gz in</span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S06_F_filt.fastq.gz and </span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S06_R_filt.fastq.gz</span>
+#&gt; <span class='message'> into 4 amplicons</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
