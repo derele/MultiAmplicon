@@ -29,7 +29,7 @@ vignette locally.
 library(SRAdb) 
 
 sqlfile <- "SRAmetadb.sqlite"
-if(!file.exists("SRAmetadb.sqlite")) sqlfile <<- getSRAdbFile()
+if(!file.exists("SRAmetadb.sqlite")) sqlfile <- getSRAdbFile()
 sqlfile <- getSRAdbFile()
 sra_con <- dbConnect(SQLite(),sqlfile)
 
