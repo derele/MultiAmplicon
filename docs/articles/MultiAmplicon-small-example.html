@@ -113,43 +113,7 @@ MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAmp
 <a href="#sorting-into-multiple-amplicons" class="anchor"></a>Sorting into multiple amplicons</h2>
 <p>Based on the primer sequences we can now sort the sequences into amplicons. This is done by the function <code>sortAmplicons</code>, which updates the MultiAmplicon object with the sorted amplicons.</p>
 <p>For this small example dataset we can look at the resuling <code>rawCounts</code> i.e. the number of sequences for each of the fully stratified amplicon x sample matrix.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sortAmplicons.html">sortAmplicons</a></span>(MA)
-<span class="co">#&gt; using existing directory  /tmp/RtmpLyAefg and adding specific prefixes to avoid problems when running code twice </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  finished  sorting 0 sequencing reads for S00_F_filt.fastq.gz in </span>
-<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S00_F_filt.fastq.gz  and </span>
-<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S00_R_filt.fastq.gz </span>
-<span class="co">#&gt;   into  0 amplicons </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  finished  sorting 1 sequencing reads for S01_F_filt.fastq.gz in </span>
-<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S01_F_filt.fastq.gz  and </span>
-<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S01_R_filt.fastq.gz </span>
-<span class="co">#&gt;   into  1 amplicons </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  finished  sorting 9348 sequencing reads for S02_F_filt.fastq.gz in </span>
-<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S02_F_filt.fastq.gz  and </span>
-<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S02_R_filt.fastq.gz </span>
-<span class="co">#&gt;   into  4 amplicons </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  finished  sorting 5 sequencing reads for S03_F_filt.fastq.gz in </span>
-<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S03_F_filt.fastq.gz  and </span>
-<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S03_R_filt.fastq.gz </span>
-<span class="co">#&gt;   into  1 amplicons </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  finished  sorting 14 sequencing reads for S04_F_filt.fastq.gz in </span>
-<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S04_F_filt.fastq.gz  and </span>
-<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S04_R_filt.fastq.gz </span>
-<span class="co">#&gt;   into  3 amplicons </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  finished  sorting 51779 sequencing reads for S05_F_filt.fastq.gz in </span>
-<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S05_F_filt.fastq.gz  and </span>
-<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S05_R_filt.fastq.gz </span>
-<span class="co">#&gt;   into  4 amplicons </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  finished  sorting 17358 sequencing reads for S06_F_filt.fastq.gz in </span>
-<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S06_F_filt.fastq.gz  and </span>
-<span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S06_R_filt.fastq.gz </span>
-<span class="co">#&gt;   into  4 amplicons</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sortAmplicons.html">sortAmplicons</a></span>(MA)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">rawCounts</a></span>(MA1))</code></pre></div>
 <table class="table">
 <thead><tr class="header">
