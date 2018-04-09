@@ -99,8 +99,6 @@ amplicons)}
 \item{...}{not used}
 
 \item{drop}{should not be used}
-
-\item{MA}{MultiAmplicon-class object}
 }
 \description{
 The MultiAmplicon class is a container for storing primer pairs,

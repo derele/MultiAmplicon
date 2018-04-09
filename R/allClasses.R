@@ -395,7 +395,6 @@ setMethod("dim", "MultiAmplicon", function (x) {
     as.integer(c(length(x@PrimerPairsSet), length(x@PairedReadFileSet)))
 })
 
-
 ##' @rdname MultiAmplicon-class
 ##' @export
 setGeneric("rawCounts", function(x){standardGeneric("rawCounts")})
@@ -403,15 +402,12 @@ setGeneric("rawCounts", function(x){standardGeneric("rawCounts")})
 ##' @rdname MultiAmplicon-class
 setMethod("rawCounts", "MultiAmplicon", function(x) slot(x, "rawCounts"))
 
-
 ## accessors for the stratified files
-
 ##' @rdname MultiAmplicon-class
 ##' @param MA MultiAmplicon-class object
 ##' @export
 stratifiedFilesF <- function(MA) lapply(MA@stratifiedFiles, slot, "readsF")
 
 ##' @rdname MultiAmplicon-class
-##' @param MA MultiAmplicon-class object
 ##' @export
 stratifiedFilesR <- function(MA) lapply(MA@stratifiedFiles, slot, "readsR")
