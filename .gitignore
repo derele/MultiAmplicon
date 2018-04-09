@@ -9,3 +9,4 @@ inst/doc
 docs/articles/*_cache/
 *.sqlite
 download/*
+filtered/*
