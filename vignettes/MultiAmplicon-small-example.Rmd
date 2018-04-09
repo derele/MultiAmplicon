@@ -56,7 +56,7 @@ steps below. See the
 our [real-world data vignette](https:/foobarXYZXYZ.foo).
 
 
-```{r buildup, message = FALSE}
+```{r buildup, message=FALSE}
 library(MultiAmplicon)
 
 primerF <- c(Amp1F = "AGAGTTTGATCCTGGCTCAG", Amp2F = "ACTCCTACGGGAGGCAGC",
@@ -96,7 +96,7 @@ For this small example dataset we can look at the resuling `rawCounts`
 i.e. the number of sequences for each of the fully stratified amplicon
 x sample matrix. 
 
-```{r sortAmplicon, message = FALSE}
+```{r sortAmplicon, message=FALSE}
 MA1 <- sortAmplicons(MA)
 ```
 
@@ -143,7 +143,7 @@ probabilistic sequence variant inference. We do this here on the
 combined statified files for different amplicons. This should be done
 separately for forward ad reverse sequence though!
 
-```{r errEst, cache=TRUE, message = FALSE}
+```{r errEst, cache=TRUE, message=FALSE}
 errF <- learnErrors(unlist(stratifiedFilesF(MA1)), nread=1e6)
 errR <- learnErrors(unlist(stratifiedFilesR(MA1)), nread=1e6)
 ```
@@ -154,7 +154,7 @@ safe it under a new name, here for illustration. In your own workflow
 you can also overwrite the old object.
 
 
-```{r pipeline, cache=TRUE, message = FALSE}
+```{r pipeline, cache=TRUE, message=FALSE}
 MA2 <- derepMulti(MA.sub)
 
 MA3 <- dadaMulti(MA2, Ferr=errF, Rerr=errR,  pool=FALSE)

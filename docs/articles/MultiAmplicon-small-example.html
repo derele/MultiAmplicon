@@ -45,6 +45,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/Multi-Amplicon-real-world-example.html">Multi Amplicon - a real world example</a>
+    </li>
+    <li>
       <a href="../articles/MultiAmplicon-small-example.html">Multi Amplicon - a small example</a>
     </li>
   </ul>
@@ -65,7 +68,7 @@
       <h1>Multi Amplicon - a small example</h1>
                         <h4 class="author">Emanuel Heitlinger</h4>
             
-            <h4 class="date">2018-04-08</h4>
+            <h4 class="date">2018-04-09</h4>
           </div>
 
     
@@ -82,7 +85,7 @@
 <p>Similarly, primer pairs must be provided in a <code>PrimerPairsSet</code>. We then match forward and reverse primers at the start of forward and reverse reads, respectively. The maximal number of missmatches and the maximal distance from the start of the read can be supplied as arguments to the function. The primer sequences are trimmed from the reads and the read-pair is associated with the amplicon defined by the primer-pair. While we focus on this default use case, the package can als be used adaptor trimming with a single primer (see vignette xyz).</p>
 <p>But to go on with our main intended use case example first have a look at how <code>PairedReadFileSet</code> and <code>PrimerPairsSet</code> are generated.</p>
 <p>Please use files containing quality filtered sequencing reads for the steps below. See the <a href="https://benjjneb.github.io/dada2/tutorial.html">dada2 tutorial</a> or our <a href="https:/foobarXYZXYZ.foo">real-world data vignette</a>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressMessages</span>(<span class="kw">library</span>(MultiAmplicon))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(MultiAmplicon)
 
 primerF &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">Amp1F =</span> <span class="st">"AGAGTTTGATCCTGGCTCAG"</span>, <span class="dt">Amp2F =</span> <span class="st">"ACTCCTACGGGAGGCAGC"</span>,
              <span class="dt">Amp3F =</span> <span class="st">"GAATTGACGGAAGGGCACC"</span>, <span class="dt">Amp4F =</span> <span class="st">"YGGTGRTGCATGGCCGYT"</span>,
@@ -111,7 +114,7 @@ MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAmp
 <p>Based on the primer sequences we can now sort the sequences into amplicons. This is done by the function <code>sortAmplicons</code>, which updates the MultiAmplicon object with the sorted amplicons.</p>
 <p>For this small example dataset we can look at the resuling <code>rawCounts</code> i.e. the number of sequences for each of the fully stratified amplicon x sample matrix.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sortAmplicons.html">sortAmplicons</a></span>(MA)
-<span class="co">#&gt; using existing directory  /tmp/RtmpJUH0fy and adding specific prefixes to avoid problems when running code twice </span>
+<span class="co">#&gt; using existing directory  /tmp/RtmpmWHCVg and adding specific prefixes to avoid problems when running code twice </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;  finished  sorting 0 sequencing reads for S00_F_filt.fastq.gz in </span>
 <span class="co">#&gt;   /usr/local/lib/R/site-library/MultiAmplicon/extdata/fastq/S00_F_filt.fastq.gz  and </span>
@@ -401,44 +404,24 @@ errR &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span cla
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/derepMulti.html">derepMulti</a></span>(MA.sub)
 
 MA3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/dadaMulti.html">dadaMulti</a></span>(MA2, <span class="dt">Ferr=</span>errF, <span class="dt">Rerr=</span>errR,  <span class="dt">pool=</span><span class="ot">FALSE</span>)
-<span class="co">#&gt; </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; amplicon Amp1F.Amp1R dada estimation of sequence variants from  3  of  3 possible sample files</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; calling dada with pool=FALSE parameters</span>
 <span class="co">#&gt; Sample 1 - 3495 reads in 1493 unique sequences.</span>
 <span class="co">#&gt; Sample 2 - 29310 reads in 7224 unique sequences.</span>
 <span class="co">#&gt; Sample 3 - 2569 reads in 1053 unique sequences.</span>
 <span class="co">#&gt; Sample 1 - 3495 reads in 1535 unique sequences.</span>
 <span class="co">#&gt; Sample 2 - 29310 reads in 8273 unique sequences.</span>
 <span class="co">#&gt; Sample 3 - 2569 reads in 994 unique sequences.</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; amplicon Amp2F.Amp2R dada estimation of sequence variants from  3  of  3 possible sample files</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; calling dada with pool=FALSE parameters</span>
 <span class="co">#&gt; Sample 1 - 2949 reads in 1142 unique sequences.</span>
 <span class="co">#&gt; Sample 2 - 20391 reads in 4136 unique sequences.</span>
 <span class="co">#&gt; Sample 3 - 2690 reads in 968 unique sequences.</span>
 <span class="co">#&gt; Sample 1 - 2949 reads in 1290 unique sequences.</span>
 <span class="co">#&gt; Sample 2 - 20391 reads in 5719 unique sequences.</span>
 <span class="co">#&gt; Sample 3 - 2690 reads in 1100 unique sequences.</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; amplicon Amp3F.Amp3R dada estimation of sequence variants from  3  of  3 possible sample files</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; calling dada with pool=FALSE parameters</span>
 <span class="co">#&gt; Sample 1 - 1817 reads in 589 unique sequences.</span>
 <span class="co">#&gt; Sample 2 - 2 reads in 2 unique sequences.</span>
 <span class="co">#&gt; Sample 3 - 11671 reads in 3783 unique sequences.</span>
 <span class="co">#&gt; Sample 1 - 1817 reads in 547 unique sequences.</span>
 <span class="co">#&gt; Sample 2 - 2 reads in 2 unique sequences.</span>
 <span class="co">#&gt; Sample 3 - 11671 reads in 4054 unique sequences.</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; amplicon Amp4F.Amp4R dada estimation of sequence variants from  3  of  3 possible sample files</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; calling dada with pool=FALSE parameters</span>
 <span class="co">#&gt; Sample 1 - 1087 reads in 394 unique sequences.</span>
 <span class="co">#&gt; Sample 2 - 2076 reads in 959 unique sequences.</span>
 <span class="co">#&gt; Sample 3 - 428 reads in 166 unique sequences.</span>
@@ -447,28 +430,8 @@ MA3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/dadaMul
 <span class="co">#&gt; Sample 3 - 428 reads in 183 unique sequences.</span>
 
 MA4 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mergeMulti.html">mergeMulti</a></span>(MA3)
-<span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp1F.Amp1R </span>
-<span class="co">#&gt; calling mergePairs with default parameters</span>
-<span class="co">#&gt; DONE</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp2F.Amp2R </span>
-<span class="co">#&gt; calling mergePairs with default parameters</span>
-<span class="co">#&gt; DONE</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp3F.Amp3R </span>
-<span class="co">#&gt; calling mergePairs with default parameters</span>
-<span class="co">#&gt; DONE</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp4F.Amp4R </span>
-<span class="co">#&gt; calling mergePairs with default parameters</span>
-<span class="co">#&gt; DONE</span>
 
 MA5 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sequenceTableMulti.html">sequenceTableMulti</a></span>(MA4)
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; The sequences being tabled vary in length.</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
 
 MA6 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noChimeMulti.html">noChimeMulti</a></span>(MA5)</code></pre></div>
 <p>Ready! This was <em>easy</em>, right?</p>
