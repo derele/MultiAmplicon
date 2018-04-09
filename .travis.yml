@@ -6,12 +6,8 @@ cache: packages
 sudo: false
 
 env:
-  - DB=sqlite
-
-test:
-  adapter: sqlite3
-  database: ":memory:"
-  timeout: 500
+  global:
+    - R_CHECK_ARGS="--no-build-vignettes --no-manual" 
 
 # before_script:
 #   - echo "BiocParallel::register(BiocParallel::SerialParam())" > ~/.Rprofile
