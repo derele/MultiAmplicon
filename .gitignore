@@ -10,3 +10,7 @@ docs/articles/*_cache/
 *.sqlite
 download/*
 filtered/*
+/vignettes/.build.timestamp
+/vignettes/SRAmetadb.sqlite.gz
+docs/articles/download/
+docs/articles/filtered/
