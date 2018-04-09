@@ -35,11 +35,10 @@ if(!file.exists("SRAmetadb.sqlite")){
     sqlfile <- "SRAmetadb.sqlite"
 }
 
-sra_con <- dbConnect(RSQLite::SQLite(), ":memory:")
+sra_con <- dbConnect(SQLite(), sqlfile)
 carnivoreSeqRuns <- getSRA(search_terms = '"Intestinal biome sequencing of carnivores"',
-                           sra_con=sra_con, acc_only=TRUE)
+                           sra_con=sra_con, acc_only=FALSE)
 
-data(carnivoreSeqRuns)
 runs <- tail(carnivoreSeqRuns$run, n=50)
 
 destDir <- "./download"

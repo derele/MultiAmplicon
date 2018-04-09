@@ -6,3 +6,4 @@
 ^download$
 ^filtered$
 ^SRAmetadb.sqlite$
+^.build.timestamp$
