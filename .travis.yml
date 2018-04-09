@@ -3,17 +3,8 @@ r: bioc-release
 use_bioc: true
 # bioc_required: true
 cache: packages
-sudo: true
-dist: trusty
 
-apt_packages:
-  - libxml2-dev
-  
-
-env:
-  global:
-    - R_CHECK_ARGS="--no-build-vignettes"
-    - R_BUILD_ARGS="--no-build-vignettes"
+r_github_packages: RSQLite
 
 # before_script:
 #   - echo "BiocParallel::register(BiocParallel::SerialParam())" > ~/.Rprofile
