@@ -5,6 +5,14 @@ use_bioc: true
 cache: packages
 sudo: false
 
+env:
+  - DB=sqlite
+
+test:
+  adapter: sqlite3
+  database: ":memory:"
+  timeout: 500
+
 # before_script:
 #   - echo "BiocParallel::register(BiocParallel::SerialParam())" > ~/.Rprofile
 
@@ -14,7 +22,3 @@ r_packages:
 after_success:
   - Rscript -e 'library(covr); codecov()'
 
-test:
-  adapter: sqlite3
-  database: ":memory:"
-  timeout: 500
