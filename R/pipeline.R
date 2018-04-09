@@ -29,13 +29,13 @@ derepMulti <- function(MA, mc.cores = getOption("mc.cores", 2L),
                        keep.single.singlets = FALSE, ...){
     exp.args <- extract.ellipsis(list(...), nrow(MA))    
     PPderep <- mclapply(seq_along(MA@PrimerPairsSet), function (i){
-        cat("amplicon", names(MA@PrimerPairsSet)[i],
-            "dereplicating for ",
-            length(MA@stratifiedFiles[[i]]@readsF), " of ",
-            length(MA@PairedReadFileSet@readsF), "possible sample files\n")
         ## work on possilbe different paramters for this particular amplicon
         args.here <- lapply(exp.args, "[", i)
         param.message("derepFastq", args.here)
+        message("amplicon ", names(MA@PrimerPairsSet)[i],
+                " dereplicating for ",
+                length(MA@stratifiedFiles[[i]]@readsF), " of ",
+                length(MA@PairedReadFileSet@readsF), " possible sample files.\n")
         derepF <- do.call(derepFastq,
                           c(list(MA@stratifiedFiles[[i]]@readsF), args.here))
         derepR <- do.call(derepFastq,
@@ -47,11 +47,11 @@ derepMulti <- function(MA, mc.cores = getOption("mc.cores", 2L),
             if(length(derepF$map) == 1 && keep.single.singlets == FALSE){
                 derepF <- list()
                 derepR <- list()
-                cat("\nproducing empty derep object for amplicon",
+                message("producing empty derep object for amplicon ",
                     names(MA@PrimerPairsSet)[i],
                     "as only one sequence is reported for one sample ",
-                    "set keep.single.singlets to TRUE to change this behaviour,",
-                    "but be warned that this may lead to downstream errors\n\n" )
+                    "set keep.single.singlets to TRUE to change this behaviour, ",
+                    "but be warned that this may lead to downstream errors." )
             } else{
                 derepF <- list(derepF)
                 derepR <- list(derepR)
@@ -101,10 +101,10 @@ dadaMulti <- function(MA, Ferr=NULL, Rerr=NULL, ...){
     PPdada <- lapply(seq_along(MA@PrimerPairsSet), function (i){
        dF <- lapply(MA@derep[[i]], function (x) slot(x, "derepF"))
        dR <- lapply(MA@derep[[i]], function (x) slot(x,  "derepR"))
-       cat("\n\namplicon", names(MA@PrimerPairsSet)[i],
-           "dada estimation of sequence variants from ",
+       message("\n\namplicon ", names(MA@PrimerPairsSet)[i],
+           ": dada estimation of sequence variants from ",
             length(dF), " of ",
-           length(MA@PairedReadFileSet), "possible sample files\n\n")
+           length(MA@PairedReadFileSet), " possible sample files")
        if(length(dF)>0 && length(dR)>0){
            ## run functions for reverse and forward
            ## work on possilbe different paramters for this particular amplicon
@@ -123,7 +123,7 @@ dadaMulti <- function(MA, Ferr=NULL, Rerr=NULL, ...){
            Pdada <- PairedDada(dadaF = dadaF, dadaR = dadaR)
        } else {
            Pdada <- PairedDada()
-           cat("skipping empty amplicon\n")
+           message("\nskipping empty amplicon")
        }
        return(Pdada)
     })
@@ -165,10 +165,9 @@ mergeMulti <- function(MA, ...){
             daR <- slot(MA@dada[[i]], "dadaR")
             deF <- lapply(MA@derep[[i]], "slot", "derepF")
             deR <- lapply(MA@derep[[i]], "slot", "derepR")
-            cat("merging sequences from " , length(MA@dada[[i]]),
-                "samples for amplicon ",
-                MA@PrimerPairsSet@names[[i]], "\n")
-
+            message("\nmerging sequences from " , length(MA@dada[[i]]),
+                " samples for amplicon ",
+                MA@PrimerPairsSet@names[[i]])
             ## work on possilbe different paramters for this particular amplicon
             args.here <- lapply(exp.args, "[", i)
             param.message("mergePairs", args.here)
@@ -177,11 +176,10 @@ mergeMulti <- function(MA, ...){
                                  dadaR = daR, derepR = deR), args.here))
             ## correct the case of one sample / amplicon 
             if(class(MP)%in%"data.frame"){MP <- list(MP)}
-            cat("DONE\n\n")
             return(MP)} else{
-                          cat("skipping empty amplicon (sequences for" ,
-                              length(MA@dada[[i]]), "samples)  ",
-                              MA@PrimerPairsSet@names[[i]], "\n\n")
+                          message("skipping empty amplicon (sequences for" ,
+                              length(MA@dada[[i]]), " samples)  ",
+                              MA@PrimerPairsSet@names[[i]])
                           return(list())}
     })
     names(mergers) <- names(MA@PrimerPairsSet)
@@ -295,6 +293,7 @@ param.message <- function(what, args){
     print.args.here <- paste(names(args), unlist(args),
                              sep = "=")
     if(!length(print.args.here)) {print.args.here <- "default"}
-    cat("calling", what, "with", print.args.here, "parameters\n")
+    message("calling ", what, " with ",
+            paste(print.args.here, collapse = " "), " parameters")
 }
 
