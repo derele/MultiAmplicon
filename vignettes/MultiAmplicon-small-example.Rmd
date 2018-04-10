@@ -27,29 +27,36 @@ read files must be provided as a `PairedReadFileSet`. These files can
 contain reads in fastq or in gzipped fastq format. We focus as a
 default use case on (non-interleaved) paired-end reads, as these are
 the most common format Illumina sequencing reads are currently
-produced in (but see vignette xyz as an example how to process
-single-end sequencing data).
+produced in.
 
 Similarly, primer pairs must be provided in a `PrimerPairsSet`. We
 then match forward and reverse primers at the start of forward and
-reverse reads, respectively. The maximal number of missmatches and the
+reverse reads, respectively. The maximal number of mismatches and the
 maximal distance from the start of the read can be supplied as
 arguments to the function. The primer sequences are trimmed from the
 reads and the read-pair is associated with the amplicon defined by the
-primer-pair. While we focus on this default use case, the package can
-als be used adaptor trimming with a single primer (see vignette xyz).
+primer-pair. 
 
-But to go on with our main intended use case example first have a look
-at how `PairedReadFileSet` and `PrimerPairsSet` are generated.
-
-Please use files containing quality filtered sequencing reads for the
-steps below. See the
+We first have a look at how `PairedReadFileSet` and `PrimerPairsSet`
+are generated. Please use files containing quality filtered sequencing
+reads for the steps below. See the
 [dada2 tutorial](https://benjjneb.github.io/dada2/tutorial.html) or
-our [real-world data vignette](https:/foobarXYZXYZ.foo).
+our
+[real-world example vignette](https://derele.github.io/MultiAmplicon/articles/MultiAmplicon-real-world-example.html)
+for how files are trimmed and quality filtered. But we here first use
+a very small data set included in the MultiAmplicon package.
 
 
 ```{r buildup, message=FALSE}
 library(MultiAmplicon)
+
+fastq.dir <- system.file("extdata", "fastq", package = "MultiAmplicon")
+fastq.files <- list.files(fastq.dir, full.names=TRUE)
+
+Ffastq.file <- fastq.files[grepl("F_filt", fastq.files)]
+Rfastq.file <- fastq.files[grepl("R_filt", fastq.files)]
+
+PRF <- PairedReadFileSet(Ffastq.file, Rfastq.file)
 
 primerF <- c(Amp1F = "AGAGTTTGATCCTGGCTCAG", Amp2F = "ACTCCTACGGGAGGCAGC",
              Amp3F = "GAATTGACGGAAGGGCACC", Amp4F = "YGGTGRTGCATGGCCGYT",
@@ -60,14 +67,6 @@ primerR <- c(Amp1R = "CTGCWGCCNCCCGTAGG", Amp2R = "GACTACHVGGGTATCTAATCC",
              Amp5R = "AAAAACCCCGGGGGGTTTTT", Amp6R = "CCTACGGGTGGCAGATGCAG")
 
 PPS <- PrimerPairsSet(primerF, primerR)
-
-fastq.dir <- system.file("extdata", "fastq", package = "MultiAmplicon")
-fastq.files <- list.files(fastq.dir, full.names=TRUE)
-
-Ffastq.file <- fastq.files[grepl("F_filt", fastq.files)]
-Rfastq.file <- fastq.files[grepl("R_filt", fastq.files)]
-
-PRF <- PairedReadFileSet(Ffastq.file, Rfastq.file)
 
 MA <- MultiAmplicon(PPS, PRF)
 ```
@@ -84,7 +83,7 @@ Based on the primer sequences we can now sort the sequences into
 amplicons. This is done by the function `sortAmplicons`, which updates
 the MultiAmplicon object with the sorted amplicons.
 
-For this small example dataset we can look at the resuling `rawCounts`
+For this small example data set we can look at the resulting `rawCounts`
 i.e. the number of sequences for each of the fully stratified amplicon
 x sample matrix. 
 
@@ -99,8 +98,9 @@ knitr::kable(rawCounts(MA1))
 ## Visualizing read numbers per amplicon and filtering based on these
 
 Now we can plot the result. The function plotAmpliconNumbers allows us
-also to store clustering information (see \code{pheatmap}). Which can
-afterwards be used to filter data.
+also to store clustering information (see
+[\code{pheatmap}](https://www.rdocumentation.org/packages/pheatmap/versions/0.2/topics/pheatmap)). Which
+can afterwards be used to filter data.
 
 ```{r plotAmpliconNumbers, fig.show='hold'}
 clusters <- plotAmpliconNumbers(MA1)
@@ -122,17 +122,17 @@ MA.sub <- MA1[which(two.clusters.row==1), which(two.clusters.col==2)]
 knitr::kable(rawCounts(MA.sub))
 ```
 
-In real world applications (see vignette xyz) the samples to be
-excluded from further analysis can be selected based on clustering
-with negative controls (similar to the example data here where S00 is
-an empty file and S01 contains one sequence).
+In real world applications (see
+[our other vignette](https://derele.github.io/MultiAmplicon/articles/MultiAmplicon-real-world-example.html))
+the samples to be excluded from further analysis can be selected based
+on clustering with negative controls (similar to the example data here
+where S00 is an empty file and S01 contains one sequence).
 
-## Running the amplicon sequencing pipline 
+## Running the amplicon sequencing pipeline 
 
-
-We first estimate the errors seperately for both for dada's
+We first estimate the errors separately for both for dada's
 probabilistic sequence variant inference. We do this here on the
-combined statified files for different amplicons. This should be done
+combined stratified files for different amplicons. This should be done
 separately for forward ad reverse sequence though!
 
 ```{r errEst, cache=TRUE, message=FALSE}
@@ -162,14 +162,13 @@ MA6 <- noChimeMulti(MA5, mc.cores=1)
 
 Ready! This was *easy*, right?
 
-
 ## A word on dada2 sequence inference
 
 The above workflow assumes that errors could be estimated for each
-amplicon together. This would be beneficial if erros were largely
+amplicon together. This would be beneficial if errors were largely
 similar between different amplicons (i.e. not influenced by the primer
 starting the sequence). Below an alternative approach is demonstrated
-with error probabilities estimated seperately for each amplicon (here
+with error probabilities estimated separately for each amplicon (here
 also overwrite objects from each previous processing steps).
 
 
@@ -183,10 +182,24 @@ MA.alt <- sequenceTableMulti(MA.alt)
 MA.alt <- noChimeMulti(MA.alt, mc.cores=1)
 ```
 
+I will add a comparison between the two different versions here.
+
+<!-- ```{r compdata, cache=TRUE, message=FALSE} -->
+<!-- together <- lapply(MA6@sequenceTableNoChime, function (x) if(all(dim(x)>1))getSequences(x))[[3]] -->
+
+<!-- alt <- lapply(MA.alt@sequenceTableNoChime, function (x) if(all(dim(x)>1))getSequences(x))[[3]] -->
+
+<!-- table(alt%in%together) -->
+
+<!-- alt.diff <- alt[!alt%in%together] -->
+<!-- tog.diff <- together[!together%in%alt] -->
+
+<!-- ``` -->
+
 ## Using different parameters for each amplicon
 
-In some real world applications it might be desireable to have more
-control over paramters used in the pipeline for different amplicons.
+In some real world applications it might be desirable to have more
+control over parameters used in the pipeline for different amplicons.
 
 We use ellipsis (aka "...", dots, dot-dot-dot or three-dots) to pass
 parameters on to the underlying dada2 functions. The MultiAmplicon
@@ -200,7 +213,7 @@ amplicons, while we concatenate others using N's.
 ```{r mixdata, cache=TRUE}
 MA.mixed <- mergeMulti(MA3, justConcatenate=c(TRUE, FALSE, FALSE, TRUE))
 ```
-The above example would make sense if amlicons Amp1F.Amp1R and
-Amp4F.Amp4R (1st and 4th in our object) had too little overalap
-between forward and revese reads to be merged and would better be
+The above example would make sense if amplicons Amp1F.Amp1R and
+Amp4F.Amp4R (1st and 4th in our object) had too little overlap
+between forward and reverse reads to be merged and would better be
 concatenated.

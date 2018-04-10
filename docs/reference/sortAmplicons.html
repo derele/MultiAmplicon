@@ -128,19 +128,19 @@ read counts is returned</p></td>
     </tr>
     <tr>
       <th>rmPrimer</th>
-      <td><p>logical, indicating whehter primer sequences
+      <td><p>logical, indicating whether primer sequences
 should be removed during sorting</p></td>
     </tr>
     <tr>
       <th>filedir</th>
       <td><p>path to an existing or newly to be created folder
 on your computer. <code><a href='http://www.rdocumentation.org/packages/base/topics/tempfile'>tempfile</a></code> is used within
-this folder to creat unique filnames trying to avoid problems
+this folder to create unique filnames trying to avoid problems
 in case the folder has been used before.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>addtional parameter so be passed to
+      <td><p>additional parameter so be passed to
 Biostrings::isMatchingStartingAt. Be careful when using
 multiple starting positions or allowing error. This could lead
 to read pairs being assigned to multiple amplicons.</p></td>
@@ -160,10 +160,9 @@ to read pairs being assigned to multiple amplicons.</p></td>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This functions uses Biostrings::isMatchingStartingAt to match
-primer sequences at the first postion of forward and reverse
-sequences. These sequences are written to temporary files to allow
-processing via standard metabarcoding pipelines (i.e. dada2 using
-fastq streaming).</p>
+primer sequences at the first position of forward and reverse
+sequences. These sequences are written to (temporary) files to
+allow processing via standard metabarcoding pipelines.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -185,7 +184,7 @@ fastq streaming).</p>
 <span class='no'>MA</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='MultiAmplicon-class.html'>MultiAmplicon</a></span>(<span class='no'>PPS</span>, <span class='no'>PRF</span>)
 
 <span class='co'>## sort into amplicons</span>
-<span class='no'>MA1</span> <span class='kw'>&lt;-</span> <span class='fu'>sortAmplicons</span>(<span class='no'>MA</span>)</div><div class='output co'>#&gt; <span class='message'>using existing directory /tmp/RtmpIx0cHW and adding specific prefixes to avoid problems when running code twice</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 0 sequencing reads for S00_F_filt.fastq.gz in</span>
+<span class='no'>MA1</span> <span class='kw'>&lt;-</span> <span class='fu'>sortAmplicons</span>(<span class='no'>MA</span>)</div><div class='output co'>#&gt; <span class='message'>using existing directory /tmp/RtmpQH4gKK and adding specific prefixes to avoid problems when running code twice</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 0 sequencing reads for S00_F_filt.fastq.gz in</span>
 #&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S00_F_filt.fastq.gz and </span>
 #&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S00_R_filt.fastq.gz</span>
 #&gt; <span class='message'> into 0 amplicons</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 0 sequencing reads for S01_F_filt.fastq.gz in</span>

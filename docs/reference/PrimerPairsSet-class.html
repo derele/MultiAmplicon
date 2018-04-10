@@ -101,9 +101,9 @@ sequences can be provided as character strings and will be
 converted to <code><a href='http://www.rdocumentation.org/packages/Biostrings/topics/XStringSet-class'>DNAStringSet</a></code> by the
 constructor function of the same name. primerF and primerR have to
 be of the same length to specify primer pairs. Warnings are
-given if primer sequences are of unusal length (&lt;16 or &gt;26 bases).</p>
+given if primer sequences are of unusual length (&lt;16 or &gt;26 bases).</p>
 <p>Accessor like functions
-<code>length</code> gives the number of read paires in a
+<code>length</code> gives the number of read pairs in a
 <code>PrimerPairsSet-class</code> object
 
     <code>names</code> of primer-pairs (amplicons) in a
@@ -142,6 +142,10 @@ length. Can be named or unnamed.</p></td>
       <td><p>A <code>PrimerPairsSet-class</code> object.</p></td>
     </tr>
     <tr>
+      <th>object</th>
+      <td><p>A <code>PrimerPairsSet-class</code> object.</p></td>
+    </tr>
+    <tr>
       <th>i</th>
       <td><p>integer, or logical value which primer pairs to select or
 character string giving the name of the primer pair</p></td>
@@ -158,10 +162,6 @@ character string giving the name of the primer pair</p></td>
       <th>drop</th>
       <td><p>not used</p></td>
     </tr>
-    <tr>
-      <th>x</th>
-      <td><p>A <code>PrimerPairsSet-class</code> object.</p></td>
-    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -174,7 +174,7 @@ character string giving the name of the primer pair</p></td>
     <dl class='dl-horizontal'>
 <dt><code>primerF</code></dt><dd><p>DNAStringSet. Can be named or unnamed.</p></dd>
     <dt><code>primerR</code></dt><dd><p>DNAStringSet of the same length. Can be named or
-unnnamed.</p></dd>
+unnamed.</p></dd>
     <dt><code>names</code></dt><dd><p>Character string. Either constructed as a
 concatenation of names of forward and reverse primers or of
 their sequences (if primer sequences are unnamed).</p></dd>
