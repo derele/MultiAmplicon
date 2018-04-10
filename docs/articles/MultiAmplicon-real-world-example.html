@@ -79,124 +79,18 @@
 <a href="#data-preparation-download" class="anchor"></a>Data preparation (download)</h2>
 <p>We first download the sample data set from SRA using a helper scirtp part of the MultiAmplicon package.</p>
 <p>You will need about 2Gb space to store those files if you want to execute the pipeline below on your local computer and/or compile the vignette locally.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(SRAdb) 
-<span class="co">#&gt; Loading required package: RSQLite</span>
-<span class="co">#&gt; Loading required package: graph</span>
-<span class="co">#&gt; Loading required package: BiocGenerics</span>
-<span class="co">#&gt; Loading required package: parallel</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'BiocGenerics'</span>
-<span class="co">#&gt; The following objects are masked from 'package:parallel':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,</span>
-<span class="co">#&gt;     clusterExport, clusterMap, parApply, parCapply, parLapply,</span>
-<span class="co">#&gt;     parLapplyLB, parRapply, parSapply, parSapplyLB</span>
-<span class="co">#&gt; The following objects are masked from 'package:stats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     IQR, mad, sd, var, xtabs</span>
-<span class="co">#&gt; The following objects are masked from 'package:base':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     anyDuplicated, append, as.data.frame, cbind, colMeans,</span>
-<span class="co">#&gt;     colnames, colSums, do.call, duplicated, eval, evalq, Filter,</span>
-<span class="co">#&gt;     Find, get, grep, grepl, intersect, is.unsorted, lapply,</span>
-<span class="co">#&gt;     lengths, Map, mapply, match, mget, order, paste, pmax,</span>
-<span class="co">#&gt;     pmax.int, pmin, pmin.int, Position, rank, rbind, Reduce,</span>
-<span class="co">#&gt;     rowMeans, rownames, rowSums, sapply, setdiff, sort, table,</span>
-<span class="co">#&gt;     tapply, union, unique, unsplit, which, which.max, which.min</span>
-<span class="co">#&gt; Loading required package: RCurl</span>
-<span class="co">#&gt; Loading required package: bitops</span>
-<span class="co">#&gt; Setting options('download.file.method.GEOquery'='auto')</span>
-<span class="co">#&gt; Setting options('GEOquery.inmemory.gpl'=FALSE)</span>
-<span class="kw">library</span>(MultiAmplicon)
-<span class="co">#&gt; Loading required package: ShortRead</span>
-<span class="co">#&gt; Loading required package: BiocParallel</span>
-<span class="co">#&gt; Loading required package: Biostrings</span>
-<span class="co">#&gt; Loading required package: S4Vectors</span>
-<span class="co">#&gt; Loading required package: stats4</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'S4Vectors'</span>
-<span class="co">#&gt; The following object is masked from 'package:base':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     expand.grid</span>
-<span class="co">#&gt; Loading required package: IRanges</span>
-<span class="co">#&gt; Loading required package: XVector</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'Biostrings'</span>
-<span class="co">#&gt; The following object is masked from 'package:graph':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     complement</span>
-<span class="co">#&gt; The following object is masked from 'package:base':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     strsplit</span>
-<span class="co">#&gt; Loading required package: Rsamtools</span>
-<span class="co">#&gt; Loading required package: GenomeInfoDb</span>
-<span class="co">#&gt; Loading required package: GenomicRanges</span>
-<span class="co">#&gt; Loading required package: GenomicAlignments</span>
-<span class="co">#&gt; Loading required package: SummarizedExperiment</span>
-<span class="co">#&gt; Loading required package: Biobase</span>
-<span class="co">#&gt; Welcome to Bioconductor</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     Vignettes contain introductory material; view with</span>
-<span class="co">#&gt;     'browseVignettes()'. To cite Bioconductor, see</span>
-<span class="co">#&gt;     'citation("Biobase")', and for packages 'citation("pkgname")'.</span>
-<span class="co">#&gt; Loading required package: DelayedArray</span>
-<span class="co">#&gt; Loading required package: matrixStats</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'matrixStats'</span>
-<span class="co">#&gt; The following objects are masked from 'package:Biobase':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     anyMissing, rowMedians</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'DelayedArray'</span>
-<span class="co">#&gt; The following objects are masked from 'package:matrixStats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     colMaxs, colMins, colRanges, rowMaxs, rowMins, rowRanges</span>
-<span class="co">#&gt; The following object is masked from 'package:Biostrings':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     type</span>
-<span class="co">#&gt; The following object is masked from 'package:base':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     apply</span>
-<span class="co">#&gt; Loading required package: dada2</span>
-<span class="co">#&gt; Loading required package: Rcpp</span>
-
-if(!<span class="kw">file.exists</span>(<span class="st">"SRAmetadb.sqlite"</span>)){
-    sqlfile &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/SRAdb/topics/getSRAdbFile">getSRAdbFile</a></span>()
-} else {
-    sqlfile &lt;-<span class="st"> "SRAmetadb.sqlite"</span>
-}
-<span class="co">#&gt; Unzipping...</span>
-<span class="co">#&gt; Metadata associate with downloaded file:</span>
-<span class="co">#&gt; c("schema version", "creation timestamp")c("1.0", "2018-04-05 23:32:48")</span>
-
-sra_con &lt;-<span class="st"> </span><span class="kw">dbConnect</span>(<span class="kw">SQLite</span>(), sqlfile)
-
-carnivoreSeqRuns &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/SRAdb/topics/getSRA">getSRA</a></span>(<span class="dt">search_terms =</span>
-                               <span class="st">'"Intestinal biome sequencing of carnivores"'</span>,
-                           <span class="dt">sra_con=</span>sra_con, <span class="dt">acc_only=</span><span class="ot">FALSE</span>)
-
-carnivoreSeqRuns &lt;-<span class="st"> </span>carnivoreSeqRuns[, <span class="kw">c</span>(<span class="st">'run'</span>,<span class="st">'study'</span>,<span class="st">'sample'</span>,
-                                         <span class="st">'experiment'</span>, <span class="st">'sample_attribute'</span>)]
-
-runs &lt;-<span class="st"> </span><span class="kw">tail</span>(carnivoreSeqRuns$run, <span class="dt">n=</span><span class="dv">50</span>)
-
-destDir &lt;-<span class="st"> "./download"</span>
-
-if(!<span class="kw">file_test</span>(<span class="st">"-d"</span>, destDir)) <span class="kw">dir.create</span>(destDir)
-
-fastqFiles &lt;-<span class="st"> </span><span class="kw">list.files</span>(destDir, <span class="dt">pattern=</span><span class="st">".fastq.gz"</span>, <span class="dt">full.names=</span><span class="ot">TRUE</span>)
-
-if(<span class="kw">length</span>(fastqFiles) &lt;<span class="st"> </span><span class="dv">100</span>){
-    <span class="kw"><a href="http://www.rdocumentation.org/packages/SRAdb/topics/getSRAfile">getSRAfile</a></span>(runs, sra_con, <span class="dt">fileType =</span> <span class="st">'fastq'</span> , <span class="dt">srcType =</span> <span class="st">"ftp"</span>,
-               <span class="dt">destDir=</span>destDir)
-    fastqFiles &lt;-<span class="st"> </span><span class="kw">list.files</span>(destDir, <span class="dt">pattern=</span><span class="st">".fastq.gz"</span>, <span class="dt">full.names=</span><span class="ot">TRUE</span>)
-}</code></pre></div>
 </div>
 <div id="data-preparation-filtering" class="section level2">
 <h2 class="hasAnchor">
 <a href="#data-preparation-filtering" class="anchor"></a>Data preparation (filtering)</h2>
 <p>Now we can run our standard workflow. But we have to remember to filte our files first. This particular sequencing was of quite low quality, so we have to trim and screen quite harshly.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fastqF &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="st">"_1.fastq.gz"</span>, fastqFiles, <span class="dt">value =</span> <span class="ot">TRUE</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(MultiAmplicon)
+
+path &lt;-<span class="st"> "~/download"</span>
+
+fastqFiles &lt;-<span class="st"> </span><span class="kw">list.files</span>(path, <span class="dt">pattern=</span><span class="st">".fastq.gz$"</span>, <span class="dt">full.names=</span><span class="ot">TRUE</span>)
+
+fastqF &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="st">"_1.fastq.gz"</span>, fastqFiles, <span class="dt">value =</span> <span class="ot">TRUE</span>)
 fastqR &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="st">"_2.fastq.gz"</span>, fastqFiles, <span class="dt">value =</span> <span class="ot">TRUE</span>)
 
 samples &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">"_1.fastq</span><span class="ch">\\</span><span class="st">.gz"</span>, <span class="st">"</span><span class="ch">\\</span><span class="st">1"</span>, <span class="kw">basename</span>(fastqF))
@@ -215,10 +109,16 @@ filter.track &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span 
                   <span class="dt">maxN=</span><span class="dv">0</span>, <span class="dt">maxEE=</span><span class="dv">2</span>, <span class="dt">truncQ=</span><span class="dv">2</span>, 
                   <span class="dt">compress=</span><span class="ot">TRUE</span>, <span class="dt">verbose=</span><span class="ot">TRUE</span>)
 })
+<span class="co">#&gt; Warning in filterAndTrim(fastqF[i], filtFs[i], fastqR[i], filtRs[i],</span>
+<span class="co">#&gt; truncLen = c(170, : No reads passed the filter. Please revisit your</span>
+<span class="co">#&gt; filtering parameters.</span>
 
 <span class="kw">names</span>(filtFs) &lt;-<span class="st"> </span><span class="kw">names</span>(filtRs) &lt;-<span class="st"> </span>samples
 
-files &lt;-<span class="st"> </span><span class="kw"><a href="../reference/PairedReadFileSet-class.html">PairedReadFileSet</a></span>(filtFs, filtRs)</code></pre></div>
+files &lt;-<span class="st"> </span><span class="kw"><a href="../reference/PairedReadFileSet-class.html">PairedReadFileSet</a></span>(filtFs, filtRs)
+<span class="co">#&gt; Warning in validityMethod(object): </span>
+<span class="co">#&gt; file ./filtered/SRR5569127_F_filt.fastq.gz does not exist on your system</span>
+<span class="co">#&gt; file ./filtered/SRR5569127_R_filt.fastq.gz does not exist on your system</span></code></pre></div>
 </div>
 <div id="data-preparation-primer-set" class="section level2">
 <h2 class="hasAnchor">

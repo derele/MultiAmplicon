@@ -16,12 +16,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-The MultiAmplicon-package allows the matching and removal of primer
-sequences from sequencing reads. Amplicons, here defined as the
-sequences amplified by particular combionation of forward and reverse
-primer, can then be further processed. The package further guiedes
-downstream analysis of multiple amplicons in a bioconductor workflow
-wrapped around the package dada2 (and phyloseq).
 
 ## Preparing sequencing read files and a primer set
 
