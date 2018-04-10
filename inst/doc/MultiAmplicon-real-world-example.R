@@ -7,7 +7,7 @@ knitr::opts_chunk$set(
 ## ----filter, message=FALSE-----------------------------------------------
 library(MultiAmplicon)
 
-path <- "~/download"
+path <- "~/download" ## change according to where you downloaded
 
 fastqFiles <- list.files(path, pattern=".fastq.gz$", full.names=TRUE)
 
@@ -24,12 +24,17 @@ names(filtFs) <- samples
 filtRs <- file.path(filt_path, paste0(samples, "_R_filt.fastq.gz"))
 names(filtRs) <- samples
 
-filter.track <- lapply(seq_along(fastqF),  function (i) {
-    filterAndTrim(fastqF[i], filtFs[i], fastqR[i], filtRs[i],
-                  truncLen=c(170,170), minLen=c(170,170), 
-                  maxN=0, maxEE=2, truncQ=2, 
-                  compress=TRUE, verbose=TRUE)
-})
+## some files will be filtered out completely, therefore allowing 50
+## files less present and still don't redo filtering
+if(sum(file.exists(fastqF)) -
+   sum(file.exists(filtFs)) > 50){
+    lapply(seq_along(fastqF),  function (i) {
+        filterAndTrim(fastqF[i], filtFs[i], fastqR[i], filtRs[i],
+                      truncLen=c(170,170), minLen=c(170,170), 
+                      maxN=0, maxEE=2, truncQ=2, 
+                      compress=TRUE, verbose=TRUE)
+    })
+}
 
 names(filtFs) <- names(filtRs) <- samples
 
