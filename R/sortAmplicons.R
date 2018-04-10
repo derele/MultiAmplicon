@@ -2,10 +2,9 @@
 ##' amplicons structure based on primer matches.
 ##'
 ##' This functions uses Biostrings::isMatchingStartingAt to match
-##' primer sequences at the first postion of forward and reverse
-##' sequences. These sequences are written to temporary files to allow
-##' processing via standard metabarcoding pipelines (i.e. dada2 using
-##' fastq streaming).
+##' primer sequences at the first position of forward and reverse
+##' sequences. These sequences are written to (temporary) files to
+##' allow processing via standard metabarcoding pipelines.
 ##' 
 ##' @title sortAmplicons
 ##' @param MA \code{\link{MultiAmplicon-class}} object containing a
@@ -17,13 +16,13 @@
 ##'     I/O operations reading the sequence files.
 ##' @param countOnly logical argument if set TRUE only a matrix of
 ##'     read counts is returned
-##' @param rmPrimer logical, indicating whehter primer sequences
-##'     should be removed during sorting 
+##' @param rmPrimer logical, indicating whether primer sequences
+##'     should be removed during sorting
 ##' @param filedir path to an existing or newly to be created folder
 ##'     on your computer. \code{\link[base]{tempfile}} is used within
-##'     this folder to creat unique filnames trying to avoid problems
+##'     this folder to create unique filnames trying to avoid problems
 ##'     in case the folder has been used before.
-##' @param ... addtional parameter so be passed to
+##' @param ... additional parameter so be passed to
 ##'     Biostrings::isMatchingStartingAt. Be careful when using
 ##'     multiple starting positions or allowing error. This could lead
 ##'     to read pairs being assigned to multiple amplicons.

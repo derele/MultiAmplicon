@@ -60,28 +60,28 @@ stratifiedFilesR(MA)
 \item{PrimerPairsSet}{a set of primer pairs specifiying your
 amplicons see \code{\link{PrimerPairsSet-class}}}
 
-\item{PairedReadFileSet}{a set of paired end sequencing data fiels
+\item{PairedReadFileSet}{a set of paired end sequencing data files
 \code{\link{PairedReadFileSet-class}}}
 
-\item{rawCounts}{Users should not supply this prameter, the slot
+\item{rawCounts}{Users should not supply this parameter, the slot
 is created by \code{\link{sortAmplicons}}.}
 
-\item{stratifiedFiles}{Users should not supply this prameter, the
+\item{stratifiedFiles}{Users should not supply this parameter, the
 slot is created by \code{\link{sortAmplicons}}.}
 
-\item{derep}{Users should not supply this prameter, the slot is
+\item{derep}{Users should not supply this parameter, the slot is
 created by \code{\link{derepMulti}}}
 
-\item{dada}{Users should not supply this prameter, the slot is
+\item{dada}{Users should not supply this parameter, the slot is
 created by \code{\link{dadaMulti}}}
 
-\item{mergers}{Users should not supply this prameter, the slot is
+\item{mergers}{Users should not supply this parameter, the slot is
 created by \code{\link{mergeMulti}}}
 
-\item{sequenceTable}{Users should not supply this prameter, the
+\item{sequenceTable}{Users should not supply this parameter, the
 slot is created by \code{\link{sequenceTableMulti}}}
 
-\item{sequenceTableNoChime}{Users should not supply this prameter,
+\item{sequenceTableNoChime}{Users should not supply this parameter,
 the slot is created by \code{\link{noChimeMulti}}}
 
 \item{x}{MultiAmplicon-class object}

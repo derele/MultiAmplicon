@@ -16,14 +16,14 @@ slot filled}
 vector of the same length as the number of primer pairs in the
 MultiAmplicon object, allowing to specify different parameters
 for each amplicon. If a shorter vector is given it will be
-recycled to match the number of ampicons.}
+recycled to match the number of amplicons.}
 }
 \value{
 A MultiAmplicon-class object with the sequenceTable slot
     filled
 }
 \description{
-Create a sequence table inside a MultiAmplcion object.
+Create a sequence table inside a MultiAmplicon object.
 }
 \details{
 This is a wrapper for the \code{\link[dada2]{makeSequenceTable}}

@@ -6,7 +6,7 @@
 ##'
 ##' @title derepMulti
 ##' @param MA MultiAmplicon object to be dereplicated
-##' @param keep.single.singlets logical argument indicationg whether a
+##' @param keep.single.singlets logical argument indicating whether a
 ##'     derep slot should be filled with a single sequence recovered
 ##'     in only one sample. Defaults to FALSE meaning that such empty
 ##'     derep objects are created in such a case. Keeping such derep
@@ -18,7 +18,7 @@
 ##'     length as the number of primer pairs in the MultiAmplicon
 ##'     object, allowing to specify different parameters for each
 ##'     amplicon. If a shorter vector is given it will be recycled to
-##'     match the number of ampicons.  
+##'     match the number of amplicons.
 ##' @return MultiAmplicon object with derep slots (forward derepF and
 ##'     reverse derepR) filled
 ##' @importFrom dada2 derepFastq
@@ -72,7 +72,7 @@ derepMulti <- function(MA, mc.cores = getOption("mc.cores", 2L),
 ##' A wrapper around \code{\link[dada2]{dada}} from \code{dada2}
 ##'
 ##' The function runs \code{\link[dada2]{dada}} from the package
-##' \code{dada2} \url{https://benjjneb.github.io/dada2/} to performe
+##' \code{dada2} \url{https://benjjneb.github.io/dada2/} to perform
 ##' 'High resolution sample inference from amplicon data' on multiple
 ##' amplicons stored as dereplicated sequences in a
 ##' MultiAmplicon-class object
@@ -89,7 +89,7 @@ derepMulti <- function(MA, mc.cores = getOption("mc.cores", 2L),
 ##'     length as the number of primer pairs in the MultiAmplicon
 ##'     object, allowing to specify different parameters for each
 ##'     amplicon. If a shorter vector is given it will be recycled to
-##'     match the number of ampicons.
+##'     match the number of amplicons.
 ##' @return MultiAmplicon object with dadaF and dadaR slots filled
 ##' @importFrom dada2 dada
 ##' @importFrom methods initialize new slot
@@ -132,7 +132,7 @@ dadaMulti <- function(MA, Ferr=NULL, Rerr=NULL, ...){
 }
 
 ##' merge denoised pairs of forward and reverse reads inside an
-##' MultiAmplcion object.
+##' MultiAmplicon object.
 ##'
 ##' This is a wrapper for \code{\link[dada2]{mergePairs}} from
 ##' \code{dada2}. It works on an \code{\link{MultiAmplicon-class}}
@@ -186,7 +186,7 @@ mergeMulti <- function(MA, ...){
     initialize(MA, mergers = mergers)
 }
 
-##' Create a sequence table inside a MultiAmplcion object.
+##' Create a sequence table inside a MultiAmplicon object.
 ##'
 ##' This is a wrapper for the \code{\link[dada2]{makeSequenceTable}}
 ##' function of \code{dada2}. It works on an
@@ -206,7 +206,7 @@ mergeMulti <- function(MA, ...){
 ##'     vector of the same length as the number of primer pairs in the
 ##'     MultiAmplicon object, allowing to specify different parameters
 ##'     for each amplicon. If a shorter vector is given it will be
-##'     recycled to match the number of ampicons.
+##'     recycled to match the number of amplicons.
 ##' @return A MultiAmplicon-class object with the sequenceTable slot
 ##'     filled
 ##' @importFrom dada2 makeSequenceTable
@@ -236,16 +236,16 @@ sequenceTableMulti <- function(MA, ...){
 ##' object to preprocess your multi-marker data to this point.
 ##'
 ##' @title noChimeMulti
-##' @param MA A \code{\link{MultiAmplicon-class}} object pre-processed
+##' @param MA A \code{\link{MultiAmplicon-class}} object preprocessed
 ##'     to have a sequenceTableMulti populated
 ##' @param mc.cores integer number of cores to use for parallelization
-##' @param ... paramter passed through to
+##' @param ... passed on to
 ##'     \code{\link[dada2]{removeBimeraDenovo}}. All arguments to the
 ##'     function can be given as a vector of the same length as the
 ##'     number of primer pairs in the MultiAmplicon object, allowing
 ##'     to specify different parameters for each amplicon. If a
 ##'     shorter vector is given it will be recycled to match the
-##'     number of ampicons.
+##'     number of amplicons.
 ##' @return a \code{\link{MultiAmplicon-class}} object with the
 ##'     sequenceTableNoChime filled
 ##' @importFrom dada2 removeBimeraDenovo

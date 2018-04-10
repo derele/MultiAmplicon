@@ -22,7 +22,7 @@ MultiAmplicon object or the object itself}
 \item{transf}{transformation to be applied, recommended default is
 log10(x+1)}
 
-\item{...}{addtional parameter to be passed to pheatmap funciton}
+\item{...}{additional parameter to be passed to pheatmap function}
 }
 \value{
 just like the original \code{\link{pheatmap}} function, A

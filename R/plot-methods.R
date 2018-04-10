@@ -13,7 +13,7 @@
 ##'     log10(x+1)
 ##' 
 ##' @importFrom pheatmap pheatmap
-##' @param ... addtional parameter to be passed to pheatmap funciton
+##' @param ... additional parameter to be passed to pheatmap function
 ##' @return just like the original \code{\link{pheatmap}} function, A
 ##'     heatmap is drawn to the graphics output device. Returned are
 ##'     (invisibly) a list of components: 1."tree_row" the clustering

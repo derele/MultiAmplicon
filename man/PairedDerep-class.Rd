@@ -5,7 +5,7 @@
 \alias{PairedDerep-class}
 \alias{length,PairedDerep-method}
 \alias{[,PairedDerep,index,missing,ANY-method}
-\title{PiredDerep-class}
+\title{PairedDerep-class}
 \usage{
 \S4method{length}{PairedDerep}(x)
 
@@ -31,7 +31,7 @@ A pair of two derep objects
 }
 \details{
 derep-class objects as defined by the package \code{dada2}
-(\code{\link[dada2]{derepFastq}}] are bundeled as forward and
+(\code{\link[dada2]{derepFastq}}] are bundled as forward and
 reverse read pairs in this object
 }
 \section{Slots}{
@@ -40,7 +40,7 @@ reverse read pairs in this object
 \item{\code{derep}}{object containing forward read pairs created by
 \code{dada2}'s \code{\link[dada2]{derepFastq}} function}
 
-\item{\code{derepR}}{derep object containing reverse read pairscreated by
+\item{\code{derepR}}{derep object containing reverse read pairs created by
 \code{dada2}'s \code{\link[dada2]{derepFastq}} function}
 }}
 

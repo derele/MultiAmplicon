@@ -18,12 +18,17 @@ knitr::opts_chunk$set(
 
 ## Data preparation (download)
 
-We first download the sample data set from SRA using a helper scirtp
-part of the MultiAmplicon package.
+We first download the raw fastq files of the sample data set
+[from here](https://svalbard.biologie.hu-berlin.de:443/d/c291b870178f4abc8c59/).
+ 
 
-You will need about 2Gb space to store those files if you want to
-execute the pipeline below on your local computer and/or compile the
-vignette locally.
+This dataset was downloaded from NCBI's SRA using the process
+described in the
+[help file for carnivoreSeqRuns](https://derele.github.io/MultiAmplicon/reference/carnivoreSeqRuns.html).
+
+You will need about 10 Gb disk space to store those files if you want
+to execute the pipeline below on your local computer and/or to compile
+the vignette locally.
 
 ```{r getData}
 library(SRAdb) 
@@ -97,5 +102,5 @@ names(primerR) <- as.character(ptable[, "corrected.NameR"])
 
 primers <- PrimerPairsSet(primerF, primerR)
 ```
-
 ## Running the MultiAmplicon pipeline
+

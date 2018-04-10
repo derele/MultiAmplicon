@@ -21,7 +21,7 @@ arguments to the function can be given as a vector of the same
 length as the number of primer pairs in the MultiAmplicon
 object, allowing to specify different parameters for each
 amplicon. If a shorter vector is given it will be recycled to
-match the number of ampicons.}
+match the number of amplicons.}
 }
 \value{
 MultiAmplicon object with dadaF and dadaR slots filled
@@ -31,7 +31,7 @@ A wrapper around \code{\link[dada2]{dada}} from \code{dada2}
 }
 \details{
 The function runs \code{\link[dada2]{dada}} from the package
-\code{dada2} \url{https://benjjneb.github.io/dada2/} to performe
+\code{dada2} \url{https://benjjneb.github.io/dada2/} to perform
 'High resolution sample inference from amplicon data' on multiple
 amplicons stored as dereplicated sequences in a
 MultiAmplicon-class object

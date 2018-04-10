@@ -52,10 +52,10 @@ sequences can be provided as character strings and will be
 converted to \code{\link[Biostrings]{DNAStringSet}} by the
 constructor function of the same name. primerF and primerR have to
 be of the same length to specify primer pairs. Warnings are
-given if primer sequences are of unusal length (<16 or >26 bases).
+given if primer sequences are of unusual length (<16 or >26 bases).
 
 Accessor like functions
-\code{length} gives the number of read paires in a
+\code{length} gives the number of read pairs in a
 \code{PrimerPairsSet-class} object
 
 \code{names} of primer-pairs (amplicons) in a
@@ -67,7 +67,7 @@ Accessor like functions
 \item{\code{primerF}}{DNAStringSet. Can be named or unnamed.}
 
 \item{\code{primerR}}{DNAStringSet of the same length. Can be named or
-unnnamed.}
+unnamed.}
 
 \item{\code{names}}{Character string. Either constructed as a
 concatenation of names of forward and reverse primers or of

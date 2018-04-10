@@ -24,7 +24,7 @@ A MultiAmplicon-class object with the mergers slot filled
 }
 \description{
 merge denoised pairs of forward and reverse reads inside an
-MultiAmplcion object.
+MultiAmplicon object.
 }
 \details{
 This is a wrapper for \code{\link[dada2]{mergePairs}} from

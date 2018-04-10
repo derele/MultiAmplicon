@@ -6,7 +6,7 @@
 ##' filtered fastq files already stratified into samples (one file
 ##' pair for each sample). 
 ##'
-##' @slot readF A charcter vector specifying the file paths to files
+##' @slot readF A character vector specifying the file paths to files
 ##'     containing forward (sometimes called R1) sequencing
 ##'     reads. This vector can be named to store short short-name of
 ##'     samples.
@@ -70,11 +70,11 @@ setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
 ##' converted to \code{\link[Biostrings]{DNAStringSet}} by the
 ##' constructor function of the same name. primerF and primerR have to
 ##' be of the same length to specify primer pairs. Warnings are
-##' given if primer sequences are of unusal length (<16 or >26 bases).
+##' given if primer sequences are of unusual length (<16 or >26 bases).
 ##'
 ##' @slot primerF DNAStringSet. Can be named or unnamed.
 ##' @slot primerR DNAStringSet of the same length. Can be named or
-##'     unnnamed.
+##'     unnamed.
 ##' @slot names Character string. Either constructed as a
 ##'     concatenation of names of forward and reverse primers or of
 ##'     their sequences (if primer sequences are unnamed).
@@ -132,7 +132,7 @@ PrimerPairsSet <- function(primerF, primerR){
 
 ## Methods
 ##' Accessor like functions
-##' \code{length} gives the number of read paires in a
+##' \code{length} gives the number of read pairs in a
 ##' \code{PrimerPairsSet-class} object
 ##' @param x A \code{PrimerPairsSet-class} object.
 ##' @rdname PrimerPairsSet-class
@@ -146,13 +146,13 @@ setMethod(names, "PrimerPairsSet", function (x) x@names)
 ##' A pair of two derep objects
 ##'
 ##' derep-class objects as defined by the package \code{dada2}
-##' (\code{\link[dada2]{derepFastq}}] are bundeled as forward and
+##' (\code{\link[dada2]{derepFastq}}] are bundled as forward and
 ##' reverse read pairs in this object
-##' @title PiredDerep-class
+##' @title PairedDerep-class
 ##'
 ##' @slot derep object containing forward read pairs created by
 ##'     \code{dada2}'s \code{\link[dada2]{derepFastq}} function
-##' @slot derepR derep object containing reverse read pairscreated by
+##' @slot derepR derep object containing reverse read pairs created by
 ##'     \code{dada2}'s \code{\link[dada2]{derepFastq}} function
 ##' @return A PairedDerep-class object
 ##' @author Emanuel Heitlinger
@@ -171,7 +171,7 @@ setMethod("length", "PairedDerep", function(x){
 ##' A pair of two dada objects 
 ##'
 ##' dada-class objects as defined by the package \code{dada2}
-##' (function \code{\link[dada2]{dada}}) are bundeled as forward and
+##' (function \code{\link[dada2]{dada}}) are bundled as forward and
 ##' reverse read pairs in this object
 ##'
 ##' @title PairedDada-class
@@ -260,28 +260,28 @@ setMethod("length", "PairedDada", function(x){
 ##' @param PrimerPairsSet a set of primer pairs specifiying your
 ##'     amplicons see \code{\link{PrimerPairsSet-class}}
 ##' 
-##' @param PairedReadFileSet a set of paired end sequencing data fiels
+##' @param PairedReadFileSet a set of paired end sequencing data files
 ##'     \code{\link{PairedReadFileSet-class}}
 ##'
-##' @param rawCounts Users should not supply this prameter, the slot
+##' @param rawCounts Users should not supply this parameter, the slot
 ##'     is created by \code{\link{sortAmplicons}}.
 ##'
-##' @param stratifiedFiles Users should not supply this prameter, the
+##' @param stratifiedFiles Users should not supply this parameter, the
 ##'     slot is created by \code{\link{sortAmplicons}}.
 ##'
-##' @param derep Users should not supply this prameter, the slot is
+##' @param derep Users should not supply this parameter, the slot is
 ##'     created by \code{\link{derepMulti}}
 ##'
-##' @param dada Users should not supply this prameter, the slot is
+##' @param dada Users should not supply this parameter, the slot is
 ##'     created by \code{\link{dadaMulti}}
 ##' 
-##' @param mergers Users should not supply this prameter, the slot is
+##' @param mergers Users should not supply this parameter, the slot is
 ##'     created by \code{\link{mergeMulti}}
 ##'
-##' @param sequenceTable Users should not supply this prameter, the
+##' @param sequenceTable Users should not supply this parameter, the
 ##'     slot is created by \code{\link{sequenceTableMulti}}
 ##'
-##' @param sequenceTableNoChime Users should not supply this prameter,
+##' @param sequenceTableNoChime Users should not supply this parameter,
 ##'     the slot is created by \code{\link{noChimeMulti}}
 ##' 
 ##' @examples

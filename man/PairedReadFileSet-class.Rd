@@ -58,7 +58,7 @@ PairedReadFileSet-class
 \section{Slots}{
 
 \describe{
-\item{\code{readF}}{A charcter vector specifying the file paths to files
+\item{\code{readF}}{A character vector specifying the file paths to files
 containing forward (sometimes called R1) sequencing
 reads. This vector can be named to store short short-name of
 samples.}

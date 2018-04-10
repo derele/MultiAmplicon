@@ -12,7 +12,7 @@ derepMulti(MA, mc.cores = getOption("mc.cores", 2L),
 
 \item{mc.cores}{number or compute cores for parallel processing}
 
-\item{keep.single.singlets}{logical argument indicationg whether a
+\item{keep.single.singlets}{logical argument indicating whether a
 derep slot should be filled with a single sequence recovered
 in only one sample. Defaults to FALSE meaning that such empty
 derep objects are created in such a case. Keeping such derep
@@ -24,7 +24,7 @@ arguments to the function can be given as a vector of the same
 length as the number of primer pairs in the MultiAmplicon
 object, allowing to specify different parameters for each
 amplicon. If a shorter vector is given it will be recycled to
-match the number of ampicons.}
+match the number of amplicons.}
 }
 \value{
 MultiAmplicon object with derep slots (forward derepF and
