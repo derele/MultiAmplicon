@@ -4,7 +4,7 @@ use_bioc: true
 # bioc_required: true
 cache: packages
 
-r_github_packages: r-dbi/RSQLite
+install: travis_wait 120 mvn install
 
 # before_script:
 #   - echo "BiocParallel::register(BiocParallel::SerialParam())" > ~/.Rprofile
