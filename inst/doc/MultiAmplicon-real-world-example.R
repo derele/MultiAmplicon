@@ -1,0 +1,51 @@
+## ----setup, include = FALSE----------------------------------------------
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+## ----filter, message=FALSE-----------------------------------------------
+library(MultiAmplicon)
+
+path <- "~/download"
+
+fastqFiles <- list.files(path, pattern=".fastq.gz$", full.names=TRUE)
+
+fastqF <- grep("_1.fastq.gz", fastqFiles, value = TRUE)
+fastqR <- grep("_2.fastq.gz", fastqFiles, value = TRUE)
+
+samples <- gsub("_1.fastq\\.gz", "\\1", basename(fastqF))
+
+filt_path <- "./filtered"
+if(!file_test("-d", filt_path)) dir.create(filt_path)
+
+filtFs <- file.path(filt_path, paste0(samples, "_F_filt.fastq.gz"))
+names(filtFs) <- samples
+filtRs <- file.path(filt_path, paste0(samples, "_R_filt.fastq.gz"))
+names(filtRs) <- samples
+
+filter.track <- lapply(seq_along(fastqF),  function (i) {
+    filterAndTrim(fastqF[i], filtFs[i], fastqR[i], filtRs[i],
+                  truncLen=c(170,170), minLen=c(170,170), 
+                  maxN=0, maxEE=2, truncQ=2, 
+                  compress=TRUE, verbose=TRUE)
+})
+
+names(filtFs) <- names(filtRs) <- samples
+
+files <- PairedReadFileSet(filtFs, filtRs)
+
+## ----prepPrimers, cache=TRUE---------------------------------------------
+primer.file <- system.file("extdata", "real_world_primers.csv",
+                           package = "MultiAmplicon")
+
+ptable <- read.csv(primer.file, sep=",", header=TRUE, stringsAsFactors=FALSE)
+
+primerF <- ptable[, "TS.SequenceF"]
+primerR <- ptable[, "TS.SequenceR"]
+
+names(primerF) <- as.character(ptable[, "corrected.NameF"])
+names(primerR) <- as.character(ptable[, "corrected.NameR"])
+
+primers <- PrimerPairsSet(primerF, primerR)
+

@@ -13,7 +13,6 @@ filtered/*
 /vignettes/SRAmetadb.sqlite.gz
 docs/articles/download/
 docs/articles/filtered/
-inst/doc
 /vignettes/filtered/
 *_cache/*
 vignettes/*_cache*

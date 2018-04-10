@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Emanuel Heitlinger" />
+
+<meta name="date" content="2018-04-10" />
+
+<title>MultiAmplicon - a small example</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">MultiAmplicon - a small example</h1>
+<h4 class="author"><em>Emanuel Heitlinger</em></h4>
+<h4 class="date"><em>2018-04-10</em></h4>
+
+
+
+<div id="preparing-sequencing-read-files-and-a-primer-set" class="section level2">
+<h2>Preparing sequencing read files and a primer set</h2>
+<p>The MultiAmplicon package uses dedicated classes to ensure that input to its <code>sortAmplicons</code> function is provided correctly. Concerning input files, this means for the user that file names (including paths to the directory they are stored in) of forward and reverse sequencing read files must be provided as a <code>PairedReadFileSet</code>. These files can contain reads in fastq or in gzipped fastq format. We focus as a default use case on (non-interleaved) paired-end reads, as these are the most common format Illumina sequencing reads are currently produced in (but see vignette xyz as an example how to process single-end sequencing data).</p>
+<p>Similarly, primer pairs must be provided in a <code>PrimerPairsSet</code>. We then match forward and reverse primers at the start of forward and reverse reads, respectively. The maximal number of missmatches and the maximal distance from the start of the read can be supplied as arguments to the function. The primer sequences are trimmed from the reads and the read-pair is associated with the amplicon defined by the primer-pair. While we focus on this default use case, the package can als be used adaptor trimming with a single primer (see vignette xyz).</p>
+<p>But to go on with our main intended use case example first have a look at how <code>PairedReadFileSet</code> and <code>PrimerPairsSet</code> are generated.</p>
+<p>Please use files containing quality filtered sequencing reads for the steps below. See the <a href="https://benjjneb.github.io/dada2/tutorial.html">dada2 tutorial</a> or our <a href="https:/foobarXYZXYZ.foo">real-world data vignette</a>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(MultiAmplicon)
+
+primerF &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">Amp1F =</span> <span class="st">&quot;AGAGTTTGATCCTGGCTCAG&quot;</span>, <span class="dt">Amp2F =</span> <span class="st">&quot;ACTCCTACGGGAGGCAGC&quot;</span>,
+             <span class="dt">Amp3F =</span> <span class="st">&quot;GAATTGACGGAAGGGCACC&quot;</span>, <span class="dt">Amp4F =</span> <span class="st">&quot;YGGTGRTGCATGGCCGYT&quot;</span>,
+             <span class="dt">Amp5F =</span> <span class="st">&quot;AAAAACCCCGGGGGGTTTTT&quot;</span>, <span class="dt">Amp6F =</span> <span class="st">&quot;AGAGTTTGATCCTGCCTCAG&quot;</span>)
+
+primerR &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">Amp1R =</span> <span class="st">&quot;CTGCWGCCNCCCGTAGG&quot;</span>, <span class="dt">Amp2R =</span> <span class="st">&quot;GACTACHVGGGTATCTAATCC&quot;</span>,
+             <span class="dt">Amp3R =</span> <span class="st">&quot;AAGGGCATCACAGACCTGTTAT&quot;</span>, <span class="dt">Amp4R =</span> <span class="st">&quot;TCCTTCTGCAGGTTCACCTAC&quot;</span>,
+             <span class="dt">Amp5R =</span> <span class="st">&quot;AAAAACCCCGGGGGGTTTTT&quot;</span>, <span class="dt">Amp6R =</span> <span class="st">&quot;CCTACGGGTGGCAGATGCAG&quot;</span>)
+
+PPS &lt;-<span class="st"> </span><span class="kw">PrimerPairsSet</span>(primerF, primerR)
+
+fastq.dir &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;fastq&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;MultiAmplicon&quot;</span>)
+fastq.files &lt;-<span class="st"> </span><span class="kw">list.files</span>(fastq.dir, <span class="dt">full.names=</span><span class="ot">TRUE</span>)
+
+Ffastq.file &lt;-<span class="st"> </span>fastq.files[<span class="kw">grepl</span>(<span class="st">&quot;F_filt&quot;</span>, fastq.files)]
+Rfastq.file &lt;-<span class="st"> </span>fastq.files[<span class="kw">grepl</span>(<span class="st">&quot;R_filt&quot;</span>, fastq.files)]
+
+PRF &lt;-<span class="st"> </span><span class="kw">PairedReadFileSet</span>(Ffastq.file, Rfastq.file)
+
+MA &lt;-<span class="st"> </span><span class="kw">MultiAmplicon</span>(PPS, PRF)</code></pre></div>
+<p>Note that the primer pairs in the <code>PrimerPairsSet</code> can be named and the same also is true for the sequencing read file pairs (although not in our example above). This results in names for primer-pairs and for samples.</p>
+</div>
+<div id="sorting-into-multiple-amplicons" class="section level2">
+<h2>Sorting into multiple amplicons</h2>
+<p>Based on the primer sequences we can now sort the sequences into amplicons. This is done by the function <code>sortAmplicons</code>, which updates the MultiAmplicon object with the sorted amplicons.</p>
+<p>For this small example dataset we can look at the resuling <code>rawCounts</code> i.e. the number of sequences for each of the fully stratified amplicon x sample matrix.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA1 &lt;-<span class="st"> </span><span class="kw">sortAmplicons</span>(MA)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(<span class="kw">rawCounts</span>(MA1))</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">S00_F_filt.fastq.gz</th>
+<th align="right">S01_F_filt.fastq.gz</th>
+<th align="right">S02_F_filt.fastq.gz</th>
+<th align="right">S03_F_filt.fastq.gz</th>
+<th align="right">S04_F_filt.fastq.gz</th>
+<th align="right">S05_F_filt.fastq.gz</th>
+<th align="right">S06_F_filt.fastq.gz</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Amp1F.Amp1R</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">3495</td>
+<td align="right">5</td>
+<td align="right">5</td>
+<td align="right">29310</td>
+<td align="right">2569</td>
+</tr>
+<tr class="even">
+<td>Amp2F.Amp2R</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">2949</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">20391</td>
+<td align="right">2690</td>
+</tr>
+<tr class="odd">
+<td>Amp3F.Amp3R</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1817</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">11671</td>
+</tr>
+<tr class="even">
+<td>Amp4F.Amp4R</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1087</td>
+<td align="right">0</td>
+<td align="right">7</td>
+<td align="right">2076</td>
+<td align="right">428</td>
+</tr>
+<tr class="odd">
+<td>Amp5F.Amp5R</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td>Amp6F.Amp6R</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="visualizing-read-numbers-per-amplicon-and-filtering-based-on-these" class="section level2">
+<h2>Visualizing read numbers per amplicon and filtering based on these</h2>
+<p>Now we can plot the result. The function plotAmpliconNumbers allows us also to store clustering information (see ). Which can afterwards be used to filter data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clusters &lt;-<span class="st"> </span><span class="kw">plotAmpliconNumbers</span>(MA1)</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>We can use this clustering information now to subset our MultiAmplicon object.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">two.clusters.row &lt;-<span class="st"> </span><span class="kw">cutree</span>(clusters$tree_row, <span class="dt">k=</span><span class="dv">2</span>)
+two.clusters.col &lt;-<span class="st"> </span><span class="kw">cutree</span>(clusters$tree_col, <span class="dt">k=</span><span class="dv">2</span>)
+
+knitr::<span class="kw">kable</span>(two.clusters.row)</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">x</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Amp1F.Amp1R</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td>Amp2F.Amp2R</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td>Amp3F.Amp3R</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td>Amp4F.Amp4R</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td>Amp5F.Amp5R</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td>Amp6F.Amp6R</td>
+<td align="right">2</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(two.clusters.col)</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">x</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>S00_F_filt.fastq.gz</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td>S01_F_filt.fastq.gz</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td>S02_F_filt.fastq.gz</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td>S03_F_filt.fastq.gz</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td>S04_F_filt.fastq.gz</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td>S05_F_filt.fastq.gz</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td>S06_F_filt.fastq.gz</td>
+<td align="right">2</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+MA.sub &lt;-<span class="st"> </span>MA1[<span class="kw">which</span>(two.clusters.row==<span class="dv">1</span>), <span class="kw">which</span>(two.clusters.col==<span class="dv">2</span>)]
+
+knitr::<span class="kw">kable</span>(<span class="kw">rawCounts</span>(MA.sub))</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">S02_F_filt.fastq.gz</th>
+<th align="right">S05_F_filt.fastq.gz</th>
+<th align="right">S06_F_filt.fastq.gz</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Amp1F.Amp1R</td>
+<td align="right">3495</td>
+<td align="right">29310</td>
+<td align="right">2569</td>
+</tr>
+<tr class="even">
+<td>Amp2F.Amp2R</td>
+<td align="right">2949</td>
+<td align="right">20391</td>
+<td align="right">2690</td>
+</tr>
+<tr class="odd">
+<td>Amp3F.Amp3R</td>
+<td align="right">1817</td>
+<td align="right">2</td>
+<td align="right">11671</td>
+</tr>
+<tr class="even">
+<td>Amp4F.Amp4R</td>
+<td align="right">1087</td>
+<td align="right">2076</td>
+<td align="right">428</td>
+</tr>
+</tbody>
+</table>
+<p>In real world applications (see vignette xyz) the samples to be excluded from further analysis can be selected based on clustering with negative controls (similar to the example data here where S00 is an empty file and S01 contains one sequence).</p>
+</div>
+<div id="running-the-amplicon-sequencing-pipline" class="section level2">
+<h2>Running the amplicon sequencing pipline</h2>
+<p>We first estimate the errors seperately for both for dada’s probabilistic sequence variant inference. We do this here on the combined statified files for different amplicons. This should be done separately for forward ad reverse sequence though!</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">errF &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw">stratifiedFilesF</span>(MA1)), <span class="dt">nread=</span><span class="fl">1e6</span>,
+                    <span class="dt">verbose=</span><span class="dv">0</span>)
+errR &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw">stratifiedFilesR</span>(MA1)), <span class="dt">nread=</span><span class="fl">1e6</span>,
+                    <span class="dt">verbose=</span><span class="dv">0</span>)</code></pre></div>
+<p>We can now run the pipeline of the dada2 package in parallel over the different amplicons. We update our object from each previous step and safe it under a new name, here for illustration. In your own workflow you can also overwrite the old object.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA2 &lt;-<span class="st"> </span><span class="kw">derepMulti</span>(MA.sub, <span class="dt">mc.cores=</span><span class="dv">1</span>) 
+
+MA3 &lt;-<span class="st"> </span><span class="kw">dadaMulti</span>(MA2, <span class="dt">Ferr=</span>errF, <span class="dt">Rerr=</span>errR,  <span class="dt">pool=</span><span class="ot">FALSE</span>)
+<span class="co">#&gt; Sample 1 - 3495 reads in 1493 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 29310 reads in 7224 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 2569 reads in 1053 unique sequences.</span>
+<span class="co">#&gt; Sample 1 - 3495 reads in 1535 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 29310 reads in 8273 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 2569 reads in 994 unique sequences.</span>
+<span class="co">#&gt; Sample 1 - 2949 reads in 1142 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 20391 reads in 4136 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 2690 reads in 968 unique sequences.</span>
+<span class="co">#&gt; Sample 1 - 2949 reads in 1290 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 20391 reads in 5719 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 2690 reads in 1100 unique sequences.</span>
+<span class="co">#&gt; Sample 1 - 1817 reads in 589 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 2 reads in 2 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 11671 reads in 3783 unique sequences.</span>
+<span class="co">#&gt; Sample 1 - 1817 reads in 547 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 2 reads in 2 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 11671 reads in 4054 unique sequences.</span>
+<span class="co">#&gt; Sample 1 - 1087 reads in 394 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 2076 reads in 959 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 428 reads in 166 unique sequences.</span>
+<span class="co">#&gt; Sample 1 - 1087 reads in 433 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 2076 reads in 962 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 428 reads in 183 unique sequences.</span>
+
+MA4 &lt;-<span class="st"> </span><span class="kw">mergeMulti</span>(MA3)
+
+MA5 &lt;-<span class="st"> </span><span class="kw">sequenceTableMulti</span>(MA4)
+
+MA6 &lt;-<span class="st"> </span><span class="kw">noChimeMulti</span>(MA5, <span class="dt">mc.cores=</span><span class="dv">1</span>)</code></pre></div>
+<p>Ready! This was <em>easy</em>, right?</p>
+</div>
+<div id="a-word-on-dada2-sequence-inference" class="section level2">
+<h2>A word on dada2 sequence inference</h2>
+<p>The above workflow assumes that errors could be estimated for each amplicon together. This would be beneficial if erros were largely similar between different amplicons (i.e. not influenced by the primer starting the sequence). Below an alternative approach is demonstrated with error probabilities estimated seperately for each amplicon (here also overwrite objects from each previous processing steps).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA.alt &lt;-<span class="st"> </span><span class="kw">dadaMulti</span>(MA2, <span class="dt">selfConsist=</span><span class="ot">TRUE</span>, <span class="dt">pool=</span><span class="ot">FALSE</span>)
+<span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
+<span class="co">#&gt; Sample 1 - 3495 reads in 1493 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 29310 reads in 7224 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 2569 reads in 1053 unique sequences.</span>
+<span class="co">#&gt;    selfConsist step 2 </span>
+<span class="co">#&gt;    selfConsist step 3 </span>
+<span class="co">#&gt;    selfConsist step 4 </span>
+<span class="co">#&gt;    selfConsist step 5 </span>
+<span class="co">#&gt;    selfConsist step 6 </span>
+<span class="co">#&gt; Convergence after  6  rounds.</span>
+<span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
+<span class="co">#&gt; Sample 1 - 3495 reads in 1535 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 29310 reads in 8273 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 2569 reads in 994 unique sequences.</span>
+<span class="co">#&gt;    selfConsist step 2 </span>
+<span class="co">#&gt;    selfConsist step 3 </span>
+<span class="co">#&gt;    selfConsist step 4 </span>
+<span class="co">#&gt;    selfConsist step 5 </span>
+<span class="co">#&gt; Convergence after  5  rounds.</span>
+<span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
+<span class="co">#&gt; Sample 1 - 2949 reads in 1142 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 20391 reads in 4136 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 2690 reads in 968 unique sequences.</span>
+<span class="co">#&gt;    selfConsist step 2 </span>
+<span class="co">#&gt;    selfConsist step 3 </span>
+<span class="co">#&gt;    selfConsist step 4 </span>
+<span class="co">#&gt; Convergence after  4  rounds.</span>
+<span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
+<span class="co">#&gt; Sample 1 - 2949 reads in 1290 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 20391 reads in 5719 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 2690 reads in 1100 unique sequences.</span>
+<span class="co">#&gt;    selfConsist step 2 </span>
+<span class="co">#&gt;    selfConsist step 3 </span>
+<span class="co">#&gt;    selfConsist step 4 </span>
+<span class="co">#&gt;    selfConsist step 5 </span>
+<span class="co">#&gt; Convergence after  5  rounds.</span>
+<span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
+<span class="co">#&gt; Sample 1 - 1817 reads in 589 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 2 reads in 2 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 11671 reads in 3783 unique sequences.</span>
+<span class="co">#&gt;    selfConsist step 2 </span>
+<span class="co">#&gt;    selfConsist step 3 </span>
+<span class="co">#&gt;    selfConsist step 4 </span>
+<span class="co">#&gt; Convergence after  4  rounds.</span>
+<span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
+<span class="co">#&gt; Sample 1 - 1817 reads in 547 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 2 reads in 2 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 11671 reads in 4054 unique sequences.</span>
+<span class="co">#&gt;    selfConsist step 2 </span>
+<span class="co">#&gt;    selfConsist step 3 </span>
+<span class="co">#&gt;    selfConsist step 4 </span>
+<span class="co">#&gt; Convergence after  4  rounds.</span>
+<span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
+<span class="co">#&gt; Sample 1 - 1087 reads in 394 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 2076 reads in 959 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 428 reads in 166 unique sequences.</span>
+<span class="co">#&gt;    selfConsist step 2 </span>
+<span class="co">#&gt;    selfConsist step 3 </span>
+<span class="co">#&gt;    selfConsist step 4 </span>
+<span class="co">#&gt; Convergence after  4  rounds.</span>
+<span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
+<span class="co">#&gt; Sample 1 - 1087 reads in 433 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 2076 reads in 962 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 428 reads in 183 unique sequences.</span>
+<span class="co">#&gt;    selfConsist step 2 </span>
+<span class="co">#&gt;    selfConsist step 3 </span>
+<span class="co">#&gt;    selfConsist step 4 </span>
+<span class="co">#&gt; Convergence after  4  rounds.</span>
+
+MA.alt &lt;-<span class="st"> </span><span class="kw">mergeMulti</span>(MA.alt)
+
+MA.alt &lt;-<span class="st"> </span><span class="kw">sequenceTableMulti</span>(MA.alt)
+
+MA.alt &lt;-<span class="st"> </span><span class="kw">noChimeMulti</span>(MA.alt, <span class="dt">mc.cores=</span><span class="dv">1</span>)</code></pre></div>
+</div>
+<div id="using-different-parameters-for-each-amplicon" class="section level2">
+<h2>Using different parameters for each amplicon</h2>
+<p>In some real world applications it might be desireable to have more control over paramters used in the pipeline for different amplicons.</p>
+<p>We use ellipsis (aka “…”, dots, dot-dot-dot or three-dots) to pass parameters on to the underlying dada2 functions. The MultiAmplicon package allows all those arguments to be vectors with values varying for different amplicons.</p>
+<p>Let’s suppose for this we e.g. want to merge a subset of our amplicons, while we concatenate others using N’s.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA.mixed &lt;-<span class="st"> </span><span class="kw">mergeMulti</span>(MA3, <span class="dt">justConcatenate=</span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>))
+<span class="co">#&gt; </span>
+<span class="co">#&gt; merging sequences from 3 samples for amplicon Amp1F.Amp1R</span>
+<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; merging sequences from 3 samples for amplicon Amp2F.Amp2R</span>
+<span class="co">#&gt; calling mergePairs with justConcatenate=FALSE parameters</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; merging sequences from 3 samples for amplicon Amp3F.Amp3R</span>
+<span class="co">#&gt; calling mergePairs with justConcatenate=FALSE parameters</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; merging sequences from 3 samples for amplicon Amp4F.Amp4R</span>
+<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></code></pre></div>
+<p>The above example would make sense if amlicons Amp1F.Amp1R and Amp4F.Amp4R (1st and 4th in our object) had too little overalap between forward and revese reads to be merged and would better be concatenated.</p>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
