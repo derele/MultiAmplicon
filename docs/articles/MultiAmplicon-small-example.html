@@ -77,11 +77,18 @@
 <div id="preparing-sequencing-read-files-and-a-primer-set" class="section level2">
 <h2 class="hasAnchor">
 <a href="#preparing-sequencing-read-files-and-a-primer-set" class="anchor"></a>Preparing sequencing read files and a primer set</h2>
-<p>The MultiAmplicon package uses dedicated classes to ensure that input to its <code>sortAmplicons</code> function is provided correctly. Concerning input files, this means for the user that file names (including paths to the directory they are stored in) of forward and reverse sequencing read files must be provided as a <code>PairedReadFileSet</code>. These files can contain reads in fastq or in gzipped fastq format. We focus as a default use case on (non-interleaved) paired-end reads, as these are the most common format Illumina sequencing reads are currently produced in (but see vignette xyz as an example how to process single-end sequencing data).</p>
-<p>Similarly, primer pairs must be provided in a <code>PrimerPairsSet</code>. We then match forward and reverse primers at the start of forward and reverse reads, respectively. The maximal number of missmatches and the maximal distance from the start of the read can be supplied as arguments to the function. The primer sequences are trimmed from the reads and the read-pair is associated with the amplicon defined by the primer-pair. While we focus on this default use case, the package can als be used adaptor trimming with a single primer (see vignette xyz).</p>
-<p>But to go on with our main intended use case example first have a look at how <code>PairedReadFileSet</code> and <code>PrimerPairsSet</code> are generated.</p>
-<p>Please use files containing quality filtered sequencing reads for the steps below. See the <a href="https://benjjneb.github.io/dada2/tutorial.html">dada2 tutorial</a> or our <a href="https:/foobarXYZXYZ.foo">real-world data vignette</a>.</p>
+<p>The MultiAmplicon package uses dedicated classes to ensure that input to its <code>sortAmplicons</code> function is provided correctly. Concerning input files, this means for the user that file names (including paths to the directory they are stored in) of forward and reverse sequencing read files must be provided as a <code>PairedReadFileSet</code>. These files can contain reads in fastq or in gzipped fastq format. We focus as a default use case on (non-interleaved) paired-end reads, as these are the most common format Illumina sequencing reads are currently produced in.</p>
+<p>Similarly, primer pairs must be provided in a <code>PrimerPairsSet</code>. We then match forward and reverse primers at the start of forward and reverse reads, respectively. The maximal number of mismatches and the maximal distance from the start of the read can be supplied as arguments to the function. The primer sequences are trimmed from the reads and the read-pair is associated with the amplicon defined by the primer-pair.</p>
+<p>We first have a look at how <code>PairedReadFileSet</code> and <code>PrimerPairsSet</code> are generated. Please use files containing quality filtered sequencing reads for the steps below. See the <a href="https://benjjneb.github.io/dada2/tutorial.html">dada2 tutorial</a> or our <a href="https://derele.github.io/MultiAmplicon/articles/MultiAmplicon-real-world-example.html">real-world example vignette</a> for how files are trimmed and quality filtered. But we here first use a very small data set included in the MultiAmplicon package.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(MultiAmplicon)
+
+fastq.dir &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"fastq"</span>, <span class="dt">package =</span> <span class="st">"MultiAmplicon"</span>)
+fastq.files &lt;-<span class="st"> </span><span class="kw">list.files</span>(fastq.dir, <span class="dt">full.names=</span><span class="ot">TRUE</span>)
+
+Ffastq.file &lt;-<span class="st"> </span>fastq.files[<span class="kw">grepl</span>(<span class="st">"F_filt"</span>, fastq.files)]
+Rfastq.file &lt;-<span class="st"> </span>fastq.files[<span class="kw">grepl</span>(<span class="st">"R_filt"</span>, fastq.files)]
+
+PRF &lt;-<span class="st"> </span><span class="kw"><a href="../reference/PairedReadFileSet-class.html">PairedReadFileSet</a></span>(Ffastq.file, Rfastq.file)
 
 primerF &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">Amp1F =</span> <span class="st">"AGAGTTTGATCCTGGCTCAG"</span>, <span class="dt">Amp2F =</span> <span class="st">"ACTCCTACGGGAGGCAGC"</span>,
              <span class="dt">Amp3F =</span> <span class="st">"GAATTGACGGAAGGGCACC"</span>, <span class="dt">Amp4F =</span> <span class="st">"YGGTGRTGCATGGCCGYT"</span>,
@@ -93,14 +100,6 @@ primerR &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt"
 
 PPS &lt;-<span class="st"> </span><span class="kw"><a href="../reference/PrimerPairsSet-class.html">PrimerPairsSet</a></span>(primerF, primerR)
 
-fastq.dir &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"fastq"</span>, <span class="dt">package =</span> <span class="st">"MultiAmplicon"</span>)
-fastq.files &lt;-<span class="st"> </span><span class="kw">list.files</span>(fastq.dir, <span class="dt">full.names=</span><span class="ot">TRUE</span>)
-
-Ffastq.file &lt;-<span class="st"> </span>fastq.files[<span class="kw">grepl</span>(<span class="st">"F_filt"</span>, fastq.files)]
-Rfastq.file &lt;-<span class="st"> </span>fastq.files[<span class="kw">grepl</span>(<span class="st">"R_filt"</span>, fastq.files)]
-
-PRF &lt;-<span class="st"> </span><span class="kw"><a href="../reference/PairedReadFileSet-class.html">PairedReadFileSet</a></span>(Ffastq.file, Rfastq.file)
-
 MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAmplicon-class.html">MultiAmplicon</a></span>(PPS, PRF)</code></pre></div>
 <p>Note that the primer pairs in the <code>PrimerPairsSet</code> can be named and the same also is true for the sequencing read file pairs (although not in our example above). This results in names for primer-pairs and for samples.</p>
 </div>
@@ -108,7 +107,7 @@ MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAmp
 <h2 class="hasAnchor">
 <a href="#sorting-into-multiple-amplicons" class="anchor"></a>Sorting into multiple amplicons</h2>
 <p>Based on the primer sequences we can now sort the sequences into amplicons. This is done by the function <code>sortAmplicons</code>, which updates the MultiAmplicon object with the sorted amplicons.</p>
-<p>For this small example dataset we can look at the resuling <code>rawCounts</code> i.e. the number of sequences for each of the fully stratified amplicon x sample matrix.</p>
+<p>For this small example data set we can look at the resulting <code>rawCounts</code> i.e. the number of sequences for each of the fully stratified amplicon x sample matrix.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sortAmplicons.html">sortAmplicons</a></span>(MA)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">rawCounts</a></span>(MA1))</code></pre></div>
 <table class="table">
@@ -189,7 +188,7 @@ MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAmp
 <div id="visualizing-read-numbers-per-amplicon-and-filtering-based-on-these" class="section level2">
 <h2 class="hasAnchor">
 <a href="#visualizing-read-numbers-per-amplicon-and-filtering-based-on-these" class="anchor"></a>Visualizing read numbers per amplicon and filtering based on these</h2>
-<p>Now we can plot the result. The function plotAmpliconNumbers allows us also to store clustering information (see ). Which can afterwards be used to filter data.</p>
+<p>Now we can plot the result. The function plotAmpliconNumbers allows us also to store clustering information (see <a href="https://www.rdocumentation.org/packages/pheatmap/versions/0.2/topics/pheatmap"></a>). Which can afterwards be used to filter data.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clusters &lt;-<span class="st"> </span><span class="kw"><a href="../reference/plotAmpliconNumbers.html">plotAmpliconNumbers</a></span>(MA1)</code></pre></div>
 <p><img src="MultiAmplicon-small-example_files/figure-html/plotAmpliconNumbers-1.png" width="672"></p>
 <p>We can use this clustering information now to subset our MultiAmplicon object.</p>
@@ -304,12 +303,12 @@ knitr::<span class="kw">kable</span>(<span class="kw"><a href="../reference/Mult
 </tr>
 </tbody>
 </table>
-<p>In real world applications (see vignette xyz) the samples to be excluded from further analysis can be selected based on clustering with negative controls (similar to the example data here where S00 is an empty file and S01 contains one sequence).</p>
+<p>In real world applications (see <a href="https://derele.github.io/MultiAmplicon/articles/MultiAmplicon-real-world-example.html">our other vignette</a>) the samples to be excluded from further analysis can be selected based on clustering with negative controls (similar to the example data here where S00 is an empty file and S01 contains one sequence).</p>
 </div>
-<div id="running-the-amplicon-sequencing-pipline" class="section level2">
+<div id="running-the-amplicon-sequencing-pipeline" class="section level2">
 <h2 class="hasAnchor">
-<a href="#running-the-amplicon-sequencing-pipline" class="anchor"></a>Running the amplicon sequencing pipline</h2>
-<p>We first estimate the errors seperately for both for dada’s probabilistic sequence variant inference. We do this here on the combined statified files for different amplicons. This should be done separately for forward ad reverse sequence though!</p>
+<a href="#running-the-amplicon-sequencing-pipeline" class="anchor"></a>Running the amplicon sequencing pipeline</h2>
+<p>We first estimate the errors separately for both for dada’s probabilistic sequence variant inference. We do this here on the combined stratified files for different amplicons. This should be done separately for forward ad reverse sequence though!</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">errF &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">stratifiedFilesF</a></span>(MA1)), <span class="dt">nread=</span><span class="fl">1e6</span>,
                     <span class="dt">verbose=</span><span class="dv">0</span>)
 errR &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">stratifiedFilesR</a></span>(MA1)), <span class="dt">nread=</span><span class="fl">1e6</span>,
@@ -353,7 +352,7 @@ MA6 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noChime
 <div id="a-word-on-dada2-sequence-inference" class="section level2">
 <h2 class="hasAnchor">
 <a href="#a-word-on-dada2-sequence-inference" class="anchor"></a>A word on dada2 sequence inference</h2>
-<p>The above workflow assumes that errors could be estimated for each amplicon together. This would be beneficial if erros were largely similar between different amplicons (i.e. not influenced by the primer starting the sequence). Below an alternative approach is demonstrated with error probabilities estimated seperately for each amplicon (here also overwrite objects from each previous processing steps).</p>
+<p>The above workflow assumes that errors could be estimated for each amplicon together. This would be beneficial if errors were largely similar between different amplicons (i.e. not influenced by the primer starting the sequence). Below an alternative approach is demonstrated with error probabilities estimated separately for each amplicon (here also overwrite objects from each previous processing steps).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/dadaMulti.html">dadaMulti</a></span>(MA2, <span class="dt">selfConsist=</span><span class="ot">TRUE</span>, <span class="dt">pool=</span><span class="ot">FALSE</span>)
 <span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
 <span class="co">#&gt; Sample 1 - 3495 reads in 1493 unique sequences.</span>
@@ -429,11 +428,19 @@ MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/merg
 MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sequenceTableMulti.html">sequenceTableMulti</a></span>(MA.alt)
 
 MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noChimeMulti.html">noChimeMulti</a></span>(MA.alt, <span class="dt">mc.cores=</span><span class="dv">1</span>)</code></pre></div>
+<p>I will add a comparison between the two different versions here.</p>
+<!-- ```{r compdata, cache=TRUE, message=FALSE} -->
+<!-- together <- lapply(MA6@sequenceTableNoChime, function (x) if(all(dim(x)>1))getSequences(x))[[3]] -->
+<!-- alt <- lapply(MA.alt@sequenceTableNoChime, function (x) if(all(dim(x)>1))getSequences(x))[[3]] -->
+<!-- table(alt%in%together) -->
+<!-- alt.diff <- alt[!alt%in%together] -->
+<!-- tog.diff <- together[!together%in%alt] -->
+<!-- ``` -->
 </div>
 <div id="using-different-parameters-for-each-amplicon" class="section level2">
 <h2 class="hasAnchor">
 <a href="#using-different-parameters-for-each-amplicon" class="anchor"></a>Using different parameters for each amplicon</h2>
-<p>In some real world applications it might be desireable to have more control over paramters used in the pipeline for different amplicons.</p>
+<p>In some real world applications it might be desirable to have more control over parameters used in the pipeline for different amplicons.</p>
 <p>We use ellipsis (aka “…”, dots, dot-dot-dot or three-dots) to pass parameters on to the underlying dada2 functions. The MultiAmplicon package allows all those arguments to be vectors with values varying for different amplicons.</p>
 <p>Let’s suppose for this we e.g. want to merge a subset of our amplicons, while we concatenate others using N’s.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA.mixed &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mergeMulti.html">mergeMulti</a></span>(MA3, <span class="dt">justConcatenate=</span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>))
@@ -452,7 +459,7 @@ MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noCh
 <span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp4F.Amp4R </span>
 <span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
 <span class="co">#&gt; DONE</span></code></pre></div>
-<p>The above example would make sense if amlicons Amp1F.Amp1R and Amp4F.Amp4R (1st and 4th in our object) had too little overalap between forward and revese reads to be merged and would better be concatenated.</p>
+<p>The above example would make sense if amplicons Amp1F.Amp1R and Amp4F.Amp4R (1st and 4th in our object) had too little overlap between forward and reverse reads to be merged and would better be concatenated.</p>
 </div>
 </div>
   </div>
@@ -465,7 +472,7 @@ MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noCh
 <li><a href="#preparing-sequencing-read-files-and-a-primer-set">Preparing sequencing read files and a primer set</a></li>
       <li><a href="#sorting-into-multiple-amplicons">Sorting into multiple amplicons</a></li>
       <li><a href="#visualizing-read-numbers-per-amplicon-and-filtering-based-on-these">Visualizing read numbers per amplicon and filtering based on these</a></li>
-      <li><a href="#running-the-amplicon-sequencing-pipline">Running the amplicon sequencing pipline</a></li>
+      <li><a href="#running-the-amplicon-sequencing-pipeline">Running the amplicon sequencing pipeline</a></li>
       <li><a href="#a-word-on-dada2-sequence-inference">A word on dada2 sequence inference</a></li>
       <li><a href="#using-different-parameters-for-each-amplicon">Using different parameters for each amplicon</a></li>
       </ul>

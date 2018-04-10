@@ -389,3 +389,38 @@ stratifiedFilesF <- function(MA) lapply(MA@stratifiedFiles, slot, "readsF")
 ##' @rdname MultiAmplicon-class
 ##' @export
 stratifiedFilesR <- function(MA) lapply(MA@stratifiedFiles, slot, "readsR")
+
+##' @rdname MultiAmplicon-class
+##' @export
+derepF <-  function(MA) lapply(MA@derep, function (x) lapply(x, slot, "derepF"))
+
+##' @rdname MultiAmplicon-class
+##' @export
+derepR <-  function(MA) lapply(MA@derep, function (x) lapply(x, slot, "derepR"))
+
+##' @rdname MultiAmplicon-class
+##' @export
+dadaF <- function(MA) lapply(MA@dada, slot, "dadaF")
+
+##' @rdname MultiAmplicon-class
+##' @export
+dadaR <- function(MA) lapply(MA@dada, slot, "dadaR")
+
+##' @rdname MultiAmplicon-class
+##' @export
+mergers <- function(MA) MA@mergers
+
+
+##' @rdname MultiAmplicon-class
+##' @export
+mergers <- function(MA) MA@mergers
+
+##' @rdname MultiAmplicon-class
+##' @export
+sequenceTable <- function(MA) MA@sequenceTable
+
+
+##' @rdname MultiAmplicon-class
+##' @export
+sequenceTableNoChime <- function(MA) MA@sequenceTableNoChime
+

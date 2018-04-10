@@ -22,7 +22,7 @@ We first download the raw fastq files of the sample data set
 [from here](https://svalbard.biologie.hu-berlin.de:443/d/c291b870178f4abc8c59/).
  
 
-This dataset was downloaded from NCBI's SRA using the process
+This data set was downloaded from NCBI's SRA using the process
 described in the
 [help file for carnivoreSeqRuns](https://derele.github.io/MultiAmplicon/reference/carnivoreSeqRuns.html).
 
@@ -31,7 +31,6 @@ to execute the pipeline below on your local computer and/or to compile
 the vignette locally.
 
 ```{r getData}
-library(SRAdb) 
 library(MultiAmplicon)
 
 data(carnivoreSeqRuns)
@@ -52,9 +51,10 @@ if(length(fastqFiles) < 100){
 
 ## Data preparation (filtering)
 
-Now we can run our standard workflow. But we have to remember to filte
-our files first. This particular sequencing was of quite low quality,
-so we have to trim and screen quite harshly.
+Now we can run our standard workflow. But in real world example we
+have to quality trim and filter our input files first. This particular
+sequencing was of quite low quality, so we have to trim and screen
+quite harshly.
 
 ```{r filter, message=FALSE}
 fastqF <- grep("_1.fastq.gz", fastqFiles, value = TRUE)

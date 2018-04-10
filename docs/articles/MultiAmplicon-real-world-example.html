@@ -86,7 +86,7 @@
 <p>Now we can run our standard workflow. But we have to remember to filte our files first. This particular sequencing was of quite low quality, so we have to trim and screen quite harshly.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(MultiAmplicon)
 
-path &lt;-<span class="st"> "~/download"</span>
+path &lt;-<span class="st"> "~/download"</span> ## change according to where you downloaded
 
 fastqFiles &lt;-<span class="st"> </span><span class="kw">list.files</span>(path, <span class="dt">pattern=</span><span class="st">".fastq.gz$"</span>, <span class="dt">full.names=</span><span class="ot">TRUE</span>)
 
@@ -103,15 +103,17 @@ filtFs &lt;-<span class="st"> </span><span class="kw">file.path</span>(filt_path
 filtRs &lt;-<span class="st"> </span><span class="kw">file.path</span>(filt_path, <span class="kw">paste0</span>(samples, <span class="st">"_R_filt.fastq.gz"</span>))
 <span class="kw">names</span>(filtRs) &lt;-<span class="st"> </span>samples
 
-filter.track &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">seq_along</span>(fastqF),  function (i) {
-    <span class="kw">filterAndTrim</span>(fastqF[i], filtFs[i], fastqR[i], filtRs[i],
-                  <span class="dt">truncLen=</span><span class="kw">c</span>(<span class="dv">170</span>,<span class="dv">170</span>), <span class="dt">minLen=</span><span class="kw">c</span>(<span class="dv">170</span>,<span class="dv">170</span>), 
-                  <span class="dt">maxN=</span><span class="dv">0</span>, <span class="dt">maxEE=</span><span class="dv">2</span>, <span class="dt">truncQ=</span><span class="dv">2</span>, 
-                  <span class="dt">compress=</span><span class="ot">TRUE</span>, <span class="dt">verbose=</span><span class="ot">TRUE</span>)
-})
-<span class="co">#&gt; Warning in filterAndTrim(fastqF[i], filtFs[i], fastqR[i], filtRs[i],</span>
-<span class="co">#&gt; truncLen = c(170, : No reads passed the filter. Please revisit your</span>
-<span class="co">#&gt; filtering parameters.</span>
+## some files will be filtered out completely, therefore allowing 50
+## files less present and still don't redo filtering
+if(<span class="kw">sum</span>(<span class="kw">file.exists</span>(fastqF)) -
+<span class="st">   </span><span class="kw">sum</span>(<span class="kw">file.exists</span>(filtFs)) &gt;<span class="st"> </span><span class="dv">50</span>){
+    <span class="kw">lapply</span>(<span class="kw">seq_along</span>(fastqF),  function (i) {
+        <span class="kw">filterAndTrim</span>(fastqF[i], filtFs[i], fastqR[i], filtRs[i],
+                      <span class="dt">truncLen=</span><span class="kw">c</span>(<span class="dv">170</span>,<span class="dv">170</span>), <span class="dt">minLen=</span><span class="kw">c</span>(<span class="dv">170</span>,<span class="dv">170</span>), 
+                      <span class="dt">maxN=</span><span class="dv">0</span>, <span class="dt">maxEE=</span><span class="dv">2</span>, <span class="dt">truncQ=</span><span class="dv">2</span>, 
+                      <span class="dt">compress=</span><span class="ot">TRUE</span>, <span class="dt">verbose=</span><span class="ot">TRUE</span>)
+    })
+}
 
 <span class="kw">names</span>(filtFs) &lt;-<span class="st"> </span><span class="kw">names</span>(filtRs) &lt;-<span class="st"> </span>samples
 
@@ -124,8 +126,8 @@ files &lt;-<span class="st"> </span><span class="kw"><a href="../reference/Paire
 <h2 class="hasAnchor">
 <a href="#data-preparation-primer-set" class="anchor"></a>Data preparation (primer set)</h2>
 <p>Now we have our sequencing read input data, only the primers are still missing. The primer set for the above is included in the MultiAmplicon package.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-primer.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"real_world_primers.csv"</span>, <span class="dt">package =</span> <span class="st">"MultiAmplicon"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">primer.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"real_world_primers.csv"</span>,
+                           <span class="dt">package =</span> <span class="st">"MultiAmplicon"</span>)
 
 ptable &lt;-<span class="st"> </span><span class="kw">read.csv</span>(primer.file, <span class="dt">sep=</span><span class="st">","</span>, <span class="dt">header=</span><span class="ot">TRUE</span>, <span class="dt">stringsAsFactors=</span><span class="ot">FALSE</span>)
 

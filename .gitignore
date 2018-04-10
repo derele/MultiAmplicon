@@ -18,3 +18,5 @@ docs/articles/filtered/
 vignettes/*_cache*
 *_cache*
 vignettes/MultiAmplicon-real-world-example_cache/
+/docs/articles/MultiAmplicon-real-world-example.R
+/vignettes/MultiAmplicon-real-world-example.R

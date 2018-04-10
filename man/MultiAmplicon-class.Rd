@@ -14,6 +14,14 @@
 \alias{rawCounts,MultiAmplicon-method}
 \alias{stratifiedFilesF}
 \alias{stratifiedFilesR}
+\alias{derepF}
+\alias{derepR}
+\alias{dadaF}
+\alias{dadaR}
+\alias{mergers}
+\alias{mergers}
+\alias{sequenceTable}
+\alias{sequenceTableNoChime}
 \alias{show,MultiAmplicon-method}
 \alias{[,MultiAmplicon,index,index,ANY-method}
 \alias{[,MultiAmplicon,index,missing,ANY-method}
@@ -45,6 +53,22 @@ rawCounts(x)
 stratifiedFilesF(MA)
 
 stratifiedFilesR(MA)
+
+derepF(MA)
+
+derepR(MA)
+
+dadaF(MA)
+
+dadaR(MA)
+
+mergers(MA)
+
+mergers(MA)
+
+sequenceTable(MA)
+
+sequenceTableNoChime(MA)
 
 \S4method{show}{MultiAmplicon}(object)
 
