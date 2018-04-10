@@ -74,16 +74,11 @@
     
     
 <div class="contents">
-<div id="data-preparation-download" class="section level2">
+<div id="data-preparation-download-and-filtering" class="section level2">
 <h2 class="hasAnchor">
-<a href="#data-preparation-download" class="anchor"></a>Data preparation (download)</h2>
-<p>We first download the sample data set from SRA using a helper scirtp part of the MultiAmplicon package.</p>
-<p>You will need about 2Gb space to store those files if you want to execute the pipeline below on your local computer and/or compile the vignette locally.</p>
-</div>
-<div id="data-preparation-filtering" class="section level2">
-<h2 class="hasAnchor">
-<a href="#data-preparation-filtering" class="anchor"></a>Data preparation (filtering)</h2>
-<p>Now we can run our standard workflow. But we have to remember to filte our files first. This particular sequencing was of quite low quality, so we have to trim and screen quite harshly.</p>
+<a href="#data-preparation-download-and-filtering" class="anchor"></a>Data preparation (download and filtering)</h2>
+<p>We first <a href="https://svalbard.biologie.hu-berlin.de:443/d/c291b870178f4abc8c59/">download the sample data</a> set from consisting of 192 fastq file-pairs from 18S and 16S amplicon sequencing of fecess and intestinal contents of carnivores (hyenas and wolfes). The help file for the <a href="https://derele.github.io/MultiAmplicon/reference/carnivoreSeqRuns.html"><code>carnivoreSeqRuns</code></a> (containing sample data included in the package), shows how this data has been downloaded from <a href="https://www.ncbi.nlm.nih.gov/bioproject/PRJNA386767">NCBI-SRA</a>.</p>
+<p>Now we can run our standard workflow. But as usual with real data we have to filter the input files first. This particular sequencing was of quite low quality, so we have to trim and screen quite harshly.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(MultiAmplicon)
 
 path &lt;-<span class="st"> "~/download"</span> ## change according to where you downloaded
@@ -151,8 +146,7 @@ primers &lt;-<span class="st"> </span><span class="kw"><a href="../reference/Pri
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#data-preparation-download">Data preparation (download)</a></li>
-      <li><a href="#data-preparation-filtering">Data preparation (filtering)</a></li>
+<li><a href="#data-preparation-download-and-filtering">Data preparation (download and filtering)</a></li>
       <li><a href="#data-preparation-primer-set">Data preparation (primer set)</a></li>
       <li><a href="#running-the-multiamplicon-pipeline">Running the MultiAmplicon pipeline</a></li>
       </ul>

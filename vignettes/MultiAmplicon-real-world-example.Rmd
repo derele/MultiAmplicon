@@ -16,20 +16,21 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Data preparation (download)
+## Data preparation (download and filtering)
 
-We first download the sample data set from SRA using a helper scirtp
-part of the MultiAmplicon package.
+We first
+[download the sample data](https://svalbard.biologie.hu-berlin.de:443/d/c291b870178f4abc8c59/)
+set from consisting of 192 fastq file-pairs from 18S and 16S amplicon
+sequencing of fecess and intestinal contents of carnivores (hyenas and
+wolfes). The help file for the
+[`carnivoreSeqRuns`](https://derele.github.io/MultiAmplicon/reference/carnivoreSeqRuns.html)
+(containing sample data included in the package), shows how this data
+has been downloaded from
+[NCBI-SRA](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA386767).
 
-You will need about 2Gb space to store those files if you want to
-execute the pipeline below on your local computer and/or compile the
-vignette locally.
-
-## Data preparation (filtering)
-
-Now we can run our standard workflow. But we have to remember to filte
-our files first. This particular sequencing was of quite low quality,
-so we have to trim and screen quite harshly.
+Now we can run our standard workflow. But as usual with real data we
+have to filter the input files first. This particular sequencing was
+of quite low quality, so we have to trim and screen quite harshly.
 
 ```{r filter, message=FALSE}
 library(MultiAmplicon)
