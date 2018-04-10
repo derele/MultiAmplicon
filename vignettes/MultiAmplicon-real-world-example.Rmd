@@ -25,41 +25,6 @@ You will need about 2Gb space to store those files if you want to
 execute the pipeline below on your local computer and/or compile the
 vignette locally.
 
-```{r getData}
-library(SRAdb) 
-library(MultiAmplicon)
-
-file.string <- paste0(system.file(package = "MultiAmplicon"),
-                      "SRAmetadb.sqlite")
-
-if(!file.exists(file.string)){
-    getSRAdbFile(destdir=system.file(package = "MultiAmplicon"))
-}
-
-sra_con <- dbConnect(SQLite(), file.string)
-
-carnivoreSeqRuns <- getSRA(search_terms =
-                               '"Intestinal biome sequencing of carnivores"',
-                           sra_con=sra_con, acc_only=FALSE)
-
-carnivoreSeqRuns <- carnivoreSeqRuns[, c('run','study','sample',
-                                         'experiment', 'sample_attribute')]
-
-runs <- tail(carnivoreSeqRuns$run, n=50)
-
-destDir <- "./download"
-
-if(!file_test("-d", destDir)) dir.create(destDir)
-
-fastqFiles <- list.files(destDir, pattern=".fastq.gz", full.names=TRUE)
-
-if(length(fastqFiles) < 100){
-    getSRAfile(runs, sra_con, fileType = 'fastq' , srcType = "ftp",
-               destDir=destDir)
-    fastqFiles <- list.files(destDir, pattern=".fastq.gz", full.names=TRUE)
-}
-```
-
 ## Data preparation (filtering)
 
 Now we can run our standard workflow. But we have to remember to filte
@@ -67,6 +32,12 @@ our files first. This particular sequencing was of quite low quality,
 so we have to trim and screen quite harshly.
 
 ```{r filter, message=FALSE}
+library(MultiAmplicon)
+
+path <- "~/download"
+
+fastqFiles <- list.files(path, pattern=".fastq.gz$", full.names=TRUE)
+
 fastqF <- grep("_1.fastq.gz", fastqFiles, value = TRUE)
 fastqR <- grep("_2.fastq.gz", fastqFiles, value = TRUE)
 

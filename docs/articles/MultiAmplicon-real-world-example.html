@@ -48,7 +48,7 @@
       <a href="../articles/MultiAmplicon-real-world-example.html">Multi Amplicon - a real world example</a>
     </li>
     <li>
-      <a href="../articles/MultiAmplicon-small-example.html">Multi Amplicon - a small example</a>
+      <a href="../articles/MultiAmplicon-small-example.html">MultiAmplicon - a small example</a>
     </li>
   </ul>
 </li>
@@ -68,7 +68,7 @@
       <h1>Multi Amplicon - a real world example</h1>
                         <h4 class="author">Emanuel Heitlinger</h4>
             
-            <h4 class="date">2018-04-09</h4>
+            <h4 class="date">2018-04-10</h4>
           </div>
 
     
@@ -165,13 +165,15 @@ if(!<span class="kw">file.exists</span>(<span class="st">"SRAmetadb.sqlite"</spa
 } else {
     sqlfile &lt;-<span class="st"> "SRAmetadb.sqlite"</span>
 }
+<span class="co">#&gt; Unzipping...</span>
+<span class="co">#&gt; Metadata associate with downloaded file:</span>
+<span class="co">#&gt; c("schema version", "creation timestamp")c("1.0", "2018-04-05 23:32:48")</span>
 
 sra_con &lt;-<span class="st"> </span><span class="kw">dbConnect</span>(<span class="kw">SQLite</span>(), sqlfile)
 
 carnivoreSeqRuns &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/SRAdb/topics/getSRA">getSRA</a></span>(<span class="dt">search_terms =</span>
                                <span class="st">'"Intestinal biome sequencing of carnivores"'</span>,
                            <span class="dt">sra_con=</span>sra_con, <span class="dt">acc_only=</span><span class="ot">FALSE</span>)
-
 
 carnivoreSeqRuns &lt;-<span class="st"> </span>carnivoreSeqRuns[, <span class="kw">c</span>(<span class="st">'run'</span>,<span class="st">'study'</span>,<span class="st">'sample'</span>,
                                          <span class="st">'experiment'</span>, <span class="st">'sample_attribute'</span>)]

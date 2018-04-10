@@ -3,7 +3,5 @@
 ^\.travis\.yml$
 ^codecov\.yml$
 ^docs$
-^download$
-^filtered$
-^SRAmetadb.sqlite$
 ^.build.timestamp$
+^filtered$
