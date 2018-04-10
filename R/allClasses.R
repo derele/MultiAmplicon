@@ -375,10 +375,10 @@ setMethod("dim", "MultiAmplicon", function (x) {
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-setGeneric("rawCounts", function(object){standardGeneric("rawCounts")})
+setGeneric("rawCounts", function(x){standardGeneric("rawCounts")})
 
 ##' @rdname MultiAmplicon-class
-setMethod("rawCounts", "MultiAmplicon", function(object) slot(x, "rawCounts"))
+setMethod("rawCounts", "MultiAmplicon", function(x) slot(x, "rawCounts"))
 
 ## accessors for the stratified files
 ##' @rdname MultiAmplicon-class
