@@ -45,7 +45,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/MultiAmplicon-real-world-example.html">Multi Amplicon - a real world example</a>
+      <a href="../articles/MultiAmplicon-real-world-example.html">MultiAmplicon - a real world example</a>
     </li>
     <li>
       <a href="../articles/MultiAmplicon-small-example.html">MultiAmplicon - a small example</a>
@@ -74,7 +74,6 @@
     
     
 <div class="contents">
-<p>The MultiAmplicon-package allows the matching and removal of primer sequences from sequencing reads. Amplicons, here defined as the sequences amplified by particular combionation of forward and reverse primer, can then be further processed. The package further guiedes downstream analysis of multiple amplicons in a bioconductor workflow wrapped around the package dada2 (and phyloseq).</p>
 <div id="preparing-sequencing-read-files-and-a-primer-set" class="section level2">
 <h2 class="hasAnchor">
 <a href="#preparing-sequencing-read-files-and-a-primer-set" class="anchor"></a>Preparing sequencing read files and a primer set</h2>
@@ -316,7 +315,7 @@ knitr::<span class="kw">kable</span>(<span class="kw"><a href="../reference/Mult
 errR &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">stratifiedFilesR</a></span>(MA1)), <span class="dt">nread=</span><span class="fl">1e6</span>,
                     <span class="dt">verbose=</span><span class="dv">0</span>)</code></pre></div>
 <p>We can now run the pipeline of the dada2 package in parallel over the different amplicons. We update our object from each previous step and safe it under a new name, here for illustration. In your own workflow you can also overwrite the old object.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/derepMulti.html">derepMulti</a></span>(MA.sub)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/derepMulti.html">derepMulti</a></span>(MA.sub, <span class="dt">mc.cores=</span><span class="dv">1</span>) 
 
 MA3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/dadaMulti.html">dadaMulti</a></span>(MA2, <span class="dt">Ferr=</span>errF, <span class="dt">Rerr=</span>errR,  <span class="dt">pool=</span><span class="ot">FALSE</span>)
 <span class="co">#&gt; Sample 1 - 3495 reads in 1493 unique sequences.</span>
@@ -348,7 +347,7 @@ MA4 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mergeMu
 
 MA5 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sequenceTableMulti.html">sequenceTableMulti</a></span>(MA4)
 
-MA6 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noChimeMulti.html">noChimeMulti</a></span>(MA5)</code></pre></div>
+MA6 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noChimeMulti.html">noChimeMulti</a></span>(MA5, <span class="dt">mc.cores=</span><span class="dv">1</span>)</code></pre></div>
 <p>Ready! This was <em>easy</em>, right?</p>
 </div>
 <div id="a-word-on-dada2-sequence-inference" class="section level2">
@@ -429,7 +428,7 @@ MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/merg
 
 MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sequenceTableMulti.html">sequenceTableMulti</a></span>(MA.alt)
 
-MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noChimeMulti.html">noChimeMulti</a></span>(MA.alt)</code></pre></div>
+MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noChimeMulti.html">noChimeMulti</a></span>(MA.alt, <span class="dt">mc.cores=</span><span class="dv">1</span>)</code></pre></div>
 </div>
 <div id="using-different-parameters-for-each-amplicon" class="section level2">
 <h2 class="hasAnchor">

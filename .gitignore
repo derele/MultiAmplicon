@@ -13,5 +13,9 @@ filtered/*
 /vignettes/SRAmetadb.sqlite.gz
 docs/articles/download/
 docs/articles/filtered/
-/inst/SRAmetadb.sqlite.gz
-inst/doc/*
+inst/doc
+/vignettes/filtered/
+*_cache/*
+vignettes/*_cache*
+*_cache*
+vignettes/MultiAmplicon-real-world-example_cache/

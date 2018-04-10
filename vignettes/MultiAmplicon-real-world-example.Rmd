@@ -69,9 +69,9 @@ Now we have our sequencing read input data, only the primers are still
 missing. The primer set for the above is included in the MultiAmplicon
 package.
 
-```{r prep primers}
-
-primer.file <- system.file("extdata", "real_world_primers.csv", package = "MultiAmplicon")
+```{r prepPrimers, cache=TRUE}
+primer.file <- system.file("extdata", "real_world_primers.csv",
+                           package = "MultiAmplicon")
 
 ptable <- read.csv(primer.file, sep=",", header=TRUE, stringsAsFactors=FALSE)
 
