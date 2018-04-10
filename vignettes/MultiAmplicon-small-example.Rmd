@@ -149,7 +149,7 @@ you can also overwrite the old object.
 
 
 ```{r pipeline, cache=TRUE, message=FALSE}
-MA2 <- derepMulti(MA.sub)
+MA2 <- derepMulti(MA.sub, mc.cores=1) 
 
 MA3 <- dadaMulti(MA2, Ferr=errF, Rerr=errR,  pool=FALSE)
 
@@ -157,7 +157,7 @@ MA4 <- mergeMulti(MA3)
 
 MA5 <- sequenceTableMulti(MA4)
 
-MA6 <- noChimeMulti(MA5)
+MA6 <- noChimeMulti(MA5, mc.cores=1)
 ```
 
 Ready! This was *easy*, right?
@@ -180,7 +180,7 @@ MA.alt <- mergeMulti(MA.alt)
 
 MA.alt <- sequenceTableMulti(MA.alt)
 
-MA.alt <- noChimeMulti(MA.alt)
+MA.alt <- noChimeMulti(MA.alt, mc.cores=1)
 ```
 
 ## Using different parameters for each amplicon

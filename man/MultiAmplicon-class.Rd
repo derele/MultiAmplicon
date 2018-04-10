@@ -84,11 +84,9 @@ slot is created by \code{\link{sequenceTableMulti}}}
 \item{sequenceTableNoChime}{Users should not supply this prameter,
 the slot is created by \code{\link{noChimeMulti}}}
 
-\item{x}{MultiAmplicon-class object}
+\item{x}{A \code{MultiAmplicon-class} object.}
 
 \item{MA}{MultiAmplicon-class object}
-
-\item{object}{A \code{MultiAmplicon-class} object.}
 
 \item{i}{numeric, logical or names vector for subsetting rows (==
 amplicons)}
@@ -99,6 +97,8 @@ amplicons)}
 \item{...}{not used}
 
 \item{drop}{should not be used}
+
+\item{x}{MultiAmplicon-class object}
 }
 \description{
 The MultiAmplicon class is a container for storing primer pairs,

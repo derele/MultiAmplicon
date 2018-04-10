@@ -284,28 +284,6 @@ setMethod("length", "PairedDada", function(x){
 ##' @param sequenceTableNoChime Users should not supply this prameter,
 ##'     the slot is created by \code{\link{noChimeMulti}}
 ##' 
-## ##' Accessor-like methods:
-## ##' 
-## ##' In the code snippets below, 'x' is an
-## ##' \code{\link{MultiAmplicon-class}} object.
-## ##' 
-## ##' 'nrow(x)' An integer giving the number of primer pairs in the
-## ##' object
-## ##'
-## ##' 'ncol(x)' An integer giving the number of paired read files
-## ##' (usually samples and their replicates) in the object
-## ##'
-## ##' 'rownames(x)' A character vector giving the primer-pair names see
-## ##' \code{\link{PrimerPairsSet}}
-## ##'
-## ##' 'colnames(x)' A character vector giving the names of the paired
-## ##' read filnames (e.g. used to store sample names) see also
-## ##' \code{\link{PairedReadFileSet}}
-## ##'
-## ##' 'rawCounts(x)' An accessor for the slot of the same name, returns
-## ##' raw sequencing read counts assigned to a particular sample (input
-## ##' file pair) and amplicon (input primer pair)
-##'
 ##' @examples
 ##'
 ##' primerF <- c("AGAGTTTGATCCTGGCTCAG", "ACTCCTACGGGAGGCAGC",
@@ -397,10 +375,10 @@ setMethod("dim", "MultiAmplicon", function (x) {
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-setGeneric("rawCounts", function(x){standardGeneric("rawCounts")})
+setGeneric("rawCounts", function(object){standardGeneric("rawCounts")})
 
 ##' @rdname MultiAmplicon-class
-setMethod("rawCounts", "MultiAmplicon", function(x) slot(x, "rawCounts"))
+setMethod("rawCounts", "MultiAmplicon", function(object) slot(x, "rawCounts"))
 
 ## accessors for the stratified files
 ##' @rdname MultiAmplicon-class

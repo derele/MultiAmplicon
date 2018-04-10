@@ -37,7 +37,7 @@ setMethod("show", "PrimerPairsSet", function(object){
 ##' @importFrom methods show
 ##' @rdname MultiAmplicon-class 
 setMethod("show", "MultiAmplicon", function(object){
-    cat("A", class(object), "instance of dimensions", dim(object)[1], "x",
+    cat("A", class(object), "instance of dimensions", dim(object)[1], "object",
         dim(object)[2],"\n")
     cat("\nContaining slot PrimerPairsSet: \n")
     show(object@PrimerPairsSet)
