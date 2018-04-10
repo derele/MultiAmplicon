@@ -70,7 +70,7 @@ sequencing files (in a <code><a href='PairedReadFileSet-class.html'>PairedReadFi
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/MultiAmplicon-real-world-example.html">Multi Amplicon - a real world example</a>
+      <a href="../articles/MultiAmplicon-real-world-example.html">MultiAmplicon - a real world example</a>
     </li>
     <li>
       <a href="../articles/MultiAmplicon-small-example.html">MultiAmplicon - a small example</a>
@@ -200,15 +200,11 @@ the slot is created by <code><a href='noChimeMulti.html'>noChimeMulti</a></code>
     </tr>
     <tr>
       <th>x</th>
-      <td><p>MultiAmplicon-class object</p></td>
+      <td><p>A <code>MultiAmplicon-class</code> object.</p></td>
     </tr>
     <tr>
       <th>MA</th>
       <td><p>MultiAmplicon-class object</p></td>
-    </tr>
-    <tr>
-      <th>object</th>
-      <td><p>A <code>MultiAmplicon-class</code> object.</p></td>
     </tr>
     <tr>
       <th>i</th>
@@ -227,6 +223,10 @@ amplicons)</p></td>
     <tr>
       <th>drop</th>
       <td><p>should not be used</p></td>
+    </tr>
+    <tr>
+      <th>x</th>
+      <td><p>MultiAmplicon-class object</p></td>
     </tr>
     </table>
     
@@ -294,7 +294,7 @@ pairs of dada-class objects created by <code>dada2</code>’s
 <span class='co'>## the number of samples (sequencing read file pairs)</span>
 <span class='fu'>ncol</span>(<span class='no'>MA</span>)</div><div class='output co'>#&gt; [1] 7</div><div class='input'>
 <span class='co'>## sort into amplicons</span>
-<span class='no'>MA1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sortAmplicons.html'>sortAmplicons</a></span>(<span class='no'>MA</span>)</div><div class='output co'>#&gt; <span class='message'>using existing directory /tmp/RtmprDWp8e and adding specific prefixes to avoid problems when running code twice</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 0 sequencing reads for S00_F_filt.fastq.gz in</span>
+<span class='no'>MA1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sortAmplicons.html'>sortAmplicons</a></span>(<span class='no'>MA</span>)</div><div class='output co'>#&gt; <span class='message'>using existing directory /tmp/RtmpIx0cHW and adding specific prefixes to avoid problems when running code twice</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 0 sequencing reads for S00_F_filt.fastq.gz in</span>
 #&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S00_F_filt.fastq.gz and </span>
 #&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S00_R_filt.fastq.gz</span>
 #&gt; <span class='message'> into 0 amplicons</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 0 sequencing reads for S01_F_filt.fastq.gz in</span>
