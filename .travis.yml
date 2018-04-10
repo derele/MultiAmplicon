@@ -4,10 +4,12 @@ use_bioc: true
 # bioc_required: true
 cache: packages
 
-install: travis_wait 120 mvn install
-
 # before_script:
 #   - echo "BiocParallel::register(BiocParallel::SerialParam())" > ~/.Rprofile
+
+script : 
+ - travis_wait 100 R CMD build --no-build-vignettes
+ - travis_wait 100 R CMD check "${PKG_FILE_NAME}" --no-build-vignettes --as-cran
 
 r_packages:
   - covr
