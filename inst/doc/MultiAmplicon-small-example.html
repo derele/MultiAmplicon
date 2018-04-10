@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Emanuel Heitlinger" />
+
+<meta name="date" content="2018-04-04" />
+
+<title>Multi Amplicon - a small example</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Multi Amplicon - a small example</h1>
+<h4 class="author"><em>Emanuel Heitlinger</em></h4>
+<h4 class="date"><em>2018-04-04</em></h4>
+
+
+
+<div id="multi-amplicon---a-small-example" class="section level1">
+<h1>Multi Amplicon - a small example</h1>
+<p>The MultiAmplicon-package allows the matching and removal of primer sequences from sequencing reads. Amplicons, here defined as the sequences amplified by particular combionation of forward and reverse primer, can then be further processed. The package further guiedes downstream analysis of multiple amplicons in a bioconductor workflow wrapped around the package dada2 (and phyloseq).</p>
+<div id="preparing-sequencing-read-files-and-a-primer-set" class="section level2">
+<h2>Preparing sequencing read files and a primer set</h2>
+<p>The MultiAmplicon package uses dedicated classes to ensure that input to its <code>sortAmplicons</code> function is provided correctly. Concerning input files, this means for the user that file names (including paths to the directory they are stored in) of forward and reverse sequencing read files must be provided as a <code>PairedReadFileSet</code>. These files can contain reads in fastq or in gzipped fastq format. We focus as a default use case on (non-interleaved) paired-end reads, as these are the most common format Illumina sequencing reads are currently produced in (but see vignette xyz as an example how to process single-end sequencing data).</p>
+<p>Similarly, primer pairs must be provided in a <code>PrimerPairsSet</code>. We then match forward and reverse primers at the start of forward and reverse reads, respectively. The maximal number of missmatches and the maximal distance from the start of the read can be supplied as arguments to the function. The primer sequences are trimmed from the reads and the read-pair is associated with the amplicon defined by the primer-pair. While we focus on this default use case, the package can als be used adaptor trimming with a single primer (see vignette xyz).</p>
+<p>But to go on with our main intended use case example first have a look at how <code>PairedReadFileSet</code> and <code>PrimerPairsSet</code> are generated.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressMessages</span>(<span class="kw">library</span>(MultiAmplicon))
+
+primerF &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">Amp1F =</span> <span class="st">&quot;AGAGTTTGATCCTGGCTCAG&quot;</span>, <span class="dt">Amp2F =</span> <span class="st">&quot;ACTCCTACGGGAGGCAGC&quot;</span>,
+             <span class="dt">Amp3F =</span> <span class="st">&quot;GAATTGACGGAAGGGCACC&quot;</span>, <span class="dt">Amp4F =</span> <span class="st">&quot;YGGTGRTGCATGGCCGYT&quot;</span>,
+             <span class="dt">Amp5F =</span> <span class="st">&quot;AAAAACCCCGGGGGGTTTTT&quot;</span>, <span class="dt">Amp6F =</span> <span class="st">&quot;AGAGTTTGATCCTGCCTCAG&quot;</span>)
+
+primerR &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">Amp1R =</span> <span class="st">&quot;CTGCWGCCNCCCGTAGG&quot;</span>, <span class="dt">Amp2R =</span> <span class="st">&quot;GACTACHVGGGTATCTAATCC&quot;</span>,
+             <span class="dt">Amp3R =</span> <span class="st">&quot;AAGGGCATCACAGACCTGTTAT&quot;</span>, <span class="dt">Amp4R =</span> <span class="st">&quot;TCCTTCTGCAGGTTCACCTAC&quot;</span>,
+             <span class="dt">Amp5R =</span> <span class="st">&quot;AAAAACCCCGGGGGGTTTTT&quot;</span>, <span class="dt">Amp6R =</span> <span class="st">&quot;CCTACGGGTGGCAGATGCAG&quot;</span>)
+
+PPS &lt;-<span class="st"> </span><span class="kw">PrimerPairsSet</span>(primerF, primerR)
+
+fastq.dir &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;fastq&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;MultiAmplicon&quot;</span>)
+fastq.files &lt;-<span class="st"> </span><span class="kw">list.files</span>(fastq.dir, <span class="dt">full.names=</span><span class="ot">TRUE</span>)
+
+Ffastq.file &lt;-<span class="st"> </span>fastq.files[<span class="kw">grepl</span>(<span class="st">&quot;F_filt&quot;</span>, fastq.files)]
+Rfastq.file &lt;-<span class="st"> </span>fastq.files[<span class="kw">grepl</span>(<span class="st">&quot;R_filt&quot;</span>, fastq.files)]
+
+PRF &lt;-<span class="st"> </span><span class="kw">PairedReadFileSet</span>(Ffastq.file, Rfastq.file)
+
+MA &lt;-<span class="st"> </span><span class="kw">MultiAmplicon</span>(PPS, PRF)</code></pre></div>
+<p>Note that the primer pairs in the <code>PrimerPairsSet</code> can be named and the same also is true for the sequencing read file pairs (although not in our example above). This results in names for primer-pairs and for samples.</p>
+</div>
+<div id="sorting-into-multiple-amplicons" class="section level2">
+<h2>Sorting into multiple amplicons</h2>
+<p>Based on the primer sequences we can now sort the sequences into amplicons. This is done by the function <code>sortAmplicons</code>, which updates the MultiAmplicon object with the sorted amplicons.</p>
+<p>For this small example dataset we can look at the resuling <code>rawCounts</code> i.e. the number of sequences for each of the fully stratified amplicon x sample matrix.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA1 &lt;-<span class="st"> </span><span class="kw">sortAmplicons</span>(MA)
+<span class="co">#&gt; using existing directory  /tmp/RtmpFePLS8 and adding specific prefixes to avoid problems when running code twice </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  finished  sorting 0 sequencing reads for S0_F_filt.fastq.gz in </span>
+<span class="co">#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S0_F_filt.fastq.gz  and </span>
+<span class="co">#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S0_R_filt.fastq.gz </span>
+<span class="co">#&gt;   into  0 amplicons </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  finished  sorting 0 sequencing reads for S00_F_filt.fastq.gz in </span>
+<span class="co">#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S00_F_filt.fastq.gz  and </span>
+<span class="co">#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S00_R_filt.fastq.gz </span>
+<span class="co">#&gt;   into  0 amplicons </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  finished  sorting 1 sequencing reads for S01_F_filt.fastq.gz in </span>
+<span class="co">#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S01_F_filt.fastq.gz  and </span>
+<span class="co">#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S01_R_filt.fastq.gz </span>
+<span class="co">#&gt;   into  1 amplicons </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  finished  sorting 9348 sequencing reads for S121_F_filt.fastq.gz in </span>
+<span class="co">#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S121_F_filt.fastq.gz  and </span>
+<span class="co">#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S121_R_filt.fastq.gz </span>
+<span class="co">#&gt;   into  4 amplicons </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  finished  sorting 5 sequencing reads for S144_F_filt.fastq.gz in </span>
+<span class="co">#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S144_F_filt.fastq.gz  and </span>
+<span class="co">#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S144_R_filt.fastq.gz </span>
+<span class="co">#&gt;   into  1 amplicons </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  finished  sorting 16 sequencing reads for S22_F_filt.fastq.gz in </span>
+<span class="co">#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S22_F_filt.fastq.gz  and </span>
+<span class="co">#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S22_R_filt.fastq.gz </span>
+<span class="co">#&gt;   into  4 amplicons </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  finished  sorting 63448 sequencing reads for S8_F_filt.fastq.gz in </span>
+<span class="co">#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S8_F_filt.fastq.gz  and </span>
+<span class="co">#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S8_R_filt.fastq.gz </span>
+<span class="co">#&gt;   into  4 amplicons </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  finished  sorting 7108 sequencing reads for S91_F_filt.fastq.gz in </span>
+<span class="co">#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S91_F_filt.fastq.gz  and </span>
+<span class="co">#&gt;   /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S91_R_filt.fastq.gz </span>
+<span class="co">#&gt;   into  4 amplicons</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(<span class="kw">rawCounts</span>(MA1))</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">S0_F_filt.fastq.gz</th>
+<th align="right">S00_F_filt.fastq.gz</th>
+<th align="right">S01_F_filt.fastq.gz</th>
+<th align="right">S121_F_filt.fastq.gz</th>
+<th align="right">S144_F_filt.fastq.gz</th>
+<th align="right">S22_F_filt.fastq.gz</th>
+<th align="right">S8_F_filt.fastq.gz</th>
+<th align="right">S91_F_filt.fastq.gz</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Amp1F.Amp1R</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">3495</td>
+<td align="right">5</td>
+<td align="right">5</td>
+<td align="right">29310</td>
+<td align="right">2569</td>
+</tr>
+<tr class="even">
+<td>Amp2F.Amp2R</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">2949</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">20391</td>
+<td align="right">2690</td>
+</tr>
+<tr class="odd">
+<td>Amp3F.Amp3R</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1817</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">11671</td>
+<td align="right">1421</td>
+</tr>
+<tr class="even">
+<td>Amp4F.Amp4R</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1087</td>
+<td align="right">0</td>
+<td align="right">7</td>
+<td align="right">2076</td>
+<td align="right">428</td>
+</tr>
+<tr class="odd">
+<td>Amp5F.Amp5R</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td>Amp6F.Amp6R</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p>Now we can plot the result. The function plotAmpliconNumbers allows us also to store clustering information (see ). Which can afterwards be used to filter data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clusters &lt;-<span class="st"> </span><span class="kw">plotAmpliconNumbers</span>(MA1)</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>We can use this clustering information to subset our MultiAmplicon object.</p>
+<p>You can enable figure captions by <code>fig_caption: yes</code> in YAML:</p>
+<pre><code>output:
+  rmarkdown::html_vignette:
+    fig_caption: yes</code></pre>
+<p>Then you can use the chunk option <code>fig.cap = &quot;Your figure caption.&quot;</code> in <strong>knitr</strong>.</p>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

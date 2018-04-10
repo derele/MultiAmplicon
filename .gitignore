@@ -5,7 +5,6 @@
 *.R~
 *~
 MA_sorted.rda
-inst/doc
 docs/articles/*_cache/
 *.sqlite
 download/*
@@ -15,3 +14,5 @@ filtered/*
 docs/articles/download/
 docs/articles/filtered/
 /inst/SRAmetadb.sqlite.gz
+vignettes/*
+inst/doc/*
