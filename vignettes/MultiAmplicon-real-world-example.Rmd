@@ -1,5 +1,5 @@
 ---
-title: "Multi Amplicon - a real world example"
+title: "MultiAmplicon - a real world example"
 author: "Emanuel Heitlinger"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
