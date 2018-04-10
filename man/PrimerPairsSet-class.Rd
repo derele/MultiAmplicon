@@ -30,6 +30,8 @@ length. Can be named or unnamed.}
 
 \item{x}{A \code{PrimerPairsSet-class} object.}
 
+\item{object}{A \code{PrimerPairsSet-class} object.}
+
 \item{i}{integer, or logical value which primer pairs to select or
 character string giving the name of the primer pair}
 
@@ -38,8 +40,6 @@ character string giving the name of the primer pair}
 \item{...}{not used}
 
 \item{drop}{not used}
-
-\item{x}{A \code{PrimerPairsSet-class} object.}
 }
 \value{
 PrimerPairsSet-class

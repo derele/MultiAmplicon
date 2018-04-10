@@ -45,7 +45,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/MultiAmplicon-real-world-example.html">Multi Amplicon - a real world example</a>
+      <a href="articles/MultiAmplicon-real-world-example.html">MultiAmplicon - a real world example</a>
     </li>
     <li>
       <a href="articles/MultiAmplicon-small-example.html">MultiAmplicon - a small example</a>
@@ -66,13 +66,26 @@
   <div class="contents col-md-9">
     
 
-<p>This is a pre-release version! I have used it in my own research but the documentation is still patchy. Once fit for reseach use by people other than myself this note will disappear/change.</p>
+<div id="the-multiamplicon-r-package" class="section level1">
+<div class="page-header"><h1 class="hasAnchor">
+<a href="#the-multiamplicon-r-package" class="anchor"></a>The MultiAmplicon R-package</h1></div>
+<p>The MultiAmplicon-package allows the matching and removal of primer sequences from sequencing reads. Amplicons, here defined as the sequences amplified by particular combination of forward and reverse primer, can then be further processed. The package guiedes downstream analysis of multiple amplicons in a bioconductor workflow wrapped around the package <a href="https://benjjneb.github.io/dada2/index.html">dada2</a> and helps to export to <a href="https://joey711.github.io/phyloseq/index.html">phyloseq</a> for further analysis.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>(for the adventurous)</p>
 <div class="sourceCode"><pre class="sourceCode s"><code class="sourceCode gnuassembler">require(devtools)
-<span class="kw">devtools::</span>insatll_github(<span class="st">"derele/MultiAmplicon"</span>)</code></pre></div>
+<span class="kw">devtools::</span>install_github(<span class="st">"derele/MultiAmplicon"</span>)</code></pre></div>
+</div>
+<div id="documentation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#documentation" class="anchor"></a>Documentation</h2>
+<p>Documentation, including the <a href="https://derele.github.io/MultiAmplicon/reference/index.html">reference manual</a> is available <a href="https://derele.github.io/MultiAmplicon/index.html">online</a>.</p>
+<p>Tutorials cover:</p>
+<ul>
+<li><p><a href="https://derele.github.io/MultiAmplicon/articles/MultiAmplicon-small-example.html">A a typical workflow quickly executed on data available within the package</a></p></li>
+<li><p><a href="https://derele.github.io/MultiAmplicon/articles/MultiAmplicon-real-world-example.html">A a typical workflow quickly executed on a real world dataset</a></p></li>
+</ul>
+</div>
 </div>
 
   </div>
