@@ -22,6 +22,10 @@
 \alias{mergers}
 \alias{sequenceTable}
 \alias{sequenceTableNoChime}
+\alias{calcPropMerged}
+\alias{calcPropMerged,MultiAmplicon-method}
+\alias{getSequencesFromTable}
+\alias{getSequencesFromTable,MultiAmplicon-method}
 \alias{show,MultiAmplicon-method}
 \alias{[,MultiAmplicon,index,index,ANY-method}
 \alias{[,MultiAmplicon,index,missing,ANY-method}
@@ -69,6 +73,14 @@ mergers(MA)
 sequenceTable(MA)
 
 sequenceTableNoChime(MA)
+
+calcPropMerged(MA)
+
+\S4method{calcPropMerged}{MultiAmplicon}(MA)
+
+getSequencesFromTable(MA)
+
+\S4method{getSequencesFromTable}{MultiAmplicon}(MA)
 
 \S4method{show}{MultiAmplicon}(object)
 

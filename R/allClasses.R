@@ -376,7 +376,12 @@ setGeneric("rawCounts", function(x){standardGeneric("rawCounts")})
 ##' @rdname MultiAmplicon-class
 setMethod("rawCounts", "MultiAmplicon", function(x) slot(x, "rawCounts"))
 
-## accessors for the stratified files
+## More accessors and accessor like summarizers --------------------------
+### ToDo!! Improve coding of these. User interface should remain
+### though...  Better individual functions than one that does it all
+### depending on context and confusin the user
+
+
 ##' @rdname MultiAmplicon-class
 ##' @param MA MultiAmplicon-class object
 ##' @export
@@ -420,3 +425,30 @@ sequenceTable <- function(MA) MA@sequenceTable
 ##' @export
 sequenceTableNoChime <- function(MA) MA@sequenceTableNoChime
 
+
+##' @rdname MultiAmplicon-class
+##' @export
+setGeneric("calcPropMerged", function(MA) {standardGeneric("calcPropMerged")})
+
+##' @rdname MultiAmplicon-class
+setMethod("calcPropMerged", "MultiAmplicon",
+          function(MA){
+              sgt <- function(x) sum(getUniques(x))
+              getN <- function(x) sum(sapply(x, sgt))
+              nMerged <- sapply(mergers(MA), getN)
+              nBefore <- sapply(dadaF(MA), getN)
+              nMerged/nBefore
+          })
+
+
+##' @rdname MultiAmplicon-class
+##' @export
+setGeneric("getSequencesFromTable", function(MA) {standardGeneric("getSequencesFromTable")})
+
+##' @rdname MultiAmplicon-class
+setMethod("getSequencesFromTable", "MultiAmplicon",
+          function (MA) {
+              lapply(sequenceTableNoChime(MA), function (y) {
+                  if(all(dim(y)>1)) getSequences(y) else NULL
+              })
+          })
