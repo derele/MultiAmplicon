@@ -47,8 +47,11 @@ sample.variable <- lapply(sample.vars, function(x){
 ## this creates the object distributed with the package
 carnivoreSeqRuns <- cbind(carnivoreSeqRuns, do.call(rbind, sample.variable))
 
-## The data linked at \\url{xyz.htm} for download in the vignette
-## \\url{agaga.html} can then be downloadd as follows
+## The data linked at
+##\\url{https://svalbard.biologie.hu-berlin.de:443/d/c291b870178f4abc8c59/}
+##for download in the vignette #
+##\\url{https://derele.github.io/MultiAmplicon/articles/MultiAmplicon-real-world-example.html}
+##can then be downloadd as follows
 carnivoreSeqRuns$sample_attribute <- NULL
 
 runs <- carnivoreSeqRuns$run
