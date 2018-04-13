@@ -1,10 +1,11 @@
 ##' Sort different amplicons into a fully stratified samples x
 ##' amplicons structure based on primer matches.
 ##'
-##' This functions uses Biostrings::isMatchingStartingAt to match
-##' primer sequences at the first position of forward and reverse
-##' sequences. These sequences are written to (temporary) files to
-##' allow processing via standard metabarcoding pipelines.
+##' This function uses \code{\link[Biostrings]{isMatchingStartingAt}}
+##' to match primer sequences at the first position of forward and
+##' reverse sequences. These primer sequences can be removed. The
+##' remaining sequences of interest are written to (temporary) files
+##' to allow processing via standard metabarcoding pipelines.
 ##' 
 ##' @title sortAmplicons
 ##' @param MA \code{\link{MultiAmplicon-class}} object containing a
