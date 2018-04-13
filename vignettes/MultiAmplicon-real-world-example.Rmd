@@ -81,7 +81,7 @@ if you want to know more about this you can consult
 or
 [Lesniak et al. (2017)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5269671/).
 
-```{r prepPrimers}
+```{r prepPrimers, message=FALSE}
 primer.file <- system.file("extdata", "real_world_primers.csv",
                            package = "MultiAmplicon")
 
@@ -102,11 +102,11 @@ MA <- MultiAmplicon(primers, files)
 
 We start by sorting our amplicons by primer sequences cutting off the latter from sequencing reads.
 
-```{r sortAmps}
+```{r sortAmps, message=FALSE}
 MA <- sortAmplicons(MA)
 ```
 
-```{r pipeline}
+```{r pipeline, message=FALSE}
 errF <- learnErrors(unlist(stratifiedFilesF(MA)), nread=1e6,
                     verbose=0)
 errR <- learnErrors(unlist(stratifiedFilesR(MA)), nread=1e6,
@@ -121,7 +121,7 @@ massively. Therefore we have to assume that most sequences won't have
 enough overlap to merge. Now we figure out for which amplicons this is
 the case.
 
-```{r merger}
+```{r merger, message=FALSE}
 MA <- mergeMulti(MA)
 
 propMerged <- MultiAmplicon::calcPropMerged(MA)
@@ -136,7 +136,7 @@ concatenating all amplicons with less than 80% merged by setting
 `justConcatenate` to `TRUE` for those.
 
 
-```{r tabulator}
+```{r tabulator, mesage=FALSE}
 MA <- mergeMulti(MA, justConcatenate=propMerged<0.8)
 MA <- sequenceTableMulti(MA)
 MA <- noChimeMulti(MA, mc.cores=1)
