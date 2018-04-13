@@ -101,7 +101,7 @@ filtered fastq files already stratified into samples (one file
 pair for each sample).</p>
     
 
-    <pre class="usage">PairedReadFileSet(readsF, readsR, names = character())
+    <pre class="usage">PairedReadFileSet(readsF = character(), readsR = character())
 
 # S4 method for PairedReadFileSet
 length(x)
@@ -122,12 +122,6 @@ show(object)
     <tr>
       <th>readsR</th>
       <td><p>The path and filenames containing reverse (R2) reads</p></td>
-    </tr>
-    <tr>
-      <th>names</th>
-      <td><p>Optional vector of class character with same length
-as sequencing read files. If empty constructed from basename
-of forward read files (filename without directory).</p></td>
     </tr>
     <tr>
       <th>x</th>
@@ -179,6 +173,9 @@ containing reverse (sometimes called R2) sequencing
 reads. This vector can be named to store short short-name of
 samples. Names of readF and readR should be identical in this
 case</p></dd>
+    <dt><code>names</code></dt><dd><p>Is either (first choice) from names of the forward
+reads, or (if these are empty) constructed from basename of
+forward read files (filename without directory).</p></dd>
 </dl>
     
 

@@ -34,10 +34,6 @@ PairedReadFileSet(readsF = character(), readsR = character())
 \item{...}{not used}
 
 \item{drop}{not used}
-
-\item{names}{Optional vector of class character with same length
-as sequencing read files. If empty constructed from basename
-of forward read files (filename without directory).}
 }
 \value{
 PairedReadFileSet
@@ -68,6 +64,10 @@ containing reverse (sometimes called R2) sequencing
 reads. This vector can be named to store short short-name of
 samples. Names of readF and readR should be identical in this
 case}
+
+\item{\code{names}}{Is either (first choice) from names of the forward
+reads, or (if these are empty) constructed from basename of
+forward read files (filename without directory).}
 }}
 
 \author{

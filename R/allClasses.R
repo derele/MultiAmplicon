@@ -16,6 +16,10 @@
 ##'     reads. This vector can be named to store short short-name of
 ##'     samples. Names of readF and readR should be identical in this
 ##'     case
+##'
+##' @slot names Is either (first choice) from names of the forward
+##'     reads, or (if these are empty) constructed from basename of
+##'     forward read files (filename without directory).
 ##' 
 ##' @return PairedReadFileSet
 ##' @author Emanuel Heitlinger
@@ -36,9 +40,6 @@ setClass("PairedReadFileSet",
 
 ##' @param readsF The path and filenames containing forward (R1) reads
 ##' @param readsR The path and filenames containing reverse (R2) reads
-##' @param names Optional vector of class character with same length
-##'     as sequencing read files. If empty constructed from basename
-##'     of forward read files (filename without directory).
 ##' @export PairedReadFileSet
 ##' @describeIn PairedReadFileSet-class Constructor for
 ##'     PairedReadFileSet-class
