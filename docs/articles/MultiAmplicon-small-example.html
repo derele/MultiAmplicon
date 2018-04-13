@@ -68,7 +68,7 @@
       <h1>MultiAmplicon - a small example</h1>
                         <h4 class="author">Emanuel Heitlinger</h4>
             
-            <h4 class="date">2018-04-10</h4>
+            <h4 class="date">2018-04-13</h4>
           </div>
 
     
@@ -87,6 +87,9 @@ fastq.files &lt;-<span class="st"> </span><span class="kw">list.files</span>(fas
 
 Ffastq.file &lt;-<span class="st"> </span>fastq.files[<span class="kw">grepl</span>(<span class="st">"F_filt"</span>, fastq.files)]
 Rfastq.file &lt;-<span class="st"> </span>fastq.files[<span class="kw">grepl</span>(<span class="st">"R_filt"</span>, fastq.files)]
+
+<span class="kw">names</span>(Rfastq.file) &lt;-<span class="st"> </span><span class="kw">names</span>(Ffastq.file) &lt;-
+<span class="st">    </span><span class="kw">gsub</span>(<span class="st">"_F_filt</span><span class="ch">\\</span><span class="st">.fastq</span><span class="ch">\\</span><span class="st">.gz"</span>, <span class="st">""</span>, <span class="kw">basename</span>(Ffastq.file))
 
 PRF &lt;-<span class="st"> </span><span class="kw"><a href="../reference/PairedReadFileSet-class.html">PairedReadFileSet</a></span>(Ffastq.file, Rfastq.file)
 
@@ -113,13 +116,13 @@ MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAmp
 <table class="table">
 <thead><tr class="header">
 <th></th>
-<th align="right">S00_F_filt.fastq.gz</th>
-<th align="right">S01_F_filt.fastq.gz</th>
-<th align="right">S02_F_filt.fastq.gz</th>
-<th align="right">S03_F_filt.fastq.gz</th>
-<th align="right">S04_F_filt.fastq.gz</th>
-<th align="right">S05_F_filt.fastq.gz</th>
-<th align="right">S06_F_filt.fastq.gz</th>
+<th align="right">S00</th>
+<th align="right">S01</th>
+<th align="right">S02</th>
+<th align="right">S03</th>
+<th align="right">S04</th>
+<th align="right">S05</th>
+<th align="right">S06</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
@@ -149,7 +152,7 @@ MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAmp
 <td align="right">1817</td>
 <td align="right">0</td>
 <td align="right">0</td>
-<td align="right">2</td>
+<td align="right">0</td>
 <td align="right">11671</td>
 </tr>
 <tr class="even">
@@ -236,31 +239,31 @@ knitr::<span class="kw">kable</span>(two.clusters.row)</code></pre></div>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>S00_F_filt.fastq.gz</td>
+<td>S00</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
-<td>S01_F_filt.fastq.gz</td>
+<td>S01</td>
 <td align="right">1</td>
 </tr>
 <tr class="odd">
-<td>S02_F_filt.fastq.gz</td>
+<td>S02</td>
 <td align="right">2</td>
 </tr>
 <tr class="even">
-<td>S03_F_filt.fastq.gz</td>
+<td>S03</td>
 <td align="right">1</td>
 </tr>
 <tr class="odd">
-<td>S04_F_filt.fastq.gz</td>
+<td>S04</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
-<td>S05_F_filt.fastq.gz</td>
+<td>S05</td>
 <td align="right">2</td>
 </tr>
 <tr class="odd">
-<td>S06_F_filt.fastq.gz</td>
+<td>S06</td>
 <td align="right">2</td>
 </tr>
 </tbody>
@@ -272,9 +275,9 @@ knitr::<span class="kw">kable</span>(<span class="kw"><a href="../reference/Mult
 <table class="table">
 <thead><tr class="header">
 <th></th>
-<th align="right">S02_F_filt.fastq.gz</th>
-<th align="right">S05_F_filt.fastq.gz</th>
-<th align="right">S06_F_filt.fastq.gz</th>
+<th align="right">S02</th>
+<th align="right">S05</th>
+<th align="right">S06</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
@@ -292,7 +295,7 @@ knitr::<span class="kw">kable</span>(<span class="kw"><a href="../reference/Mult
 <tr class="odd">
 <td>Amp3F.Amp3R</td>
 <td align="right">1817</td>
-<td align="right">2</td>
+<td align="right">0</td>
 <td align="right">11671</td>
 </tr>
 <tr class="even">
@@ -309,10 +312,8 @@ knitr::<span class="kw">kable</span>(<span class="kw"><a href="../reference/Mult
 <h2 class="hasAnchor">
 <a href="#running-the-amplicon-sequencing-pipeline" class="anchor"></a>Running the amplicon sequencing pipeline</h2>
 <p>We first estimate the errors separately for both for dada’s probabilistic sequence variant inference. We do this here on the combined stratified files for different amplicons. This should be done separately for forward ad reverse sequence though!</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">errF &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">stratifiedFilesF</a></span>(MA1)), <span class="dt">nread=</span><span class="fl">1e6</span>,
-                    <span class="dt">verbose=</span><span class="dv">0</span>)
-errR &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">stratifiedFilesR</a></span>(MA1)), <span class="dt">nread=</span><span class="fl">1e6</span>,
-                    <span class="dt">verbose=</span><span class="dv">0</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">errF &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">stratifiedFilesF</a></span>(MA1)), <span class="dt">verbose=</span><span class="dv">0</span>)
+errR &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">stratifiedFilesR</a></span>(MA1)), <span class="dt">verbose=</span><span class="dv">0</span>)</code></pre></div>
 <p>We can now run the pipeline of the dada2 package in parallel over the different amplicons. We update our object from each previous step and safe it under a new name, here for illustration. In your own workflow you can also overwrite the old object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/derepMulti.html">derepMulti</a></span>(MA.sub, <span class="dt">mc.cores=</span><span class="dv">1</span>) 
 
@@ -330,11 +331,9 @@ MA3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/dadaMul
 <span class="co">#&gt; Sample 2 - 20391 reads in 5719 unique sequences.</span>
 <span class="co">#&gt; Sample 3 - 2690 reads in 1100 unique sequences.</span>
 <span class="co">#&gt; Sample 1 - 1817 reads in 589 unique sequences.</span>
-<span class="co">#&gt; Sample 2 - 2 reads in 2 unique sequences.</span>
-<span class="co">#&gt; Sample 3 - 11671 reads in 3783 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 11671 reads in 3783 unique sequences.</span>
 <span class="co">#&gt; Sample 1 - 1817 reads in 547 unique sequences.</span>
-<span class="co">#&gt; Sample 2 - 2 reads in 2 unique sequences.</span>
-<span class="co">#&gt; Sample 3 - 11671 reads in 4054 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 11671 reads in 4054 unique sequences.</span>
 <span class="co">#&gt; Sample 1 - 1087 reads in 394 unique sequences.</span>
 <span class="co">#&gt; Sample 2 - 2076 reads in 959 unique sequences.</span>
 <span class="co">#&gt; Sample 3 - 428 reads in 166 unique sequences.</span>
@@ -342,7 +341,7 @@ MA3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/dadaMul
 <span class="co">#&gt; Sample 2 - 2076 reads in 962 unique sequences.</span>
 <span class="co">#&gt; Sample 3 - 428 reads in 183 unique sequences.</span>
 
-MA4 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mergeMulti.html">mergeMulti</a></span>(MA3)
+MA4 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mergeMulti.html">mergeMulti</a></span>(MA3, <span class="dt">justConcatenate=</span><span class="ot">TRUE</span>)
 
 MA5 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sequenceTableMulti.html">sequenceTableMulti</a></span>(MA4)
 
@@ -352,7 +351,7 @@ MA6 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noChime
 <div id="a-word-on-dada2-sequence-inference" class="section level2">
 <h2 class="hasAnchor">
 <a href="#a-word-on-dada2-sequence-inference" class="anchor"></a>A word on dada2 sequence inference</h2>
-<p>The above workflow assumes that errors could be estimated for each amplicon together. This would be beneficial if errors were largely similar between different amplicons (i.e. not influenced by the primer starting the sequence). Below an alternative approach is demonstrated with error probabilities estimated separately for each amplicon (here also overwrite objects from each previous processing steps).</p>
+<p>The above workflow assumes that errors could be estimated for each amplicon together. This would be beneficial if errors were largely similar between different amplicons (i.e. not influenced by the removed primer having starting the original sequence). Below an alternative approach is demonstrated with error probabilities estimated separately for each amplicon (here also overwrite objects from each previous processing steps).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/dadaMulti.html">dadaMulti</a></span>(MA2, <span class="dt">selfConsist=</span><span class="ot">TRUE</span>, <span class="dt">pool=</span><span class="ot">FALSE</span>)
 <span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
 <span class="co">#&gt; Sample 1 - 3495 reads in 1493 unique sequences.</span>
@@ -392,16 +391,14 @@ MA6 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noChime
 <span class="co">#&gt; Convergence after  5  rounds.</span>
 <span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
 <span class="co">#&gt; Sample 1 - 1817 reads in 589 unique sequences.</span>
-<span class="co">#&gt; Sample 2 - 2 reads in 2 unique sequences.</span>
-<span class="co">#&gt; Sample 3 - 11671 reads in 3783 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 11671 reads in 3783 unique sequences.</span>
 <span class="co">#&gt;    selfConsist step 2 </span>
 <span class="co">#&gt;    selfConsist step 3 </span>
 <span class="co">#&gt;    selfConsist step 4 </span>
 <span class="co">#&gt; Convergence after  4  rounds.</span>
 <span class="co">#&gt; Initializing error rates to maximum possible estimate.</span>
 <span class="co">#&gt; Sample 1 - 1817 reads in 547 unique sequences.</span>
-<span class="co">#&gt; Sample 2 - 2 reads in 2 unique sequences.</span>
-<span class="co">#&gt; Sample 3 - 11671 reads in 4054 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 11671 reads in 4054 unique sequences.</span>
 <span class="co">#&gt;    selfConsist step 2 </span>
 <span class="co">#&gt;    selfConsist step 3 </span>
 <span class="co">#&gt;    selfConsist step 4 </span>
@@ -423,19 +420,39 @@ MA6 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noChime
 <span class="co">#&gt;    selfConsist step 4 </span>
 <span class="co">#&gt; Convergence after  4  rounds.</span>
 
-MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mergeMulti.html">mergeMulti</a></span>(MA.alt)
+MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mergeMulti.html">mergeMulti</a></span>(MA.alt, <span class="dt">justConcatenate=</span><span class="ot">TRUE</span>)
 
 MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sequenceTableMulti.html">sequenceTableMulti</a></span>(MA.alt)
 
 MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noChimeMulti.html">noChimeMulti</a></span>(MA.alt, <span class="dt">mc.cores=</span><span class="dv">1</span>)</code></pre></div>
 <p>I will add a comparison between the two different versions here.</p>
-<!-- ```{r compdata, cache=TRUE, message=FALSE} -->
-<!-- together <- lapply(MA6@sequenceTableNoChime, function (x) if(all(dim(x)>1))getSequences(x))[[3]] -->
-<!-- alt <- lapply(MA.alt@sequenceTableNoChime, function (x) if(all(dim(x)>1))getSequences(x))[[3]] -->
-<!-- table(alt%in%together) -->
-<!-- alt.diff <- alt[!alt%in%together] -->
-<!-- tog.diff <- together[!together%in%alt] -->
-<!-- ``` -->
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">together &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAmplicon-class.html">getSequencesFromTable</a></span>(MA6)
+alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAmplicon-class.html">getSequencesFromTable</a></span>(MA.alt)
+
+<span class="kw">lapply</span>(<span class="kw">seq_along</span>(together), function (i){
+    <span class="kw">setequal</span>(alt[[i]], together[[i]])
+    <span class="kw">table</span>(alt[[i]]%in%together[[i]])
+})
+<span class="co">#&gt; [[1]]</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; FALSE  TRUE </span>
+<span class="co">#&gt;     1   228 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[2]]</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; FALSE  TRUE </span>
+<span class="co">#&gt;     3   143 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[3]]</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; FALSE  TRUE </span>
+<span class="co">#&gt;     1   155 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[4]]</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; FALSE  TRUE </span>
+<span class="co">#&gt;     4   114</span></code></pre></div>
+<p>So in this case we got nearly the same output, which speaks for error rates not differing between amplicons (and for the robustness of the ASV inference of the amazing dada2). Which one you should use depends on your data: if each amplicon has enough reads you can estimate seperately and potentially get a better estimate of errors for amplicons with different errors. If on the other hand some amplicons have very few reads, it might make sense to pool them to improve error estimates with larger size for the training set.</p>
 </div>
 <div id="using-different-parameters-for-each-amplicon" class="section level2">
 <h2 class="hasAnchor">
@@ -444,22 +461,76 @@ MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noCh
 <p>We use ellipsis (aka “…”, dots, dot-dot-dot or three-dots) to pass parameters on to the underlying dada2 functions. The MultiAmplicon package allows all those arguments to be vectors with values varying for different amplicons.</p>
 <p>Let’s suppose for this we e.g. want to merge a subset of our amplicons, while we concatenate others using N’s.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA.mixed &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mergeMulti.html">mergeMulti</a></span>(MA3, <span class="dt">justConcatenate=</span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>))
-<span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp1F.Amp1R </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; merging sequences from 3 samples for amplicon Amp1F.Amp1R</span>
 <span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; DONE</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp2F.Amp2R </span>
+<span class="co">#&gt; merging sequences from 3 samples for amplicon Amp2F.Amp2R</span>
 <span class="co">#&gt; calling mergePairs with justConcatenate=FALSE parameters</span>
-<span class="co">#&gt; DONE</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp3F.Amp3R </span>
+<span class="co">#&gt; merging sequences from 2 samples for amplicon Amp3F.Amp3R</span>
 <span class="co">#&gt; calling mergePairs with justConcatenate=FALSE parameters</span>
-<span class="co">#&gt; DONE</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from  3 samples for amplicon  Amp4F.Amp4R </span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; DONE</span></code></pre></div>
-<p>The above example would make sense if amplicons Amp1F.Amp1R and Amp4F.Amp4R (1st and 4th in our object) had too little overlap between forward and reverse reads to be merged and would better be concatenated.</p>
+<span class="co">#&gt; merging sequences from 3 samples for amplicon Amp4F.Amp4R</span>
+<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></code></pre></div>
+<p>The above example would make sense if (only) amplicons Amp1F.Amp1R and Amp4F.Amp4R (1st and 4th in our object) had too little overlap between forward and reverse reads to be merged and would better be concatenated. Btw: Here this makes not really sense as to much sequences for the 2nd and 3rd amplicon don’t merge for this dataset.</p>
+<p>Coming back to our example on dada sequence inference, we could also mix err estimates to use errors either seperately or accross amplicons. Always set the both error parameter-objects <code>NULL</code> when using self consistent estimation within one amplicon.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA.mixed &lt;-<span class="st"> </span><span class="kw"><a href="../reference/dadaMulti.html">dadaMulti</a></span>(MA2, <span class="dt">Ferr=</span><span class="kw">c</span>(<span class="ot">NULL</span>, errF, <span class="ot">NULL</span>, errF),
+                      <span class="dt">Rerr=</span><span class="kw">c</span>(<span class="ot">NULL</span>, errF, <span class="ot">NULL</span>, errF),
+                      <span class="dt">selfConsist=</span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>))
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; amplicon Amp1F.Amp1R: dada estimation of sequence variants from 3 of 3 possible sample files</span>
+<span class="co">#&gt; calling dada with selfConsist=TRUE parameters</span>
+<span class="co">#&gt; Sample 1 - 3495 reads in 1493 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 29310 reads in 7224 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 2569 reads in 1053 unique sequences.</span>
+<span class="co">#&gt;    selfConsist step 2 </span>
+<span class="co">#&gt;    selfConsist step 3 </span>
+<span class="co">#&gt;    selfConsist step 4 </span>
+<span class="co">#&gt; Convergence after  4  rounds.</span>
+<span class="co">#&gt; Sample 1 - 3495 reads in 1535 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 29310 reads in 8273 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 2569 reads in 994 unique sequences.</span>
+<span class="co">#&gt;    selfConsist step 2 </span>
+<span class="co">#&gt;    selfConsist step 3 </span>
+<span class="co">#&gt;    selfConsist step 4 </span>
+<span class="co">#&gt; Convergence after  4  rounds.</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; amplicon Amp2F.Amp2R: dada estimation of sequence variants from 3 of 3 possible sample files</span>
+<span class="co">#&gt; calling dada with selfConsist=FALSE parameters</span>
+<span class="co">#&gt; Sample 1 - 2949 reads in 1142 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 20391 reads in 4136 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 2690 reads in 968 unique sequences.</span>
+<span class="co">#&gt; Sample 1 - 2949 reads in 1290 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 20391 reads in 5719 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 2690 reads in 1100 unique sequences.</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; amplicon Amp3F.Amp3R: dada estimation of sequence variants from 2 of 3 possible sample files</span>
+<span class="co">#&gt; calling dada with selfConsist=TRUE parameters</span>
+<span class="co">#&gt; Sample 1 - 1817 reads in 589 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 11671 reads in 3783 unique sequences.</span>
+<span class="co">#&gt;    selfConsist step 2 </span>
+<span class="co">#&gt;    selfConsist step 3 </span>
+<span class="co">#&gt; Convergence after  3  rounds.</span>
+<span class="co">#&gt; Sample 1 - 1817 reads in 547 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 11671 reads in 4054 unique sequences.</span>
+<span class="co">#&gt;    selfConsist step 2 </span>
+<span class="co">#&gt;    selfConsist step 3 </span>
+<span class="co">#&gt;    selfConsist step 4 </span>
+<span class="co">#&gt; Convergence after  4  rounds.</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; amplicon Amp4F.Amp4R: dada estimation of sequence variants from 3 of 3 possible sample files</span>
+<span class="co">#&gt; calling dada with selfConsist=FALSE parameters</span>
+<span class="co">#&gt; Sample 1 - 1087 reads in 394 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 2076 reads in 959 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 428 reads in 166 unique sequences.</span>
+<span class="co">#&gt; Sample 1 - 1087 reads in 433 unique sequences.</span>
+<span class="co">#&gt; Sample 2 - 2076 reads in 962 unique sequences.</span>
+<span class="co">#&gt; Sample 3 - 428 reads in 183 unique sequences.</span></code></pre></div>
 </div>
 </div>
   </div>

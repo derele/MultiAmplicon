@@ -16,25 +16,28 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Data preparation (download)
+## Data preparation (download and filtering)
 
-We first download the sample data set from SRA using a helper scirtp
-part of the MultiAmplicon package.
+We first
+[download the data](https://svalbard.biologie.hu-berlin.de:443/d/c291b870178f4abc8c59/)
+set from consisting of 192 fastq file-pairs from 18S and 16S amplicon
+sequencing of feces and intestinal contents of carnivores (hyenas and
+wolves). Use the botton on the upper right of the page to download a
+zipped folder and unzip it after downloading. The help file
+for the
+[`carnivoreSeqRuns`](https://derele.github.io/MultiAmplicon/reference/carnivoreSeqRuns.html)
+(containing sample data included in the package), shows how this data
+has been downloaded from
+[NCBI-SRA](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA386767).
 
-You will need about 2Gb space to store those files if you want to
-execute the pipeline below on your local computer and/or compile the
-vignette locally.
-
-## Data preparation (filtering)
-
-Now we can run our standard workflow. But we have to remember to filte
-our files first. This particular sequencing was of quite low quality,
-so we have to trim and screen quite harshly.
+Now we can run our standard workflow. But as usual with real data we
+have to filter the input files first. This particular sequencing was
+of quite low quality, so we have to trim and screen quite harshly.
 
 ```{r filter, message=FALSE}
 library(MultiAmplicon)
 
-path <- "~/download" ## change according to where you downloaded
+path <- "~/download_sra" ## change according to where you downloaded
 
 fastqFiles <- list.files(path, pattern=".fastq.gz$", full.names=TRUE)
 
@@ -43,7 +46,7 @@ fastqR <- grep("_2.fastq.gz", fastqFiles, value = TRUE)
 
 samples <- gsub("_1.fastq\\.gz", "\\1", basename(fastqF))
 
-filt_path <- "./filtered"
+filt_path <- "~/filtered_sra/"
 if(!file_test("-d", filt_path)) dir.create(filt_path)
 
 filtFs <- file.path(filt_path, paste0(samples, "_F_filt.fastq.gz"))
@@ -72,9 +75,13 @@ files <- PairedReadFileSet(filtFs, filtRs)
 
 Now we have our sequencing read input data, only the primers are still
 missing. The primer set for the above is included in the MultiAmplicon
-package.
+package. The data has been generated using a microfluidics PCR system,
+if you want to know more about this you can consult
+[Heitlinger et al. (2017)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5472691/)
+or
+[Lesniak et al. (2017)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5269671/).
 
-```{r prepPrimers, cache=TRUE}
+```{r prepPrimers}
 primer.file <- system.file("extdata", "real_world_primers.csv",
                            package = "MultiAmplicon")
 
@@ -87,6 +94,52 @@ names(primerF) <- as.character(ptable[, "corrected.NameF"])
 names(primerR) <- as.character(ptable[, "corrected.NameR"])
 
 primers <- PrimerPairsSet(primerF, primerR)
+
+MA <- MultiAmplicon(primers, files)
 ```
 
 ## Running the MultiAmplicon pipeline
+
+We start by sorting our amplicons by primer sequences cutting off the latter from sequencing reads.
+
+```{r sortAmps}
+MA <- sortAmplicons(MA)
+```
+
+```{r pipeline}
+errF <- learnErrors(unlist(stratifiedFilesF(MA)), nread=1e6,
+                    verbose=0)
+errR <- learnErrors(unlist(stratifiedFilesR(MA)), nread=1e6,
+                    verbose=0)
+
+MA <- derepMulti(MA, mc.cores=1) 
+MA <- dadaMulti(MA, Ferr=errF, Rerr=errR,  pool=FALSE)
+```
+
+The sequences were quite low quality and we shortened them
+massively. Therefore we have to assume that most sequences won't have
+enough overlap to merge. Now we figure out for which amplicons this is
+the case.
+
+```{r merger}
+MA <- mergeMulti(MA)
+
+propMerged <- MultiAmplicon::calcPropMerged(MA)
+
+summary(propMerged)
+table(propMerged<0.8)
+```
+
+So we just found out that for this dataset only one amplicon could be
+merged retaining over 80% of the sequence. Lets run the merge again,
+concatenating all amplicons with less than 80% merged by setting
+`justConcatenate` to `TRUE` for those.
+
+
+```{r tabulator}
+MA <- mergeMulti(MA, justConcatenate=propMerged<0.8)
+MA <- sequenceTableMulti(MA)
+MA <- noChimeMulti(MA, mc.cores=1)
+```
+
+

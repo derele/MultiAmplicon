@@ -5,3 +5,5 @@
 ^docs$
 ^.build.timestamp$
 ^filtered$
+vignettes/MultiAmplicon-real-world-example_cache
+vignettes/MultiAmplicon-small-example_cache

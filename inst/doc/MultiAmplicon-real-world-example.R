@@ -7,7 +7,7 @@ knitr::opts_chunk$set(
 ## ----filter, message=FALSE-----------------------------------------------
 library(MultiAmplicon)
 
-path <- "~/download" ## change according to where you downloaded
+path <- "~/download_sra" ## change according to where you downloaded
 
 fastqFiles <- list.files(path, pattern=".fastq.gz$", full.names=TRUE)
 
@@ -16,7 +16,7 @@ fastqR <- grep("_2.fastq.gz", fastqFiles, value = TRUE)
 
 samples <- gsub("_1.fastq\\.gz", "\\1", basename(fastqF))
 
-filt_path <- "./filtered"
+filt_path <- "~/filtered_sra/"
 if(!file_test("-d", filt_path)) dir.create(filt_path)
 
 filtFs <- file.path(filt_path, paste0(samples, "_F_filt.fastq.gz"))
@@ -40,7 +40,7 @@ names(filtFs) <- names(filtRs) <- samples
 
 files <- PairedReadFileSet(filtFs, filtRs)
 
-## ----prepPrimers, cache=TRUE---------------------------------------------
+## ----prepPrimers---------------------------------------------------------
 primer.file <- system.file("extdata", "real_world_primers.csv",
                            package = "MultiAmplicon")
 
@@ -53,4 +53,31 @@ names(primerF) <- as.character(ptable[, "corrected.NameF"])
 names(primerR) <- as.character(ptable[, "corrected.NameR"])
 
 primers <- PrimerPairsSet(primerF, primerR)
+
+MA <- MultiAmplicon(primers, files)
+
+## ----sortAmps------------------------------------------------------------
+MA <- sortAmplicons(MA)
+
+## ----pipeline------------------------------------------------------------
+errF <- learnErrors(unlist(stratifiedFilesF(MA)), nread=1e6,
+                    verbose=0)
+errR <- learnErrors(unlist(stratifiedFilesR(MA)), nread=1e6,
+                    verbose=0)
+
+MA <- derepMulti(MA, mc.cores=1) 
+MA <- dadaMulti(MA, Ferr=errF, Rerr=errR,  pool=FALSE)
+
+## ----merger--------------------------------------------------------------
+MA <- mergeMulti(MA)
+
+propMerged <- MultiAmplicon::calcPropMerged(MA)
+
+summary(propMerged)
+table(propMerged<0.8)
+
+## ----tabulator-----------------------------------------------------------
+MA <- mergeMulti(MA, justConcatenate=propMerged<0.8)
+MA <- sequenceTableMulti(MA)
+MA <- noChimeMulti(MA, mc.cores=1)
 

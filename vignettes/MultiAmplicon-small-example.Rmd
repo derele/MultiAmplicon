@@ -56,6 +56,9 @@ fastq.files <- list.files(fastq.dir, full.names=TRUE)
 Ffastq.file <- fastq.files[grepl("F_filt", fastq.files)]
 Rfastq.file <- fastq.files[grepl("R_filt", fastq.files)]
 
+names(Rfastq.file) <- names(Ffastq.file) <-
+    gsub("_F_filt\\.fastq\\.gz", "", basename(Ffastq.file))
+
 PRF <- PairedReadFileSet(Ffastq.file, Rfastq.file)
 
 primerF <- c(Amp1F = "AGAGTTTGATCCTGGCTCAG", Amp2F = "ACTCCTACGGGAGGCAGC",
@@ -136,10 +139,8 @@ combined stratified files for different amplicons. This should be done
 separately for forward ad reverse sequence though!
 
 ```{r errEst, cache=TRUE, message=FALSE}
-errF <- learnErrors(unlist(stratifiedFilesF(MA1)), nread=1e6,
-                    verbose=0)
-errR <- learnErrors(unlist(stratifiedFilesR(MA1)), nread=1e6,
-                    verbose=0)
+errF <- learnErrors(unlist(stratifiedFilesF(MA1)), verbose=0)
+errR <- learnErrors(unlist(stratifiedFilesR(MA1)), verbose=0)
 ```
 
 We can now run the pipeline of the dada2 package in parallel over the
@@ -153,7 +154,7 @@ MA2 <- derepMulti(MA.sub, mc.cores=1)
 
 MA3 <- dadaMulti(MA2, Ferr=errF, Rerr=errR,  pool=FALSE)
 
-MA4 <- mergeMulti(MA3)
+MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
 
 MA5 <- sequenceTableMulti(MA4)
 
@@ -166,16 +167,17 @@ Ready! This was *easy*, right?
 
 The above workflow assumes that errors could be estimated for each
 amplicon together. This would be beneficial if errors were largely
-similar between different amplicons (i.e. not influenced by the primer
-starting the sequence). Below an alternative approach is demonstrated
-with error probabilities estimated separately for each amplicon (here
-also overwrite objects from each previous processing steps).
+similar between different amplicons (i.e. not influenced by the
+removed primer having starting the original sequence). Below an
+alternative approach is demonstrated with error probabilities
+estimated separately for each amplicon (here also overwrite objects
+from each previous processing steps).
 
 
 ```{r altdada, cache=TRUE, message=FALSE}
 MA.alt <- dadaMulti(MA2, selfConsist=TRUE, pool=FALSE)
 
-MA.alt <- mergeMulti(MA.alt)
+MA.alt <- mergeMulti(MA.alt, justConcatenate=TRUE)
 
 MA.alt <- sequenceTableMulti(MA.alt)
 
@@ -184,17 +186,23 @@ MA.alt <- noChimeMulti(MA.alt, mc.cores=1)
 
 I will add a comparison between the two different versions here.
 
-<!-- ```{r compdata, cache=TRUE, message=FALSE} -->
-<!-- together <- lapply(MA6@sequenceTableNoChime, function (x) if(all(dim(x)>1))getSequences(x))[[3]] -->
+```{r compdata, cache=TRUE, message=FALSE}
+together <- getSequencesFromTable(MA6)
+alt <- getSequencesFromTable(MA.alt)
 
-<!-- alt <- lapply(MA.alt@sequenceTableNoChime, function (x) if(all(dim(x)>1))getSequences(x))[[3]] -->
-
-<!-- table(alt%in%together) -->
-
-<!-- alt.diff <- alt[!alt%in%together] -->
-<!-- tog.diff <- together[!together%in%alt] -->
-
-<!-- ``` -->
+lapply(seq_along(together), function (i){
+    setequal(alt[[i]], together[[i]])
+    table(alt[[i]]%in%together[[i]])
+})
+```
+So in this case we got nearly the same output, which speaks for error
+rates not differing between amplicons (and for the robustness of the
+ASV inference of the amazing dada2). Which one you should use depends
+on your data: if each amplicon has enough reads you can estimate
+seperately and potentially get a better estimate of errors for
+amplicons with different errors. If on the other hand some amplicons
+have very few reads, it might make sense to pool them to improve
+error estimates with larger size for the training set.
 
 ## Using different parameters for each amplicon
 
@@ -209,11 +217,26 @@ for different amplicons.
 Let's suppose for this we e.g. want to merge a subset of our
 amplicons, while we concatenate others using N's. 
 
-
-```{r mixdata, cache=TRUE}
+```{r mixmerge, cache=TRUE}
 MA.mixed <- mergeMulti(MA3, justConcatenate=c(TRUE, FALSE, FALSE, TRUE))
 ```
-The above example would make sense if amplicons Amp1F.Amp1R and
-Amp4F.Amp4R (1st and 4th in our object) had too little overlap
-between forward and reverse reads to be merged and would better be
-concatenated.
+The above example would make sense if (only) amplicons Amp1F.Amp1R and
+Amp4F.Amp4R (1st and 4th in our object) had too little overlap between
+forward and reverse reads to be merged and would better be
+concatenated. Btw: Here this makes not really sense as to much
+sequences for the 2nd and 3rd amplicon don't merge for this dataset.
+
+
+Coming back to our example on dada sequence inference, we could also
+mix err estimates to use errors either seperately or accross
+amplicons. Always set the both error parameter-objects `NULL` when
+using self consistent estimation within one amplicon.
+
+```{r mixdada, cache=TRUE}
+MA.mixed <- dadaMulti(MA2, Ferr=c(NULL, errF, NULL, errF),
+                      Rerr=c(NULL, errF, NULL, errF),
+                      selfConsist=c(TRUE, FALSE, TRUE, FALSE))
+```
+
+
+
