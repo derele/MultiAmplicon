@@ -42,10 +42,10 @@ setClass("PairedReadFileSet",
 ##' @export PairedReadFileSet
 ##' @describeIn PairedReadFileSet-class Constructor for
 ##'     PairedReadFileSet-class
-PairedReadFileSet <- function(readsF, readsR){
+PairedReadFileSet <- function(readsF=character(), readsR=character()){
     ## construct from names if they exist
     if(length(names(readsF)) == length(readsF)) {
-        na <- names(readsF)
+        na <- as.character(names(readsF)) ## as.c to catch empty (NULL)
     } else {na <- basename(readsF)} ## otherwise use filenames
     new("PairedReadFileSet",
         readsF = readsF,
@@ -110,7 +110,7 @@ setClass("PrimerPairsSet", contains = "DNAStringSet",
 ##'     length. Can be named or unnamed.
 ##' @export PrimerPairsSet
 ##' @rdname PrimerPairsSet-class
-PrimerPairsSet <- function(primerF, primerR){
+PrimerPairsSet <- function(primerF=character(), primerR=character()){
     ## if names exist construct primer names
     if(length(names(primerR)) == length(primerR) &&
        length(names(primerF))== length(primerF)) {
@@ -431,6 +431,7 @@ sequenceTableNoChime <- function(MA) MA@sequenceTableNoChime
 setGeneric("calcPropMerged", function(MA) {standardGeneric("calcPropMerged")})
 
 ##' @rdname MultiAmplicon-class
+##' @export
 setMethod("calcPropMerged", "MultiAmplicon",
           function(MA){
               sgt <- function(x) sum(getUniques(x))
@@ -446,6 +447,7 @@ setMethod("calcPropMerged", "MultiAmplicon",
 setGeneric("getSequencesFromTable", function(MA) {standardGeneric("getSequencesFromTable")})
 
 ##' @rdname MultiAmplicon-class
+##' @export
 setMethod("getSequencesFromTable", "MultiAmplicon",
           function (MA) {
               lapply(sequenceTableNoChime(MA), function (y) {
