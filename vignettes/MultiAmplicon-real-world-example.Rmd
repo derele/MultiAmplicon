@@ -113,7 +113,8 @@ errR <- learnErrors(unlist(stratifiedFilesR(MA)), nread=1e6,
                     verbose=0)
 
 MA <- derepMulti(MA, mc.cores=1) 
-MA <- dadaMulti(MA, Ferr=errF, Rerr=errR,  pool=FALSE)
+MA <- dadaMulti(MA, Ferr=errF, Rerr=errR,  pool=FALSE,
+                verbose=0)
 ```
 
 The sequences were quite low quality and we shortened them

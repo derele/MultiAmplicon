@@ -40,7 +40,7 @@ names(filtFs) <- names(filtRs) <- samples
 
 files <- PairedReadFileSet(filtFs, filtRs)
 
-## ----prepPrimers---------------------------------------------------------
+## ----prepPrimers, message=FALSE------------------------------------------
 primer.file <- system.file("extdata", "real_world_primers.csv",
                            package = "MultiAmplicon")
 
@@ -56,19 +56,20 @@ primers <- PrimerPairsSet(primerF, primerR)
 
 MA <- MultiAmplicon(primers, files)
 
-## ----sortAmps------------------------------------------------------------
+## ----sortAmps, message=FALSE---------------------------------------------
 MA <- sortAmplicons(MA)
 
-## ----pipeline------------------------------------------------------------
+## ----pipeline, message=FALSE---------------------------------------------
 errF <- learnErrors(unlist(stratifiedFilesF(MA)), nread=1e6,
                     verbose=0)
 errR <- learnErrors(unlist(stratifiedFilesR(MA)), nread=1e6,
                     verbose=0)
 
 MA <- derepMulti(MA, mc.cores=1) 
-MA <- dadaMulti(MA, Ferr=errF, Rerr=errR,  pool=FALSE)
+MA <- dadaMulti(MA, Ferr=errF, Rerr=errR,  pool=FALSE,
+                verbose=0)
 
-## ----merger--------------------------------------------------------------
+## ----merger, message=FALSE-----------------------------------------------
 MA <- mergeMulti(MA)
 
 propMerged <- MultiAmplicon::calcPropMerged(MA)
@@ -76,7 +77,7 @@ propMerged <- MultiAmplicon::calcPropMerged(MA)
 summary(propMerged)
 table(propMerged<0.8)
 
-## ----tabulator-----------------------------------------------------------
+## ----tabulator, mesage=FALSE---------------------------------------------
 MA <- mergeMulti(MA, justConcatenate=propMerged<0.8)
 MA <- sequenceTableMulti(MA)
 MA <- noChimeMulti(MA, mc.cores=1)
