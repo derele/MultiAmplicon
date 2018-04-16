@@ -158,12 +158,14 @@ MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
 
 MA5 <- sequenceTableMulti(MA4)
 
-MA6 <- noChimeMulti(MA5, mc.cores=1)
+MA6 <- removeChimeraMulti(MA5, mc.cores=1)
 
 MA7 <- fillSampleTables(MA6)
 ```
 
-Ready! This was *easy*, right?
+The steps after `sortAmplcions` until `removeChimeraMulti`
+recapitulate different processes in the
+[dada2 pipeline](https://benjjneb.github.io/dada2/tutorial.html).
 
 ## A word on dada2 sequence inference
 
@@ -183,7 +185,7 @@ MA.alt <- mergeMulti(MA.alt, justConcatenate=TRUE)
 
 MA.alt <- sequenceTableMulti(MA.alt)
 
-MA.alt <- noChimeMulti(MA.alt, mc.cores=1)
+MA.alt <- removeChimeraMulti(MA.alt, mc.cores=1)
 ```
 
 I will add a comparison between the two different versions here.
@@ -241,11 +243,6 @@ MA.mixed <- dadaMulti(MA2,
                       Rerr=c(NULL, errF,  NULL, errF),
                selfConsist=c(TRUE, FALSE, TRUE, FALSE))
 ```
-
-## Synchronizing MultiAmplicon sequence tables
-
-
-
 
 
 ## Taxnomical annotation

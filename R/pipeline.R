@@ -352,6 +352,7 @@ fillSampleTables <- function (MA, samples="union"){
             paste(print.args.here, collapse = " "), " parameters")
 }
 
+#' @importFrom methods slotNames
 .complainWhenAbsent <- function(MA, slots=TRUE){
     allSlots <- slotNames(MA)
     slotL <- sapply(allSlots, function (x){

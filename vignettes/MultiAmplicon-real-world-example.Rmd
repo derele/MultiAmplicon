@@ -140,6 +140,6 @@ concatenating all amplicons with less than 80% merged by setting
 ```{r tabulator, mesage=FALSE}
 MA <- mergeMulti(MA, justConcatenate=propMerged<0.8)
 MA <- sequenceTableMulti(MA)
-MA <- noChimeMulti(MA, mc.cores=1)
+MA <- removeChimeraMulti(MA, mc.cores=1)
 ```
 
