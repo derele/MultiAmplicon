@@ -285,6 +285,7 @@ noChimeMulti <- function(MA, mc.cores = getOption("mc.cores", 2L), ...){
 ##'     retain
 ##' @return MultiAmplicon object with the \code{sequenceTableFilled}
 ##'     slot filled
+##' @export
 ##' @author Emanuel Heitlinger
 fillSampleTables <- function (MA, samples="union"){
     seqtab <- getSequenceTableNoChime(MA)
