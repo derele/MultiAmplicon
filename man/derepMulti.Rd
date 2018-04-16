@@ -31,7 +31,7 @@ MultiAmplicon object with derep slots (forward derepF and
     reverse derepR) filled
 }
 \description{
-Dereplicate sequences in fastq files
+Dereplicate sequences in fastq files.
 }
 \details{
 An interface to \code{\link[dada2]{derepFastq}} which itself uses

@@ -23,7 +23,7 @@ will be recycled to match the number of amplicons.}
 A MultiAmplicon-class object with the mergers slot filled
 }
 \description{
-merge denoised pairs of forward and reverse reads inside an
+Merge denoised pairs of forward and reverse reads inside an
 MultiAmplicon object.
 }
 \details{

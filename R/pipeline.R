@@ -1,4 +1,4 @@
-##' Dereplicate sequences in fastq files
+##' Dereplicate sequences in fastq files.
 ##'
 ##' An interface to \code{\link[dada2]{derepFastq}} which itself uses
 ##' \code{\link[ShortRead]{FastqStreamer}} for dereplicating amplicon
@@ -69,13 +69,14 @@ derepMulti <- function(MA, mc.cores = getOption("mc.cores", 2L),
 }
 
 
-##' A wrapper around \code{\link[dada2]{dada}} from \code{dada2}
+##' A wrapper around \code{\link[dada2]{dada}} from \code{dada2} for
+##' multiple amplicons.
 ##'
 ##' The function runs \code{\link[dada2]{dada}} from the package
 ##' \code{dada2} \url{https://benjjneb.github.io/dada2/} to perform
 ##' 'High resolution sample inference from amplicon data' on multiple
 ##' amplicons stored as dereplicated sequences in a
-##' MultiAmplicon-class object
+##' MultiAmplicon-class object.
 ##' 
 ##' @title dadaMulti
 ##' @param MA MultiAmplicon-class object
@@ -131,7 +132,7 @@ dadaMulti <- function(MA, Ferr=NULL, Rerr=NULL, ...){
     initialize(MA, dada = PPdada)
 }
 
-##' merge denoised pairs of forward and reverse reads inside an
+##' Merge denoised pairs of forward and reverse reads inside an
 ##' MultiAmplicon object.
 ##'
 ##' This is a wrapper for \code{\link[dada2]{mergePairs}} from
@@ -267,7 +268,24 @@ noChimeMulti <- function(MA, mc.cores = getOption("mc.cores", 2L), ...){
     initialize(MA, sequenceTableNoChime = sequenceTableNoChime)
 }
 
-
+##' Fill multiple sequence Tables in a MultiAmplicon object for all or
+##' selected samples.
+##'
+##' In a MultiAmplicon object for some primer pairs some samples might
+##' have no amplified sequence variants at all. This function adds a
+##' \code{sequenceTableFilled} slot to a MultiAmplicon object. It uses
+##' the \code{sequenceTableNoChime} slot and fills tables for all
+##' samples appearing in any table or for requested samples.
+##' 
+##' @title fillSampleTables
+##' @param MA MultiAmplicon object
+##' @param samples either a character vector of length one giving
+##'     "union" to use all samples appearing for any of the amplicons
+##'     or a longer character vector giving names of samples to
+##'     retain
+##' @return MultiAmplicon object with the \code{sequenceTableFilled}
+##'     slot filled
+##' @author Emanuel Heitlinger
 fillSampleTables <- function (MA, samples="union"){
     seqtab <- getSequenceTableNoChime(MA)
     if (length(samples) == 1){

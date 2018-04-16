@@ -27,14 +27,15 @@ match the number of amplicons.}
 MultiAmplicon object with dadaF and dadaR slots filled
 }
 \description{
-A wrapper around \code{\link[dada2]{dada}} from \code{dada2}
+A wrapper around \code{\link[dada2]{dada}} from \code{dada2} for
+multiple amplicons.
 }
 \details{
 The function runs \code{\link[dada2]{dada}} from the package
 \code{dada2} \url{https://benjjneb.github.io/dada2/} to perform
 'High resolution sample inference from amplicon data' on multiple
 amplicons stored as dereplicated sequences in a
-MultiAmplicon-class object
+MultiAmplicon-class object.
 }
 \author{
 Emanuel Heitlinger
