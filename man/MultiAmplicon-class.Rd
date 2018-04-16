@@ -107,7 +107,7 @@ created by \code{\link{dadaMulti}}}
 created by \code{\link{mergeMulti}}}
 
 \item{sequenceTable}{Users should not supply this parameter, the
-slot is created by \code{\link{sequenceTableMulti}}}
+slot is created by \code{\link{makeSequenceTableMulti}}}
 
 \item{sequenceTableNoChime}{Users should not supply this parameter,
 the slot is created by \code{\link{removeChimeraMulti}}}

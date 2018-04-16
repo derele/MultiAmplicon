@@ -2,7 +2,7 @@
 % Please edit documentation in R/pipeline.R
 \name{makeSequenceTableMulti}
 \alias{makeSequenceTableMulti}
-\title{sequenceTableMulti}
+\title{makeSequenceTableMulti}
 \usage{
 makeSequenceTableMulti(MA, ...)
 }

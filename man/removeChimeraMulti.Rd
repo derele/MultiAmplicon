@@ -8,7 +8,7 @@ removeChimeraMulti(MA, mc.cores = getOption("mc.cores", 2L), ...)
 }
 \arguments{
 \item{MA}{A \code{\link{MultiAmplicon-class}} object preprocessed
-to have a sequenceTableMulti populated}
+to have the sequenceTable slot filled.}
 
 \item{mc.cores}{integer number of cores to use for parallelization}
 
@@ -34,7 +34,7 @@ function of \code{dada2}. It works on an
 \code{\link{MultiAmplicon-class}} object with the sequenceTable
 slot filled. Use \code{\link{dadaMulti}},
 \code{\link{derepMulti}}, \code{\link{mergeMulti}} and
-\code{\link{sequenceTableMulti}} on a amplicon sorted (see
+\code{\link{makeSequenceTableMulti}} on a amplicon sorted (see
 \code{\link{sortAmplicons}}) \code{\link{MultiAmplicon-class}}
 object to preprocess your multi-marker data to this point.
 }

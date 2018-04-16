@@ -277,7 +277,7 @@ setMethod("length", "PairedDada", function(x){
 ##'     created by \code{\link{mergeMulti}}
 ##'
 ##' @param sequenceTable Users should not supply this parameter, the
-##'     slot is created by \code{\link{sequenceTableMulti}}
+##'     slot is created by \code{\link{makeSequenceTableMulti}}
 ##'
 ##' @param sequenceTableNoChime Users should not supply this parameter,
 ##'     the slot is created by \code{\link{removeChimeraMulti}}

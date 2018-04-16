@@ -200,7 +200,7 @@ mergeMulti <- function(MA, ...){
 ##' \code{\link{MultiAmplicon-class}} object to preprocess your
 ##' multi-marker data to this point.
 ##'
-##' @title sequenceTableMulti 
+##' @title makeSequenceTableMulti 
 ##'
 ##' @param MA \code{\link{MultiAmplicon-class}} object with mergers
 ##'     slot filled
@@ -236,13 +236,13 @@ makeSequenceTableMulti <- function(MA, ...){
 ##' \code{\link{MultiAmplicon-class}} object with the sequenceTable
 ##' slot filled. Use \code{\link{dadaMulti}},
 ##' \code{\link{derepMulti}}, \code{\link{mergeMulti}} and
-##' \code{\link{sequenceTableMulti}} on a amplicon sorted (see
+##' \code{\link{makeSequenceTableMulti}} on a amplicon sorted (see
 ##' \code{\link{sortAmplicons}}) \code{\link{MultiAmplicon-class}}
 ##' object to preprocess your multi-marker data to this point.
 ##'
 ##' @title removeChimeraMulti
 ##' @param MA A \code{\link{MultiAmplicon-class}} object preprocessed
-##'     to have a sequenceTableMulti populated
+##'     to have the sequenceTable slot filled.
 ##' @param mc.cores integer number of cores to use for parallelization
 ##' @param ... passed on to
 ##'     \code{\link[dada2]{removeBimeraDenovo}}. All arguments to the
