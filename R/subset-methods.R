@@ -154,54 +154,55 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                   ## cat("\nNEW J: new.j", unlist(new.j) , "\n")
                   ## cat("\nNEW J non Zero: new.jnonZero",
                   ## unlist(new.j.nonZero) , "\n\n")
-              newSF <-  lapply(seq_along(i), function (ii) {
-                  x@stratifiedFiles[[i[[ii]]]][new.j[[ii]]]
-              })
-              names(newSF) <- names(x@stratifiedFiles[i])
-          }
-          if(length(x@derep)>0){
-              newderep <- lapply(seq_along(i), function (ii){
-                  x@derep[[i[[ii]]]][new.j.nonZero[[ii]]]
-              })
-              names(newderep) <- names(x@derep[i])
-          }
-          if(length(x@dada)>0){
-              newdada <- lapply(seq_along(i), function (ii){
-                  x@dada[[i[[ii]]]][new.j[[ii]]]
-              })
-              names(newdada) <- names(x@dada[i])
-          }
-          if(length(x@mergers)>0){
-              newmergers <- lapply(seq_along(i), function (ii){
-                  x@mergers[[i[[ii]]]][new.j[[ii]]]
-              })
-              names(newmergers) <- names(x@mergers[i])
-          }
-          if(length(x@sequenceTable)>0){
-              newST <- lapply(seq_along(i), function (ii){
-                  x@sequenceTable[[i[[ii]]]][new.j[[ii]], , drop=FALSE]
-              })
-              names(newST) <- names(x@sequenceTable[i])
-          }
-          if(length(x@sequenceTableNoChime)>0){
-              newSTnC <- lapply(seq_along(i), function (ii){
-                  x@sequenceTableNoChime[[i[[ii]]]][new.j[[ii]], , drop=FALSE]
-              })
-              names(newSTnC) <- names(x@sequenceTableNoChime[i])
-          }
-          initialize(x,
-                     PrimerPairsSet = newPrimer,
-                     PairedReadFileSet = newFiles,
-                     rawCounts = newRC,
-                     stratifiedFiles = newSF,
-                     derep = newderep,
-                     dada = newdada,
-                     mergers = newmergers,
-                     sequenceTable = newST,
-                     sequenceTableNoChime = newSTnC
-                     )
-          }
-)
+                  newSF <-  lapply(seq_along(i), function (ii) {
+                      x@stratifiedFiles[[i[[ii]]]][new.j[[ii]]]
+                  })
+                  names(newSF) <- names(x@stratifiedFiles[i])
+              }
+              if(length(x@derep)>0){
+                  newderep <- lapply(seq_along(i), function (ii){
+                      x@derep[[i[[ii]]]][new.j.nonZero[[ii]]]
+                  })
+                  names(newderep) <- names(x@derep[i])
+              }
+              if(length(x@dada)>0){
+                  newdada <- lapply(seq_along(i), function (ii){
+                      x@dada[[i[[ii]]]][new.j[[ii]]]
+                  })
+                  names(newdada) <- names(x@dada[i])
+              }
+              if(length(x@mergers)>0){
+                  newmergers <- lapply(seq_along(i), function (ii){
+                      x@mergers[[i[[ii]]]][new.j[[ii]]]
+                  })
+                  names(newmergers) <- names(x@mergers[i])
+              }
+              if(length(x@sequenceTable)>0){
+                  newST <- lapply(seq_along(i), function (ii){
+                      x@sequenceTable[[i[[ii]]]][new.j[[ii]], , drop=FALSE]
+                  })
+                  names(newST) <- names(x@sequenceTable[i])
+              }
+              if(length(x@sequenceTableNoChime)>0){
+                  newSTnC <- lapply(seq_along(i), function (ii){
+                      x@sequenceTableNoChime[[i[[ii]]]][new.j[[ii]], , drop=FALSE]
+                  })
+                  names(newSTnC) <- names(x@sequenceTableNoChime[i])         
+              }              
+              MA.out <- initialize(x,
+                                   PrimerPairsSet = newPrimer,
+                                   PairedReadFileSet = newFiles,
+                                   rawCounts = newRC,
+                                   stratifiedFiles = newSF,
+                                   derep = newderep,
+                                   dada = newdada,
+                                   mergers = newmergers,
+                                   sequenceTable = newST,
+                                   sequenceTableNoChime = newSTnC)              
+              if(length(x@sequenceTableFilled)>0){           
+                  fillSampleTables(MA.out, samples="union")
+              } else {MA.out}
+          })
 
 ## empty column
 ##' @rdname MultiAmplicon-class

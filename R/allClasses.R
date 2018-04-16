@@ -251,6 +251,7 @@ setMethod("length", "PairedDada", function(x){
 ##'
 ##' @slot sequenceTableNoChime
 ##'
+##' @slot sequenceTableFilled
 ##'
 ##' MultiAmplicon(PrimerPairsSet, PairedReadFileSet)
 ##' 
@@ -280,6 +281,9 @@ setMethod("length", "PairedDada", function(x){
 ##'
 ##' @param sequenceTableNoChime Users should not supply this parameter,
 ##'     the slot is created by \code{\link{noChimeMulti}}
+##'
+##' @param sequenceTableFilled Users should not supply this parameter,
+##'     the slot is created by \code{\link{fillSampleTables}}
 ##' 
 ##' @examples
 ##'
@@ -317,6 +321,8 @@ setMethod("length", "PairedDada", function(x){
 ##' MA5 <- sequenceTableMulti(MA4)
 ##'
 ##' MA6 <- noChimeMulti(MA5, mc.cores=1)
+##'
+##' MA7 <- fillSampleTables(MA6)
 ##' 
 ##' @seealso \code{\link[dada2]{derepFastq}},\code{\link[dada2]{dada}}
 ##' @importFrom dada2 derepFastq dada
@@ -331,7 +337,8 @@ setClass("MultiAmplicon",
                         dada="list",
                         mergers="list",
                         sequenceTable="list",
-                        sequenceTableNoChime="list"))
+                        sequenceTableNoChime="list",
+                        sequenceTableFilled="list"))
 
 
 ##' @export MultiAmplicon
@@ -345,7 +352,8 @@ MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
                           dada = list(),
                           mergers = list(),
                           sequenceTable = list(),
-                          sequenceTableNoChime = list()
+                          sequenceTableNoChime = list(),
+                          sequenceTableFilled = list()
                           ){
     new("MultiAmplicon",
         PrimerPairsSet = PrimerPairsSet,
@@ -386,59 +394,53 @@ setMethod("rawCounts", "MultiAmplicon", function(x) slot(x, "rawCounts"))
 ##' @rdname MultiAmplicon-class
 ##' @param MA MultiAmplicon-class object
 ##' @export
-stratifiedFilesF <- function(MA) lapply(MA@stratifiedFiles, slot, "readsF")
+getStratifiedFilesF <- function(MA) lapply(MA@stratifiedFiles, slot, "readsF")
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-stratifiedFilesR <- function(MA) lapply(MA@stratifiedFiles, slot, "readsR")
+getStratifiedFilesR <- function(MA) lapply(MA@stratifiedFiles, slot, "readsR")
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-derepF <-  function(MA) lapply(MA@derep, function (x) lapply(x, slot, "derepF"))
+getDerepF <-  function(MA) lapply(MA@derep, function (x) lapply(x, slot, "derepF"))
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-derepR <-  function(MA) lapply(MA@derep, function (x) lapply(x, slot, "derepR"))
+getDerepR <-  function(MA) lapply(MA@derep, function (x) lapply(x, slot, "derepR"))
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-dadaF <- function(MA) lapply(MA@dada, slot, "dadaF")
+getDadaF <- function(MA) lapply(MA@dada, slot, "dadaF")
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-dadaR <- function(MA) lapply(MA@dada, slot, "dadaR")
+getDadaR <- function(MA) lapply(MA@dada, slot, "dadaR")
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-mergers <- function(MA) MA@mergers
-
-
-##' @rdname MultiAmplicon-class
-##' @export
-mergers <- function(MA) MA@mergers
+getMergers <- function(MA) MA@mergers
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-sequenceTable <- function(MA) MA@sequenceTable
-
+getSequenceTable <- function(MA) MA@sequenceTable
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-sequenceTableNoChime <- function(MA) MA@sequenceTableNoChime
-
+getSequenceTableNoChime <- function(MA) MA@sequenceTableNoChime
 
 ##' @rdname MultiAmplicon-class
 ##' @export
 setGeneric("calcPropMerged", function(MA) {standardGeneric("calcPropMerged")})
 
 ##' @rdname MultiAmplicon-class
+##' @importFrom dada2 getUniques
 ##' @export
 setMethod("calcPropMerged", "MultiAmplicon",
           function(MA){
               sgt <- function(x) sum(getUniques(x))
               getN <- function(x) sum(sapply(x, sgt))
-              nMerged <- sapply(mergers(MA), getN)
-              nBefore <- sapply(dadaF(MA), getN)
+              nMerged <- sapply(getMergers(MA), getN)
+              nBefore <- sapply(getDadaF(MA), getN)
               nMerged/nBefore
           })
 
@@ -448,10 +450,11 @@ setMethod("calcPropMerged", "MultiAmplicon",
 setGeneric("getSequencesFromTable", function(MA) {standardGeneric("getSequencesFromTable")})
 
 ##' @rdname MultiAmplicon-class
+##' @importFrom dada2 getSequences
 ##' @export
 setMethod("getSequencesFromTable", "MultiAmplicon",
           function (MA) {
-              lapply(sequenceTableNoChime(MA), function (y) {
+              lapply(getSequenceTableNoChime(MA), function (y) {
                   if(all(dim(y)>1)) getSequences(y) else NULL
               })
           })

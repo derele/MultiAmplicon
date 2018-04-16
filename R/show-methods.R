@@ -55,5 +55,7 @@ setMethod("show", "MultiAmplicon", function(object){
         length(object@sequenceTable), "\n")
     cat("\nContaining slot sequenceTableNoChime of length:",
         length(object@sequenceTableNoChime), "\n")
+    cat("\nContaining slot sequenceTableFilled of length:",
+        length(object@sequenceTableFilled), "\n")
 })
 

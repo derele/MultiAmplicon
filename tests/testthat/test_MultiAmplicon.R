@@ -205,6 +205,9 @@ test_that("sorting a subsetted object same as subsetting a sorted object", {
 })
 
 
+MA7 <- fillSampleTables(MA6)
+
+
 ## failing  from here TODO!!!
 
 ## MA3.alt <- dadaMulti(MA2.alt, selfConsist=TRUE, pool=FALSE, multithread=TRUE)

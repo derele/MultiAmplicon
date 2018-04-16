@@ -139,8 +139,8 @@ combined stratified files for different amplicons. This should be done
 separately for forward ad reverse sequence though!
 
 ```{r errEst, cache=TRUE, message=FALSE}
-errF <- learnErrors(unlist(stratifiedFilesF(MA1)), verbose=0)
-errR <- learnErrors(unlist(stratifiedFilesR(MA1)), verbose=0)
+errF <- learnErrors(unlist(getStratifiedFilesF(MA1)), verbose=0)
+errR <- learnErrors(unlist(getStratifiedFilesR(MA1)), verbose=0)
 ```
 
 We can now run the pipeline of the dada2 package in parallel over the
@@ -159,6 +159,8 @@ MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
 MA5 <- sequenceTableMulti(MA4)
 
 MA6 <- noChimeMulti(MA5, mc.cores=1)
+
+MA7 <- fillSampleTables(MA6)
 ```
 
 Ready! This was *easy*, right?
@@ -229,14 +231,26 @@ sequences for the 2nd and 3rd amplicon don't merge for this dataset.
 
 Coming back to our example on dada sequence inference, we could also
 mix err estimates to use errors either seperately or accross
-amplicons. Always set the both error parameter-objects `NULL` when
-using self consistent estimation within one amplicon.
+amplicons. Always set the references to both pre-computed error
+parameters `NULL` when using self consistent estimation within one
+amplicon.
 
 ```{r mixdada, cache=TRUE}
-MA.mixed <- dadaMulti(MA2, Ferr=c(NULL, errF, NULL, errF),
-                      Rerr=c(NULL, errF, NULL, errF),
-                      selfConsist=c(TRUE, FALSE, TRUE, FALSE))
+MA.mixed <- dadaMulti(MA2,
+                      Ferr=c(NULL, errF,  NULL, errF),
+                      Rerr=c(NULL, errF,  NULL, errF),
+               selfConsist=c(TRUE, FALSE, TRUE, FALSE))
 ```
 
+## Synchronizing MultiAmplicon sequence tables
 
 
+
+
+
+## Taxnomical annotation
+
+For the examples above (which represent a sequence a subset of the
+[real world example](https://derele.github.io/MultiAmplicon/articles/MultiAmplicon-real-world-example.html))
+taxonimical annotation is difficult as for 18S markers reference
+databases are not as mature as for 16S.

@@ -268,6 +268,36 @@ noChimeMulti <- function(MA, mc.cores = getOption("mc.cores", 2L), ...){
 }
 
 
+fillSampleTables <- function (MA, samples="union"){
+    seqtab <- getSequenceTableNoChime(MA)
+    if (length(samples) == 1){
+        if(samples %in% "union") {
+            all.samples <- unique(unlist(lapply(seqtab, rownames)))
+        } else {stop("please specify either \"union\" to use all samples", 
+                     "or a list of sample names")
+        }
+    } else{all.samples <- samples}
+    if(any(!all.samples%in%names(MA@PairedReadFileSet))){
+        warning("requested samples " ,
+                all.samples[!all.samples%in%names(MA@PairedReadFileSet)],
+                " not found in original sample names")
+    }    
+    filledST <- lapply(seqtab, function (ampST){
+        missing.samples <- all.samples[!all.samples%in%rownames(ampST)]
+        if(length(missing.samples)>0){
+            fill <- matrix(0, nrow=length(missing.samples), ncol=ncol(ampST))
+            rownames(fill) <- missing.samples
+            full <- rbind(ampST, fill)
+        } else {full <- ampST}
+        full[all.samples, ]
+    })
+    MA@sequenceTableFilled <- list() ## empty slot for subset operations
+    initialize(MA[, which(names(MA@PairedReadFileSet)%in%all.samples)],
+               sequenceTableFilled = filledST)    
+}
+
+
+## Util functions for pipeline ------------------------------------
 extract.ellipsis <- function(dotargs, n) {
     exp.args <- lapply(dotargs, function (x) {
         if(length(x)){

@@ -107,9 +107,9 @@ MA <- sortAmplicons(MA)
 ```
 
 ```{r pipeline, message=FALSE}
-errF <- learnErrors(unlist(stratifiedFilesF(MA)), nread=1e6,
+errF <- learnErrors(unlist(getStratifiedFilesF(MA)), nread=1e6,
                     verbose=0)
-errR <- learnErrors(unlist(stratifiedFilesR(MA)), nread=1e6,
+errR <- learnErrors(unlist(getStratifiedFilesR(MA)), nread=1e6,
                     verbose=0)
 
 MA <- derepMulti(MA, mc.cores=1) 
@@ -142,5 +142,4 @@ MA <- mergeMulti(MA, justConcatenate=propMerged<0.8)
 MA <- sequenceTableMulti(MA)
 MA <- noChimeMulti(MA, mc.cores=1)
 ```
-
 

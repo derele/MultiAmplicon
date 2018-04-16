@@ -12,16 +12,15 @@
 \alias{dim,MultiAmplicon-method}
 \alias{rawCounts}
 \alias{rawCounts,MultiAmplicon-method}
-\alias{stratifiedFilesF}
-\alias{stratifiedFilesR}
-\alias{derepF}
-\alias{derepR}
-\alias{dadaF}
-\alias{dadaR}
-\alias{mergers}
-\alias{mergers}
-\alias{sequenceTable}
-\alias{sequenceTableNoChime}
+\alias{getStratifiedFilesF}
+\alias{getStratifiedFilesR}
+\alias{getDerepF}
+\alias{getDerepR}
+\alias{getDadaF}
+\alias{getDadaR}
+\alias{getMergers}
+\alias{getSequenceTable}
+\alias{getSequenceTableNoChime}
 \alias{calcPropMerged}
 \alias{calcPropMerged,MultiAmplicon-method}
 \alias{getSequencesFromTable}
@@ -38,7 +37,8 @@ sequencing files (in a \code{\link{PairedReadFileSet-class}}).}
 MultiAmplicon(PrimerPairsSet = PrimerPairsSet(),
   PairedReadFileSet = PairedReadFileSet(), rawCounts = matrix(),
   stratifiedFiles = list(), derep = list(), dada = list(),
-  mergers = list(), sequenceTable = list(), sequenceTableNoChime = list())
+  mergers = list(), sequenceTable = list(), sequenceTableNoChime = list(),
+  sequenceTableFilled = list())
 
 \S4method{colnames}{MultiAmplicon}(x)
 
@@ -54,25 +54,23 @@ rawCounts(x)
 
 \S4method{rawCounts}{MultiAmplicon}(x)
 
-stratifiedFilesF(MA)
+getStratifiedFilesF(MA)
 
-stratifiedFilesR(MA)
+getStratifiedFilesR(MA)
 
-derepF(MA)
+getDerepF(MA)
 
-derepR(MA)
+getDerepR(MA)
 
-dadaF(MA)
+getDadaF(MA)
 
-dadaR(MA)
+getDadaR(MA)
 
-mergers(MA)
+getMergers(MA)
 
-mergers(MA)
+getSequenceTable(MA)
 
-sequenceTable(MA)
-
-sequenceTableNoChime(MA)
+getSequenceTableNoChime(MA)
 
 calcPropMerged(MA)
 
@@ -119,6 +117,9 @@ slot is created by \code{\link{sequenceTableMulti}}}
 
 \item{sequenceTableNoChime}{Users should not supply this parameter,
 the slot is created by \code{\link{noChimeMulti}}}
+
+\item{sequenceTableFilled}{Users should not supply this parameter,
+the slot is created by \code{\link{fillSampleTables}}}
 
 \item{x}{MultiAmplicon-class object}
 
@@ -184,7 +185,9 @@ pairs of dada-class objects created by \code{dada2}’s
 
 \item{\code{sequenceTable}}{}
 
-\item{\code{sequenceTableNoChime}}{MultiAmplicon(PrimerPairsSet, PairedReadFileSet)}
+\item{\code{sequenceTableNoChime}}{}
+
+\item{\code{sequenceTableFilled}}{MultiAmplicon(PrimerPairsSet, PairedReadFileSet)}
 }}
 
 \examples{
@@ -223,6 +226,8 @@ MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
 MA5 <- sequenceTableMulti(MA4)
 
 MA6 <- noChimeMulti(MA5, mc.cores=1)
+
+MA7 <- fillSampleTables(MA6)
 
 }
 \seealso{
