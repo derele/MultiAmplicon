@@ -27,11 +27,12 @@
 ##' @author Emanuel Heitlinger
 derepMulti <- function(MA, mc.cores = getOption("mc.cores", 2L),
                        keep.single.singlets = FALSE, ...){
-    exp.args <- extract.ellipsis(list(...), nrow(MA))    
+    .complainWhenAbsent(MA, "stratifiedFiles")
+    exp.args <- .extractEllipsis(list(...), nrow(MA))    
     PPderep <- mclapply(seq_along(MA@PrimerPairsSet), function (i){
         ## work on possilbe different paramters for this particular amplicon
         args.here <- lapply(exp.args, "[", i)
-        param.message("derepFastq", args.here)
+        .paramMessage("derepFastq", args.here)
         message("amplicon ", names(MA@PrimerPairsSet)[i],
                 " dereplicating for ",
                 length(MA@stratifiedFiles[[i]]@readsF), " of ",
@@ -97,7 +98,8 @@ derepMulti <- function(MA, mc.cores = getOption("mc.cores", 2L),
 ##' @export
 ##' @author Emanuel Heitlinger
 dadaMulti <- function(MA, Ferr=NULL, Rerr=NULL, ...){
-    exp.args <- extract.ellipsis(list(...), nrow(MA))
+    .complainWhenAbsent(MA, "derep")
+    exp.args <- .extractEllipsis(list(...), nrow(MA))
     ## needs to be computed on pairs of amplicons
     PPdada <- lapply(seq_along(MA@PrimerPairsSet), function (i){
        dF <- lapply(MA@derep[[i]], function (x) slot(x, "derepF"))
@@ -110,7 +112,7 @@ dadaMulti <- function(MA, Ferr=NULL, Rerr=NULL, ...){
            ## run functions for reverse and forward
            ## work on possilbe different paramters for this particular amplicon
            args.here <- lapply(exp.args, "[", i)
-           param.message("dada", args.here)
+           .paramMessage("dada", args.here)
            dadaF <- do.call(dada, c(list(derep = dF, err=Ferr), args.here))
            ## make it a list of length 1 in case of only one sample,
            ## otherwise it is simplified and can't be handled
@@ -159,7 +161,8 @@ dadaMulti <- function(MA, Ferr=NULL, Rerr=NULL, ...){
 ##' @export
 ##' @author Emanuel Heitlinger
 mergeMulti <- function(MA, ...){
-    exp.args <- extract.ellipsis(list(...), nrow(MA))
+    .complainWhenAbsent(MA, "dada")
+    exp.args <- .extractEllipsis(list(...), nrow(MA))
     mergers <- lapply(seq_along(MA@PrimerPairsSet), function (i){     
         if(length(MA@dada[[i]])){
             daF <- slot(MA@dada[[i]], "dadaF")
@@ -171,7 +174,7 @@ mergeMulti <- function(MA, ...){
                 MA@PrimerPairsSet@names[[i]])
             ## work on possilbe different paramters for this particular amplicon
             args.here <- lapply(exp.args, "[", i)
-            param.message("mergePairs", args.here)
+            .paramMessage("mergePairs", args.here)
             MP <- do.call(mergePairs,
                           c(list(dadaF = daF, derepF = deF,
                                  dadaR = daR, derepR = deR), args.here))
@@ -213,11 +216,12 @@ mergeMulti <- function(MA, ...){
 ##' @importFrom dada2 makeSequenceTable
 ##' @export
 ##' @author Emanuel Heitlinger
-sequenceTableMulti <- function(MA, ...){
-    exp.args <- extract.ellipsis(list(...), nrow(MA))
+makeSequenceTableMulti <- function(MA, ...){
+        .complainWhenAbsent(MA, "mergers")
+    exp.args <- .extractEllipsis(list(...), nrow(MA))
     sequenceTable <- lapply(seq_along(MA@mergers), function (i){
         args.here <- lapply(exp.args, "[", i)
-        param.message("makeSequenceTable", args.here)
+        .paramMessage("makeSequenceTable", args.here)
         do.call(makeSequenceTable, c(list(MA@mergers[[i]]), args.here))
     })
     names(sequenceTable) <- names(MA@PrimerPairsSet)
@@ -236,7 +240,7 @@ sequenceTableMulti <- function(MA, ...){
 ##' \code{\link{sortAmplicons}}) \code{\link{MultiAmplicon-class}}
 ##' object to preprocess your multi-marker data to this point.
 ##'
-##' @title noChimeMulti
+##' @title removeChimeraMulti
 ##' @param MA A \code{\link{MultiAmplicon-class}} object preprocessed
 ##'     to have a sequenceTableMulti populated
 ##' @param mc.cores integer number of cores to use for parallelization
@@ -248,18 +252,19 @@ sequenceTableMulti <- function(MA, ...){
 ##'     shorter vector is given it will be recycled to match the
 ##'     number of amplicons.
 ##' @return a \code{\link{MultiAmplicon-class}} object with the
-##'     sequenceTableNoChime filled
+##'     \code{sequenceTableNoChime} filled
 ##' @importFrom dada2 removeBimeraDenovo
 ##' @importFrom parallel mclapply
 ##' @export
 ##' @author Emanuel Heitlinger
-noChimeMulti <- function(MA, mc.cores = getOption("mc.cores", 2L), ...){
-    exp.args <- extract.ellipsis(list(...), nrow(MA))
+removeChimeraMulti <- function(MA, mc.cores = getOption("mc.cores", 2L), ...){
+    .complainWhenAbsent(MA, "sequenceTable")
+    exp.args <- .extractEllipsis(list(...), nrow(MA))
     sequenceTableNoChime <-
     mclapply(seq_along(MA@sequenceTable), function (i) { 
             if (nrow(MA@sequenceTable[[i]])>0 && ncol(MA@sequenceTable[[i]])>0){
                 args.here <- lapply(exp.args, "[", i)
-                param.message("removeBimeraDenovo", args.here)
+                .paramMessage("removeBimeraDenovo", args.here)
                 do.call(removeBimeraDenovo, c(list(MA@sequenceTable[[i]]), args.here))
             } else {matrix()}
         },
@@ -288,6 +293,7 @@ noChimeMulti <- function(MA, mc.cores = getOption("mc.cores", 2L), ...){
 ##' @export
 ##' @author Emanuel Heitlinger
 fillSampleTables <- function (MA, samples="union"){
+    .complainWhenAbsent(MA, "sequenceTableNoChime")
     seqtab <- getSequenceTableNoChime(MA)
     if (length(samples) == 1){
         if(samples %in% "union") {
@@ -317,7 +323,7 @@ fillSampleTables <- function (MA, samples="union"){
 
 
 ## Util functions for pipeline ------------------------------------
-extract.ellipsis <- function(dotargs, n) {
+.extractEllipsis <- function(dotargs, n) {
     exp.args <- lapply(dotargs, function (x) {
         if(length(x)){
             if(n%%length(x)>0){
@@ -332,7 +338,7 @@ extract.ellipsis <- function(dotargs, n) {
     exp.args
 }
 
-param.message <- function(what, args){
+.paramMessage <- function(what, args){
     ### would be better to print the do.call call directly... this
     ### hack to help with it as not implemented
     ## NULL as character
@@ -346,3 +352,13 @@ param.message <- function(what, args){
             paste(print.args.here, collapse = " "), " parameters")
 }
 
+.complainWhenAbsent <- function(MA, slots=TRUE){
+    allSlots <- slotNames(MA)
+    slotL <- sapply(allSlots, function (x){
+                    length(slot(MA, name=x))})
+    fslot <- slotL[slots]
+    if(!fslot){
+        stop("Slot ", names(fslot), " not filled ",
+             "for MultiAmplicon object: consult ?MultiAmplicon")
+   }
+}

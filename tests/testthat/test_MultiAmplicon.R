@@ -156,7 +156,7 @@ test_that("all sequences are dereplicated ", {
     expect_equal(up1.counts, up1.merge)
 })
 
-MA5 <- sequenceTableMulti(MA4)
+MA5 <- makeSequenceTableMulti(MA4)
 
 context("Sequence table has entries corresponding to stratified files ")
 test_that("stratified files result in the number of columns of sequence tables ",
@@ -168,7 +168,7 @@ test_that("stratified files result in the number of columns of sequence tables "
     ## last case for if a single sequence was dropped derep object
 })
 
-MA6 <- noChimeMulti(MA5)
+MA6 <- removeChimeraMulti(MA5)
 
 context("Merging works?")
 test_that("merging produces a list of derep objects ", {
@@ -222,13 +222,13 @@ MA7 <- fillSampleTables(MA6)
 ##     expect_equal(MA4.alt@mergers, MA4[2:5, 2:6]@mergers)
 ## })
 
-## MA5.alt <- sequenceTableMulti(MA4.alt)
+## MA5.alt <- makeSequenceTableMulti(MA4.alt)
 
 ## test_that("sequence table same after subsetting", {
 ##     expect_equal(MA5.alt@sequenceTable, MA5[2:5, 2:6]@sequenceTable)
 ## })
 
-## MA6.alt <- noChimeMulti(MA5.alt)
+## MA6.alt <- removeChimeraMulti(MA5.alt)
 
 ## test_that("noChime same after subsetting", {
 ##     expect_equal(MA6.alt@sequenceTableNoChime, MA5[2:5, 2:6]@sequenceTableNoChime)

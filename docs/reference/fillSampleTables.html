@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>mergeMulti — mergeMulti • MultiAmplicon</title>
+<title>fillSampleTables — fillSampleTables • MultiAmplicon</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -90,50 +90,44 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>mergeMulti</h1>
+    <h1>fillSampleTables</h1>
     </div>
 
     
-    <p>Merge denoised pairs of forward and reverse reads inside an
-MultiAmplicon object.</p>
+    <p>Fill multiple sequence Tables in a MultiAmplicon object for all or
+selected samples.</p>
     
 
-    <pre class="usage"><span class='fu'>mergeMulti</span>(<span class='no'>MA</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>fillSampleTables</span>(<span class='no'>MA</span>, <span class='kw'>samples</span> <span class='kw'>=</span> <span class='st'>"union"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>MA</th>
-      <td><p><code><a href='MultiAmplicon-class.html'>MultiAmplicon-class</a></code> object with derep and
-dada slots filled.</p></td>
+      <td><p>MultiAmplicon object</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>additional arguments to be passed to the
-<code><a href='http://www.rdocumentation.org/packages/dada2/topics/mergePairs'>mergePairs</a></code> function of <code>dada2</code>, all
-arguments to the function can be given as a vector of the same
-length as the number of primer pairs in the MultiAmplicon
-object, allowing to specify e.g. justConcatenate to be set
-TRUE for only some of the amplicons, or to specify different
-minOverlap for each amplicon. If a shorter vector is given it
-will be recycled to match the number of amplicons.</p></td>
+      <th>samples</th>
+      <td><p>either a character vector of length one giving
+"union" to use all samples appearing for any of the amplicons
+or a longer character vector giving names of samples to
+retain</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A MultiAmplicon-class object with the mergers slot filled</p>
+    <p>MultiAmplicon object with the <code>sequenceTableFilled</code>
+    slot filled</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This is a wrapper for <code><a href='http://www.rdocumentation.org/packages/dada2/topics/mergePairs'>mergePairs</a></code> from
-<code>dada2</code>. It works on an <code><a href='MultiAmplicon-class.html'>MultiAmplicon-class</a></code>
-object with derep and dada slots filled. Use
-<code><a href='dadaMulti.html'>dadaMulti</a></code> and <code><a href='derepMulti.html'>derepMulti</a></code> on a amplicon
-sorted (see <code><a href='sortAmplicons.html'>sortAmplicons</a></code>)
-<code><a href='MultiAmplicon-class.html'>MultiAmplicon-class</a></code> object to preprocess your
-multi-marker data to this point.</p>
+    <p>In a MultiAmplicon object for some primer pairs some samples might
+have no amplified sequence variants at all. This function adds a
+<code>sequenceTableFilled</code> slot to a MultiAmplicon object. It uses
+the <code>sequenceTableNoChime</code> slot and fills tables for all
+samples appearing in any table or for requested samples.</p>
     
 
   </div>

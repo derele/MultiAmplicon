@@ -116,7 +116,7 @@ created by \code{\link{mergeMulti}}}
 slot is created by \code{\link{sequenceTableMulti}}}
 
 \item{sequenceTableNoChime}{Users should not supply this parameter,
-the slot is created by \code{\link{noChimeMulti}}}
+the slot is created by \code{\link{removeChimeraMulti}}}
 
 \item{sequenceTableFilled}{Users should not supply this parameter,
 the slot is created by \code{\link{fillSampleTables}}}
@@ -223,9 +223,9 @@ MA3 <- dadaMulti(MA2, selfConsist = TRUE)
 
 MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
 
-MA5 <- sequenceTableMulti(MA4)
+MA5 <- makeSequenceTableMulti(MA4)
 
-MA6 <- noChimeMulti(MA5, mc.cores=1)
+MA6 <- removeChimeraMulti(MA5, mc.cores=1)
 
 MA7 <- fillSampleTables(MA6)
 

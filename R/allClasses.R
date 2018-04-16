@@ -280,7 +280,7 @@ setMethod("length", "PairedDada", function(x){
 ##'     slot is created by \code{\link{sequenceTableMulti}}
 ##'
 ##' @param sequenceTableNoChime Users should not supply this parameter,
-##'     the slot is created by \code{\link{noChimeMulti}}
+##'     the slot is created by \code{\link{removeChimeraMulti}}
 ##'
 ##' @param sequenceTableFilled Users should not supply this parameter,
 ##'     the slot is created by \code{\link{fillSampleTables}}
@@ -318,9 +318,9 @@ setMethod("length", "PairedDada", function(x){
 ##'
 ##' MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
 ##'
-##' MA5 <- sequenceTableMulti(MA4)
+##' MA5 <- makeSequenceTableMulti(MA4)
 ##'
-##' MA6 <- noChimeMulti(MA5, mc.cores=1)
+##' MA6 <- removeChimeraMulti(MA5, mc.cores=1)
 ##'
 ##' MA7 <- fillSampleTables(MA6)
 ##' 
