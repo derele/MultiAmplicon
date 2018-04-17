@@ -156,7 +156,7 @@ MA3 <- dadaMulti(MA2, Ferr=errF, Rerr=errR,  pool=FALSE)
 
 MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
 
-MA5 <- sequenceTableMulti(MA4)
+MA5 <- makeSequenceTableMulti(MA4)
 
 MA6 <- removeChimeraMulti(MA5, mc.cores=1)
 
@@ -183,7 +183,7 @@ MA.alt <- dadaMulti(MA2, selfConsist=TRUE, pool=FALSE)
 
 MA.alt <- mergeMulti(MA.alt, justConcatenate=TRUE)
 
-MA.alt <- sequenceTableMulti(MA.alt)
+MA.alt <- makeSequenceTableMulti(MA.alt)
 
 MA.alt <- removeChimeraMulti(MA.alt, mc.cores=1)
 ```
@@ -245,9 +245,14 @@ MA.mixed <- dadaMulti(MA2,
 ```
 
 
+
 ## Taxnomical annotation
 
 For the examples above (which represent a sequence a subset of the
 [real world example](https://derele.github.io/MultiAmplicon/articles/MultiAmplicon-real-world-example.html))
 taxonimical annotation is difficult as for 18S markers reference
 databases are not as mature as for 16S.
+
+
+## Handing over to phyloseq
+

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>makeSequenceTableMulti — makeSequenceTableMulti • MultiAmplicon</title>
+<title>calcPropMerged — calcPropMerged • MultiAmplicon</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -90,49 +90,37 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>makeSequenceTableMulti</h1>
+    <h1>calcPropMerged</h1>
     </div>
 
     
-    <p>Create a sequence table inside a MultiAmplicon object.</p>
+    <p>Calculate the proportion of merged sequences for a MultiAmplicon
+object.</p>
     
 
-    <pre class="usage"><span class='fu'>makeSequenceTableMulti</span>(<span class='no'>MA</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>calcPropMerged</span>(<span class='no'>MA</span>)
+
+<span class='co'># S4 method for MultiAmplicon</span>
+<span class='fu'>calcPropMerged</span>(<span class='no'>MA</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>MA</th>
-      <td><p><code><a href='MultiAmplicon-class.html'>MultiAmplicon-class</a></code> object with mergers
-slot filled</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>additional parameters to be passed to the
-<code><a href='http://www.rdocumentation.org/packages/dada2/topics/makeSequenceTable'>makeSequenceTable</a></code> function of
-<code>dada2</code>. All arguments to the function can be given as a
-vector of the same length as the number of primer pairs in the
-MultiAmplicon object, allowing to specify different parameters
-for each amplicon. If a shorter vector is given it will be
-recycled to match the number of amplicons.</p></td>
+      <td><p>MultiAamplicon object with</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A MultiAmplicon-class object with the sequenceTable slot
-    filled</p>
+    <p>a vector of proportions of merged reads for each amplicon
+    (potentially named).</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This is a wrapper for the <code><a href='http://www.rdocumentation.org/packages/dada2/topics/makeSequenceTable'>makeSequenceTable</a></code>
-function of <code>dada2</code>. It works on an
-<code><a href='MultiAmplicon-class.html'>MultiAmplicon-class</a></code> object with the mergers slot
-filled. Use <code><a href='dadaMulti.html'>dadaMulti</a></code> and <code><a href='derepMulti.html'>derepMulti</a></code>
-on an amplicon sorted (see <code><a href='sortAmplicons.html'>sortAmplicons</a></code>)
-<code><a href='MultiAmplicon-class.html'>MultiAmplicon-class</a></code> object to preprocess your
-multi-marker data to this point.</p>
+    <p>Merging using <code><a href='dadaMulti.html'>dadaMulti</a></code> can result in loss of
+sequences</p>
     
 
   </div>

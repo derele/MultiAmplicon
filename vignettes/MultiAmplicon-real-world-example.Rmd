@@ -139,7 +139,14 @@ concatenating all amplicons with less than 80% merged by setting
 
 ```{r tabulator, mesage=FALSE}
 MA <- mergeMulti(MA, justConcatenate=propMerged<0.8)
-MA <- sequenceTableMulti(MA)
+MA <- makeSequenceTableMulti(MA)
 MA <- removeChimeraMulti(MA, mc.cores=1)
+MA <- fillSampleTables(MA)
 ```
 
+## Hand over to phyloseq
+
+
+
+
+## Comparing sample data 

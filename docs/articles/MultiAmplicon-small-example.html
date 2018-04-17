@@ -68,7 +68,7 @@
       <h1>MultiAmplicon - a small example</h1>
                         <h4 class="author">Emanuel Heitlinger</h4>
             
-            <h4 class="date">2018-04-14</h4>
+            <h4 class="date">2018-04-17</h4>
           </div>
 
     
@@ -312,8 +312,8 @@ knitr::<span class="kw">kable</span>(<span class="kw"><a href="../reference/Mult
 <h2 class="hasAnchor">
 <a href="#running-the-amplicon-sequencing-pipeline" class="anchor"></a>Running the amplicon sequencing pipeline</h2>
 <p>We first estimate the errors separately for both for dada’s probabilistic sequence variant inference. We do this here on the combined stratified files for different amplicons. This should be done separately for forward ad reverse sequence though!</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">errF &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">stratifiedFilesF</a></span>(MA1)), <span class="dt">verbose=</span><span class="dv">0</span>)
-errR &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">stratifiedFilesR</a></span>(MA1)), <span class="dt">verbose=</span><span class="dv">0</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">errF &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">getStratifiedFilesF</a></span>(MA1)), <span class="dt">verbose=</span><span class="dv">0</span>)
+errR &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">getStratifiedFilesR</a></span>(MA1)), <span class="dt">verbose=</span><span class="dv">0</span>)</code></pre></div>
 <p>We can now run the pipeline of the dada2 package in parallel over the different amplicons. We update our object from each previous step and safe it under a new name, here for illustration. In your own workflow you can also overwrite the old object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/derepMulti.html">derepMulti</a></span>(MA.sub, <span class="dt">mc.cores=</span><span class="dv">1</span>) 
 
@@ -343,10 +343,12 @@ MA3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/dadaMul
 
 MA4 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mergeMulti.html">mergeMulti</a></span>(MA3, <span class="dt">justConcatenate=</span><span class="ot">TRUE</span>)
 
-MA5 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sequenceTableMulti.html">sequenceTableMulti</a></span>(MA4)
+MA5 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/makeSequenceTableMulti.html">makeSequenceTableMulti</a></span>(MA4)
 
-MA6 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noChimeMulti.html">noChimeMulti</a></span>(MA5, <span class="dt">mc.cores=</span><span class="dv">1</span>)</code></pre></div>
-<p>Ready! This was <em>easy</em>, right?</p>
+MA6 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/removeChimeraMulti.html">removeChimeraMulti</a></span>(MA5, <span class="dt">mc.cores=</span><span class="dv">1</span>)
+
+MA7 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fillSampleTables.html">fillSampleTables</a></span>(MA6)</code></pre></div>
+<p>The steps after <code>sortAmplcions</code> until <code>removeChimeraMulti</code> recapitulate different processes in the <a href="https://benjjneb.github.io/dada2/tutorial.html">dada2 pipeline</a>.</p>
 </div>
 <div id="a-word-on-dada2-sequence-inference" class="section level2">
 <h2 class="hasAnchor">
@@ -422,9 +424,9 @@ MA6 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noChime
 
 MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mergeMulti.html">mergeMulti</a></span>(MA.alt, <span class="dt">justConcatenate=</span><span class="ot">TRUE</span>)
 
-MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sequenceTableMulti.html">sequenceTableMulti</a></span>(MA.alt)
+MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/makeSequenceTableMulti.html">makeSequenceTableMulti</a></span>(MA.alt)
 
-MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noChimeMulti.html">noChimeMulti</a></span>(MA.alt, <span class="dt">mc.cores=</span><span class="dv">1</span>)</code></pre></div>
+MA.alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/removeChimeraMulti.html">removeChimeraMulti</a></span>(MA.alt, <span class="dt">mc.cores=</span><span class="dv">1</span>)</code></pre></div>
 <p>I will add a comparison between the two different versions here.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">together &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAmplicon-class.html">getSequencesFromTable</a></span>(MA6)
 alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAmplicon-class.html">getSequencesFromTable</a></span>(MA.alt)
@@ -474,10 +476,11 @@ alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAm
 <span class="co">#&gt; merging sequences from 3 samples for amplicon Amp4F.Amp4R</span>
 <span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></code></pre></div>
 <p>The above example would make sense if (only) amplicons Amp1F.Amp1R and Amp4F.Amp4R (1st and 4th in our object) had too little overlap between forward and reverse reads to be merged and would better be concatenated. Btw: Here this makes not really sense as to much sequences for the 2nd and 3rd amplicon don’t merge for this dataset.</p>
-<p>Coming back to our example on dada sequence inference, we could also mix err estimates to use errors either seperately or accross amplicons. Always set the both error parameter-objects <code>NULL</code> when using self consistent estimation within one amplicon.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA.mixed &lt;-<span class="st"> </span><span class="kw"><a href="../reference/dadaMulti.html">dadaMulti</a></span>(MA2, <span class="dt">Ferr=</span><span class="kw">c</span>(<span class="ot">NULL</span>, errF, <span class="ot">NULL</span>, errF),
-                      <span class="dt">Rerr=</span><span class="kw">c</span>(<span class="ot">NULL</span>, errF, <span class="ot">NULL</span>, errF),
-                      <span class="dt">selfConsist=</span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>))
+<p>Coming back to our example on dada sequence inference, we could also mix err estimates to use errors either seperately or accross amplicons. Always set the references to both pre-computed error parameters <code>NULL</code> when using self consistent estimation within one amplicon.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA.mixed &lt;-<span class="st"> </span><span class="kw"><a href="../reference/dadaMulti.html">dadaMulti</a></span>(MA2,
+                      <span class="dt">Ferr=</span><span class="kw">c</span>(<span class="ot">NULL</span>, errF,  <span class="ot">NULL</span>, errF),
+                      <span class="dt">Rerr=</span><span class="kw">c</span>(<span class="ot">NULL</span>, errF,  <span class="ot">NULL</span>, errF),
+               <span class="dt">selfConsist=</span><span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>))
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; amplicon Amp1F.Amp1R: dada estimation of sequence variants from 3 of 3 possible sample files</span>
@@ -532,6 +535,15 @@ alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAm
 <span class="co">#&gt; Sample 2 - 2076 reads in 962 unique sequences.</span>
 <span class="co">#&gt; Sample 3 - 428 reads in 183 unique sequences.</span></code></pre></div>
 </div>
+<div id="taxnomical-annotation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#taxnomical-annotation" class="anchor"></a>Taxnomical annotation</h2>
+<p>For the examples above (which represent a sequence a subset of the <a href="https://derele.github.io/MultiAmplicon/articles/MultiAmplicon-real-world-example.html">real world example</a>) taxonimical annotation is difficult as for 18S markers reference databases are not as mature as for 16S.</p>
+</div>
+<div id="handing-over-to-phyloseq" class="section level2">
+<h2 class="hasAnchor">
+<a href="#handing-over-to-phyloseq" class="anchor"></a>Handing over to phyloseq</h2>
+</div>
 </div>
   </div>
 
@@ -546,6 +558,8 @@ alt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAm
       <li><a href="#running-the-amplicon-sequencing-pipeline">Running the amplicon sequencing pipeline</a></li>
       <li><a href="#a-word-on-dada2-sequence-inference">A word on dada2 sequence inference</a></li>
       <li><a href="#using-different-parameters-for-each-amplicon">Using different parameters for each amplicon</a></li>
+      <li><a href="#taxnomical-annotation">Taxnomical annotation</a></li>
+      <li><a href="#handing-over-to-phyloseq">Handing over to phyloseq</a></li>
       </ul>
 </div>
       </div>

@@ -68,7 +68,7 @@
       <h1>MultiAmplicon - a real world example</h1>
                         <h4 class="author">Emanuel Heitlinger</h4>
             
-            <h4 class="date">2018-04-13</h4>
+            <h4 class="date">2018-04-17</h4>
           </div>
 
     
@@ -141,9 +141,9 @@ MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAmp
 <a href="#running-the-multiamplicon-pipeline" class="anchor"></a>Running the MultiAmplicon pipeline</h2>
 <p>We start by sorting our amplicons by primer sequences cutting off the latter from sequencing reads.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sortAmplicons.html">sortAmplicons</a></span>(MA)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">errF &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">stratifiedFilesF</a></span>(MA)), <span class="dt">nread=</span><span class="fl">1e6</span>,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">errF &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">getStratifiedFilesF</a></span>(MA)), <span class="dt">nread=</span><span class="fl">1e6</span>,
                     <span class="dt">verbose=</span><span class="dv">0</span>)
-errR &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">stratifiedFilesR</a></span>(MA)), <span class="dt">nread=</span><span class="fl">1e6</span>,
+errR &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">getStratifiedFilesR</a></span>(MA)), <span class="dt">nread=</span><span class="fl">1e6</span>,
                     <span class="dt">verbose=</span><span class="dv">0</span>)
 
 MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/derepMulti.html">derepMulti</a></span>(MA, <span class="dt">mc.cores=</span><span class="dv">1</span>) 
@@ -152,7 +152,7 @@ MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/dadaMult
 <p>The sequences were quite low quality and we shortened them massively. Therefore we have to assume that most sequences won’t have enough overlap to merge. Now we figure out for which amplicons this is the case.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mergeMulti.html">mergeMulti</a></span>(MA)
 
-propMerged &lt;-<span class="st"> </span>MultiAmplicon::<span class="kw"><a href="../reference/MultiAmplicon-class.html">calcPropMerged</a></span>(MA)
+propMerged &lt;-<span class="st"> </span>MultiAmplicon::<span class="kw"><a href="../reference/calcPropMerged.html">calcPropMerged</a></span>(MA)
 
 <span class="kw">summary</span>(propMerged)
 <span class="co">#&gt;      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. </span>
@@ -307,7 +307,7 @@ propMerged &lt;-<span class="st"> </span>MultiAmplicon::<span class="kw"><a href
 <span class="co">#&gt; </span>
 <span class="co">#&gt; merging sequences from 165 samples for amplicon Hadz_1200CR.wang1624CR6S</span>
 <span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sequenceTableMulti.html">sequenceTableMulti</a></span>(MA)
+MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/makeSequenceTableMulti.html">makeSequenceTableMulti</a></span>(MA)
 <span class="co">#&gt; calling makeSequenceTable with default parameters</span>
 <span class="co">#&gt; calling makeSequenceTable with default parameters</span>
 <span class="co">#&gt; calling makeSequenceTable with default parameters</span>
@@ -357,7 +357,7 @@ MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sequence
 <span class="co">#&gt; calling makeSequenceTable with default parameters</span>
 <span class="co">#&gt; calling makeSequenceTable with default parameters</span>
 <span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noChimeMulti.html">noChimeMulti</a></span>(MA, <span class="dt">mc.cores=</span><span class="dv">1</span>)
+MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/removeChimeraMulti.html">removeChimeraMulti</a></span>(MA, <span class="dt">mc.cores=</span><span class="dv">1</span>)
 <span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
 <span class="co">#&gt; As of the 1.4 release, the default method changed to consensus (from pooled).</span>
 <span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
@@ -453,7 +453,16 @@ MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noChimeM
 <span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
 <span class="co">#&gt; As of the 1.4 release, the default method changed to consensus (from pooled).</span>
 <span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; As of the 1.4 release, the default method changed to consensus (from pooled).</span></code></pre></div>
+<span class="co">#&gt; As of the 1.4 release, the default method changed to consensus (from pooled).</span>
+MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fillSampleTables.html">fillSampleTables</a></span>(MA)</code></pre></div>
+</div>
+<div id="hand-over-to-phyloseq" class="section level2">
+<h2 class="hasAnchor">
+<a href="#hand-over-to-phyloseq" class="anchor"></a>Hand over to phyloseq</h2>
+</div>
+<div id="comparing-sample-data" class="section level2">
+<h2 class="hasAnchor">
+<a href="#comparing-sample-data" class="anchor"></a>Comparing sample data</h2>
 </div>
 </div>
   </div>
@@ -466,6 +475,8 @@ MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/noChimeM
 <li><a href="#data-preparation-download-and-filtering">Data preparation (download and filtering)</a></li>
       <li><a href="#data-preparation-primer-set">Data preparation (primer set)</a></li>
       <li><a href="#running-the-multiamplicon-pipeline">Running the MultiAmplicon pipeline</a></li>
+      <li><a href="#hand-over-to-phyloseq">Hand over to phyloseq</a></li>
+      <li><a href="#comparing-sample-data">Comparing sample data</a></li>
       </ul>
 </div>
       </div>
