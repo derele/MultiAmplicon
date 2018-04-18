@@ -147,6 +147,15 @@ test_that("merging produces a list of derep objects ", {
                  rowSums(rawCounts(MA3)>1)) # >1 singl seq rm
 })
 
+
+context("Merging works?")
+test_that("merging produces a list of derep objects ", {
+    expect_true(
+    all((calcPropMerged(MA4) > 0 & calcPropMerged(MA4) <= 1) |
+        calcPropMerged(MA4) %in% NaN) ## when zero merged
+    )
+})
+
 up1.merge <- unname(unlist(lapply(MA4@mergers, function (x)
     lapply(x, function (y) sum(getUniques(y))))))
 

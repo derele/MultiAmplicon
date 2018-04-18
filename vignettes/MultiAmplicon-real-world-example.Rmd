@@ -100,7 +100,8 @@ MA <- MultiAmplicon(primers, files)
 
 ## Running the MultiAmplicon pipeline
 
-We start by sorting our amplicons by primer sequences cutting off the latter from sequencing reads.
+We start by sorting our amplicons by primer sequences cutting off the
+latter from sequencing reads.
 
 ```{r sortAmps, message=FALSE}
 MA <- sortAmplicons(MA)

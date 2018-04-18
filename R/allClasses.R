@@ -448,7 +448,11 @@ setGeneric("calcPropMerged", function(MA) {standardGeneric("calcPropMerged")})
 setMethod("calcPropMerged", "MultiAmplicon",
           function(MA){
               sgt <- function(x) sum(getUniques(x))
-              getN <- function(x) sum(sapply(x, sgt))
+              getN <- function(x) {
+                  if(length(x)) {
+                      sum(sapply(x, sgt))
+                  } else {0}
+              }
               nMerged <- sapply(getMergers(MA), getN)
               nBefore <- sapply(getDadaF(MA), getN)
               nMerged/nBefore
