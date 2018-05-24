@@ -322,6 +322,41 @@ fillSampleTables <- function (MA, samples="union"){
 }
 
 
+##' Calculate the proportion of merged sequences for a MultiAmplicon
+##' object.
+##'
+##' Merging using \code{\link{dadaMulti}} can result in loss of
+##' sequences with too little overlap. This function determines what
+##' proporton of sequences were merged using \code{\link{mergeMulti}}
+##' for each amplicon in a MultiAmplicon object.
+##' @title calcPropMerged
+##' @param MA MultiAmplicon object with the \code{mergers} slot
+##'     filled.
+##' @return a vector of proportions of merged reads for each amplicon
+##'     (potentially named).
+##' @author Emanuel Heitlinger
+##' @export
+setGeneric("calcPropMerged", function(MA) {standardGeneric("calcPropMerged")})
+
+##' @rdname calcPropMerged
+##' @importFrom dada2 getUniques
+##' @export
+setMethod("calcPropMerged", "MultiAmplicon",
+          function(MA){
+              sgt <- function(x) sum(getUniques(x))
+              getN <- function(x) {
+                  if(length(x)) {
+                      sum(sapply(x, sgt))
+                  } else {0}
+              }
+              nMerged <- sapply(getMergers(MA), getN)
+              nBefore <- sapply(getDadaF(MA), getN)
+              nMerged/nBefore
+          })
+
+
+
+
 ## Util functions for pipeline ------------------------------------
 .extractEllipsis <- function(dotargs, n) {
     exp.args <- lapply(dotargs, function (x) {

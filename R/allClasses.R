@@ -429,36 +429,6 @@ getSequenceTable <- function(MA) MA@sequenceTable
 getSequenceTableNoChime <- function(MA) MA@sequenceTableNoChime
 
 
-##' Calculate the proportion of merged sequences for a MultiAmplicon
-##' object.
-##'
-##' Merging using \code{\link{dadaMulti}} can result in loss of
-##' sequences
-##' @title calcPropMerged
-##' @param MA MultiAamplicon object with 
-##' @return a vector of proportions of merged reads for each amplicon
-##'     (potentially named).
-##' @author Emanuel Heitlinger
-##' @export
-setGeneric("calcPropMerged", function(MA) {standardGeneric("calcPropMerged")})
-
-##' @rdname calcPropMerged
-##' @importFrom dada2 getUniques
-##' @export
-setMethod("calcPropMerged", "MultiAmplicon",
-          function(MA){
-              sgt <- function(x) sum(getUniques(x))
-              getN <- function(x) {
-                  if(length(x)) {
-                      sum(sapply(x, sgt))
-                  } else {0}
-              }
-              nMerged <- sapply(getMergers(MA), getN)
-              nBefore <- sapply(getDadaF(MA), getN)
-              nMerged/nBefore
-          })
-
-
 ##' @rdname MultiAmplicon-class
 ##' @export
 setGeneric("getSequencesFromTable", function(MA) {standardGeneric("getSequencesFromTable")})
