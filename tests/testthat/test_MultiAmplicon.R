@@ -122,9 +122,9 @@ MA3 <- dadaMulti(MA2, selfConsist=TRUE, pool=FALSE,
 
 context("Denoising works?")
 test_that("dada2 denoising produces a list of derep objects ", {
-    expect_equal(length(MA3@derep), nrow(MA3))
-    expect_equal(length(MA3@derep), nrow(rawCounts(MA3)))
-    expect_equal(unlist(lapply(MA3@derep, length)),
+    expect_equal(length(MA3@dada), nrow(MA3))
+    expect_equal(length(MA3@dada), nrow(rawCounts(MA3)))
+    expect_equal(unlist(lapply(MA3@dada, length)),
                  rowSums(rawCounts(MA3)>1)) # >1 singl seq rm
 })
 
@@ -215,6 +215,18 @@ test_that("sorting a subsetted object same as subsetting a sorted object", {
 
 
 MA7 <- fillSampleTables(MA6)
+
+MA7.fillalt <- fillSampleTables(MA6, samples = c("S03_F_filt.fastq.gz",
+                                                 "S04_F_filt.fastq.gz",
+                                                 "S05_F_filt.fastq.gz"))
+
+MA7.fillsub <- MA7[,  which(colnames(MA7)%in%
+                            c("S03_F_filt.fastq.gz",
+                              "S04_F_filt.fastq.gz",
+                              "S05_F_filt.fastq.gz"))]
+
+## everything but statified files would be equal...
+### expect_equal(MA7.fillalt@stratifiedFiles, MA7.fillsub@stratifiedFiles)
 
 
 ## failing  from here TODO!!!
