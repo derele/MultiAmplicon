@@ -280,8 +280,8 @@ removeChimeraMulti <- function(MA, mc.cores = getOption("mc.cores", 2L), ...){
     initialize(MA, sequenceTableNoChime = sequenceTableNoChime)
 }
 
-##' Fill multiple sequence Tables in a MultiAmplicon object for all or
-##' selected samples.
+##' Fill multiple sequence tables in a MultiAmplicon object to include
+##' all or selected samples.
 ##'
 ##' In a MultiAmplicon object for some primer pairs some samples might
 ##' have no amplified sequence variants at all. This function adds a
@@ -349,6 +349,7 @@ setGeneric("calcPropMerged", function(MA) {standardGeneric("calcPropMerged")})
 ##' @importFrom dada2 getUniques
 ##' @export
 setMethod("calcPropMerged", "MultiAmplicon",
+          .complainWhenAbsent(MA, "mergers")
           function(MA){
               sgt <- function(x) sum(getUniques(x))
               getN <- function(x) {
