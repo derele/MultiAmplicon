@@ -4,39 +4,46 @@
 \alias{derepMulti}
 \title{derepMulti}
 \usage{
-derepMulti(MA, mc.cores = getOption("mc.cores", 2L),
+derepMulti(MA, mc.cores = getOption("mc.cores", 1L),
   keep.single.singlets = FALSE, ...)
 }
 \arguments{
-\item{MA}{MultiAmplicon object to be dereplicated}
+\item{MA}{MultiAmplicon object to be dereplicated.}
 
-\item{mc.cores}{number or compute cores for parallel processing}
+\item{mc.cores}{number or compute cores for parallel dereplication
+of different amplicons (values > 1 are only allowed on
+Unix/Linux systems).}
 
 \item{keep.single.singlets}{logical argument indicating whether a
 derep slot should be filled with a single sequence recovered
-in only one sample. Defaults to FALSE meaning that such empty
-derep objects are created in such a case. Keeping such derep
-objects (setting this to TRUE) might result in downstream
-problems (Errors) in dada inference.}
+in only one sample. Defaults to FALSE meaning that empty derep
+objects are created in such a case. Keeping instead single
+sequence derep objects (setting this to TRUE) might result in
+downstream problems (Errors) in dada inference.}
 
-\item{...}{arguments to be passed to \code{\link{derepFastq}}. All
-arguments to the function can be given as a vector of the same
-length as the number of primer pairs in the MultiAmplicon
-object, allowing to specify different parameters for each
-amplicon. If a shorter vector is given it will be recycled to
-match the number of amplicons.}
+\item{...}{arguments to be passed to
+\code{\link[dada2]{derepFastq}}. All arguments to the function
+can be given as a vector of the same length as the number of
+primer pairs in the MultiAmplicon object, allowing to specify
+different parameters for each amplicon. If a shorter vector is
+given it will be recycled to match the number of amplicons. A
+general argument to consider changing is \code{n} (default
+1e+06, the maximum number of reads to parse at one
+time). Smaller values will decreas memory consumption.}
 }
 \value{
-MultiAmplicon object with derep slots (forward derepF and
-    reverse derepR) filled
+MultiAmplicon object with paired derep slot (forward derepF and
+    reverse derepR) filled.
 }
 \description{
 Dereplicate sequences in fastq files.
 }
 \details{
-An interface to \code{\link[dada2]{derepFastq}} which itself uses
+An interface to \code{\link[dada2]{derepFastq}}, which itself uses
 \code{\link[ShortRead]{FastqStreamer}} for dereplicating amplicon
-sequences from fastq or compressed fastq files.
+sequences from fastq or compressed fastq
+files. \code{\link[ShortRead]{FastqStreamer}} uses a streaming
+interface and can be used on low memory machines (see ... below).
 }
 \author{
 Emanuel Heitlinger
