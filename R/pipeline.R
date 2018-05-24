@@ -70,29 +70,29 @@ derepMulti <- function(MA, mc.cores = getOption("mc.cores", 2L),
 }
 
 
-##' A wrapper around \code{\link[dada2]{dada}} from \code{dada2} for
-##' multiple amplicons.
+##' A wrapper around \code{\link[dada2]{dada}} of the \code{dada2}
+##' packager for multiple amplicons.
 ##'
 ##' The function runs \code{\link[dada2]{dada}} from the package
-##' \code{dada2} \url{https://benjjneb.github.io/dada2/} to perform
-##' 'High resolution sample inference from amplicon data' on multiple
-##' amplicons stored as dereplicated sequences in a
-##' MultiAmplicon-class object.
+##'  \href{https://benjjneb.github.io/dada2/}{\code{dada2}} to perform
+##'  'High resolution sample inference from amplicon data' on multiple
+##'  amplicons stored as dereplicated sequences in a
+##'  MultiAmplicon-class object.
 ##' 
 ##' @title dadaMulti
-##' @param MA MultiAmplicon-class object
+##' @param MA MultiAmplicon-class object.
 ##' @param Ferr As in the "err" parameter of dada: the matrix of
 ##'     estimated rates for each possible nucleotide change. In this
 ##'     case for forward reads.
-##' @param Rerr the same for the reverse reads. 
-##' @param ... additional parameters to be passed to
-##'     \code{\link[dada2]{dada}} from \code{\link[dada2]{dada}}. All
-##'     arguments to the function can be given as a vector of the same
+##' @param Rerr the same for the reverse reads.
+##' @param ... additional parameters to be passed to the
+##'     \code{\link[dada2]{dada}} function of \code{dada2}. All
+##'     arguments to dadaMulti can be given as a vector of the same
 ##'     length as the number of primer pairs in the MultiAmplicon
-##'     object, allowing to specify different parameters for each
+##'     object. This allows to specify different parameters for each
 ##'     amplicon. If a shorter vector is given it will be recycled to
 ##'     match the number of amplicons.
-##' @return MultiAmplicon object with dadaF and dadaR slots filled
+##' @return MultiAmplicon object with dadaF and dadaR slots filled.
 ##' @importFrom dada2 dada
 ##' @importFrom methods initialize new slot
 ##' @export
