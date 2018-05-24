@@ -202,22 +202,13 @@ setMethod("length", "PairedDada", function(x){
 })
 
 
-## completely useless: list does it all
-## setClass("PairedDadaSet",
-##          contains="list",
-##          representation(),
-##          prototype(elementType="PairedDada"))
-
-
-
-##' A class combining sequences of forward and reverse primers (in a
-##' \code{\link{PrimerPairsSet-class}}) plus file names of paired end
-##' sequencing files (in a \code{\link{PairedReadFileSet-class}}).
+##' The central data structure of the MultiAmplicon package
 ##'
-##' The MultiAmplicon class is a container for storing primer pairs,
-##' read files and processed data in an 'amplicon x samples'
-##' format. The object is incrementally filled by running functions
-##' (from the package \code{dada2}) with additional slots.
+##' The MultiAmplicon class is a container that stores at least primer
+##' pairs, read files and progressively processed data in an 'amplicon
+##' x samples' format. The slots in this object are incrementally
+##' filled with by running wrappers functions (mostly around functions
+##' from the \code{dada2} package).
 ##' 
 ##' @slot PrimerPairsSet The primer pairs used in your experiment to
 ##'     specify amplicons stored in a

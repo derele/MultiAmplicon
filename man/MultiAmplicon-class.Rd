@@ -28,9 +28,7 @@
 \alias{[,MultiAmplicon,index,missing,ANY-method}
 \alias{[,MultiAmplicon,missing,index,ANY-method}
 \alias{[,MultiAmplicon,missing,missing,ANY-method}
-\title{A class combining sequences of forward and reverse primers (in a
-\code{\link{PrimerPairsSet-class}}) plus file names of paired end
-sequencing files (in a \code{\link{PairedReadFileSet-class}}).}
+\title{The central data structure of the MultiAmplicon package}
 \usage{
 MultiAmplicon(PrimerPairsSet = PrimerPairsSet(),
   PairedReadFileSet = PairedReadFileSet(), rawCounts = matrix(),
@@ -132,10 +130,11 @@ amplicons)}
 \item{drop}{should not be used}
 }
 \description{
-The MultiAmplicon class is a container for storing primer pairs,
-read files and processed data in an 'amplicon x samples'
-format. The object is incrementally filled by running functions
-(from the package \code{dada2}) with additional slots.
+The MultiAmplicon class is a container that stores at least primer
+pairs, read files and progressively processed data in an 'amplicon
+x samples' format. The slots in this object are incrementally
+filled with by running wrappers functions (mostly around functions
+from the \code{dada2} package).
 
 Subsetting for MultiAmplicon objects should conveniently subset
 all (potentially) filled slots
