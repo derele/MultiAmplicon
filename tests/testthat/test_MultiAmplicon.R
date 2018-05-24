@@ -216,14 +216,14 @@ test_that("sorting a subsetted object same as subsetting a sorted object", {
 
 MA7 <- fillSampleTables(MA6)
 
-MA7.fillalt <- fillSampleTables(MA6, samples = c("S03_F_filt.fastq.gz",
-                                                 "S04_F_filt.fastq.gz",
-                                                 "S05_F_filt.fastq.gz"))
+## MA7.fillalt <- fillSampleTables(MA6, samples = c("S03_F_filt.fastq.gz",
+##                                                  "S04_F_filt.fastq.gz",
+##                                                  "S05_F_filt.fastq.gz"))
 
-MA7.fillsub <- MA7[,  which(colnames(MA7)%in%
-                            c("S03_F_filt.fastq.gz",
-                              "S04_F_filt.fastq.gz",
-                              "S05_F_filt.fastq.gz"))]
+## MA7.fillsub <- MA7[,  which(colnames(MA7)%in%
+##                             c("S03_F_filt.fastq.gz",
+##                               "S04_F_filt.fastq.gz",
+##                               "S05_F_filt.fastq.gz"))]
 
 ## everything but statified files would be equal...
 ### expect_equal(MA7.fillalt@stratifiedFiles, MA7.fillsub@stratifiedFiles)
