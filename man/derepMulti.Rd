@@ -18,8 +18,8 @@ Unix/Linux systems).}
 derep slot should be filled with a single sequence recovered
 in only one sample. Defaults to FALSE meaning that empty derep
 objects are created in such a case. Keeping instead single
-sequence derep objects (setting this to TRUE) might result in
-downstream problems (Errors) in dada inference.}
+sequence derep objects (setting this to \code{TRUE}) might
+result in downstream problems (Errors) in dada inference.}
 
 \item{...}{arguments to be passed to
 \code{\link[dada2]{derepFastq}}. All arguments to the function
@@ -32,8 +32,8 @@ general argument to consider changing is \code{n} (default
 time). Smaller values will decreas memory consumption.}
 }
 \value{
-MultiAmplicon object with paired derep slot (forward derepF and
-    reverse derepR) filled.
+MultiAmplicon object with paired derep slot (forward
+    derepF and reverse derepR) filled.
 }
 \description{
 Dereplicate sequences in fastq files.
@@ -43,7 +43,8 @@ An interface to \code{\link[dada2]{derepFastq}}, which itself uses
 \code{\link[ShortRead]{FastqStreamer}} for dereplicating amplicon
 sequences from fastq or compressed fastq
 files. \code{\link[ShortRead]{FastqStreamer}} uses a streaming
-interface and can be used on low memory machines (see ... below).
+interface and can be used on low memory machines (see \code{...}
+below).
 }
 \author{
 Emanuel Heitlinger

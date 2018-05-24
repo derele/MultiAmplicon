@@ -19,8 +19,8 @@ MultiAmplicon object with the \code{sequenceTableFilled}
     slot filled
 }
 \description{
-Fill multiple sequence Tables in a MultiAmplicon object for all or
-selected samples.
+Fill multiple sequence tables in a MultiAmplicon object to include
+all or selected samples.
 }
 \details{
 In a MultiAmplicon object for some primer pairs some samples might

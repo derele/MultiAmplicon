@@ -20,7 +20,7 @@ minOverlap for each amplicon. If a shorter vector is given it
 will be recycled to match the number of amplicons.}
 }
 \value{
-A MultiAmplicon-class object with the mergers slot filled
+A MultiAmplicon-class object with the mergers slot filled.
 }
 \description{
 Merge denoised pairs of forward and reverse reads inside an

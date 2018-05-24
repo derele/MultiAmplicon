@@ -4,7 +4,8 @@
 ##' \code{\link[ShortRead]{FastqStreamer}} for dereplicating amplicon
 ##' sequences from fastq or compressed fastq
 ##' files. \code{\link[ShortRead]{FastqStreamer}} uses a streaming
-##' interface and can be used on low memory machines (see ... below).
+##' interface and can be used on low memory machines (see \code{...}
+##' below).
 ##'
 ##' @title derepMulti
 ##' @param MA MultiAmplicon object to be dereplicated.
@@ -12,8 +13,8 @@
 ##'     derep slot should be filled with a single sequence recovered
 ##'     in only one sample. Defaults to FALSE meaning that empty derep
 ##'     objects are created in such a case. Keeping instead single
-##'     sequence derep objects (setting this to TRUE) might result in
-##'     downstream problems (Errors) in dada inference.
+##'     sequence derep objects (setting this to \code{TRUE}) might
+##'     result in downstream problems (Errors) in dada inference.
 ##' @param mc.cores number or compute cores for parallel dereplication
 ##'     of different amplicons (values > 1 are only allowed on
 ##'     Unix/Linux systems).
@@ -26,8 +27,8 @@
 ##'     general argument to consider changing is \code{n} (default
 ##'     1e+06, the maximum number of reads to parse at one
 ##'     time). Smaller values will decreas memory consumption.
-##' @return MultiAmplicon object with paired derep slot (forward derepF and
-##'     reverse derepR) filled.
+##' @return MultiAmplicon object with paired derep slot (forward
+##'     derepF and reverse derepR) filled.
 ##' @importFrom dada2 derepFastq
 ##' @importFrom parallel mclapply
 ##' @export
@@ -163,7 +164,7 @@ dadaMulti <- function(MA, Ferr=NULL, Rerr=NULL, ...){
 ##'     TRUE for only some of the amplicons, or to specify different
 ##'     minOverlap for each amplicon. If a shorter vector is given it
 ##'     will be recycled to match the number of amplicons.
-##' @return A MultiAmplicon-class object with the mergers slot filled
+##' @return A MultiAmplicon-class object with the mergers slot filled.
 ##' @importFrom dada2 mergePairs
 ##' @export
 ##' @author Emanuel Heitlinger
@@ -224,7 +225,7 @@ mergeMulti <- function(MA, ...){
 ##' @export
 ##' @author Emanuel Heitlinger
 makeSequenceTableMulti <- function(MA, ...){
-        .complainWhenAbsent(MA, "mergers")
+    .complainWhenAbsent(MA, "mergers")
     exp.args <- .extractEllipsis(list(...), nrow(MA))
     sequenceTable <- lapply(seq_along(MA@mergers), function (i){
         args.here <- lapply(exp.args, "[", i)
@@ -349,8 +350,8 @@ setGeneric("calcPropMerged", function(MA) {standardGeneric("calcPropMerged")})
 ##' @importFrom dada2 getUniques
 ##' @export
 setMethod("calcPropMerged", "MultiAmplicon",
-          .complainWhenAbsent(MA, "mergers")
           function(MA){
+              .complainWhenAbsent(MA, "mergers")
               sgt <- function(x) sum(getUniques(x))
               getN <- function(x) {
                   if(length(x)) {
