@@ -4,6 +4,8 @@
 ^codecov\.yml$
 ^docs$
 ^.build.timestamp$
-^filtered$
+^download_sra$
+^filtered_sra$
+^SRAmetadb.sqlite$
 vignettes/MultiAmplicon-real-world-example_cache
 vignettes/MultiAmplicon-small-example_cache
