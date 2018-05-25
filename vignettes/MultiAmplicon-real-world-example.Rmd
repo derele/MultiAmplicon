@@ -37,7 +37,7 @@ of quite low quality, so we have to trim and screen quite harshly.
 ```{r filter, message=FALSE}
 library(MultiAmplicon)
 
-path <- "~/download_sra" ## change according to where you downloaded
+path <- "download_sra" ## change according to where you downloaded
 
 fastqFiles <- list.files(path, pattern=".fastq.gz$", full.names=TRUE)
 
@@ -46,7 +46,7 @@ fastqR <- grep("_2.fastq.gz", fastqFiles, value = TRUE)
 
 samples <- gsub("_1.fastq\\.gz", "\\1", basename(fastqF))
 
-filt_path <- "~/filtered_sra/"
+filt_path <- "filtered_sra"
 if(!file_test("-d", filt_path)) dir.create(filt_path)
 
 filtFs <- file.path(filt_path, paste0(samples, "_F_filt.fastq.gz"))
@@ -56,8 +56,10 @@ names(filtRs) <- samples
 
 ## some files will be filtered out completely, therefore allowing 50
 ## files less present and still don't redo filtering
-if(sum(file.exists(fastqF)) -
-   sum(file.exists(filtFs)) > 50){
+redo <- sum(file.exists(fastqF)) -
+    sum(file.exists(filtFs)) > 50
+
+if(redo){
     lapply(seq_along(fastqF),  function (i) {
         filterAndTrim(fastqF[i], filtFs[i], fastqR[i], filtRs[i],
                       truncLen=c(170,170), minLen=c(170,170), 
