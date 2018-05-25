@@ -6,6 +6,7 @@
 ^.build.timestamp$
 ^download_sra$
 ^filtered_sra$
+^sorted_files$
 ^SRAmetadb.sqlite$
 vignettes/MultiAmplicon-real-world-example_cache
 vignettes/MultiAmplicon-small-example_cache
