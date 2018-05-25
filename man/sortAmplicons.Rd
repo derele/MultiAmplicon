@@ -8,15 +8,18 @@
 \alias{sortAmplicons,MultiAmplicon-method}
 \title{sortAmplicons}
 \usage{
-sortAmplicons(MA, n = 1e+06, countOnly = FALSE, rmPrimer = TRUE,
-  filedir = tempdir(), ...)
+sortAmplicons(MA, filedir = "stratified_files", n = 1e+06,
+  countOnly = FALSE, rmPrimer = TRUE, ...)
 
-\S4method{sortAmplicons}{MultiAmplicon}(MA, n = 1e+06, countOnly = FALSE,
-  rmPrimer = TRUE, filedir = tempdir(), ...)
+\S4method{sortAmplicons}{MultiAmplicon}(MA, filedir = "stratified_files",
+  n = 1e+06, countOnly = FALSE, rmPrimer = TRUE, ...)
 }
 \arguments{
 \item{MA}{\code{\link{MultiAmplicon-class}} object containing a
 set of paired end files and a primer-pairs set.}
+
+\item{filedir}{path to an existing or newly to be created folder
+on your computer. If existing it has to be empty.}
 
 \item{n}{parameter passed to the yield functions of package
 ShortRead. This controls the memory consumption during
@@ -29,11 +32,6 @@ read counts is returned}
 
 \item{rmPrimer}{logical, indicating whether primer sequences
 should be removed during sorting}
-
-\item{filedir}{path to an existing or newly to be created folder
-on your computer. \code{\link[base]{tempfile}} is used within
-this folder to create unique filnames trying to avoid problems
-in case the folder has been used before.}
 
 \item{...}{additional parameter so be passed to
 Biostrings::isMatchingStartingAt. Be careful when using
@@ -57,8 +55,8 @@ amplicons structure based on primer matches.
 This function uses \code{\link[Biostrings]{isMatchingStartingAt}}
 to match primer sequences at the first position of forward and
 reverse sequences. These primer sequences can be removed. The
-remaining sequences of interest are written to (temporary) files
-to allow processing via standard metabarcoding pipelines.
+remaining sequences of interest are written to files to allow
+processing via standard metabarcoding pipelines.
 }
 \examples{
 

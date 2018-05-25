@@ -4,8 +4,8 @@
 ##' This function uses \code{\link[Biostrings]{isMatchingStartingAt}}
 ##' to match primer sequences at the first position of forward and
 ##' reverse sequences. These primer sequences can be removed. The
-##' remaining sequences of interest are written to (temporary) files
-##' to allow processing via standard metabarcoding pipelines.
+##' remaining sequences of interest are written to files to allow
+##' processing via standard metabarcoding pipelines.
 ##' 
 ##' @title sortAmplicons
 ##' @param MA \code{\link{MultiAmplicon-class}} object containing a
@@ -20,9 +20,7 @@
 ##' @param rmPrimer logical, indicating whether primer sequences
 ##'     should be removed during sorting
 ##' @param filedir path to an existing or newly to be created folder
-##'     on your computer. \code{\link[base]{tempfile}} is used within
-##'     this folder to create unique filnames trying to avoid problems
-##'     in case the folder has been used before.
+##'     on your computer. If existing it has to be empty.
 ##' @param ... additional parameter so be passed to
 ##'     Biostrings::isMatchingStartingAt. Be careful when using
 ##'     multiple starting positions or allowing error. This could lead
@@ -63,15 +61,15 @@
 ##' @export sortAmplicons
 ##' @aliases sortAmplicons, sortAmplicons-Method
 setGeneric(name="sortAmplicons",
-           def=function(MA, n = 1e6, countOnly = FALSE, rmPrimer = TRUE,
-                        filedir = tempdir(), ...) {
+           def=function(MA, filedir="stratified_files",
+                        n = 1e6, countOnly = FALSE, rmPrimer = TRUE, ...) {
                standardGeneric("sortAmplicons")
            })
 
 ##' @rdname sortAmplicons
 setMethod("sortAmplicons", "MultiAmplicon",
-          function(MA, n = 1e6, countOnly = FALSE, rmPrimer = TRUE,
-                   filedir = tempdir(), ...){
+          function(MA, filedir="stratified_files",
+                   n = 1e6, countOnly = FALSE, rmPrimer = TRUE, ...){
     .complainWhenAbsent(MA, "PrimerPairsSet")
     .complainWhenAbsent(MA, "PairedReadFileSet")          
     ## the data matrix of amplicons x samples stratified counts 
@@ -82,32 +80,30 @@ setMethod("sortAmplicons", "MultiAmplicon",
     colnames(data) <- names(MA@PairedReadFileSet)
     ## rownames have to come from (matched) primers
     rownames(data) <- names(MA@PrimerPairsSet)
-    tmppathF <- matrix("", nrow=NR, ncol=NC)
-    tmppathR <- matrix("", nrow=NR, ncol=NC)
+    filepathF <- matrix("", nrow=NR, ncol=NC)
+    filepathR <- matrix("", nrow=NR, ncol=NC)
     readsF <- MA@PairedReadFileSet@readsF
     readsR <- MA@PairedReadFileSet@readsR
     ## test whether filedir exists
     if(!dir.exists(filedir)) {
-        message("creating directory ", filedir,
-                " and adding specific prefixes to avoid problems ",
-                "when running code twice")
+        message("creating directory ", filedir)
         dir.create(filedir)
     } else {
-        message("using existing directory ", filedir,
-                " and adding specific prefixes to avoid problems",
-                " when running code twice")
+        if (length(list.files("."))==0) {
+            message("using existing directory ", filedir)
+        } else {
+            stop("directory for amplicon sorted files must be empty")
+        }
     }
     ## add sample data and metadata in columns
     for(x in seq_along(readsF)) {
-        tmpbaseF <- paste(tempfile(tmpdir=filedir),
-                          basename(readsF[[x]]), sep="_")
-        tmpbaseR <- paste(tempfile(tmpdir=filedir),
-                          basename(readsR[[x]]), sep="_")
+        filebaseF <- paste0(filedir, "/", basename(readsF[[x]]))
+        filebaseR <- paste0(filedir, "/", basename(readsR[[x]]))
         if(!file.exists(readsF[[x]]) | !file.exists(readsR[[x]])){
             data[, colnames(data)[[x]]] <- 0
-            tmppathF[,x] <- paste0(tmpbaseF, names(MA@PrimerPairsSet),
+            filepathF[,x] <- paste0(filebaseF, names(MA@PrimerPairsSet),
                                    ".fastq.gz")
-            tmppathR[,x] <- paste0(tmpbaseR, names(MA@PrimerPairsSet),
+            filepathR[,x] <- paste0(filebaseR, names(MA@PrimerPairsSet),
                                    ".fastq.gz")
             next()
         }
@@ -136,12 +132,12 @@ setMethod("sortAmplicons", "MultiAmplicon",
                        # is reverse and forward matched
                        select <- fM[[map.primerF]] & rM[[map.primerR]] 
                        if(!countOnly){ # file operations only if requested
-                           tmppathF[y, x] <-
-                               paste0(tmpbaseF,
+                           filepathF[y, x] <-
+                               paste0(filebaseF,
                                       names(MA@PrimerPairsSet)[[y]],
                                       ".fastq.gz")
-                           tmppathR[y, x] <-
-                               paste0(tmpbaseR,
+                           filepathR[y, x] <-
+                               paste0(filebaseR,
                                       names(MA@PrimerPairsSet)[[y]],
                                       ".fastq.gz")
                            lengthF <- length(MA@PrimerPairsSet@primerF[[y]])
@@ -156,9 +152,9 @@ setMethod("sortAmplicons", "MultiAmplicon",
                                                       lengthR,
                                                       width(Rfq[select]))
                            }
-                           ShortRead::writeFastq(F, file=tmppathF[[y, x]],
+                           ShortRead::writeFastq(F, file=filepathF[[y, x]],
                                                  mode="a")
-                           ShortRead::writeFastq(R, file=tmppathR[[y, x]],
+                           ShortRead::writeFastq(R, file=filepathR[[y, x]],
                                                  mode="a")
                        }
                        matches[y] <- length(select[select==TRUE])
@@ -182,8 +178,8 @@ setMethod("sortAmplicons", "MultiAmplicon",
         stratifiedFiles <- lapply(seq_along(MA@PrimerPairsSet),
                                   function(i){
                                       existing <- which(data[i, ]>0)
-                                      PairedReadFileSet(tmppathF[i, existing],
-                                                        tmppathR[i, existing])
+                                      PairedReadFileSet(filepathF[i, existing],
+                                                        filepathR[i, existing])
                                   })
         names(stratifiedFiles) <- names(MA@PrimerPairsSet)
         new.MA <- initialize(MA, rawCounts = data,
@@ -193,5 +189,4 @@ setMethod("sortAmplicons", "MultiAmplicon",
         return(data)
     }
 })
-
 
