@@ -172,11 +172,17 @@ mergeMulti <- function(MA, ...){
     .complainWhenAbsent(MA, "dada")
     exp.args <- .extractEllipsis(list(...), nrow(MA))
     mergers <- lapply(seq_along(MA@PrimerPairsSet), function (i){     
-        if(length(MA@dada[[i]])){
-            daF <- slot(MA@dada[[i]], "dadaF")
-            daR <- slot(MA@dada[[i]], "dadaR")
-            deF <- lapply(MA@derep[[i]], "slot", "derepF")
-            deR <- lapply(MA@derep[[i]], "slot", "derepR")
+        if(ncol(MA[i, ])){
+            daF <- unlist(getDadaF(MA[i, ]), recursive=FALSE)
+            daR <- unlist(getDadaR(MA[i, ]), recursive=FALSE)
+            deF <- unlist(getDerepF(MA[i, ]), recursive=FALSE)
+            deR <- unlist(getDerepR(MA[i, ]), recursive=FALSE)
+            cat("\nclass dadaF:", class(daF), "\n")
+            cat("class parts dadaF:", unlist(lapply(daF, class)))
+            cat("length dadaF:", length(daF), "\n")
+            cat("length dadaR:", length(daR), "\n")
+            cat("length derepF:", length(deF), "\n")
+            cat("length derepR:", length(deR), "\n")
             message("\nmerging sequences from " , length(MA@dada[[i]]),
                 " samples for amplicon ",
                 MA@PrimerPairsSet@names[[i]])
