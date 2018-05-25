@@ -20,6 +20,8 @@ BioProject PRJNA386767
 ## This data was generated in R using the following code:
 \dontrun{
 ## create an SRA database connection
+
+library(SRAdb)
 sqlfile <- "SRAmetadb.sqlite"
 if(!file.exists(sqlfile)){
     sqlfile <- getSRAdbFile()
@@ -29,7 +31,7 @@ sra_con <- dbConnect(SQLite(),sqlfile)
 
 ## download the samle data from SRA
 carnivoreSeqRuns <- getSRA(search_terms = '"Intestinal biome sequencing of carnivores"',
-                           sra_con=sra_con, acc_only=TRUE)
+                           sra_con=sra_con, acc_only=FALSE)
 
 ## add sample data stored in sample_attribute
 carnivoreSeqRuns <- carnivoreSeqRuns[, c('run','study','sample',
@@ -51,15 +53,17 @@ carnivoreSeqRuns <- cbind(carnivoreSeqRuns, do.call(rbind, sample.variable))
 ##\\url{https://svalbard.biologie.hu-berlin.de:443/d/c291b870178f4abc8c59/}
 ##for download in the vignette #
 ##\\url{https://derele.github.io/MultiAmplicon/articles/MultiAmplicon-real-world-example.html}
-##can then be downloadd as follows
+##can then be downloaded as follows
 carnivoreSeqRuns$sample_attribute <- NULL
 
 runs <- carnivoreSeqRuns$run
 
-destDir <- "~/download"
+destDir <- "download_sra"
 
 if(!file_test("-d", destDir)) dir.create(destDir)
+
 fastqFiles <- list.files(destDir, pattern=".fastq.gz", full.names=TRUE)
+
 if(!length(fastqFiles)){
     getSRAfile(runs, sra_con, fileType = 'fastq' , srcType = "ftp",
                destDir=destDir)
