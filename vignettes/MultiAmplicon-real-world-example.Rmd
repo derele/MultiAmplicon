@@ -106,7 +106,7 @@ We start by sorting our amplicons by primer sequences cutting off the
 latter from sequencing reads.
 
 ```{r sortAmps, message=FALSE}
-MA <- sortAmplicons(MA)
+MA <- sortAmplicons(MA, n=1e+05)
 ```
 
 ```{r pipeline, message=FALSE}
