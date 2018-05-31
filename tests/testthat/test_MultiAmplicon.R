@@ -1,4 +1,4 @@
-
+## test file for use whith testthat
 primerF <- c(Amp1F = "AGAGTTTGATCCTGGCTCAG", Amp2F = "ACTCCTACGGGAGGCAGC",
              Amp3F = "GAATTGACGGAAGGGCACC", Amp4F = "YGGTGRTGCATGGCCGYT",
              Amp5F = "AAAAACCCCGGGGGGTTTTT", Amp6F = "AGAGTTTGATCCTGCCTCAG")
@@ -20,7 +20,7 @@ context("sortAmplicons resut doesn't change results over executions")
 
 ## MA1 <- sortAmplicons(MA, max.mismatch=3)
 
-MA1 <- sortAmplicons(MA)
+MA1 <- sortAmplicons(MA, filedir=tempfile())
 
 test_that("sortAmplicons resut doesn't change over executions", {
     ## For multi amplicon objects
@@ -28,7 +28,7 @@ test_that("sortAmplicons resut doesn't change over executions", {
     expect_known_output(MA1, tmp, print=TRUE)
 })
 
-SA1 <- sortAmplicons(SA)
+SA1 <- sortAmplicons(SA, filedir=tempfile())
 
 ## this need major debuggin!!!
 ## getUnmatched(MA1)
@@ -89,9 +89,9 @@ test_that("files for each amplicon contain the number of reads reported", {
 
 context("SortAmplcion can be made less stringent?")
 test_that("less stringent sorting results in more reads accepted", {
-    expect_true(all(sortAmplicons(MA, countOnly=TRUE, starting.at=1:2) >=
+    expect_true(all(sortAmplicons(MA, filedir=paste0(tempdir(), "_2"), countOnly=TRUE, starting.at=1:2) >=
                     rawCounts(MA1)))
-    expect_true(all(sortAmplicons(MA, countOnly=TRUE, max.mismatch=1) >=
+    expect_true(all(sortAmplicons(MA, filedir=paste0(tempdir(), "_3"), countOnly=TRUE, max.mismatch=1) >=
                    rawCounts(MA1)))
 })
 
