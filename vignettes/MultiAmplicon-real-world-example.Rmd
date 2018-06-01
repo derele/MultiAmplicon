@@ -103,9 +103,12 @@ MA <- MultiAmplicon(primers, files)
 ## Running the MultiAmplicon pipeline
 
 We start by sorting our amplicons by primer sequences cutting off the
-latter from sequencing reads.
+latter from sequencing reads. The directory for sorted amplicons must
+be empty before that.
 
 ```{r sortAmps, message=FALSE}
+filedir <- "stratified_files"
+if(file_test("-d", filedir)) unlink(filedir, recursive=TRUE)
 MA <- sortAmplicons(MA, n=1e+05)
 ```
 

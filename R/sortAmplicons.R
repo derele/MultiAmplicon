@@ -165,11 +165,13 @@ setMethod("sortAmplicons", "MultiAmplicon",
                }
         close(f)
         close(r)
-        doing <- ifelse(countOnly, "counting ", "sorting ")
-        message("finished ", doing, sum(data[, colnames(data)[[x]]]),
-            " sequencing reads for ", colnames(data)[[x]], " in",
-            "\n ", readsF[[x]], " and \n ", readsR[[x]], "\n",
-            " into ", sum(data[, colnames(data)[[x]]]>0), " amplicons" )
+        doing <- ifelse(countOnly, "counting", "sorting")
+        msg <- paste("finished", doing, sum(data[, colnames(data)[[x]]]),
+            "sequencing reads for", colnames(data)[[x]], "in",
+            "\n", readsF[[x]], "and \n ", readsR[[x]], "\n",
+            "into", sum(data[, colnames(data)[[x]]]>0), " amplicons")
+        if (doing%in%"sorting")  msg <- paste(msg, "and written into", filedir)
+        message(msg)
     }
     ## run only on existing files to avoid warnings for non-existing
     ## files. This means don't run on files corresponding to zeros
@@ -181,7 +183,7 @@ setMethod("sortAmplicons", "MultiAmplicon",
                                       PairedReadFileSet(filepathF[i, existing],
                                                         filepathR[i, existing])
                                   })
-        names(stratifiedFiles) <- names(MA@PrimerPairsSet)
+        names(stratifiedFiles) <- names(MA@PrimerPairsSet)        
         new.MA <- initialize(MA, rawCounts = data,
                              stratifiedFiles = stratifiedFiles)
         return(new.MA)
@@ -189,4 +191,4 @@ setMethod("sortAmplicons", "MultiAmplicon",
         return(data)
     }
 })
-
+}
