@@ -11,3 +11,4 @@ stratified_files/*
 ^SRAmetadb.sqlite$
 vignettes/MultiAmplicon-real-world-example_cache
 vignettes/MultiAmplicon-small-example_cache
+^appveyor\.yml$
