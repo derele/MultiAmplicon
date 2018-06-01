@@ -15,8 +15,7 @@ Imports:
 Depends:
     R (>= 3.3.1),
     ShortRead (>= 1.30.0),
-    dada2 (>= 1.2.0),
-    GenomeInfoDb
+    dada2 (>= 1.2.0)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
