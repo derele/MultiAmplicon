@@ -109,8 +109,12 @@ be empty before that.
 ```{r sortAmps, message=FALSE}
 filedir <- "stratified_files"
 if(file_test("-d", filedir)) unlink(filedir, recursive=TRUE)
-MA <- sortAmplicons(MA, n=1e+05)
+MA <- sortAmplicons(MA, n=1e+05, filedir=filedir)
 ```
+The function is "streaming" fastq files, so that potentially large
+files can be handled on machines with modest memory. The parameter "n"
+controls how big the streamed chunks are. Increasing this value leads
+to faster processing and higher memory usage.
 
 ```{r pipeline, message=FALSE}
 errF <- learnErrors(unlist(getStratifiedFilesF(MA)), nread=1e6,

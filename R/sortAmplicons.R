@@ -170,7 +170,9 @@ setMethod("sortAmplicons", "MultiAmplicon",
             "sequencing reads for", colnames(data)[[x]], "in",
             "\n", readsF[[x]], "and \n ", readsR[[x]], "\n",
             "into", sum(data[, colnames(data)[[x]]]>0), " amplicons")
-        if (doing%in%"sorting")  msg <- paste(msg, "and written into", filedir)
+        if(doing%in%"sorting"){
+            msg <- paste(msg, "and written into",  normalizePath(filedir))
+        }
         message(msg)
     }
     ## run only on existing files to avoid warnings for non-existing
@@ -186,9 +188,8 @@ setMethod("sortAmplicons", "MultiAmplicon",
         names(stratifiedFiles) <- names(MA@PrimerPairsSet)        
         new.MA <- initialize(MA, rawCounts = data,
                              stratifiedFiles = stratifiedFiles)
-        return(new.MA)
+        new.MA
     }else{
-        return(data)
+        data
     }
-})
-}
+          })
