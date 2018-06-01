@@ -1,8 +1,8 @@
 language: r
 ## r: bioc-release
-r: 3.5.0
+r: bioc-devel
 use_bioc: true
-# bioc_required: true
+
 cache: packages
 
 # before_script:
