@@ -1,4 +1,4 @@
-[![Travis-CI Build Status](https://travis-ci.org/derele/MultiAmplicon.svg?branch=master)](https://travis-ci.org/derele/MultiAmplicon) [![Coverage status](https://codecov.io/gh/derele/MultiAmplicon/branch/master/graph/badge.svg)](https://codecov.io/github/derele/MultiAmplicon?branch=master)
+[![Travis-CI Build Status](https://travis-ci.org/derele/MultiAmplicon.svg?branch=master)](https://travis-ci.org/derele/MultiAmplicon) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/derele/MultiAmplicon?branch=master&svg=true)](https://ci.appveyor.com/project/derele/MultiAmplicon) [![Coverage status](https://codecov.io/gh/derele/MultiAmplicon/branch/master/graph/badge.svg)](https://codecov.io/github/derele/MultiAmplicon?branch=master)
 
 # The MultiAmplicon R-package
 
