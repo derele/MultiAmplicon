@@ -1,5 +1,6 @@
 language: r
-r: bioc-release
+## r: bioc-release
+r: 3.5.0
 use_bioc: true
 # bioc_required: true
 cache: packages
