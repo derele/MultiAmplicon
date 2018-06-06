@@ -132,6 +132,7 @@ dadaMulti <- function(MA, Ferr=NULL, Rerr=NULL, ...){
            names(dadaF) <- names(dadaR) <-
                names(rawCounts(MA)[i, ])[rawCounts(MA)[i, ]>0]
            Pdada <- PairedDada(dadaF = dadaF, dadaR = dadaR)
+##            names(Pdada) <- names(rawCounts(MA)[i, ])[rawCounts(MA)[i, ]>0]
        } else {
            Pdada <- PairedDada()
            message("\nskipping empty amplicon")
