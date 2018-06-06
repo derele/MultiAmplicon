@@ -301,7 +301,7 @@ setMethod("length", "PairedDada", function(x){
 ##' ncol(MA)
 ##'
 ##' ## sort into amplicons
-##' MA1 <- sortAmplicons(MA, fildir=tempfile(pattern = "dir"))
+##' MA1 <- sortAmplicons(MA, filedir=tempfile(pattern = "dir"))
 ##'
 ##' MA2 <- derepMulti(MA1)
 ##'

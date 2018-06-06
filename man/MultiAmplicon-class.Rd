@@ -208,7 +208,7 @@ nrow(MA)
 ncol(MA)
 
 ## sort into amplicons
-MA1 <- sortAmplicons(MA)
+MA1 <- sortAmplicons(MA, filedir=tempfile(pattern = "dir"))
 
 MA2 <- derepMulti(MA1)
 
