@@ -89,9 +89,9 @@ test_that("files for each amplicon contain the number of reads reported", {
 
 context("SortAmplcion can be made less stringent?")
 test_that("less stringent sorting results in more reads accepted", {
-    expect_true(all(sortAmplicons(MA, filedir=paste0(tempdir(), "_2"), countOnly=TRUE, starting.at=1:2) >=
+    expect_true(all(sortAmplicons(MA, filedir=tempfile(), countOnly=TRUE, starting.at=1:2) >=
                     rawCounts(MA1)))
-    expect_true(all(sortAmplicons(MA, filedir=paste0(tempdir(), "_3"), countOnly=TRUE, max.mismatch=1) >=
+    expect_true(all(sortAmplicons(MA, filedir=tempfile(), countOnly=TRUE, max.mismatch=1) >=
                    rawCounts(MA1)))
 })
 
@@ -116,8 +116,8 @@ test_that("all sequences are dereplicated ", {
 expect_equal(up1.counts, up1.dereps)
 })
 
-
-MA3 <- dadaMulti(MA2, selfConsist=TRUE, pool=FALSE, 
+## set OMEGA_C to avoid removing sequences
+MA3 <- dadaMulti(MA2, selfConsist=TRUE, pool=FALSE, OMEGA_C=0, 
                  multithread=TRUE)
 
 context("Denoising works?")
@@ -146,7 +146,6 @@ test_that("merging produces a list of derep objects ", {
     expect_equal(unlist(lapply(MA4@mergers, length)),
                  rowSums(rawCounts(MA3)>1)) # >1 singl seq rm
 })
-
 
 context("Merging works?")
 test_that("merging produces a list of derep objects ", {
@@ -214,7 +213,7 @@ test_that("sorting a subsetted object same as subsetting a sorted object", {
 })
 
 
-MA7 <- fillSampleTables(MA6)
+### MA7 <- fillSampleTables(MA6)
 
 ## MA7.fillalt <- fillSampleTables(MA6, samples = c("S03_F_filt.fastq.gz",
 ##                                                  "S04_F_filt.fastq.gz",
