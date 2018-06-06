@@ -20,7 +20,8 @@ build_script:
   - travis-tool.sh install_r Rtools 
   - travis-tool.sh install_bioc_deps
   - travis-tool.sh install_bioc GenomeInfoDbData
-  - travis-tool.sh install_bioc DelayedArray      
+  - travis-tool.sh install_bioc DelayedArray
+  - travis-tool.sh install_github derele/dada2
 
 test_script:
   - travis-tool.sh run_tests
