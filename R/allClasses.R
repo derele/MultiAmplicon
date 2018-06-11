@@ -388,30 +388,34 @@ setMethod("rawCounts", "MultiAmplicon", function(x) slot(x, "rawCounts"))
 ##'     to only one PairdReadFiles object if it has length one
 ##' @export
 getStratifiedFilesF <- function(MA, simplify=TRUE) {
-    stratL <- lapply(MA@stratifiedFiles, slot, "readsF")
-    if(length(stratL)<2 && simplify){
-        stratL[[1]]
-    } else {stratL}
-}
+    .simpfy(lapply(MA@stratifiedFiles, slot, "readsF"), simplify)
+ }
 
 ##' @rdname MultiAmplicon-class
 ##' @param simplify should the list of stratified files be simplified
 ##'     to only one PairdReadFiles object if it has length one
 ##' @export
 getStratifiedFilesR <- function(MA, simplify=TRUE) {
-    stratL <- lapply(MA@stratifiedFiles, slot, "readsR")
-    if(length(stratL)<2 && simplify){
-        stratL[[1]]
-    } else {stratL}
+    .simpfy(lapply(MA@stratifiedFiles, slot, "readsR"), simplify)
 }
     
 ##' @rdname MultiAmplicon-class
+##' @param simplify should the list of derep objects be simplified to
+##'     only one such object if a list of those has length one
 ##' @export
-getDerepF <-  function(MA) lapply(MA@derep, function (x) lapply(x, slot, "derepF"))
+getDerepF <-  function(MA, simplify=TRUE) {
+    .simpfy(lapply(MA@derep, function (x) lapply(x, slot, "derepF")),
+            simplify)
+}
 
 ##' @rdname MultiAmplicon-class
+##' @param simplify should the list of derep objects be simplified to
+##'     only one such object if a list of those has length one
 ##' @export
-getDerepR <-  function(MA) lapply(MA@derep, function (x) lapply(x, slot, "derepR"))
+getDerepR <-  function(MA, simplify=TRUE) {
+    .simpfy(lapply(MA@derep, function (x) lapply(x, slot, "derepR")),
+            simplify)
+}
 
 ##' @rdname MultiAmplicon-class
 ##' @export
@@ -447,3 +451,10 @@ setMethod("getSequencesFromTable", "MultiAmplicon",
                   if(all(dim(y)>1)) getSequences(y) else NULL
               })
           })
+
+.simpfy <- function(x, simplify) {
+    if(length(x)==1 && simplify){
+        x[[1]]
+    } else{x}
+}
+    

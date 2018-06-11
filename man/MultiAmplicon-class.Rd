@@ -54,9 +54,9 @@ getStratifiedFilesF(MA, simplify = TRUE)
 
 getStratifiedFilesR(MA, simplify = TRUE)
 
-getDerepF(MA)
+getDerepF(MA, simplify = TRUE)
 
-getDerepR(MA)
+getDerepR(MA, simplify = TRUE)
 
 getDadaF(MA)
 
@@ -134,6 +134,12 @@ amplicons)}
 
 \item{simplify}{should the list of stratified files be simplified
 to only one PairdReadFiles object if it has length one}
+
+\item{simplify}{should the list of derep objects be simplified to
+only one such object if a list of those has length one}
+
+\item{simplify}{should the list of derep objects be simplified to
+only one such object if a list of those has length one}
 }
 \description{
 The MultiAmplicon class is a container that stores at least primer
