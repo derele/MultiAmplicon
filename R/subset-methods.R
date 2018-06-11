@@ -148,7 +148,7 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                       which(zero.i%in%j)
                   })
                   new.j.nonZero <- lapply(seq_along(i), function (ii) {
-                      zero.i <- which(x@rawCounts[i[[ii]], ]>0) # >1 singl seq rm
+                      zero.i <- which(x@rawCounts[i[[ii]], ]>1) # >1 singl seq rm
                       which(zero.i%in%j)
                   })
                   ## cat("\nNEW J: new.j", unlist(new.j) , "\n")
