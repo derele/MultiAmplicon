@@ -321,7 +321,7 @@ fillSampleTables <- function (MA, samples="union"){
         full[all.samples, ]
     })
     MA@sequenceTableFilled <- list() ## empty slot for subset operations
-    initialize(MA[, which(names(MA@PairedReadFileSet)%in%all.samples)],
+    initialize(MA[, which(colnames(MA)%in%all.samples)],
                sequenceTableFilled = filledST)
 }
 

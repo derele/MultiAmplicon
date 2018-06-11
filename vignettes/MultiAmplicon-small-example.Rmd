@@ -91,7 +91,7 @@ i.e. the number of sequences for each of the fully stratified amplicon
 x sample matrix. 
 
 ```{r sortAmplicon, message=FALSE}
-MA1 <- sortAmplicons(MA)
+MA1 <- sortAmplicons(MA, filedir=tempfile("dir"))
 ```
 
 ```{r showRC, results='asis'}
