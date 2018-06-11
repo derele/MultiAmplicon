@@ -118,7 +118,9 @@ setMethod("[", c("PairedDada", "index", "missing", "ANY"),
 setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
           function(x, i, j, ..., drop=FALSE){
               newPrimer <- x@PrimerPairsSet[i]
-              newFiles <- x@PairedReadFileSet[j]
+              suppressWarnings( ## to avoid validity messages
+                  newFiles <- x@PairedReadFileSet[j]
+              )
               newRC <- matrix()
               newSF <- list()
               newderep <- list()

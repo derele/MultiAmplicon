@@ -110,8 +110,8 @@ dadaMulti <- function(MA, Ferr=NULL, Rerr=NULL, ...){
     exp.args <- .extractEllipsis(list(...), nrow(MA))
     ## needs to be computed on pairs of amplicons
     PPdada <- lapply(seq_along(MA@PrimerPairsSet), function (i){
-       dF <- lapply(MA@derep[[i]], function (x) slot(x, "derepF"))
-       dR <- lapply(MA@derep[[i]], function (x) slot(x,  "derepR"))
+       dF <- getDerepF(MA[i, ])
+       dR <- getDerepR(MA[i, ])
        message("\n\namplicon ", names(MA@PrimerPairsSet)[i],
            ": dada estimation of sequence variants from ",
             length(dF), " of ",
@@ -130,7 +130,7 @@ dadaMulti <- function(MA, Ferr=NULL, Rerr=NULL, ...){
            if (class(dadaR)%in%"dada"){dadaR <- list(dadaR)}
            ## naming the dada objects
            names(dadaF) <- names(dadaR) <-
-               names(rawCounts(MA)[i, ])[rawCounts(MA)[i, ]>0]
+               names(rawCounts(MA)[i, ])[rawCounts(MA)[i, ]>1]
            Pdada <- PairedDada(dadaF = dadaF, dadaR = dadaR)
 ##            names(Pdada) <- names(rawCounts(MA)[i, ])[rawCounts(MA)[i, ]>0]
        } else {
@@ -327,7 +327,7 @@ fillSampleTables <- function (MA, samples="union"){
     })
     MA@sequenceTableFilled <- list() ## empty slot for subset operations
     initialize(MA[, which(names(MA@PairedReadFileSet)%in%all.samples)],
-               sequenceTableFilled = filledST)    
+               sequenceTableFilled = filledST)
 }
 
 
