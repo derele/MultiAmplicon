@@ -117,6 +117,9 @@ the slot is created by \code{\link{fillSampleTables}}}
 
 \item{MA}{MultiAmplicon-class object}
 
+\item{simplify}{should the list of stratified files be simplified
+to only one PairdReadFiles object if it has length one}
+
 \item{object}{A \code{MultiAmplicon-class} object.}
 
 \item{i}{numeric, logical or names vector for subsetting rows (==
@@ -128,6 +131,9 @@ amplicons)}
 \item{...}{not used}
 
 \item{drop}{should not be used}
+
+\item{simplify}{should the list of stratified files be simplified
+to only one PairdReadFiles object if it has length one}
 }
 \description{
 The MultiAmplicon class is a container that stores at least primer

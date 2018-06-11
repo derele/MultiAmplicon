@@ -384,6 +384,8 @@ setMethod("rawCounts", "MultiAmplicon", function(x) slot(x, "rawCounts"))
 
 ##' @rdname MultiAmplicon-class
 ##' @param MA MultiAmplicon-class object
+##' @param simplify should the list of stratified files be simplified
+##'     to only one PairdReadFiles object if it has length one
 ##' @export
 getStratifiedFilesF <- function(MA, simplify=TRUE) {
     stratL <- lapply(MA@stratifiedFiles, slot, "readsF")
@@ -393,6 +395,8 @@ getStratifiedFilesF <- function(MA, simplify=TRUE) {
 }
 
 ##' @rdname MultiAmplicon-class
+##' @param simplify should the list of stratified files be simplified
+##'     to only one PairdReadFiles object if it has length one
 ##' @export
 getStratifiedFilesR <- function(MA, simplify=TRUE) {
     stratL <- lapply(MA@stratifiedFiles, slot, "readsR")
