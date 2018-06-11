@@ -385,12 +385,22 @@ setMethod("rawCounts", "MultiAmplicon", function(x) slot(x, "rawCounts"))
 ##' @rdname MultiAmplicon-class
 ##' @param MA MultiAmplicon-class object
 ##' @export
-getStratifiedFilesF <- function(MA) lapply(MA@stratifiedFiles, slot, "readsF")
+getStratifiedFilesF <- function(MA, simplify=TRUE) {
+    stratL <- lapply(MA@stratifiedFiles, slot, "readsF")
+    if(length(stratL)<2 && simplify){
+        stratL[[1]]
+    } else {stratL}
+}
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-getStratifiedFilesR <- function(MA) lapply(MA@stratifiedFiles, slot, "readsR")
-
+getStratifiedFilesR <- function(MA, simplify=TRUE) {
+    stratL <- lapply(MA@stratifiedFiles, slot, "readsR")
+    if(length(stratL)<2 && simplify){
+        stratL[[1]]
+    } else {stratL}
+}
+    
 ##' @rdname MultiAmplicon-class
 ##' @export
 getDerepF <-  function(MA) lapply(MA@derep, function (x) lapply(x, slot, "derepF"))

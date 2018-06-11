@@ -46,13 +46,13 @@ derepMulti <- function(MA, mc.cores = getOption("mc.cores", 1L),
                 length(MA@stratifiedFiles[[i]]@readsF), " of ",
                 length(MA@PairedReadFileSet@readsF), " possible sample files.\n")
         derepF <- do.call(derepFastq,
-                          c(list(MA@stratifiedFiles[[i]]@readsF), args.here))
+                          c(list(getStratifiedFilesF(MA[i, ])), args.here))
         derepR <- do.call(derepFastq,
-                          c(list(MA@stratifiedFiles[[i]]@readsR), args.here))
+                          c(list(getStratifiedFilesR(MA[i,])), args.here))
         ## make it a list even if only one sample was dereplicated
         if (class(derepF)%in%"derep") {
             ## the same must be true for the revers then to keep them
-            ## in the same lenghth
+            ## in the same length
             if(length(derepF$map) == 1 && keep.single.singlets == FALSE){
                 derepF <- list()
                 derepR <- list()
