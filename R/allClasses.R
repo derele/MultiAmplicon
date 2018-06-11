@@ -418,12 +418,20 @@ getDerepR <-  function(MA, simplify=TRUE) {
 }
 
 ##' @rdname MultiAmplicon-class
+##' @param simplify should the list of dada objects be simplified to
+##'     only one such object if a list of those has length one
 ##' @export
-getDadaF <- function(MA) lapply(MA@dada, slot, "dadaF")
+getDadaF <- function(MA, simplify=TRUE) {
+    .simpfy(lapply(MA@dada, slot, "dadaF"), simplify)
+}
 
 ##' @rdname MultiAmplicon-class
+##' @param simplify should the list of dada objects be simplified to
+##'     only one such object if a list of those has length one
 ##' @export
-getDadaR <- function(MA) lapply(MA@dada, slot, "dadaR")
+getDadaR <- function(MA, simplify=TRUE) {
+    .simpfy(lapply(MA@dada, slot, "dadaR"), simplify)
+}
 
 ##' @rdname MultiAmplicon-class
 ##' @export

@@ -173,11 +173,10 @@ mergeMulti <- function(MA, ...){
     .complainWhenAbsent(MA, "dada")
     exp.args <- .extractEllipsis(list(...), nrow(MA))
     mergers <- lapply(seq_along(MA@PrimerPairsSet), function (i){     
-        daF <- unlist(getDadaF(MA[i, ]), recursive=FALSE)
-        daR <- unlist(getDadaR(MA[i, ]), recursive=FALSE)
-        if(length(daF)>0 & length(daF)>0){
-        deF <- unlist(getDerepF(MA[i, ]), recursive=FALSE)
-        deR <- unlist(getDerepR(MA[i, ]), recursive=FALSE)        
+        daF <- getDadaF(MA[i, ])
+        daR <- getDadaR(MA[i, ])
+        deF <- getDerepF(MA[i, ])
+        deR <- getDerepR(MA[i, ])
         message("\nmerging sequences from " , length(MA@dada[[i]]),
                 " samples for amplicon ",
                 MA@PrimerPairsSet@names[[i]])
@@ -189,11 +188,7 @@ mergeMulti <- function(MA, ...){
                                  dadaR = daR, derepR = deR), args.here))
             ## correct the case of one sample / amplicon 
             if(class(MP)%in%"data.frame"){MP <- list(MP)}
-            return(MP)} else{
-                          message("skipping empty amplicon (sequences for" ,
-                              length(MA@dada[[i]]), " samples)  ",
-                              MA@PrimerPairsSet@names[[i]])
-                          return(list())}
+        return(MP)
     })
     names(mergers) <- names(MA@PrimerPairsSet)
     initialize(MA, mergers = mergers)

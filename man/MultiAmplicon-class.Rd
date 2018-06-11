@@ -58,9 +58,9 @@ getDerepF(MA, simplify = TRUE)
 
 getDerepR(MA, simplify = TRUE)
 
-getDadaF(MA)
+getDadaF(MA, simplify = TRUE)
 
-getDadaR(MA)
+getDadaR(MA, simplify = TRUE)
 
 getMergers(MA)
 
@@ -139,6 +139,12 @@ to only one PairdReadFiles object if it has length one}
 only one such object if a list of those has length one}
 
 \item{simplify}{should the list of derep objects be simplified to
+only one such object if a list of those has length one}
+
+\item{simplify}{should the list of dada objects be simplified to
+only one such object if a list of those has length one}
+
+\item{simplify}{should the list of dada objects be simplified to
 only one such object if a list of those has length one}
 }
 \description{
