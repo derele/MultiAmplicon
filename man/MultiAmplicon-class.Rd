@@ -117,8 +117,8 @@ the slot is created by \code{\link{fillSampleTables}}}
 
 \item{MA}{MultiAmplicon-class object}
 
-\item{simplify}{should the list of stratified files be simplified
-to only one PairdReadFiles object if it has length one}
+\item{simplify}{Should a list of objects be simplified to only one
+object if it has length one?}
 
 \item{object}{A \code{MultiAmplicon-class} object.}
 
@@ -131,21 +131,6 @@ amplicons)}
 \item{...}{not used}
 
 \item{drop}{should not be used}
-
-\item{simplify}{should the list of stratified files be simplified
-to only one PairdReadFiles object if it has length one}
-
-\item{simplify}{should the list of derep objects be simplified to
-only one such object if a list of those has length one}
-
-\item{simplify}{should the list of derep objects be simplified to
-only one such object if a list of those has length one}
-
-\item{simplify}{should the list of dada objects be simplified to
-only one such object if a list of those has length one}
-
-\item{simplify}{should the list of dada objects be simplified to
-only one such object if a list of those has length one}
 }
 \description{
 The MultiAmplicon class is a container that stores at least primer

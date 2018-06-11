@@ -384,24 +384,20 @@ setMethod("rawCounts", "MultiAmplicon", function(x) slot(x, "rawCounts"))
 
 ##' @rdname MultiAmplicon-class
 ##' @param MA MultiAmplicon-class object
-##' @param simplify should the list of stratified files be simplified
-##'     to only one PairdReadFiles object if it has length one
+##' @param simplify Should a list of objects be simplified to only one
+##'     object if it has length one?
 ##' @export
 getStratifiedFilesF <- function(MA, simplify=TRUE) {
     .simpfy(lapply(MA@stratifiedFiles, slot, "readsF"), simplify)
  }
 
 ##' @rdname MultiAmplicon-class
-##' @param simplify should the list of stratified files be simplified
-##'     to only one PairdReadFiles object if it has length one
 ##' @export
 getStratifiedFilesR <- function(MA, simplify=TRUE) {
     .simpfy(lapply(MA@stratifiedFiles, slot, "readsR"), simplify)
 }
     
 ##' @rdname MultiAmplicon-class
-##' @param simplify should the list of derep objects be simplified to
-##'     only one such object if a list of those has length one
 ##' @export
 getDerepF <-  function(MA, simplify=TRUE) {
     .simpfy(lapply(MA@derep, function (x) lapply(x, slot, "derepF")),
@@ -409,8 +405,6 @@ getDerepF <-  function(MA, simplify=TRUE) {
 }
 
 ##' @rdname MultiAmplicon-class
-##' @param simplify should the list of derep objects be simplified to
-##'     only one such object if a list of those has length one
 ##' @export
 getDerepR <-  function(MA, simplify=TRUE) {
     .simpfy(lapply(MA@derep, function (x) lapply(x, slot, "derepR")),
@@ -418,16 +412,12 @@ getDerepR <-  function(MA, simplify=TRUE) {
 }
 
 ##' @rdname MultiAmplicon-class
-##' @param simplify should the list of dada objects be simplified to
-##'     only one such object if a list of those has length one
 ##' @export
 getDadaF <- function(MA, simplify=TRUE) {
     .simpfy(lapply(MA@dada, slot, "dadaF"), simplify)
 }
 
 ##' @rdname MultiAmplicon-class
-##' @param simplify should the list of dada objects be simplified to
-##'     only one such object if a list of those has length one
 ##' @export
 getDadaR <- function(MA, simplify=TRUE) {
     .simpfy(lapply(MA@dada, slot, "dadaR"), simplify)
