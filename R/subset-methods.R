@@ -139,7 +139,7 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                   i <- name.to.numeric(i, rownames(x))
                   j <- name.to.numeric(j, colnames(x))
               }
-              if(all(dim(x@rawCounts)>0)){
+              if(any(dim(rawCounts(x))>0)){
                   newRC <- as.matrix(x@rawCounts[i, j, drop=FALSE])
                   ## we drop empty files from statified files
                   ## therefore we have to find new indices j. These
@@ -149,13 +149,6 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                       zero.i <- which(x@rawCounts[i[[ii]], ]>1) # >1 singl seq rm
                       which(zero.i%in%j)
                   })
-                  new.j.nonZero <- lapply(seq_along(i), function (ii) {
-                      zero.i <- which(x@rawCounts[i[[ii]], ]>1) # >1 singl seq rm
-                      which(zero.i%in%j)
-                  })
-                  ## cat("\nNEW J: new.j", unlist(new.j) , "\n")
-                  ## cat("\nNEW J non Zero: new.jnonZero",
-                  ## unlist(new.j.nonZero) , "\n\n")
                   newSF <-  lapply(seq_along(i), function (ii) {
                       x@stratifiedFiles[[i[[ii]]]][new.j[[ii]]]
                   })
@@ -163,7 +156,7 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
               }
               if(length(x@derep)>0){
                   newderep <- lapply(seq_along(i), function (ii){
-                      x@derep[[i[[ii]]]][new.j.nonZero[[ii]]]
+                      x@derep[[i[[ii]]]][new.j[[ii]]]
                   })
                   names(newderep) <- names(x@derep[i])
               }
