@@ -50,9 +50,9 @@ rawCounts(x)
 
 \S4method{rawCounts}{MultiAmplicon}(x)
 
-getStratifiedFilesF(MA)
+getStratifiedFilesF(MA, simplify = TRUE)
 
-getStratifiedFilesR(MA)
+getStratifiedFilesR(MA, simplify = TRUE)
 
 getDerepF(MA)
 
