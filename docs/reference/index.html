@@ -18,13 +18,22 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
+
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+
+
+
+<meta property="og:title" content="Function reference" />
+
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -47,8 +56,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">MultiAmplicon</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">MultiAmplicon</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.0.9000</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -80,6 +93,7 @@
       <ul class="nav navbar-nav navbar-right">
         
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -87,126 +101,120 @@
       
       </header>
 
-      <div class="row">
-  <div class="col-md-9">
+<div class="row">
+  <div class="contents col-md-9">
     <div class="page-header">
-      <h1>
-        Reference
-        <small>version&nbsp;0.0.0.9000</small>
-      </h1>
+      <h1>Reference</h1>
     </div>
 
-    <div class="contents">
-      <table class="ref-index">
+    <table class="ref-index">
 
-      <colgroup>
-        <col class="alias" />
-        <col class="title" />
-      </colgroup>
+    <colgroup>
+      
+      <col class="alias" />
+      <col class="title" />
+    </colgroup>
 
-      <tbody>
-        <tr>
-          <th colspan="2">
-            <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-            <p class="section-desc"></p>
-          </th>
-        </tr>
-        <tr>
-          <!--  -->
-          <td>
-            <p><code><a href="calcPropMerged.html">calcPropMerged</a></code> </p>
-          </td>
-          <td><p>calcPropMerged</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="carnivoreSeqRuns.html">carnivoreSeqRuns</a></code> </p>
-          </td>
-          <td><p>Sequencing run files for the carnivore biome dataset</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="dadaMulti.html">dadaMulti</a></code> </p>
-          </td>
-          <td><p>dadaMulti</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="derepMulti.html">derepMulti</a></code> </p>
-          </td>
-          <td><p>derepMulti</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="fillSampleTables.html">fillSampleTables</a></code> </p>
-          </td>
-          <td><p>fillSampleTables</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="makeSequenceTableMulti.html">makeSequenceTableMulti</a></code> </p>
-          </td>
-          <td><p>makeSequenceTableMulti</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="mergeMulti.html">mergeMulti</a></code> </p>
-          </td>
-          <td><p>mergeMulti</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="MultiAmplicon-class.html">MultiAmplicon-class</a></code> </p>
-          </td>
-          <td><p>A class combining sequences of forward and reverse primers (in a
-<code><a href='reference/PrimerPairsSet-class.html'>PrimerPairsSet-class</a></code>) plus file names of paired end
-sequencing files (in a <code><a href='reference/PairedReadFileSet-class.html'>PairedReadFileSet-class</a></code>).</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="PairedDada-class.html">PairedDada-class</a></code> </p>
-          </td>
-          <td><p>PairedDada-class</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="PairedDerep-class.html">PairedDerep-class</a></code> </p>
-          </td>
-          <td><p>PairedDerep-class</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="PairedReadFileSet-class.html">PairedReadFileSet-class</a></code> </p>
-          </td>
-          <td><p>A class representing file paths to paired end reads.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="plotAmpliconNumbers.html">plotAmpliconNumbers</a></code> </p>
-          </td>
-          <td><p>plotAmpliconNumbers</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="PrimerPairsSet-class.html">PrimerPairsSet-class</a></code> </p>
-          </td>
-          <td><p>A class representing sequences of forward and reverse primers.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="removeChimeraMulti.html">removeChimeraMulti</a></code> </p>
-          </td>
-          <td><p>removeChimeraMulti</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="sortAmplicons.html">sortAmplicons</a></code> </p>
-          </td>
-          <td><p>sortAmplicons</p></td>
-        </tr>
-      </tbody>
-      </table>
-    </div>
+    <tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="MultiAmplicon-class.html">MultiAmplicon()</a></code> <code><a href="MultiAmplicon-class.html">colnames(<i>&lt;MultiAmplicon&gt;</i>)</a></code> <code><a href="MultiAmplicon-class.html">rownames(<i>&lt;MultiAmplicon&gt;</i>)</a></code> <code><a href="MultiAmplicon-class.html">ncol(<i>&lt;MultiAmplicon&gt;</i>)</a></code> <code><a href="MultiAmplicon-class.html">nrow(<i>&lt;MultiAmplicon&gt;</i>)</a></code> <code><a href="MultiAmplicon-class.html">dim(<i>&lt;MultiAmplicon&gt;</i>)</a></code> <code><a href="MultiAmplicon-class.html">rawCounts()</a></code> <code><a href="MultiAmplicon-class.html">getStratifiedFilesF()</a></code> <code><a href="MultiAmplicon-class.html">getStratifiedFilesR()</a></code> <code><a href="MultiAmplicon-class.html">getDerepF()</a></code> <code><a href="MultiAmplicon-class.html">getDerepR()</a></code> <code><a href="MultiAmplicon-class.html">getDadaF()</a></code> <code><a href="MultiAmplicon-class.html">getDadaR()</a></code> <code><a href="MultiAmplicon-class.html">getMergers()</a></code> <code><a href="MultiAmplicon-class.html">getSequenceTable()</a></code> <code><a href="MultiAmplicon-class.html">getSequenceTableNoChime()</a></code> <code><a href="MultiAmplicon-class.html">getSequencesFromTable()</a></code> <code><a href="MultiAmplicon-class.html">show(<i>&lt;MultiAmplicon&gt;</i>)</a></code> <code><a href="MultiAmplicon-class.html">`[`(<i>&lt;MultiAmplicon&gt;</i>,<i>&lt;index&gt;</i>,<i>&lt;index&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code> <code><a href="MultiAmplicon-class.html">`[`(<i>&lt;MultiAmplicon&gt;</i>,<i>&lt;index&gt;</i>,<i>&lt;missing&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code> <code><a href="MultiAmplicon-class.html">`[`(<i>&lt;MultiAmplicon&gt;</i>,<i>&lt;missing&gt;</i>,<i>&lt;index&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code> <code><a href="MultiAmplicon-class.html">`[`(<i>&lt;MultiAmplicon&gt;</i>,<i>&lt;missing&gt;</i>,<i>&lt;missing&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>The central data structure of the MultiAmplicon package</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="PairedDada-class.html">PairedDada()</a></code> <code><a href="PairedDada-class.html">length(<i>&lt;PairedDada&gt;</i>)</a></code> <code><a href="PairedDada-class.html">`[`(<i>&lt;PairedDada&gt;</i>,<i>&lt;index&gt;</i>,<i>&lt;missing&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>PairedDada-class</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="PairedDerep-class.html">length(<i>&lt;PairedDerep&gt;</i>)</a></code> <code><a href="PairedDerep-class.html">`[`(<i>&lt;PairedDerep&gt;</i>,<i>&lt;index&gt;</i>,<i>&lt;missing&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>PairedDerep-class</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="PairedReadFileSet-class.html">PairedReadFileSet()</a></code> <code><a href="PairedReadFileSet-class.html">length(<i>&lt;PairedReadFileSet&gt;</i>)</a></code> <code><a href="PairedReadFileSet-class.html">show(<i>&lt;PairedReadFileSet&gt;</i>)</a></code> <code><a href="PairedReadFileSet-class.html">`[`(<i>&lt;PairedReadFileSet&gt;</i>,<i>&lt;index&gt;</i>,<i>&lt;missing&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>A class representing file paths to paired end reads.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="PrimerPairsSet-class.html">PrimerPairsSet()</a></code> <code><a href="PrimerPairsSet-class.html">length(<i>&lt;PrimerPairsSet&gt;</i>)</a></code> <code><a href="PrimerPairsSet-class.html">names(<i>&lt;PrimerPairsSet&gt;</i>)</a></code> <code><a href="PrimerPairsSet-class.html">show(<i>&lt;PrimerPairsSet&gt;</i>)</a></code> <code><a href="PrimerPairsSet-class.html">`[`(<i>&lt;PrimerPairsSet&gt;</i>,<i>&lt;index&gt;</i>,<i>&lt;missing&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>A class representing sequences of forward and reverse primers.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="calcPropMerged.html">calcPropMerged()</a></code> </p>
+        </td>
+        <td><p>calcPropMerged</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="carnivoreSeqRuns.html">carnivoreSeqRuns</a></code> </p>
+        </td>
+        <td><p>Sequencing run files for the carnivore biome dataset</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="dadaMulti.html">dadaMulti()</a></code> </p>
+        </td>
+        <td><p>dadaMulti</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="derepMulti.html">derepMulti()</a></code> </p>
+        </td>
+        <td><p>derepMulti</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="fillSampleTables.html">fillSampleTables()</a></code> </p>
+        </td>
+        <td><p>fillSampleTables</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="makeSequenceTableMulti.html">makeSequenceTableMulti()</a></code> </p>
+        </td>
+        <td><p>makeSequenceTableMulti</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="mergeMulti.html">mergeMulti()</a></code> </p>
+        </td>
+        <td><p>mergeMulti</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plotAmpliconNumbers.html">plotAmpliconNumbers()</a></code> </p>
+        </td>
+        <td><p>plotAmpliconNumbers</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="removeChimeraMulti.html">removeChimeraMulti()</a></code> </p>
+        </td>
+        <td><p>removeChimeraMulti</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sortAmplicons.html">sortAmplicons()</a></code> </p>
+        </td>
+        <td><p>sortAmplicons</p></td>
+      </tr>
+    </tbody>
+    </table>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -229,5 +237,8 @@ sequencing files (in a <code><a href='reference/PairedReadFileSet-class.html'>Pa
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

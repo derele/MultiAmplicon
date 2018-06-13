@@ -6,9 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>A class combining sequences of forward and reverse primers (in a
-<code><a href='PrimerPairsSet-class.html'>PrimerPairsSet-class</a></code>) plus file names of paired end
-sequencing files (in a <code><a href='PairedReadFileSet-class.html'>PairedReadFileSet-class</a></code>). — MultiAmplicon-class • MultiAmplicon</title>
+<title>The central data structure of the MultiAmplicon package — MultiAmplicon-class • MultiAmplicon</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -20,13 +18,31 @@ sequencing files (in a <code><a href='PairedReadFileSet-class.html'>PairedReadFi
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
+
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+
+
+
+<meta property="og:title" content="The central data structure of the MultiAmplicon package — MultiAmplicon-class" />
+
+<meta property="og:description" content="The MultiAmplicon class is a container that stores at least primer
+pairs, read files and progressively processed data in an 'amplicon
+x samples' format. The slots in this object are incrementally
+filled with by running wrappers functions (mostly around functions
+from the dada2 package).
+Subsetting for MultiAmplicon objects should conveniently subset
+all (potentially) filled slots" />
+<meta name="twitter:card" content="summary" />
+
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -49,8 +65,12 @@ sequencing files (in a <code><a href='PairedReadFileSet-class.html'>PairedReadFi
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">MultiAmplicon</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">MultiAmplicon</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.0.9000</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -82,6 +102,7 @@ sequencing files (in a <code><a href='PairedReadFileSet-class.html'>PairedReadFi
       <ul class="nav navbar-nav navbar-right">
         
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -89,22 +110,25 @@ sequencing files (in a <code><a href='PairedReadFileSet-class.html'>PairedReadFi
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>A class combining sequences of forward and reverse primers (in a
-<code><a href='PrimerPairsSet-class.html'>PrimerPairsSet-class</a></code>) plus file names of paired end
-sequencing files (in a <code><a href='PairedReadFileSet-class.html'>PairedReadFileSet-class</a></code>).</h1>
+    <h1>The central data structure of the MultiAmplicon package</h1>
+    
+    <div class="hidden name"><code>MultiAmplicon-class.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
-    <p>The MultiAmplicon class is a container for storing primer pairs,
-read files and processed data in an 'amplicon x samples'
-format. The object is incrementally filled by running functions
-(from the package <code>dada2</code>) with additional slots.</p>
+    <p>The MultiAmplicon class is a container that stores at least primer
+pairs, read files and progressively processed data in an 'amplicon
+x samples' format. The slots in this object are incrementally
+filled with by running wrappers functions (mostly around functions
+from the <code>dada2</code> package).</p>
 <p>Subsetting for MultiAmplicon objects should conveniently subset
 all (potentially) filled slots</p>
     
+    </div>
 
     <pre class="usage">MultiAmplicon(PrimerPairsSet = PrimerPairsSet(),
   PairedReadFileSet = PairedReadFileSet(), rawCounts = matrix(),
@@ -132,17 +156,17 @@ rawCounts(x)
 # S4 method for MultiAmplicon
 rawCounts(x)
 
-getStratifiedFilesF(MA)
+getStratifiedFilesF(MA, simplify = TRUE)
 
-getStratifiedFilesR(MA)
+getStratifiedFilesR(MA, simplify = TRUE)
 
-getDerepF(MA)
+getDerepF(MA, simplify = TRUE)
 
-getDerepR(MA)
+getDerepR(MA, simplify = TRUE)
 
-getDadaF(MA)
+getDadaF(MA, simplify = TRUE)
 
-getDadaR(MA)
+getDadaR(MA, simplify = TRUE)
 
 getMergers(MA)
 
@@ -170,7 +194,7 @@ show(object)
 # S4 method for MultiAmplicon,missing,missing,ANY
 [(x, i, j, ..., drop = FALSE)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -230,6 +254,11 @@ the slot is created by <code><a href='fillSampleTables.html'>fillSampleTables</a
     <tr>
       <th>MA</th>
       <td><p>MultiAmplicon-class object</p></td>
+    </tr>
+    <tr>
+      <th>simplify</th>
+      <td><p>Should a list of objects be simplified to only one
+object if it has length one?</p></td>
     </tr>
     <tr>
       <th>object</th>
@@ -294,7 +323,7 @@ pairs of dada-class objects created by <code>dada2</code>’s
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='http://www.rdocumentation.org/packages/dada2/topics/derepFastq'>derepFastq</a></code>,<code><a href='http://www.rdocumentation.org/packages/dada2/topics/dada'>dada</a></code></p>
+    <div class='dont-index'><p><code><a href='http://www.rdocumentation.org/packages/dada2/topics/derepFastq'>derepFastq</a></code>,<code><a href='http://www.rdocumentation.org/packages/dada2/topics/dada'>dada</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -320,115 +349,100 @@ pairs of dada-class objects created by <code>dada2</code>’s
 <span class='co'>## the number of samples (sequencing read file pairs)</span>
 <span class='fu'>ncol</span>(<span class='no'>MA</span>)</div><div class='output co'>#&gt; [1] 7</div><div class='input'>
 <span class='co'>## sort into amplicons</span>
-<span class='no'>MA1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sortAmplicons.html'>sortAmplicons</a></span>(<span class='no'>MA</span>)</div><div class='output co'>#&gt; <span class='message'>using existing directory /tmp/RtmpeEHDm3 and adding specific prefixes to avoid problems when running code twice</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 0 sequencing reads for S00_F_filt.fastq.gz in</span>
+<span class='no'>MA1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sortAmplicons.html'>sortAmplicons</a></span>(<span class='no'>MA</span>, <span class='kw'>filedir</span><span class='kw'>=</span><span class='fu'>tempfile</span>(<span class='kw'>pattern</span> <span class='kw'>=</span> <span class='st'>"dir"</span>))</div><div class='output co'>#&gt; <span class='message'>creating directory /tmp/RtmpsMKV3e/dir1311d44d3b010</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 0 sequencing reads for S00_F_filt.fastq.gz in </span>
 #&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S00_F_filt.fastq.gz and </span>
-#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S00_R_filt.fastq.gz</span>
-#&gt; <span class='message'> into 0 amplicons</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 0 sequencing reads for S01_F_filt.fastq.gz in</span>
+#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S00_R_filt.fastq.gz </span>
+#&gt; <span class='message'> into 0  amplicons and written into /tmp/RtmpsMKV3e/dir1311d44d3b010</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 0 sequencing reads for S01_F_filt.fastq.gz in </span>
 #&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S01_F_filt.fastq.gz and </span>
-#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S01_R_filt.fastq.gz</span>
-#&gt; <span class='message'> into 0 amplicons</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 9348 sequencing reads for S02_F_filt.fastq.gz in</span>
+#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S01_R_filt.fastq.gz </span>
+#&gt; <span class='message'> into 0  amplicons and written into /tmp/RtmpsMKV3e/dir1311d44d3b010</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 9348 sequencing reads for S02_F_filt.fastq.gz in </span>
 #&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S02_F_filt.fastq.gz and </span>
-#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S02_R_filt.fastq.gz</span>
-#&gt; <span class='message'> into 4 amplicons</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 5 sequencing reads for S03_F_filt.fastq.gz in</span>
+#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S02_R_filt.fastq.gz </span>
+#&gt; <span class='message'> into 4  amplicons and written into /tmp/RtmpsMKV3e/dir1311d44d3b010</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 5 sequencing reads for S03_F_filt.fastq.gz in </span>
 #&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S03_F_filt.fastq.gz and </span>
-#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S03_R_filt.fastq.gz</span>
-#&gt; <span class='message'> into 1 amplicons</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 14 sequencing reads for S04_F_filt.fastq.gz in</span>
+#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S03_R_filt.fastq.gz </span>
+#&gt; <span class='message'> into 1  amplicons and written into /tmp/RtmpsMKV3e/dir1311d44d3b010</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 14 sequencing reads for S04_F_filt.fastq.gz in </span>
 #&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S04_F_filt.fastq.gz and </span>
-#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S04_R_filt.fastq.gz</span>
-#&gt; <span class='message'> into 3 amplicons</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 51777 sequencing reads for S05_F_filt.fastq.gz in</span>
+#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S04_R_filt.fastq.gz </span>
+#&gt; <span class='message'> into 3  amplicons and written into /tmp/RtmpsMKV3e/dir1311d44d3b010</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 51777 sequencing reads for S05_F_filt.fastq.gz in </span>
 #&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S05_F_filt.fastq.gz and </span>
-#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S05_R_filt.fastq.gz</span>
-#&gt; <span class='message'> into 3 amplicons</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 17358 sequencing reads for S06_F_filt.fastq.gz in</span>
+#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S05_R_filt.fastq.gz </span>
+#&gt; <span class='message'> into 3  amplicons and written into /tmp/RtmpsMKV3e/dir1311d44d3b010</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 17358 sequencing reads for S06_F_filt.fastq.gz in </span>
 #&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S06_F_filt.fastq.gz and </span>
-#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S06_R_filt.fastq.gz</span>
-#&gt; <span class='message'> into 4 amplicons</span></div><div class='input'>
-<span class='no'>MA2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='derepMulti.html'>derepMulti</a></span>(<span class='no'>MA1</span>)
-
+#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S06_R_filt.fastq.gz </span>
+#&gt; <span class='message'> into 4  amplicons and written into /tmp/RtmpsMKV3e/dir1311d44d3b010</span></div><div class='input'>
+<span class='no'>MA2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='derepMulti.html'>derepMulti</a></span>(<span class='no'>MA1</span>)</div><div class='output co'>#&gt; <span class='message'>calling derepFastq with default parameters</span></div><div class='output co'>#&gt; <span class='message'>amplicon AGAGTTTGATCCTGGCTCAG.CTGCWGCCNCCCGTAGG dereplicating for 5 of 7 possible sample files.</span></div><div class='output co'>#&gt; <span class='message'>calling derepFastq with default parameters</span></div><div class='output co'>#&gt; <span class='message'>amplicon ACTCCTACGGGAGGCAGC.GACTACHVGGGTATCTAATCC dereplicating for 4 of 7 possible sample files.</span></div><div class='output co'>#&gt; <span class='message'>calling derepFastq with default parameters</span></div><div class='output co'>#&gt; <span class='message'>amplicon GAATTGACGGAAGGGCACC.AAGGGCATCACAGACCTGTTAT dereplicating for 2 of 7 possible sample files.</span></div><div class='output co'>#&gt; <span class='message'>calling derepFastq with default parameters</span></div><div class='output co'>#&gt; <span class='message'>amplicon YGGTGRTGCATGGCCGYT.TCCTTCTGCAGGTTCACCTAC dereplicating for 4 of 7 possible sample files.</span></div><div class='input'>
 <span class='no'>MA3</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='dadaMulti.html'>dadaMulti</a></span>(<span class='no'>MA2</span>, <span class='kw'>selfConsist</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>amplicon AGAGTTTGATCCTGGCTCAG.CTGCWGCCNCCCGTAGG: dada estimation of sequence variants from 5 of 7 possible sample files</span></div><div class='output co'>#&gt; <span class='message'>calling dada with selfConsist=TRUE parameters</span></div><div class='output co'>#&gt; Initializing error rates to maximum possible estimate.
-#&gt; Sample 1 - 3495 reads in 1493 unique sequences.
-#&gt; Sample 2 - 5 reads in 5 unique sequences.
-#&gt; Sample 3 - 5 reads in 5 unique sequences.
-#&gt; Sample 4 - 29310 reads in 7224 unique sequences.
-#&gt; Sample 5 - 2569 reads in 1053 unique sequences.
-#&gt;    selfConsist step 2 
-#&gt;    selfConsist step 3 
-#&gt;    selfConsist step 4 
-#&gt;    selfConsist step 5 
-#&gt; Convergence after  5  rounds.
+#&gt; selfConsist step 1 .....
+#&gt;    selfConsist step 2
+#&gt;    selfConsist step 3
+#&gt;    selfConsist step 4
+#&gt;    selfConsist step 5
+#&gt;    selfConsist step 6
+#&gt; Convergence after  6  rounds.
 #&gt; Initializing error rates to maximum possible estimate.
-#&gt; Sample 1 - 3495 reads in 1535 unique sequences.
-#&gt; Sample 2 - 5 reads in 5 unique sequences.
-#&gt; Sample 3 - 5 reads in 4 unique sequences.
-#&gt; Sample 4 - 29310 reads in 8273 unique sequences.
-#&gt; Sample 5 - 2569 reads in 994 unique sequences.
-#&gt;    selfConsist step 2 
-#&gt;    selfConsist step 3 
-#&gt;    selfConsist step 4 
-#&gt;    selfConsist step 5 
-#&gt; Convergence after  5  rounds.</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; selfConsist step 1 .....
+#&gt;    selfConsist step 2
+#&gt;    selfConsist step 3
+#&gt;    selfConsist step 4
+#&gt;    selfConsist step 5
+#&gt;    selfConsist step 6
+#&gt; Convergence after  6  rounds.</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>amplicon ACTCCTACGGGAGGCAGC.GACTACHVGGGTATCTAATCC: dada estimation of sequence variants from 4 of 7 possible sample files</span></div><div class='output co'>#&gt; <span class='message'>calling dada with selfConsist=TRUE parameters</span></div><div class='output co'>#&gt; Initializing error rates to maximum possible estimate.
-#&gt; Sample 1 - 2949 reads in 1142 unique sequences.
-#&gt; Sample 2 - 2 reads in 2 unique sequences.
-#&gt; Sample 3 - 20391 reads in 4136 unique sequences.
-#&gt; Sample 4 - 2690 reads in 968 unique sequences.
-#&gt;    selfConsist step 2 
-#&gt;    selfConsist step 3 
-#&gt;    selfConsist step 4 
-#&gt; Convergence after  4  rounds.
+#&gt; selfConsist step 1 ....
+#&gt;    selfConsist step 2
+#&gt;    selfConsist step 3
+#&gt;    selfConsist step 4
+#&gt;    selfConsist step 5
+#&gt; Convergence after  5  rounds.
 #&gt; Initializing error rates to maximum possible estimate.
-#&gt; Sample 1 - 2949 reads in 1290 unique sequences.
-#&gt; Sample 2 - 2 reads in 2 unique sequences.
-#&gt; Sample 3 - 20391 reads in 5719 unique sequences.
-#&gt; Sample 4 - 2690 reads in 1100 unique sequences.
-#&gt;    selfConsist step 2 
-#&gt;    selfConsist step 3 
-#&gt;    selfConsist step 4 
-#&gt;    selfConsist step 5 
-#&gt; Convergence after  5  rounds.</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; selfConsist step 1 ....
+#&gt;    selfConsist step 2
+#&gt;    selfConsist step 3
+#&gt;    selfConsist step 4
+#&gt;    selfConsist step 5
+#&gt;    selfConsist step 6
+#&gt; Convergence after  6  rounds.</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>amplicon GAATTGACGGAAGGGCACC.AAGGGCATCACAGACCTGTTAT: dada estimation of sequence variants from 2 of 7 possible sample files</span></div><div class='output co'>#&gt; <span class='message'>calling dada with selfConsist=TRUE parameters</span></div><div class='output co'>#&gt; Initializing error rates to maximum possible estimate.
-#&gt; Sample 1 - 1817 reads in 589 unique sequences.
-#&gt; Sample 2 - 11671 reads in 3783 unique sequences.
-#&gt;    selfConsist step 2 
-#&gt;    selfConsist step 3 
-#&gt;    selfConsist step 4 
-#&gt; Convergence after  4  rounds.
+#&gt; selfConsist step 1 ..
+#&gt;    selfConsist step 2
+#&gt;    selfConsist step 3
+#&gt;    selfConsist step 4
+#&gt;    selfConsist step 5
+#&gt; Convergence after  5  rounds.
 #&gt; Initializing error rates to maximum possible estimate.
-#&gt; Sample 1 - 1817 reads in 547 unique sequences.
-#&gt; Sample 2 - 11671 reads in 4054 unique sequences.
-#&gt;    selfConsist step 2 
-#&gt;    selfConsist step 3 
-#&gt;    selfConsist step 4 
+#&gt; selfConsist step 1 ..
+#&gt;    selfConsist step 2
+#&gt;    selfConsist step 3
+#&gt;    selfConsist step 4
 #&gt; Convergence after  4  rounds.</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>amplicon YGGTGRTGCATGGCCGYT.TCCTTCTGCAGGTTCACCTAC: dada estimation of sequence variants from 4 of 7 possible sample files</span></div><div class='output co'>#&gt; <span class='message'>calling dada with selfConsist=TRUE parameters</span></div><div class='output co'>#&gt; Initializing error rates to maximum possible estimate.
-#&gt; Sample 1 - 1087 reads in 394 unique sequences.
-#&gt; Sample 2 - 7 reads in 6 unique sequences.
-#&gt; Sample 3 - 2076 reads in 959 unique sequences.
-#&gt; Sample 4 - 428 reads in 166 unique sequences.
-#&gt;    selfConsist step 2 
-#&gt;    selfConsist step 3 
-#&gt;    selfConsist step 4 
-#&gt; Convergence after  4  rounds.
+#&gt; selfConsist step 1 ....
+#&gt;    selfConsist step 2
+#&gt;    selfConsist step 3
+#&gt;    selfConsist step 4
+#&gt;    selfConsist step 5
+#&gt;    selfConsist step 6
+#&gt; Convergence after  6  rounds.
 #&gt; Initializing error rates to maximum possible estimate.
-#&gt; Sample 1 - 1087 reads in 433 unique sequences.
-#&gt; Sample 2 - 7 reads in 5 unique sequences.
-#&gt; Sample 3 - 2076 reads in 962 unique sequences.
-#&gt; Sample 4 - 428 reads in 183 unique sequences.
-#&gt;    selfConsist step 2 
-#&gt;    selfConsist step 3 
-#&gt;    selfConsist step 4 
-#&gt; Convergence after  4  rounds.</div><div class='input'>
+#&gt; selfConsist step 1 ....
+#&gt;    selfConsist step 2
+#&gt;    selfConsist step 3
+#&gt;    selfConsist step 4
+#&gt;    selfConsist step 5
+#&gt; Convergence after  5  rounds.</div><div class='input'>
 <span class='no'>MA4</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mergeMulti.html'>mergeMulti</a></span>(<span class='no'>MA3</span>, <span class='kw'>justConcatenate</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>merging sequences from 5 samples for amplicon AGAGTTTGATCCTGGCTCAG.CTGCWGCCNCCCGTAGG</span></div><div class='output co'>#&gt; <span class='message'>calling mergePairs with justConcatenate=TRUE parameters</span></div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>merging sequences from 4 samples for amplicon ACTCCTACGGGAGGCAGC.GACTACHVGGGTATCTAATCC</span></div><div class='output co'>#&gt; <span class='message'>calling mergePairs with justConcatenate=TRUE parameters</span></div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>merging sequences from 2 samples for amplicon GAATTGACGGAAGGGCACC.AAGGGCATCACAGACCTGTTAT</span></div><div class='output co'>#&gt; <span class='message'>calling mergePairs with justConcatenate=TRUE parameters</span></div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>merging sequences from 4 samples for amplicon YGGTGRTGCATGGCCGYT.TCCTTCTGCAGGTTCACCTAC</span></div><div class='output co'>#&gt; <span class='message'>calling mergePairs with justConcatenate=TRUE parameters</span></div><div class='input'>
 <span class='no'>MA5</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='makeSequenceTableMulti.html'>makeSequenceTableMulti</a></span>(<span class='no'>MA4</span>)</div><div class='output co'>#&gt; <span class='message'>calling makeSequenceTable with default parameters</span></div><div class='output co'>#&gt; <span class='message'>calling makeSequenceTable with default parameters</span></div><div class='output co'>#&gt; <span class='message'>calling makeSequenceTable with default parameters</span></div><div class='output co'>#&gt; <span class='message'>calling makeSequenceTable with default parameters</span></div><div class='input'>
-<span class='no'>MA6</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='removeChimeraMulti.html'>removeChimeraMulti</a></span>(<span class='no'>MA5</span>, <span class='kw'>mc.cores</span><span class='kw'>=</span><span class='fl'>1</span>)</div><div class='output co'>#&gt; <span class='message'>calling removeBimeraDenovo with default parameters</span></div><div class='output co'>#&gt; <span class='message'>As of the 1.4 release, the default method changed to consensus (from pooled).</span></div><div class='output co'>#&gt; <span class='message'>calling removeBimeraDenovo with default parameters</span></div><div class='output co'>#&gt; <span class='message'>As of the 1.4 release, the default method changed to consensus (from pooled).</span></div><div class='output co'>#&gt; <span class='message'>calling removeBimeraDenovo with default parameters</span></div><div class='output co'>#&gt; <span class='message'>As of the 1.4 release, the default method changed to consensus (from pooled).</span></div><div class='output co'>#&gt; <span class='message'>calling removeBimeraDenovo with default parameters</span></div><div class='output co'>#&gt; <span class='message'>As of the 1.4 release, the default method changed to consensus (from pooled).</span></div><div class='input'>
+<span class='no'>MA6</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='removeChimeraMulti.html'>removeChimeraMulti</a></span>(<span class='no'>MA5</span>, <span class='kw'>mc.cores</span><span class='kw'>=</span><span class='fl'>1</span>)</div><div class='output co'>#&gt; <span class='message'>calling removeBimeraDenovo with default parameters</span></div><div class='output co'>#&gt; <span class='message'>calling removeBimeraDenovo with default parameters</span></div><div class='output co'>#&gt; <span class='message'>calling removeBimeraDenovo with default parameters</span></div><div class='input'>
 <span class='no'>MA7</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fillSampleTables.html'>fillSampleTables</a></span>(<span class='no'>MA6</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -464,5 +478,8 @@ Emanuel Heitlinger
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

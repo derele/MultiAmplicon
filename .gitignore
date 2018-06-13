@@ -20,5 +20,3 @@ docs/articles/MultiAmplicon-real-world-example.Rmd
 docs/articles/MultiAmplicon-small-example.Rmd
 docs/articles/*.R
 /SRAmetadb.sqlite
-/docs/pkgdown.yml
-/docs/docsearch.css

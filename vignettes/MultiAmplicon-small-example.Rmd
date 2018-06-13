@@ -195,7 +195,6 @@ together <- getSequencesFromTable(MA6)
 alt <- getSequencesFromTable(MA.alt)
 
 lapply(seq_along(together), function (i){
-    setequal(alt[[i]], together[[i]])
     table(alt[[i]]%in%together[[i]])
 })
 ```

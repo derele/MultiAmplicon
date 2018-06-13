@@ -18,13 +18,25 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
+
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+
+
+
+<meta property="og:title" content="derepMulti — derepMulti" />
+
+<meta property="og:description" content="Dereplicate sequences in fastq files." />
+<meta name="twitter:card" content="summary" />
+
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -47,8 +59,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">MultiAmplicon</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">MultiAmplicon</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.0.9000</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -80,6 +96,7 @@
       <ul class="nav navbar-nav navbar-right">
         
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -87,60 +104,72 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>derepMulti</h1>
+    
+    <div class="hidden name"><code>derepMulti.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Dereplicate sequences in fastq files.</p>
     
+    </div>
 
-    <pre class="usage"><span class='fu'>derepMulti</span>(<span class='no'>MA</span>, <span class='kw'>mc.cores</span> <span class='kw'>=</span> <span class='fu'>getOption</span>(<span class='st'>"mc.cores"</span>, <span class='fl'>2L</span>),
+    <pre class="usage"><span class='fu'>derepMulti</span>(<span class='no'>MA</span>, <span class='kw'>mc.cores</span> <span class='kw'>=</span> <span class='fu'>getOption</span>(<span class='st'>"mc.cores"</span>, <span class='fl'>1L</span>),
   <span class='kw'>keep.single.singlets</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>MA</th>
-      <td><p>MultiAmplicon object to be dereplicated</p></td>
+      <td><p>MultiAmplicon object to be dereplicated.</p></td>
     </tr>
     <tr>
       <th>mc.cores</th>
-      <td><p>number or compute cores for parallel processing</p></td>
+      <td><p>number or compute cores for parallel dereplication
+of different amplicons (values &gt; 1 are only allowed on
+Unix/Linux systems).</p></td>
     </tr>
     <tr>
       <th>keep.single.singlets</th>
       <td><p>logical argument indicating whether a
 derep slot should be filled with a single sequence recovered
-in only one sample. Defaults to FALSE meaning that such empty
-derep objects are created in such a case. Keeping such derep
-objects (setting this to TRUE) might result in downstream
-problems (Errors) in dada inference.</p></td>
+in only one sample. Defaults to FALSE meaning that empty derep
+objects are created in such a case. Keeping instead single
+sequence derep objects (setting this to <code>TRUE</code>) might
+result in downstream problems (Errors) in dada inference.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>arguments to be passed to <code>derepFastq</code>. All
-arguments to the function can be given as a vector of the same
-length as the number of primer pairs in the MultiAmplicon
-object, allowing to specify different parameters for each
-amplicon. If a shorter vector is given it will be recycled to
-match the number of amplicons.</p></td>
+      <td><p>arguments to be passed to
+<code><a href='http://www.rdocumentation.org/packages/dada2/topics/derepFastq'>derepFastq</a></code>. All arguments to the function
+can be given as a vector of the same length as the number of
+primer pairs in the MultiAmplicon object, allowing to specify
+different parameters for each amplicon. If a shorter vector is
+given it will be recycled to match the number of amplicons. A
+general argument to consider changing is <code>n</code> (default
+1e+06, the maximum number of reads to parse at one
+time). Smaller values will decreas memory consumption.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>MultiAmplicon object with derep slots (forward derepF and
-    reverse derepR) filled</p>
+    <p>MultiAmplicon object with paired derep slot (forward
+    derepF and reverse derepR) filled.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>An interface to <code><a href='http://www.rdocumentation.org/packages/dada2/topics/derepFastq'>derepFastq</a></code> which itself uses
+    <p>An interface to <code><a href='http://www.rdocumentation.org/packages/dada2/topics/derepFastq'>derepFastq</a></code>, which itself uses
 <code><a href='http://www.rdocumentation.org/packages/ShortRead/topics/Sampler-class'>FastqStreamer</a></code> for dereplicating amplicon
-sequences from fastq or compressed fastq files.</p>
+sequences from fastq or compressed fastq
+files. <code><a href='http://www.rdocumentation.org/packages/ShortRead/topics/Sampler-class'>FastqStreamer</a></code> uses a streaming
+interface and can be used on low memory machines (see <code>...</code>
+below).</p>
     
 
   </div>
@@ -173,5 +202,8 @@ Emanuel Heitlinger
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+
