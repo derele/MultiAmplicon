@@ -184,16 +184,19 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                   })
                   names(newSTnC) <- names(x@sequenceTableNoChime[i])         
               }              
-              MA.out <- initialize(x,
-                                   PrimerPairsSet = newPrimer,
-                                   PairedReadFileSet = newFiles,
-                                   rawCounts = newRC,
-                                   stratifiedFiles = newSF,
-                                   derep = newderep,
-                                   dada = newdada,
-                                   mergers = newmergers,
-                                   sequenceTable = newST,
-                                   sequenceTableNoChime = newSTnC)              
+              ## avoid warnings from ValidityCheck
+              suppressWarnings(
+                  MA.out <- initialize(x,
+                                       PrimerPairsSet = newPrimer,
+                                       PairedReadFileSet = newFiles,
+                                       rawCounts = newRC,
+                                       stratifiedFiles = newSF,
+                                       derep = newderep,
+                                       dada = newdada,
+                                       mergers = newmergers,
+                                       sequenceTable = newST,
+                                       sequenceTableNoChime = newSTnC)
+              )
               if(length(x@sequenceTableFilled)>0){           
                   fillSampleTables(MA.out, samples="union")
               } else {MA.out}

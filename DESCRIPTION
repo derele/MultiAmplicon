@@ -11,7 +11,9 @@ biocViews: Metagenomics,  Genetics, Sequencing, Microbiome,
 Imports:
     Biostrings (>= 2.42.0),
     pheatmap,
-    methods
+    methods,
+    plyr,
+    ggplot2
 Depends:
     R (>= 3.3.1),
     ShortRead (>= 1.30.0),

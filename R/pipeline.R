@@ -108,6 +108,7 @@ derepMulti <- function(MA, mc.cores = getOption("mc.cores", 1L),
 ##' @return MultiAmplicon object with dadaF and dadaR slots filled.
 ##' @importFrom dada2 dada
 ##' @importFrom methods initialize new slot
+##' @importFrom parallel mclapply
 ##' @export
 ##' @author Emanuel Heitlinger
 dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
@@ -176,6 +177,7 @@ dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
 ##'     will be recycled to match the number of amplicons.
 ##' @return A MultiAmplicon-class object with the mergers slot filled.
 ##' @importFrom dada2 mergePairs
+##' @importFrom parallel mclapply
 ##' @export
 ##' @author Emanuel Heitlinger
 mergeMulti <- function(MA, mc.cores=getOption("mc.cores", 1L), ...){
@@ -230,6 +232,7 @@ mergeMulti <- function(MA, mc.cores=getOption("mc.cores", 1L), ...){
 ##' @return A MultiAmplicon-class object with the sequenceTable slot
 ##'     filled
 ##' @importFrom dada2 makeSequenceTable
+##' @importFrom parallel mclapply
 ##' @export
 ##' @author Emanuel Heitlinger
 makeSequenceTableMulti <- function(MA, mc.cores=getOption("mc.cores", 1L), ...){
@@ -374,6 +377,59 @@ setMethod("calcPropMerged", "MultiAmplicon",
 
 
 
+## Summary function for pipeline ------------------------------------
+
+##' Obtain summary data for amplicons run through the MultiAmplicon pipeline.
+##'
+##' Get statistics on the number of samples (with read data), the
+##' number of unique sequence variants and the number of reads left
+##' after processing of amplicons in the MultiAmplicon pipeline. In
+##' some steps of the pipeline dada2 performs quality filtering
+##' excluding non-credible sequence variants.
+##' 
+##' @title getPipelineSummary
+##' @param MA MultiAmplicon object with all slots filled for tracking.
+##' @return a data.frame of sample, unique sequences and sequencing
+##'     reads numbers per amplicon.
+##' @export
+##' @author Emanuel Heitlinger
+getPipelineSummary <- function(MA){
+    slots <- slotNames(MA)[3:9]
+    sapply(slots, function (x) .complainWhenAbsent(MA, x))
+    getN <- function(x) unlist(lapply(x, function (y) sum(getUniques(y))))
+    getU <- function(x) unlist(lapply(x, function (y) length(getUniques(y))))
+    track.l <- lapply(seq_along(getDadaF(MA)), function (i) {
+        samples <- list(
+            sorted=length(rawCounts(MA[i, ])[rawCounts(MA)[i, ]>0]),
+            derep=length(getDerepF(MA[i, ])),
+            denoised=length(getDadaF(MA[i,])),
+            merged=length(getMergers(MA[i,])),
+            tabulated=nrow(getSequenceTable(MA[i,])),
+            noChime=nrow(getSequenceTableNoChime(MA[i,])))
+        uniques <- list(
+            derep=sum(getU(getDerepF(MA[i, ]))),
+            denoised=sum(getU(getDadaF(MA[i, ]))),
+            merged=sum(getU(getMergers(MA[i, ]))),
+            tabulated=ncol(getSequenceTable(MA[i, ])),
+            noChime=ncol(getSequenceTableNoChime(MA[i, ])))
+        reads <- list(
+            sorted=sum(rawCounts(MA[i, ])),
+            derep=sum(getN(getDerepF(MA[i, ]))),
+            denoised=sum(getN(getDadaF(MA[i, ]))),
+            merged=sum(getN(getMergers(MA[i, ]))),
+            tabulated=sum(getSequenceTable(MA[i, ])),
+            noChime=sum(getSequenceTableNoChime(MA[i, ])))
+        list(samples, uniques, reads)
+    })
+    track <- melt(track.l)
+    track$L2 <- revalue(as.factor(track$L2), c("1"="samples",
+                                               "2"="uniques", "3"="reads"))
+    track$L3 <- factor(track$L3, levels = c("sorted", "derep",
+                                          "denoised", "merged",
+                                          "tabulated", "noChime"))
+    names(track) <- c("value", "pipeStep", "what", "primer")
+    return(track)
+}
 
 ## Util functions for pipeline ------------------------------------
 .extractEllipsis <- function(dotargs, n) {

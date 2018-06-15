@@ -53,3 +53,29 @@ setMethod("plotAmpliconNumbers", c("MultiAmplicon", "ANY"),
                   with at least wo files and two samples")}
               else {plotAmpliconNumbers(MA, transf)}
           })
+
+##' Plot summary data for amplicons run through the MultiAmplicon pipeline.
+##'
+##' Plot statistics on the number of samples (with read data), the
+##' number of unique sequence variants and the number of reads left
+##' after processing of amplicons in the MultiAmplicon pipeline. In
+##' some steps of the pipeline dada2 performs quality filtering
+##' excluding non-credible sequence variants.
+##' 
+##' @title plotPipelineSummary
+##' @param MA MultiAmplicon object with all slots filled for tracking.
+##' @return a ggplot object
+##' @importFrom ggplot2 ggplot
+##' @export
+##' @author Emanuel Heitlinger
+plotPipelineSummary <- function(MA){
+    track <- getPipelineSummary(MA)
+    ggplot(track, aes(pipeStep, value, group=primer))+
+        facet_wrap(~what, scale="free_y")+
+        geom_line()+
+        geom_point()+
+        scale_x_discrete("steps in pipeline")+
+        scale_y_continuous("number of (samples with) reads")+
+        theme_bw() +
+        theme(axis.text.x=element_text(angle = -45, hjust = 0))
+}
