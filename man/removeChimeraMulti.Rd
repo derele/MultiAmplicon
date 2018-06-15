@@ -10,7 +10,8 @@ removeChimeraMulti(MA, mc.cores = getOption("mc.cores", 2L), ...)
 \item{MA}{A \code{\link{MultiAmplicon-class}} object preprocessed
 to have the sequenceTable slot filled.}
 
-\item{mc.cores}{integer number of cores to use for parallelization}
+\item{mc.cores}{integer number of cores to use for parallelization
+accross different amplicons.}
 
 \item{...}{passed on to
 \code{\link[dada2]{removeBimeraDenovo}}. All arguments to the

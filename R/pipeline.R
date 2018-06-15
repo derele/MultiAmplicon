@@ -89,6 +89,11 @@ derepMulti <- function(MA, mc.cores = getOption("mc.cores", 1L),
 ##' 
 ##' @title dadaMulti
 ##' @param MA MultiAmplicon-class object.
+##' @param mc.cores mc.cores number or compute cores for parallel
+##'     denoising of different amplicons (values > 1 are only allowed
+##'     on Unix/Linux systems). Also consider parallelization at the
+##'     level of each individual amplicon via
+##'     \code{\link[dada2]{dada}}.
 ##' @param Ferr As in the "err" parameter of dada: the matrix of
 ##'     estimated rates for each possible nucleotide change. In this
 ##'     case for forward reads.
@@ -105,11 +110,12 @@ derepMulti <- function(MA, mc.cores = getOption("mc.cores", 1L),
 ##' @importFrom methods initialize new slot
 ##' @export
 ##' @author Emanuel Heitlinger
-dadaMulti <- function(MA, Ferr=NULL, Rerr=NULL, ...){
+dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
+                      Ferr=NULL, Rerr=NULL, ...){
     .complainWhenAbsent(MA, "derep")
     exp.args <- .extractEllipsis(list(...), nrow(MA))
     ## needs to be computed on pairs of amplicons
-    PPdada <- lapply(seq_along(MA@PrimerPairsSet), function (i){
+    PPdada <- mclapply(seq_along(MA@PrimerPairsSet), function (i){
        dF <- getDerepF(MA[i, ])
        dR <- getDerepR(MA[i, ])
        message("\n\namplicon ", names(MA@PrimerPairsSet)[i],
@@ -138,7 +144,7 @@ dadaMulti <- function(MA, Ferr=NULL, Rerr=NULL, ...){
            message("\nskipping empty amplicon")
        }
        return(Pdada)
-    })
+    }, mc.cores=mc.cores)
     names(PPdada) <- names(MA@PrimerPairsSet)
     initialize(MA, dada = PPdada)
 }
@@ -157,6 +163,9 @@ dadaMulti <- function(MA, Ferr=NULL, Rerr=NULL, ...){
 ##' @title mergeMulti
 ##' @param MA \code{\link{MultiAmplicon-class}} object with derep and
 ##'     dada slots filled.
+##' @param mc.cores number or compute cores for parallel merging of
+##'     different amplicons (values > 1 are only allowed on Unix/Linux
+##'     systems).
 ##' @param ... additional arguments to be passed to the
 ##'     \code{\link[dada2]{mergePairs}} function of \code{dada2}, all
 ##'     arguments to the function can be given as a vector of the same
@@ -169,10 +178,10 @@ dadaMulti <- function(MA, Ferr=NULL, Rerr=NULL, ...){
 ##' @importFrom dada2 mergePairs
 ##' @export
 ##' @author Emanuel Heitlinger
-mergeMulti <- function(MA, ...){
+mergeMulti <- function(MA, mc.cores=getOption("mc.cores", 1L), ...){
     .complainWhenAbsent(MA, "dada")
     exp.args <- .extractEllipsis(list(...), nrow(MA))
-    mergers <- lapply(seq_along(MA@PrimerPairsSet), function (i){     
+    mergers <- mclapply(seq_along(MA@PrimerPairsSet), function (i){     
         daF <- getDadaF(MA[i, ])
         daR <- getDadaR(MA[i, ])
         deF <- getDerepF(MA[i, ])
@@ -189,7 +198,7 @@ mergeMulti <- function(MA, ...){
             ## correct the case of one sample / amplicon 
             if(class(MP)%in%"data.frame"){MP <- list(MP)}
         return(MP)
-    })
+    }, mc.cores=mc.cores)
     names(mergers) <- names(MA@PrimerPairsSet)
     initialize(MA, mergers = mergers)
 }
@@ -208,6 +217,9 @@ mergeMulti <- function(MA, ...){
 ##'
 ##' @param MA \code{\link{MultiAmplicon-class}} object with mergers
 ##'     slot filled
+##' @param mc.cores number of compute cores to use parallelizing
+##'     computations over different amplicons. Only available on *nix
+##'     systems.
 ##' @param ... additional parameters to be passed to the
 ##'     \code{\link[dada2]{makeSequenceTable}} function of
 ##'     \code{dada2}. All arguments to the function can be given as a
@@ -220,14 +232,14 @@ mergeMulti <- function(MA, ...){
 ##' @importFrom dada2 makeSequenceTable
 ##' @export
 ##' @author Emanuel Heitlinger
-makeSequenceTableMulti <- function(MA, ...){
+makeSequenceTableMulti <- function(MA, mc.cores=getOption("mc.cores", 1L), ...){
     .complainWhenAbsent(MA, "mergers")
     exp.args <- .extractEllipsis(list(...), nrow(MA))
-    sequenceTable <- lapply(seq_along(MA@mergers), function (i){
+    sequenceTable <- mclapply(seq_along(MA@mergers), function (i){
         args.here <- lapply(exp.args, "[", i)
         .paramMessage("makeSequenceTable", args.here)
         do.call(makeSequenceTable, c(list(MA@mergers[[i]]), args.here))
-    })
+    }, mc.cores=mc.cores)
     names(sequenceTable) <- names(MA@PrimerPairsSet)
     initialize(MA, sequenceTable = sequenceTable)
 }
@@ -248,6 +260,7 @@ makeSequenceTableMulti <- function(MA, ...){
 ##' @param MA A \code{\link{MultiAmplicon-class}} object preprocessed
 ##'     to have the sequenceTable slot filled.
 ##' @param mc.cores integer number of cores to use for parallelization
+##'     accross different amplicons.
 ##' @param ... passed on to
 ##'     \code{\link[dada2]{removeBimeraDenovo}}. All arguments to the
 ##'     function can be given as a vector of the same length as the

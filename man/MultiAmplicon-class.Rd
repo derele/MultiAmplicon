@@ -62,11 +62,11 @@ getDadaF(MA, simplify = TRUE)
 
 getDadaR(MA, simplify = TRUE)
 
-getMergers(MA)
+getMergers(MA, simplify = TRUE)
 
-getSequenceTable(MA)
+getSequenceTable(MA, simplify = TRUE)
 
-getSequenceTableNoChime(MA)
+getSequenceTableNoChime(MA, simplify = TRUE)
 
 getSequencesFromTable(MA)
 

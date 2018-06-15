@@ -4,11 +4,15 @@
 \alias{mergeMulti}
 \title{mergeMulti}
 \usage{
-mergeMulti(MA, ...)
+mergeMulti(MA, mc.cores = getOption("mc.cores", 1L), ...)
 }
 \arguments{
 \item{MA}{\code{\link{MultiAmplicon-class}} object with derep and
 dada slots filled.}
+
+\item{mc.cores}{number or compute cores for parallel merging of
+different amplicons (values > 1 are only allowed on Unix/Linux
+systems).}
 
 \item{...}{additional arguments to be passed to the
 \code{\link[dada2]{mergePairs}} function of \code{dada2}, all

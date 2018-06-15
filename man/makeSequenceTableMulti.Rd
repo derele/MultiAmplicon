@@ -4,11 +4,15 @@
 \alias{makeSequenceTableMulti}
 \title{makeSequenceTableMulti}
 \usage{
-makeSequenceTableMulti(MA, ...)
+makeSequenceTableMulti(MA, mc.cores = getOption("mc.cores", 1L), ...)
 }
 \arguments{
 \item{MA}{\code{\link{MultiAmplicon-class}} object with mergers
 slot filled}
+
+\item{mc.cores}{number of compute cores to use parallelizing
+computations over different amplicons. Only available on *nix
+systems.}
 
 \item{...}{additional parameters to be passed to the
 \code{\link[dada2]{makeSequenceTable}} function of

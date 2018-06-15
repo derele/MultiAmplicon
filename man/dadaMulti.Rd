@@ -4,10 +4,17 @@
 \alias{dadaMulti}
 \title{dadaMulti}
 \usage{
-dadaMulti(MA, Ferr = NULL, Rerr = NULL, ...)
+dadaMulti(MA, mc.cores = getOption("mc.cores", 1L), Ferr = NULL,
+  Rerr = NULL, ...)
 }
 \arguments{
 \item{MA}{MultiAmplicon-class object.}
+
+\item{mc.cores}{mc.cores number or compute cores for parallel
+denoising of different amplicons (values > 1 are only allowed
+on Unix/Linux systems). Also consider parallelization at the
+level of each individual amplicon via
+\code{\link[dada2]{dada}}.}
 
 \item{Ferr}{As in the "err" parameter of dada: the matrix of
 estimated rates for each possible nucleotide change. In this
