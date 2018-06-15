@@ -425,15 +425,19 @@ getDadaR <- function(MA, simplify=TRUE) {
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-getMergers <- function(MA) MA@mergers
+getMergers <- function(MA, simplify=TRUE) .simpfy(MA@mergers, simplify)
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-getSequenceTable <- function(MA) MA@sequenceTable
+getSequenceTable <- function(MA, simplify=TRUE){
+    .simpfy(MA@sequenceTable, simplify)
+}
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-getSequenceTableNoChime <- function(MA) MA@sequenceTableNoChime
+getSequenceTableNoChime <- function(MA, simplify=TRUE){
+    .simpfy(MA@sequenceTableNoChime, simplify)
+}
 
 
 ##' @rdname MultiAmplicon-class
