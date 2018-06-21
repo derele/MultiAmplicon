@@ -2,7 +2,7 @@ language: r
 ## r: bioc-release
 r: bioc-devel
 use_bioc: true
-r_github_packages: derele/dada2
+r_github_packages: benjjneb/dada2
 
 cache: packages
 
