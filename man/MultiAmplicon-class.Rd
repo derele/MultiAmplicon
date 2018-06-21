@@ -10,8 +10,7 @@
 \alias{ncol,MultiAmplicon-method}
 \alias{nrow,MultiAmplicon-method}
 \alias{dim,MultiAmplicon-method}
-\alias{rawCounts}
-\alias{rawCounts,MultiAmplicon-method}
+\alias{getRawCounts}
 \alias{getStratifiedFilesF}
 \alias{getStratifiedFilesR}
 \alias{getDerepF}
@@ -46,9 +45,7 @@ MultiAmplicon(PrimerPairsSet = PrimerPairsSet(),
 
 \S4method{dim}{MultiAmplicon}(x)
 
-rawCounts(x)
-
-\S4method{rawCounts}{MultiAmplicon}(x)
+getRawCounts(MA)
 
 getStratifiedFilesF(MA, simplify = TRUE)
 
@@ -131,6 +128,8 @@ amplicons)}
 \item{...}{not used}
 
 \item{drop}{should not be used}
+
+\item{MA}{MultiAmplicon-class object}
 }
 \description{
 The MultiAmplicon class is a container that stores at least primer

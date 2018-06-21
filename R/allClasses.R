@@ -369,18 +369,11 @@ setMethod("dim", "MultiAmplicon", function (x) {
     as.integer(c(length(x@PrimerPairsSet), length(x@PairedReadFileSet)))
 })
 
+
 ##' @rdname MultiAmplicon-class
+##' @param MA MultiAmplicon-class object
 ##' @export
-setGeneric("rawCounts", function(x){standardGeneric("rawCounts")})
-
-##' @rdname MultiAmplicon-class
-setMethod("rawCounts", "MultiAmplicon", function(x) slot(x, "rawCounts"))
-
-## More accessors and accessor like summarizers --------------------------
-### ToDo!! Improve coding of these. User interface should remain
-### though...  Better individual functions than one that does it all
-### depending on context and confusin the user
-
+getRawCounts <- function (MA) slot(MA, "rawCounts")
 
 ##' @rdname MultiAmplicon-class
 ##' @param MA MultiAmplicon-class object

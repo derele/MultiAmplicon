@@ -114,6 +114,7 @@ setMethod("[", c("PairedDada", "index", "missing", "ANY"),
 ##'     (== read files, corresponding usually to samples)
 ##' @param ... not used
 ##' @param drop should not be used
+##' @importFrom assertthat not_empty
 ##' @rdname MultiAmplicon-class
 setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
           function(x, i, j, ..., drop=FALSE){
@@ -139,14 +140,14 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                   i <- name.to.numeric(i, rownames(x))
                   j <- name.to.numeric(j, colnames(x))
               }
-              if(any(dim(rawCounts(x))>0)){
-                  newRC <- as.matrix(x@rawCounts[i, j, drop=FALSE])
+              if(not_empty(getRawCounts(x))){
+                  newRC <- as.matrix(getRawCounts(x)[i, j, drop=FALSE])
                   ## we drop empty files from statified files
                   ## therefore we have to find new indices j. These
                   ## later have to be used also for the columns of
                   ## sequence tables.
                   new.j <- lapply(seq_along(i), function (ii) {
-                      zero.i <- which(x@rawCounts[i[[ii]], ]>1) # >1 singl seq rm
+                      zero.i <- which(getRawCounts(x)[i[[ii]], ]>1) # >1 singl seq rm
                       which(zero.i%in%j)
                   })
                   newSF <-  lapply(seq_along(i), function (ii) {

@@ -137,9 +137,8 @@ dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
            if (class(dadaR)%in%"dada"){dadaR <- list(dadaR)}
            ## naming the dada objects
            names(dadaF) <- names(dadaR) <-
-               names(rawCounts(MA)[i, ])[rawCounts(MA)[i, ]>1]
+               names(getRawCounts(MA)[i, ])[getRawCounts(MA)[i, ]>1]
            Pdada <- PairedDada(dadaF = dadaF, dadaR = dadaR)
-##            names(Pdada) <- names(rawCounts(MA)[i, ])[rawCounts(MA)[i, ]>0]
        } else {
            Pdada <- PairedDada()
            message("\nskipping empty amplicon")
@@ -277,7 +276,7 @@ makeSequenceTableMulti <- function(MA, mc.cores=getOption("mc.cores", 1L), ...){
 ##' @importFrom parallel mclapply
 ##' @export
 ##' @author Emanuel Heitlinger
-removeChimeraMulti <- function(MA, mc.cores = getOption("mc.cores", 2L), ...){
+removeChimeraMulti <- function(MA, mc.cores = getOption("mc.cores", 1L), ...){
     .complainWhenAbsent(MA, "sequenceTable")
     exp.args <- .extractEllipsis(list(...), nrow(MA))
     sequenceTableNoChime <-
@@ -337,8 +336,9 @@ fillSampleTables <- function (MA, samples="union"){
         full[all.samples, ]
     })
     MA@sequenceTableFilled <- list() ## empty slot for subset operations
-    initialize(MA[, which(colnames(MA)%in%all.samples)],
-               sequenceTableFilled = filledST)
+    new("MultiAmplicon",
+        MA[, which(colnames(MA)%in%all.samples)],
+        sequenceTableFilled = filledST)
 }
 
 
@@ -400,7 +400,7 @@ getPipelineSummary <- function(MA){
     getU <- function(x) unlist(lapply(x, function (y) length(getUniques(y))))
     track.l <- lapply(seq_along(getDadaF(MA)), function (i) {
         samples <- list(
-            sorted=length(rawCounts(MA[i, ])[rawCounts(MA)[i, ]>0]),
+            sorted=length(getRawCounts(MA[i, ])[getRawCounts(MA[i, ])>0]),
             derep=length(getDerepF(MA[i, ])),
             denoised=length(getDadaF(MA[i,])),
             merged=length(getMergers(MA[i,])),
@@ -413,7 +413,7 @@ getPipelineSummary <- function(MA){
             tabulated=ncol(getSequenceTable(MA[i, ])),
             noChime=ncol(getSequenceTableNoChime(MA[i, ])))
         reads <- list(
-            sorted=sum(rawCounts(MA[i, ])),
+            sorted=sum(getRawCounts(MA[i, ])),
             derep=sum(getN(getDerepF(MA[i, ]))),
             denoised=sum(getN(getDadaF(MA[i, ]))),
             merged=sum(getN(getMergers(MA[i, ]))),
