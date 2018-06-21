@@ -4,7 +4,7 @@
 \alias{removeChimeraMulti}
 \title{removeChimeraMulti}
 \usage{
-removeChimeraMulti(MA, mc.cores = getOption("mc.cores", 2L), ...)
+removeChimeraMulti(MA, mc.cores = getOption("mc.cores", 1L), ...)
 }
 \arguments{
 \item{MA}{A \code{\link{MultiAmplicon-class}} object preprocessed

@@ -108,7 +108,7 @@ be empty before that.
 
 ```{r sortAmps, message=FALSE}
 filedir <- "stratified_files"
-if(file_test("-d", filedir)) unlink(filedir, recursive=TRUE)
+if(dir.exists(filedir)) unlink(filedir, recursive=TRUE)
 MA <- sortAmplicons(MA, n=1e+05, filedir=filedir)
 ```
 The function is "streaming" fastq files, so that potentially large
@@ -122,7 +122,7 @@ errF <- learnErrors(unlist(getStratifiedFilesF(MA)), nbase=1e8,
 errR <- learnErrors(unlist(getStratifiedFilesR(MA)), nbase=1e8,
                     verbose=0)
 
-MA <- derepMulti(MA, mc.cores=1) 
+MA <- derepMulti(MA) 
 MA <- dadaMulti(MA, Ferr=errF, Rerr=errR,  pool=FALSE,
                 verbose=0)
 ```
@@ -150,8 +150,15 @@ concatenating all amplicons with less than 80% merged by setting
 ```{r tabulator, mesage=FALSE}
 MA <- mergeMulti(MA, justConcatenate=propMerged<0.8)
 MA <- makeSequenceTableMulti(MA)
-MA <- removeChimeraMulti(MA, mc.cores=1)
-MA <- fillSampleTables(MA)
+MA <- removeChimeraMulti(MA)
+## MA <- fillSampleTables(MA)
+```
+
+## Check what happend within the pipeline 
+
+```{r tracking, mesage=FALSE}
+tracking <- getPipelineSummary(MA)
+
 ```
 
 ## Hand over to phyloseq
