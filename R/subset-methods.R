@@ -140,7 +140,7 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                   i <- name.to.numeric(i, rownames(x))
                   j <- name.to.numeric(j, colnames(x))
               }
-              if(not_empty(getRawCounts(x))){
+              if(not_empty(x@rawCounts)){
                   newRC <- as.matrix(getRawCounts(x)[i, j, drop=FALSE])
                   ## we drop empty files from statified files
                   ## therefore we have to find new indices j. These

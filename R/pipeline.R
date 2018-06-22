@@ -391,6 +391,8 @@ setMethod("calcPropMerged", "MultiAmplicon",
 ##' @param MA MultiAmplicon object with all slots filled for tracking.
 ##' @return a data.frame of sample, unique sequences and sequencing
 ##'     reads numbers per amplicon.
+##' @importFrom reshape melt
+##' @importFrom plyr revalue
 ##' @export
 ##' @author Emanuel Heitlinger
 getPipelineSummary <- function(MA){

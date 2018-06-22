@@ -5,6 +5,8 @@
 \alias{plotAmpliconNumbers}
 \alias{plotAmpliconNumbers,matrix-method}
 \alias{plotAmpliconNumbers,MultiAmplicon-method}
+\alias{plotPipelineSummary,MultiAmplicon-method}
+\alias{plotPipelineSummary,data.frame-method}
 \title{plotAmpliconNumbers}
 \usage{
 plotAmpliconNumbers(MA, transf = function(x) log10(x + 1), ...)
@@ -14,6 +16,10 @@ plotAmpliconNumbers(MA, transf = function(x) log10(x + 1), ...)
 
 \S4method{plotAmpliconNumbers}{MultiAmplicon}(MA, transf = function(x) log10(x
   + 1), ...)
+
+\S4method{plotPipelineSummary}{MultiAmplicon}(MA)
+
+\S4method{plotPipelineSummary}{data.frame}(MA)
 }
 \arguments{
 \item{MA}{The primer matching (amplicon) matrix of a

@@ -348,23 +348,36 @@ MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
                           ){
     new("MultiAmplicon",
         PrimerPairsSet = PrimerPairsSet,
-        PairedReadFileSet = PairedReadFileSet        
+        PairedReadFileSet = PairedReadFileSet,
+        rawCounts = rawCounts,
+        stratifiedFiles = stratifiedFiles, 
+        derep = derep,
+        dada = dada,
+        mergers = mergers,
+        sequenceTable = sequenceTable,
+        sequenceTableNoChime = sequenceTableNoChime,
+        sequenceTableFilled = sequenceTableFilled
         )
 }
 
 ##' @rdname MultiAmplicon-class
+##' @export
 setMethod("colnames", "MultiAmplicon", function (x) x@PairedReadFileSet@names)
 
 ##' @rdname MultiAmplicon-class
+##' @export
 setMethod("rownames", "MultiAmplicon", function (x) x@PrimerPairsSet@names)
 
 ##' @rdname MultiAmplicon-class
+##' @export
 setMethod("ncol", "MultiAmplicon", function (x) length(x@PairedReadFileSet))
 
 ##' @rdname MultiAmplicon-class
+##' @export
 setMethod("nrow", "MultiAmplicon", function (x) length(x@PrimerPairsSet))
 
 ##' @rdname MultiAmplicon-class
+##' @export
 setMethod("dim", "MultiAmplicon", function (x) {
     as.integer(c(length(x@PrimerPairsSet), length(x@PairedReadFileSet)))
 })
