@@ -65,17 +65,35 @@ setMethod("plotAmpliconNumbers", c("MultiAmplicon", "ANY"),
 ##' @title plotPipelineSummary
 ##' @param MA MultiAmplicon object with all slots filled for tracking.
 ##' @return a ggplot object
-##' @importFrom ggplot2 ggplot
+##' @import ggplot2
+##' @importFrom assertthat assert_that
 ##' @export
 ##' @author Emanuel Heitlinger
-plotPipelineSummary <- function(MA){
-    track <- getPipelineSummary(MA)
-    ggplot(track, aes(pipeStep, value, group=primer))+
-        facet_wrap(~what, scale="free_y")+
-        geom_line()+
-        geom_point()+
-        scale_x_discrete("steps in pipeline")+
-        scale_y_continuous("number of (samples with) reads")+
-        theme_bw() +
-        theme(axis.text.x=element_text(angle = -45, hjust = 0))
-}
+setGeneric(name="plotPipelineSummary",
+           def=function(MA) {
+               standardGeneric("plotPipelineSummary")
+           })
+
+##' @rdname plotAmpliconNumbers
+setMethod("plotPipelineSummary", "MultiAmplicon",
+          function(MA){
+              track <- getPipelineSummary(MA)
+              plotPipelineSummary(track)
+})
+
+
+##' @rdname plotAmpliconNumbers
+setMethod("plotPipelineSummary", "data.frame",
+          function(MA){
+              assert_that(all(c("pipeStep", "value", "primer")%in%colnames(MA)))
+              ggplot(MA, aes(pipeStep, value, group=primer))+
+                  facet_wrap(~what, scale="free_y")+
+                  geom_line()+
+                  geom_point()+
+                  scale_x_discrete("steps in pipeline")+
+                  scale_y_continuous("number of (samples with) reads")+
+                  theme_bw() +
+                  theme(axis.text.x=element_text(angle = -45, hjust = 0))
+          })
+
+
