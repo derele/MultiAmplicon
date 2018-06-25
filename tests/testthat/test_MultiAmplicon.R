@@ -36,17 +36,17 @@ SA1 <- sortAmplicons(SA, filedir=tempfile())
 context("Do empty files produce empty data?")
 test_that("rowCounts is zero for empty file", {
     ## For multi amplicon objects
-    expect_equal(colSums(rawCounts(MA1))[["S00_F_filt.fastq.gz"]], 0)
+    expect_equal(colSums(getRawCounts(MA1))[["S00_F_filt.fastq.gz"]], 0)
     ## For single amplicon objects
-    expect_equal(colSums(rawCounts(SA1))[["S00_F_filt.fastq.gz"]], 0)
+    expect_equal(colSums(getRawCounts(SA1))[["S00_F_filt.fastq.gz"]], 0)
 })
 
 context("Do nonsensical primers result in zero matches?")
 test_that("rowCounts is zero for nonsensical primer", {
     ## For multi amplicon objects
-    expect_equal(rowSums(rawCounts(MA1))[["Amp5F.Amp5R"]], 0)
+    expect_equal(rowSums(getRawCounts(MA1))[["Amp5F.Amp5R"]], 0)
     ## For single amplicon objects ... no empty amplicon used
-    ##    expect_equal(rowSums(rawCounts(SA1))[["Amp5F.Amp5R"]], 0)
+    ##    expect_equal(rowSums(getRawCounts(SA1))[["Amp5F.Amp5R"]], 0)
 })
 
 context("SortAmplcion produced two files for each non-empty sample and amplicon?")
@@ -56,21 +56,21 @@ test_that("number of files written equals non-zero samples in rawCounts", {
     ## For multi amplicon objects
     F.files <- unlist(lapply(MA1@stratifiedFiles, function (x) x@readsF))
     R.files <- unlist(lapply(MA1@stratifiedFiles, function (x) x@readsF))
-    expect_equal(sum(rawCounts(MA1)>0), length(F.files))
-    expect_equal(sum(rawCounts(MA1)>0), length(R.files))
+    expect_equal(sum(getRawCounts(MA1)>0), length(F.files))
+    expect_equal(sum(getRawCounts(MA1)>0), length(R.files))
     ## For single amplicon objects
     F.files <- unlist(lapply(SA1@stratifiedFiles, function (x) x@readsF))
     R.files <- unlist(lapply(SA1@stratifiedFiles, function (x) x@readsF))
-    expect_equal(sum(rawCounts(SA1)>0), length(F.files))
-    expect_equal(sum(rawCounts(SA1)>0), length(R.files))
+    expect_equal(sum(getRawCounts(SA1)>0), length(F.files))
+    expect_equal(sum(getRawCounts(SA1)>0), length(R.files))
 })
 
 test_that("N statified files is N of non-zero samples x amplicons",{
     ## For multi amplicon objects
-    expect_equal(rowSums(rawCounts(MA1)>0), 
+    expect_equal(rowSums(getRawCounts(MA1)>0), 
                  unlist(lapply(MA1@stratifiedFiles, length)))
     ## For single amplicon objects
-    expect_equal(rowSums(rawCounts(SA1)>0), 
+    expect_equal(rowSums(getRawCounts(SA1)>0), 
                  unlist(lapply(SA1@stratifiedFiles, length)))
 })
 
@@ -79,20 +79,20 @@ test_that("files for each amplicon contain the number of reads reported", {
     expect_equivalent(
         unlist(lapply(MA1@stratifiedFiles,
                       function (x) length(readFastq(x@readsR)))),
-        rowSums(rawCounts(MA1)))
+        rowSums(getRawCounts(MA1)))
     ## For single amplicon objects
     expect_equivalent(
         unlist(lapply(SA1@stratifiedFiles,
                       function (x) length(readFastq(x@readsR)))),
-        rowSums(rawCounts(SA1)))
+        rowSums(getRawCounts(SA1)))
 })
 
 context("SortAmplcion can be made less stringent?")
 test_that("less stringent sorting results in more reads accepted", {
     expect_true(all(sortAmplicons(MA, filedir=tempfile(), countOnly=TRUE, starting.at=1:2) >=
-                    rawCounts(MA1)))
+                    getRawCounts(MA1)))
     expect_true(all(sortAmplicons(MA, filedir=tempfile(), countOnly=TRUE, max.mismatch=1) >=
-                   rawCounts(MA1)))
+                   getRawCounts(MA1)))
 })
 
 
@@ -101,12 +101,12 @@ MA2 <- derepMulti(MA1, mc.cores=1)
 context("Dereplication works?")
 test_that("dereplication produces a list of derep objects ", {
     expect_equal(length(MA2@derep), nrow(MA2))
-    expect_equal(length(MA2@derep), nrow(rawCounts(MA2)))
+    expect_equal(length(MA2@derep), nrow(getRawCounts(MA2)))
     expect_equal(unlist(lapply(MA2@derep, length)),
-                 rowSums(rawCounts(MA2)>1)) # >1 singl seq rm
+                 rowSums(getRawCounts(MA2)>1)) # >1 singl seq rm
 })
 
-up1.counts <- t(rawCounts(MA2))[t(rawCounts(MA2))>1] # >1 singl seq rm
+up1.counts <- t(getRawCounts(MA2))[t(getRawCounts(MA2))>1] # >1 singl seq rm
 
 up1.dereps <- unname(unlist(lapply(MA2@derep, function (x){
     lapply(x, function (y) sum(slot(y, "derepF")$uniques))
@@ -120,12 +120,17 @@ expect_equal(up1.counts, up1.dereps)
 MA3 <- dadaMulti(MA2, selfConsist=TRUE, pool=FALSE, OMEGA_C=0, 
                  multithread=TRUE)
 
+MA3.R <- dadaMulti(MA2, selfConsist=TRUE, pool=FALSE, 
+                   multithread=TRUE)
+
+
+
 context("Denoising works?")
 test_that("dada2 denoising produces a list of derep objects ", {
     expect_equal(length(MA3@dada), nrow(MA3))
-    expect_equal(length(MA3@dada), nrow(rawCounts(MA3)))
+    expect_equal(length(MA3@dada), nrow(getRawCounts(MA3)))
     expect_equal(unlist(lapply(MA3@dada, length)),
-                 rowSums(rawCounts(MA3)>1)) # >1 singl seq rm
+                 rowSums(getRawCounts(MA3)>1)) # >1 singl seq rm
 })
 
 up1.dadas <- unname(unlist(lapply(MA3@dada, function (x)
@@ -142,9 +147,9 @@ MA4 <- mergeMulti(MA3, justConcatenate=c(TRUE, TRUE),
 context("Merging works?")
 test_that("merging produces a list of derep objects ", {
     expect_equal(length(MA4@mergers), nrow(MA3))
-    expect_equal(length(MA4@mergers), nrow(rawCounts(MA3)))
+    expect_equal(length(MA4@mergers), nrow(getRawCounts(MA3)))
     expect_equal(unlist(lapply(MA4@mergers, length)),
-                 rowSums(rawCounts(MA3)>1)) # >1 singl seq rm
+                 rowSums(getRawCounts(MA3)>1)) # >1 singl seq rm
 })
 
 context("Merging works?")
@@ -181,9 +186,9 @@ MA6 <- removeChimeraMulti(MA5)
 context("Merging works?")
 test_that("merging produces a list of derep objects ", {
     expect_equal(length(MA4@mergers), nrow(MA3))
-    expect_equal(length(MA4@mergers), nrow(rawCounts(MA3)))
+    expect_equal(length(MA4@mergers), nrow(getRawCounts(MA3)))
     expect_equal(unlist(lapply(MA4@mergers, length)),
-                 rowSums(rawCounts(MA3)>1)) # >1 singl seq rm
+                 rowSums(getRawCounts(MA3)>1)) # >1 singl seq rm
 })
 
 
@@ -191,8 +196,8 @@ context("Subsetting MultiAmplicon objects")
 
 
 test_that("subsetting leaves rawCounts intact", {
-    expect_equal(rawCounts(MA6[2, 6]), rawCounts(MA6)[2, 6, drop=FALSE])
-    expect_equal(rawCounts(MA6[3:4, 2:5]), rawCounts(MA6)[3:4, 2:5, drop=FALSE])
+    expect_equal(getRawCounts(MA6[2, 6]), getRawCounts(MA6)[2, 6, drop=FALSE])
+    expect_equal(getRawCounts(MA6[3:4, 2:5]), getRawCounts(MA6)[3:4, 2:5, drop=FALSE])
     })
 
 MA1.alt <- sortAmplicons(MA[2:5, 2:6])
@@ -225,7 +230,10 @@ MA7.fillsub <- MA7[,  which(colnames(MA7)%in%
                               "S05_F_filt.fastq.gz"))]
 
 ## everything but statified files would be equal...
-### expect_equal(MA7.fillalt@stratifiedFiles, MA7.fillsub@stratifiedFiles)
+expect_equal(MA7.fillalt@stratifiedFiles, MA7.fillsub@stratifiedFiles)
+
+
+getPipelineSummary(MA7)
 
 
 ## failing  from here TODO!!!
