@@ -14,7 +14,8 @@ Imports:
     methods,
     plyr,
     ggplot2,
-    reshape
+    reshape,
+    assertthat
 Depends:
     R (>= 3.3.1),
     ShortRead (>= 1.30.0),
