@@ -46,7 +46,7 @@ setMethod("plotAmpliconNumbers", c("matrix", "ANY"),
 ##' @rdname plotAmpliconNumbers
 setMethod("plotAmpliconNumbers", c("MultiAmplicon", "ANY"),
           function (MA, transf=function(x) log10(x+1), ...){
-              MA <- rawCounts(MA)
+              MA <- getRawCounts(MA)
               if (nrow(MA) < 2 || ncol(MA) < 2) {
                   stop("No rawCounts found in MultiAmplicon object:
                   Run sortAmplicons to produce a MultiAmplicon-object
@@ -87,7 +87,7 @@ setMethod("plotPipelineSummary", "data.frame",
           function(MA){
               assert_that(all(c("pipeStep", "value", "primer")%in%colnames(MA)))
               ggplot(MA, aes(pipeStep, value, group=primer))+
-                  facet_wrap(~what, scale="free_y")+
+                  facet_wrap(~what, scales="free_y")+
                   geom_line()+
                   geom_point()+
                   scale_x_discrete("steps in pipeline")+
