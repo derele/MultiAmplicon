@@ -66,7 +66,7 @@ setMethod("plotAmpliconNumbers", c("MultiAmplicon", "ANY"),
 ##' @param MA MultiAmplicon object with all slots filled for tracking.
 ##' @return a ggplot object
 ##' @import ggplot2
-##' @importFrom assertthat assert_that
+## ##' @importFrom assertthat assert_that
 ##' @export
 ##' @author Emanuel Heitlinger
 setGeneric(name="plotPipelineSummary",
@@ -85,7 +85,10 @@ setMethod("plotPipelineSummary", "MultiAmplicon",
 ##' @rdname plotAmpliconNumbers
 setMethod("plotPipelineSummary", "data.frame",
           function(MA){
-              assert_that(all(c("pipeStep", "value", "primer")%in%colnames(MA)))
+              if(!all(c("pipeStep", "value", "primer")%in%colnames(MA))){
+                  stop("please provide either a MultiAmplicon object or ",
+                       "a data.frame produced by `getPipelineSummary`")
+              }
               ggplot(MA, aes(pipeStep, value, group=primer))+
                   facet_wrap(~what, scales="free_y")+
                   geom_line()+
