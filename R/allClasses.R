@@ -389,7 +389,6 @@ setMethod("dim", "MultiAmplicon", function (x) {
 getRawCounts <- function (MA) slot(MA, "rawCounts")
 
 ##' @rdname MultiAmplicon-class
-##' @param MA MultiAmplicon-class object
 ##' @param simplify Should a list of objects be simplified to only one
 ##'     object if it has length one?
 ##' @export
