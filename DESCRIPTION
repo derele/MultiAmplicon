@@ -17,7 +17,7 @@ Imports:
     reshape,
     assertthat
 Depends:
-    R (>= 3.3.1),
+    R (>= 3.3),
     ShortRead (>= 1.30.0),
     dada2 (>= 1.2.0)
 License: GPL-3
