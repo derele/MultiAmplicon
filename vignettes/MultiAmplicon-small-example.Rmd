@@ -188,7 +188,7 @@ MA.alt <- makeSequenceTableMulti(MA.alt)
 MA.alt <- removeChimeraMulti(MA.alt, mc.cores=1)
 ```
 
-I will add a comparison between the two different versions here.
+So we can make a comparison between the two different versions:
 
 ```{r compdata, cache=TRUE, message=FALSE}
 together <- getSequencesFromTable(MA6)
@@ -198,14 +198,15 @@ lapply(seq_along(together), function (i){
     table(alt[[i]]%in%together[[i]])
 })
 ```
-So in this case we got nearly the same output, which speaks for error
+So in this case we got nearly the same output: 215 of 8 (for the first
+amplicon) and even higher proportions of identical speaks for error
 rates not differing between amplicons (and for the robustness of the
 ASV inference of the amazing dada2). Which one you should use depends
 on your data: if each amplicon has enough reads you can estimate
 seperately and potentially get a better estimate of errors for
 amplicons with different errors. If on the other hand some amplicons
-have very few reads, it might make sense to pool them to improve
-error estimates with larger size for the training set.
+have very few reads, it might make sense to pool them to improve error
+estimates with larger size for the training set.
 
 ## Using different parameters for each amplicon
 
