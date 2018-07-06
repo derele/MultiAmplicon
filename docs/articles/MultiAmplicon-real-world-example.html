@@ -75,7 +75,7 @@
       <h1>MultiAmplicon - a real world example</h1>
                         <h4 class="author">Emanuel Heitlinger</h4>
             
-            <h4 class="date">2018-06-13</h4>
+            <h4 class="date">2018-07-02</h4>
       
       
       <div class="hidden name"><code>MultiAmplicon-real-world-example.Rmd</code></div>
@@ -90,6 +90,10 @@
 <p>We first <a href="https://svalbard.biologie.hu-berlin.de:443/d/c291b870178f4abc8c59/">download the data</a> set from consisting of 192 fastq file-pairs from 18S and 16S amplicon sequencing of feces and intestinal contents of carnivores (hyenas and wolves). Use the botton on the upper right of the page to download a zipped folder and unzip it after downloading. The help file for the <a href="https://derele.github.io/MultiAmplicon/reference/carnivoreSeqRuns.html"><code>carnivoreSeqRuns</code></a> (containing sample data included in the package), shows how this data has been downloaded from <a href="https://www.ncbi.nlm.nih.gov/bioproject/PRJNA386767">NCBI-SRA</a>.</p>
 <p>Now we can run our standard workflow. But as usual with real data we have to filter the input files first. This particular sequencing was of quite low quality, so we have to trim and screen quite harshly.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(MultiAmplicon)
+<span class="co">#&gt; Warning: replacing previous import 'BiocGenerics::dims' by 'Biobase::dims'</span>
+<span class="co">#&gt; when loading 'SummarizedExperiment'</span>
+<span class="co">#&gt; Warning: replacing previous import 'BiocGenerics::dims' by 'Biobase::dims'</span>
+<span class="co">#&gt; when loading 'ShortRead'</span>
 
 path &lt;-<span class="st"> "download_sra"</span> ## change according to where you downloaded
 
@@ -153,7 +157,7 @@ MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAmp
 <a href="#running-the-multiamplicon-pipeline" class="anchor"></a>Running the MultiAmplicon pipeline</h2>
 <p>We start by sorting our amplicons by primer sequences cutting off the latter from sequencing reads. The directory for sorted amplicons must be empty before that.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filedir &lt;-<span class="st"> "stratified_files"</span>
-if(<span class="kw">file_test</span>(<span class="st">"-d"</span>, filedir)) <span class="kw">unlink</span>(filedir, <span class="dt">recursive=</span><span class="ot">TRUE</span>)
+if(<span class="kw">dir.exists</span>(filedir)) <span class="kw">unlink</span>(filedir, <span class="dt">recursive=</span><span class="ot">TRUE</span>)
 MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sortAmplicons.html">sortAmplicons</a></span>(MA, <span class="dt">n=</span><span class="fl">1e+05</span>, <span class="dt">filedir=</span>filedir)</code></pre></div>
 <p>The function is “streaming” fastq files, so that potentially large files can be handled on machines with modest memory. The parameter “n” controls how big the streamed chunks are. Increasing this value leads to faster processing and higher memory usage.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">errF &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">getStratifiedFilesF</a></span>(MA)), <span class="dt">nbase=</span><span class="fl">1e8</span>,
@@ -161,7 +165,7 @@ MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sortAmpl
 errR &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">getStratifiedFilesR</a></span>(MA)), <span class="dt">nbase=</span><span class="fl">1e8</span>,
                     <span class="dt">verbose=</span><span class="dv">0</span>)
 
-MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/derepMulti.html">derepMulti</a></span>(MA, <span class="dt">mc.cores=</span><span class="dv">1</span>) 
+MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/derepMulti.html">derepMulti</a></span>(MA) 
 MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/dadaMulti.html">dadaMulti</a></span>(MA, <span class="dt">Ferr=</span>errF, <span class="dt">Rerr=</span>errR,  <span class="dt">pool=</span><span class="ot">FALSE</span>,
                 <span class="dt">verbose=</span><span class="dv">0</span>)</code></pre></div>
 <p>The sequences were quite low quality and we shortened them massively. Therefore we have to assume that most sequences won’t have enough overlap to merge. Now we figure out for which amplicons this is the case.</p>
@@ -170,8 +174,8 @@ MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/dadaMult
 propMerged &lt;-<span class="st"> </span>MultiAmplicon::<span class="kw"><a href="../reference/calcPropMerged.html">calcPropMerged</a></span>(MA)
 
 <span class="kw">summary</span>(propMerged)
-<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
-<span class="co">#&gt; 0.00000 0.00000 0.00000 0.01838 0.00000 0.88176</span>
+<span class="co">#&gt;      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. </span>
+<span class="co">#&gt; 0.0000000 0.0002201 0.0013314 0.0416345 0.0063899 0.8817589</span>
 <span class="kw">table</span>(propMerged&lt;<span class="fl">0.8</span>)
 <span class="co">#&gt; </span>
 <span class="co">#&gt; FALSE  TRUE </span>
@@ -372,14 +376,80 @@ MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/makeSequ
 <span class="co">#&gt; calling makeSequenceTable with default parameters</span>
 <span class="co">#&gt; calling makeSequenceTable with default parameters</span>
 <span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/removeChimeraMulti.html">removeChimeraMulti</a></span>(MA, <span class="dt">mc.cores=</span><span class="dv">1</span>)
+MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/removeChimeraMulti.html">removeChimeraMulti</a></span>(MA)
 <span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
 <span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fillSampleTables.html">fillSampleTables</a></span>(MA)</code></pre></div>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
+<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></code></pre></div>
+</div>
+<div id="check-what-happend-within-the-pipeline" class="section level2">
+<h2 class="hasAnchor">
+<a href="#check-what-happend-within-the-pipeline" class="anchor"></a>Check what happend within the pipeline</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tracking &lt;-<span class="st"> </span><span class="kw"><a href="../reference/getPipelineSummary.html">getPipelineSummary</a></span>(MA)
+<span class="kw"><a href="../reference/plotPipelineSummary.html">plotPipelineSummary</a></span>(tracking)</code></pre></div>
+<p><img src="MultiAmplicon-real-world-example_files/figure-html/tracking-1.png" width="700"></p>
+<p>Blah</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
+<span class="kw"><a href="../reference/plotPipelineSummary.html">plotPipelineSummary</a></span>(tracking) +<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/scale_continuous">scale_y_log10</a></span>()
+<span class="co">#&gt; Scale for 'y' is already present. Adding another scale for 'y', which</span>
+<span class="co">#&gt; will replace the existing scale.</span></code></pre></div>
+<p><img src="MultiAmplicon-real-world-example_files/figure-html/plottrack-1.png" width="700"></p>
+<p>The output of the pipeline summary can be modified with standard ggplot syntax.</p>
 </div>
 <div id="hand-over-to-phyloseq" class="section level2">
 <h2 class="hasAnchor">
 <a href="#hand-over-to-phyloseq" class="anchor"></a>Hand over to phyloseq</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MAf &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fillSampleTables.html">fillSampleTables</a></span>(MA)
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  class Colnames: NULL </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  Colnames: </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  Which:</span></code></pre></div>
 </div>
 <div id="comparing-sample-data" class="section level2">
 <h2 class="hasAnchor">
@@ -395,6 +465,7 @@ MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/fillSamp
 <li><a href="#data-preparation-download-and-filtering">Data preparation (download and filtering)</a></li>
       <li><a href="#data-preparation-primer-set">Data preparation (primer set)</a></li>
       <li><a href="#running-the-multiamplicon-pipeline">Running the MultiAmplicon pipeline</a></li>
+      <li><a href="#check-what-happend-within-the-pipeline">Check what happend within the pipeline</a></li>
       <li><a href="#hand-over-to-phyloseq">Hand over to phyloseq</a></li>
       <li><a href="#comparing-sample-data">Comparing sample data</a></li>
       </ul>

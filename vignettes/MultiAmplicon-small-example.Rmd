@@ -86,16 +86,16 @@ Based on the primer sequences we can now sort the sequences into
 amplicons. This is done by the function `sortAmplicons`, which updates
 the MultiAmplicon object with the sorted amplicons.
 
-For this small example data set we can look at the resulting `rawCounts`
-i.e. the number of sequences for each of the fully stratified amplicon
-x sample matrix. 
+For this small example data set we can look at the resulting
+`rawCounts` (function `getRawCounts`) i.e. the number of sequences for
+each of the fully stratified amplicon x sample matrix.
 
 ```{r sortAmplicon, message=FALSE}
 MA1 <- sortAmplicons(MA, filedir=tempfile("dir"))
 ```
 
 ```{r showRC, results='asis'}
-knitr::kable(rawCounts(MA1))
+knitr::kable(getRawCounts(MA1))
 ```
 
 ## Visualizing read numbers per amplicon and filtering based on these
@@ -122,7 +122,7 @@ knitr::kable(two.clusters.col)
 
 MA.sub <- MA1[which(two.clusters.row==1), which(two.clusters.col==2)]
 
-knitr::kable(rawCounts(MA.sub))
+knitr::kable(getRawCounts(MA.sub))
 ```
 
 In real world applications (see

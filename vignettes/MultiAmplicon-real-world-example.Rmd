@@ -151,19 +151,32 @@ concatenating all amplicons with less than 80% merged by setting
 MA <- mergeMulti(MA, justConcatenate=propMerged<0.8)
 MA <- makeSequenceTableMulti(MA)
 MA <- removeChimeraMulti(MA)
-## MA <- fillSampleTables(MA)
 ```
 
 ## Check what happend within the pipeline 
 
-```{r tracking, mesage=FALSE}
+```{r tracking, mesage=FALSE, fig.show='hold'}
 tracking <- getPipelineSummary(MA)
+plotPipelineSummary(tracking)
 
 ```
 
+Blah
+
+```{r plottrack, mesage=FALSE, fig.show='hold'}
+library(ggplot2)
+plotPipelineSummary(tracking) + scale_y_log10()
+
+```
+
+The output of the pipeline summary can be modified with standard
+ggplot syntax.
+
+
 ## Hand over to phyloseq
 
-
-
+```{r filling, mesage=FALSE}
+MAf <- fillSampleTables(MA)
+```
 
 ## Comparing sample data 

@@ -120,7 +120,7 @@ MultiAmplicon object.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>mergeMulti</span>(<span class='no'>MA</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>mergeMulti</span>(<span class='no'>MA</span>, <span class='kw'>mc.cores</span> <span class='kw'>=</span> <span class='fu'>getOption</span>(<span class='st'>"mc.cores"</span>, <span class='fl'>1L</span>), <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -129,6 +129,12 @@ MultiAmplicon object.</p>
       <th>MA</th>
       <td><p><code><a href='MultiAmplicon-class.html'>MultiAmplicon-class</a></code> object with derep and
 dada slots filled.</p></td>
+    </tr>
+    <tr>
+      <th>mc.cores</th>
+      <td><p>number or compute cores for parallel merging of
+different amplicons (values &gt; 1 are only allowed on Unix/Linux
+systems).</p></td>
     </tr>
     <tr>
       <th>...</th>

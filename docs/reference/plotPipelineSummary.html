@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>dadaMulti — dadaMulti • MultiAmplicon</title>
+<title>plotPipelineSummary — plotPipelineSummary • MultiAmplicon</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,10 +30,9 @@
 
 
 
-<meta property="og:title" content="dadaMulti — dadaMulti" />
+<meta property="og:title" content="plotPipelineSummary — plotPipelineSummary" />
 
-<meta property="og:description" content="A wrapper around dada of the dada2
-packager for multiple amplicons." />
+<meta property="og:description" content="Plot summary data for amplicons run through the MultiAmplicon pipeline." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -108,69 +107,39 @@ packager for multiple amplicons." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>dadaMulti</h1>
+    <h1>plotPipelineSummary</h1>
     
-    <div class="hidden name"><code>dadaMulti.Rd</code></div>
+    <div class="hidden name"><code>plotPipelineSummary.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>A wrapper around <code><a href='http://www.rdocumentation.org/packages/dada2/topics/dada'>dada</a></code> of the <code>dada2</code>
-packager for multiple amplicons.</p>
+    <p>Plot summary data for amplicons run through the MultiAmplicon pipeline.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>dadaMulti</span>(<span class='no'>MA</span>, <span class='kw'>mc.cores</span> <span class='kw'>=</span> <span class='fu'>getOption</span>(<span class='st'>"mc.cores"</span>, <span class='fl'>1L</span>), <span class='kw'>Ferr</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>Rerr</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>plotPipelineSummary</span>(<span class='no'>MA</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>MA</th>
-      <td><p>MultiAmplicon-class object.</p></td>
-    </tr>
-    <tr>
-      <th>mc.cores</th>
-      <td><p>mc.cores number or compute cores for parallel
-denoising of different amplicons (values &gt; 1 are only allowed
-on Unix/Linux systems). Also consider parallelization at the
-level of each individual amplicon via
-<code><a href='http://www.rdocumentation.org/packages/dada2/topics/dada'>dada</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>Ferr</th>
-      <td><p>As in the "err" parameter of dada: the matrix of
-estimated rates for each possible nucleotide change. In this
-case for forward reads.</p></td>
-    </tr>
-    <tr>
-      <th>Rerr</th>
-      <td><p>the same for the reverse reads.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>additional parameters to be passed to the
-<code><a href='http://www.rdocumentation.org/packages/dada2/topics/dada'>dada</a></code> function of <code>dada2</code>. All
-arguments to dadaMulti can be given as a vector of the same
-length as the number of primer pairs in the MultiAmplicon
-object. This allows to specify different parameters for each
-amplicon. If a shorter vector is given it will be recycled to
-match the number of amplicons.</p></td>
+      <td><p>MultiAmplicon object with all slots filled for tracking.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>MultiAmplicon object with dadaF and dadaR slots filled.</p>
+    <p>a ggplot object</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The function runs <code><a href='http://www.rdocumentation.org/packages/dada2/topics/dada'>dada</a></code> from the package
- <a href='https://benjjneb.github.io/dada2/'><code>dada2</code></a> to perform
- 'High resolution sample inference from amplicon data' on multiple
- amplicons stored as dereplicated sequences in a
- MultiAmplicon-class object.</p>
+    <p>Plot statistics on the number of samples (with read data), the
+number of unique sequence variants and the number of reads left
+after processing of amplicons in the MultiAmplicon pipeline. In
+some steps of the pipeline dada2 performs quality filtering
+excluding non-credible sequence variants.</p>
     
 
   </div>

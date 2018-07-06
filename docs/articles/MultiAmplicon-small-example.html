@@ -75,7 +75,7 @@
       <h1>MultiAmplicon - a small example</h1>
                         <h4 class="author">Emanuel Heitlinger</h4>
             
-            <h4 class="date">2018-06-13</h4>
+            <h4 class="date">2018-07-02</h4>
       
       
       <div class="hidden name"><code>MultiAmplicon-small-example.Rmd</code></div>
@@ -91,6 +91,10 @@
 <p>Similarly, primer pairs must be provided in a <code>PrimerPairsSet</code>. We then match forward and reverse primers at the start of forward and reverse reads, respectively. The maximal number of mismatches and the maximal distance from the start of the read can be supplied as arguments to the function. The primer sequences are trimmed from the reads and the read-pair is associated with the amplicon defined by the primer-pair.</p>
 <p>We first have a look at how <code>PairedReadFileSet</code> and <code>PrimerPairsSet</code> are generated. Please use files containing quality filtered sequencing reads for the steps below. See the <a href="https://benjjneb.github.io/dada2/tutorial.html">dada2 tutorial</a> or our <a href="https://derele.github.io/MultiAmplicon/articles/MultiAmplicon-real-world-example.html">real-world example vignette</a> for how files are trimmed and quality filtered. But we here first use a very small data set included in the MultiAmplicon package.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(MultiAmplicon)
+<span class="co">#&gt; Warning: replacing previous import 'BiocGenerics::dims' by 'Biobase::dims'</span>
+<span class="co">#&gt; when loading 'SummarizedExperiment'</span>
+<span class="co">#&gt; Warning: replacing previous import 'BiocGenerics::dims' by 'Biobase::dims'</span>
+<span class="co">#&gt; when loading 'ShortRead'</span>
 
 fastq.dir &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"fastq"</span>, <span class="dt">package =</span> <span class="st">"MultiAmplicon"</span>)
 fastq.files &lt;-<span class="st"> </span><span class="kw">list.files</span>(fastq.dir, <span class="dt">full.names=</span><span class="ot">TRUE</span>)
@@ -120,9 +124,9 @@ MA &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MultiAmp
 <h2 class="hasAnchor">
 <a href="#sorting-into-multiple-amplicons" class="anchor"></a>Sorting into multiple amplicons</h2>
 <p>Based on the primer sequences we can now sort the sequences into amplicons. This is done by the function <code>sortAmplicons</code>, which updates the MultiAmplicon object with the sorted amplicons.</p>
-<p>For this small example data set we can look at the resulting <code>rawCounts</code> i.e. the number of sequences for each of the fully stratified amplicon x sample matrix.</p>
+<p>For this small example data set we can look at the resulting <code>rawCounts</code> (function <code>getRawCounts</code>) i.e. the number of sequences for each of the fully stratified amplicon x sample matrix.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MA1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sortAmplicons.html">sortAmplicons</a></span>(MA, <span class="dt">filedir=</span><span class="kw">tempfile</span>(<span class="st">"dir"</span>))</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">rawCounts</a></span>(MA1))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">getRawCounts</a></span>(MA1))</code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th></th>
@@ -281,7 +285,7 @@ knitr::<span class="kw">kable</span>(two.clusters.row)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 MA.sub &lt;-<span class="st"> </span>MA1[<span class="kw">which</span>(two.clusters.row==<span class="dv">1</span>), <span class="kw">which</span>(two.clusters.col==<span class="dv">2</span>)]
 
-knitr::<span class="kw">kable</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">rawCounts</a></span>(MA.sub))</code></pre></div>
+knitr::<span class="kw">kable</span>(<span class="kw"><a href="../reference/MultiAmplicon-class.html">getRawCounts</a></span>(MA.sub))</code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th></th>
