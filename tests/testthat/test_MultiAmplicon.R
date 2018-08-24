@@ -15,7 +15,6 @@ PRF <- PairedReadFileSet(Ffastq.file, Rfastq.file)
 MA <- MultiAmplicon(PPS, PRF)
 SA <- MultiAmplicon(PrimerPairsSet(primerF[1], primerR[1]), PRF)
 
-
 context("sortAmplicons resut doesn't change results over executions")
 
 ## MA1 <- sortAmplicons(MA, max.mismatch=3)
@@ -191,33 +190,43 @@ test_that("merging produces a list of derep objects ", {
                  rowSums(getRawCounts(MA3)>1)) # >1 singl seq rm
 })
 
-
 context("Subsetting MultiAmplicon objects")
-
 
 test_that("subsetting leaves rawCounts intact", {
     expect_equal(getRawCounts(MA6[2, 6]), getRawCounts(MA6)[2, 6, drop=FALSE])
     expect_equal(getRawCounts(MA6[3:4, 2:5]), getRawCounts(MA6)[3:4, 2:5, drop=FALSE])
     })
 
-## MA1.alt <- sortAmplicons(MA[2:5, 2:6])
+MA1.alt <- sortAmplicons(MA1[2:5, 2:6], filedir=tempfile())
+MA2.alt <- derepMulti(MA1.alt)
 
-## MA2.alt <- derepMulti(MA1.alt)
-
+test_that("sorting a subsetted object same as subsetting a sorted object", {
+   expect_equal(MA2.alt@derep, MA2[2:5, 2:6]@derep)
+   expect_equal(MA2.alt@rawCounts, MA2[2:5, 2:6]@rawCounts)
+   ## expect_equal(MA2.alt, MA2[2:5, 2:6])
+   ## expect_equal(MA2.alt@stratifiedFiles, MA2[2:5, 2:6]@stratifiedFiles)
+})
 
 ## Thought I had a bug in stratified file subsetting before, but this
 ## can't work as subsetting creates different stratified file names by
 ## default
-## expect_equal(stratifiedFilesF(MA2.alt), stratifiedFilesF(MA2[2:5, 2:6]))
-## expect_equal(stratifiedFilesR(MA2.alt), stratifiedFilesR(MA2[2:5, 2:6]))
+## expect_equal(getStratifiedFilesF(MA2.alt), getStratifiedFilesF(MA2[2:5, 2:6]))
+## expect_equal(getStratifiedFilesR(MA2.alt), getStratifiedFilesR(MA2[2:5, 2:6]))
 
-## test_that("sorting a subsetted object same as subsetting a sorted object", {
-##     expect_equal(MA2.alt@derep, MA2[2:5, 2:6]@derep)
-##     expect_equal(MA2.alt@rawCounts, MA2[2:5, 2:6]@rawCounts)
-##     ## expect_equal(MA2.alt, MA2[2:5, 2:6])
+
+context("Subsetting and concatenatingMultiAmplicon objects")
+
+foo  <- concatenateDadaMulti((MA6[, 1:3]), MA6[, 4:7])
+
+## Again this fails, despite the fact that there is no new
+## stratification involved!  Hove to FIX THIS!!!
+
+## test_that("subsetting and concatenation go hand in hand", {
+##     expect_equal(MA6@stratifiedFiles, foo@stratifiedFiles)
 ## })
 
 
+## FILLING SAMPLES DOES NOT WORK. FIX THIS!!!!
 ## MA7 <- fillSampleTables(MA6)
 
 ## MA7.fillalt <- fillSampleTables(MA6, samples = c("S03_F_filt.fastq.gz",
