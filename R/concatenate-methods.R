@@ -3,19 +3,25 @@
                       readsR=c(x@readsR, y@readsR))
 }
 
-.concatenateStratifiedFiles <- function(x, y) 
-lapply(seq_along(x), function (i){
-    .concatenatePairedReadFileSets(x[[i]], y[[i]])
-})
-
+.concatenateStratifiedFiles <- function(x, y){
+    ## to avoid but when one of the MA is missing a sample
+    along <- 1:max(length(x), length(y)) 
+    cf <- lapply(along, function (i){
+        .concatenatePairedReadFileSets(x[[i]], y[[i]])
+    })
+    names(cf) <- names(x)
+    cf
+}
 .concatenateRawCounts <- function(x, y){
     cbind(x@rawCounts, y@rawCounts)
 }
 
 .concatenateDerep <- function(x, y){
-    lapply(seq_along(x@derep), function (i){
+    dr <- lapply(seq_along(x@derep), function (i){
         c(x@derep[[i]], y@derep[[i]])
     })
+    names(dr) <- names(x@derep)
+    dr
 }
 
 .concatenateDada <- function(x, y){
@@ -33,23 +39,43 @@ lapply(seq_along(x), function (i){
 }
 
 .concatenateMergers <- function(x, y){
-    lapply(seq_along(x@mergers), function (i){
+    mg <- lapply(seq_along(x@mergers), function (i){
         c(x@mergers[[i]], y@mergers[[i]])
     })
+    names(mg) <- names(x@mergers)
+    mg
 }
 
 .concatenateSequenceTable <- function(x, y){
-    lapply(seq_along(x), function (i){
+    st <- lapply(seq_along(x), function (i){
         rbind(x[[i]], y[[i]])
     })
+    names(st) <- names(x)
+    st
 }
 
 
-
+##' Concatenate two MultiAmplicon objects
+##'
+##' Two MultiAmplicon objects are concatenated. Currently only
+##' concatenation of different samples with the same amplicons is
+##' implemented. 
+##' 
+##' @title concatenateDadaMulti
+##' @param MA1 MultiAmplicon object that should be concatenated.
+##' @param MA2 Second MultiAmplicon object to be concatenated with the
+##'     first.
+##' @param what Should either "samples" or "amplicons" be
+##'     concatenated? Currently only "samples" are implemented.
+##' @return
+##' @author Emanuel Heitlinger
 concatenateDadaMulti <- function (MA1, MA2, what="samples") {
     if(!all(what%in%c("samples", "amplicons"))){
         stop("please indicate `what` you want to concatenate, `samples` or
 `amplicons`?")
+    }
+    if(what%in%"amplicons"){
+        stop("concatenation of amplicons is not yet implemented, plaese open and issue on github and ask  prioritize this feature if you need it!")
     }
     MultiAmplicon(MA1@PrimerPairsSet,
                   .concatenatePairedReadFileSets(MA1@PairedReadFileSet,
