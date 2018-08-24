@@ -51,7 +51,7 @@ setMethod("plotAmpliconNumbers", c("MultiAmplicon", "ANY"),
                   stop("No rawCounts found in MultiAmplicon object:
                   Run sortAmplicons to produce a MultiAmplicon-object
                   with at least wo files and two samples")}
-              else {plotAmpliconNumbers(MA, transf)}
+              else {plotAmpliconNumbers(MA, transf, ...)}
           })
 
 ##' Plot summary data for amplicons run through the MultiAmplicon pipeline.
