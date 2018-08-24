@@ -67,7 +67,8 @@
 ##'     first.
 ##' @param what Should either "samples" or "amplicons" be
 ##'     concatenated? Currently only "samples" are implemented.
-##' @return
+##' @return A concatenated MultiAmplicon object
+##' @export
 ##' @author Emanuel Heitlinger
 concatenateDadaMulti <- function (MA1, MA2, what="samples") {
     if(!all(what%in%c("samples", "amplicons"))){

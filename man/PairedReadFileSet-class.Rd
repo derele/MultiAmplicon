@@ -16,7 +16,8 @@ PairedReadFileSet(readsF = character(), readsR = character())
 
 \S4method{show}{PairedReadFileSet}(object)
 
-\S4method{[}{PairedReadFileSet,index,missing,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{PairedReadFileSet,index,missing,ANY}(x, i, j, ...,
+  drop = TRUE)
 }
 \arguments{
 \item{readsF}{The path and filenames containing forward (R1) reads}

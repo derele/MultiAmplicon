@@ -32,8 +32,8 @@
 MultiAmplicon(PrimerPairsSet = PrimerPairsSet(),
   PairedReadFileSet = PairedReadFileSet(), rawCounts = matrix(),
   stratifiedFiles = list(), derep = list(), dada = list(),
-  mergers = list(), sequenceTable = list(), sequenceTableNoChime = list(),
-  sequenceTableFilled = list())
+  mergers = list(), sequenceTable = list(),
+  sequenceTableNoChime = list(), sequenceTableFilled = list())
 
 \S4method{colnames}{MultiAmplicon}(x)
 
@@ -77,7 +77,8 @@ getSequencesFromTable(MA)
 
 \S4method{[}{MultiAmplicon,missing,index,ANY}(x, i, j, ..., drop = FALSE)
 
-\S4method{[}{MultiAmplicon,missing,missing,ANY}(x, i, j, ..., drop = FALSE)
+\S4method{[}{MultiAmplicon,missing,missing,ANY}(x, i, j, ...,
+  drop = FALSE)
 }
 \arguments{
 \item{PrimerPairsSet}{a set of primer pairs specifiying your

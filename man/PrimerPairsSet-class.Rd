@@ -53,13 +53,6 @@ converted to \code{\link[Biostrings]{DNAStringSet}} by the
 constructor function of the same name. primerF and primerR have to
 be of the same length to specify primer pairs. Warnings are
 given if primer sequences are of unusual length (<16 or >26 bases).
-
-Accessor like functions
-\code{length} gives the number of read pairs in a
-\code{PrimerPairsSet-class} object
-
-\code{names} of primer-pairs (amplicons) in a
-\code{PrimerPairsSet-class} object
 }
 \section{Slots}{
 

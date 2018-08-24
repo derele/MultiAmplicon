@@ -11,11 +11,11 @@
 \usage{
 plotAmpliconNumbers(MA, transf = function(x) log10(x + 1), ...)
 
-\S4method{plotAmpliconNumbers}{matrix}(MA, transf = function(x) log10(x + 1),
-  ...)
+\S4method{plotAmpliconNumbers}{matrix}(MA, transf = function(x) log10(x +
+  1), ...)
 
-\S4method{plotAmpliconNumbers}{MultiAmplicon}(MA, transf = function(x) log10(x
-  + 1), ...)
+\S4method{plotAmpliconNumbers}{MultiAmplicon}(MA, transf = function(x)
+  log10(x + 1), ...)
 
 \S4method{plotPipelineSummary}{MultiAmplicon}(MA)
 
