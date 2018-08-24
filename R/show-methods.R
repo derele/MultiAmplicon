@@ -37,25 +37,39 @@ setMethod("show", "PrimerPairsSet", function(object){
 ##' @importFrom methods show
 ##' @rdname MultiAmplicon-class 
 setMethod("show", "MultiAmplicon", function(object){
-    cat("A", class(object), "instance of dimensions", dim(object)[1], "object",
+    cat("A", class(object), "instance of dimensions", dim(object)[1], "",
         dim(object)[2],"\n")
     cat("\nContaining slot PrimerPairsSet: \n")
     show(object@PrimerPairsSet)
     cat("\nContaining slot PairedReadFileSet: \n")
     show(object@PairedReadFileSet)
-    cat("\nContaining slot stratifiedFiles of length:",
-        length(object@stratifiedFiles), "\n")
-    cat("\nContaining slot derep of length:",
-        length(object@derep), "\n")
-    cat("\nContaining slot dada of length:",
-        length(object@dada), "\n")
-    cat("\nContaining slot mergers of length:",
-        length(object@mergers), "\n")
-    cat("\nContaining slot sequenceTable of length:",
-        length(object@sequenceTable), "\n")
-    cat("\nContaining slot sequenceTableNoChime of length:",
-        length(object@sequenceTableNoChime), "\n")
-    cat("\nContaining slot sequenceTableFilled of length:",
-        length(object@sequenceTableFilled), "\n")
+    cat("\nContaining slot stratifiedFiles of dimensions:",
+        length(object@stratifiedFiles), "amplicons x ",
+        paste(range(lapply(object@stratifiedFiles, length)), collapse=" to "),
+        " samples \n")
+    cat("\nContaining slot derep of dimensions:",
+        length(object@derep), "amplicons x ",
+        paste(range(lapply(object@derep, length)), collapse=" to "),
+        " samples \n")
+    cat("\nContaining slot dada of dimensions:",
+        length(object@dada), "amplicons x ",
+        paste(range(lapply(object@dada, length)), collapse=" to "),
+        " samples \n")
+    cat("\nContaining slot mergers of dimensions:",
+        length(object@mergers), " x ",
+        paste(range(lapply(object@mergers, length)), collapse=" to "),
+        " samples \n")
+    cat("\nContaining slot sequenceTable of dimensions:",
+        length(object@sequenceTable), " x ",
+        paste(range(lapply(object@sequenceTable, nrow)), collapse=" to "),
+        " samples \n")
+    cat("\nContaining slot sequenceTableNoChime of dimensions:",
+        length(object@sequenceTableNoChime), " x ",
+        paste(range(lapply(object@sequenceTableNoChime, nrow)), collapse=" to "),
+        " samples \n")
+    cat("\nContaining slot sequenceTableFilled of dimensions:",
+        length(object@sequenceTableFilled), " x ",
+        paste(range(lapply(object@sequenceTableFilled, nrow)), collapse=" to "),
+        " samples \n")
 })
 
