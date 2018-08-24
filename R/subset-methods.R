@@ -150,8 +150,12 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                       zero.i <- which(getRawCounts(x)[i[[ii]], ]>1) # >1 singl seq rm
                       which(zero.i%in%j)
                   })
+                  new.jz <- lapply(seq_along(i), function (ii) {
+                      zero.i <- which(getRawCounts(x)[i[[ii]], ]>0) # >0 zero seq rm
+                      which(zero.i%in%j)
+                  })
                   newSF <-  lapply(seq_along(i), function (ii) {
-                      x@stratifiedFiles[[i[[ii]]]][new.j[[ii]]]
+                      x@stratifiedFiles[[i[[ii]]]][new.jz[[ii]]]
                   })
                   names(newSF) <- names(x@stratifiedFiles[i])
               }
