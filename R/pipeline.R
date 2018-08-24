@@ -335,10 +335,12 @@ fillSampleTables <- function (MA, samples="union"){
         } else {full <- ampST}
         full[all.samples, ]
     })
-    MA@sequenceTableFilled <- list() ## empty slot for subset operations
-    new("MultiAmplicon",
-        MA[, which(colnames(MA)%in%all.samples)],
-        sequenceTableFilled = filledST)
+    cat("\n class Colnames:", class(colnames(MA)), "\n")
+    cat("\n Colnames:", colnames(MA), "\n")
+    cat("\n Which:", which(colnames(MA)%in%all.samples), "\n")
+    new.MA <- MA[, which(colnames(MA)%in%all.samples)]
+    new.MA@sequenceTableFilled <- filledST ## empty slot for subset operations
+    new.MA
 }
 
 
