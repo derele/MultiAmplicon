@@ -45,31 +45,40 @@ setMethod("show", "MultiAmplicon", function(object){
     show(object@PairedReadFileSet)
     cat("\nContaining slot stratifiedFiles of dimensions:",
         length(object@stratifiedFiles), "amplicons x ",
-        paste(range(lapply(object@stratifiedFiles, length)), collapse=" to "),
+        paste(.replace_inf_range(lapply(object@stratifiedFiles, length)), collapse=" to "),
         " samples \n")
     cat("\nContaining slot derep of dimensions:",
         length(object@derep), "amplicons x ",
-        paste(range(lapply(object@derep, length)), collapse=" to "),
+        paste(.replace_inf_range(lapply(object@derep, length)), collapse=" to "),
         " samples \n")
     cat("\nContaining slot dada of dimensions:",
         length(object@dada), "amplicons x ",
-        paste(range(lapply(object@dada, length)), collapse=" to "),
+        paste(.replace_inf_range(lapply(object@dada, length)), collapse=" to "),
         " samples \n")
     cat("\nContaining slot mergers of dimensions:",
         length(object@mergers), " x ",
-        paste(range(lapply(object@mergers, length)), collapse=" to "),
+        paste(.replace_inf_range(lapply(object@mergers, length)),
+              collapse=" to "),
         " samples \n")
     cat("\nContaining slot sequenceTable of dimensions:",
         length(object@sequenceTable), " x ",
-        paste(range(lapply(object@sequenceTable, nrow)), collapse=" to "),
+        paste(.replace_inf_range(lapply(object@sequenceTable, nrow)),
+              collapse=" to "),
         " samples \n")
     cat("\nContaining slot sequenceTableNoChime of dimensions:",
         length(object@sequenceTableNoChime), " x ",
-        paste(range(lapply(object@sequenceTableNoChime, nrow)), collapse=" to "),
+        paste(.replace_inf_range(lapply(object@sequenceTableNoChime, nrow)),
+              collapse=" to "),
         " samples \n")
     cat("\nContaining slot sequenceTableFilled of dimensions:",
         length(object@sequenceTableFilled), " x ",
-        paste(range(lapply(object@sequenceTableFilled, nrow)), collapse=" to "),
+        paste(.replace_inf_range(lapply(object@sequenceTableFilled, nrow)),
+              collapse=" to "),
         " samples \n")
 })
 
+.replace_inf_range<- function(x){
+    r <- suppressWarnings(range(x))
+    r[!is.finite(r)] <- 0
+    r
+}
