@@ -369,7 +369,7 @@ setMethod("calcPropMerged", "MultiAmplicon",
               sgt <- function(x) sum(getUniques(x))
               getN <- function(x) {
                   ## check length for every sample in amplicon for
-                  ## mergers or 
+                  ## mergers or just to have dada otherwise 
                   if(any(unlist(sapply(x, nrow)) > 0 ||
                      all(sapply(x, class)%in%"dada"))){ 
                       sum(unlist(sapply(x, sgt)))
