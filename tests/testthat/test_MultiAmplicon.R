@@ -216,7 +216,7 @@ test_that("sorting a subsetted object same as subsetting a sorted object", {
 
 context("Subsetting and concatenatingMultiAmplicon objects")
 
-foo  <- concatenateDadaMulti((MA6[, 1:3]), MA6[, 4:7])
+foo  <- concatenateMultiAmplicon((MA6[, 1:3]), MA6[, 4:7])
 
 ## Again this fails, despite the fact that there is no new
 ## stratification involved!  Hove to FIX THIS!!!
