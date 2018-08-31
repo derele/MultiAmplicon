@@ -368,8 +368,11 @@ setMethod("calcPropMerged", "MultiAmplicon",
               .complainWhenAbsent(MA, "mergers")
               sgt <- function(x) sum(getUniques(x))
               getN <- function(x) {
-                  if(length(x)) {
-                      sum(sapply(x, sgt))
+                  ## check length for every sample in amplicon for
+                  ## mergers or 
+                  if(any(unlist(sapply(x, nrow)) > 0 ||
+                     all(sapply(x, class)%in%"dada"))){ 
+                      sum(unlist(sapply(x, sgt)))
                   } else {0}
               }
               nMerged <- sapply(getMergers(MA), getN)
