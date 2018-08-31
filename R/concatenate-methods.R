@@ -61,7 +61,7 @@
 ##' concatenation of different samples with the same amplicons is
 ##' implemented. 
 ##' 
-##' @title concatenateDadaMulti
+##' @title concatenateMultiAmplicon
 ##' @param MA1 MultiAmplicon object that should be concatenated.
 ##' @param MA2 Second MultiAmplicon object to be concatenated with the
 ##'     first.
@@ -70,7 +70,7 @@
 ##' @return A concatenated MultiAmplicon object
 ##' @export
 ##' @author Emanuel Heitlinger
-concatenateDadaMulti <- function (MA1, MA2, what="samples") {
+concatenateMultiAmplicon <- function (MA1, MA2, what="samples") {
     if(!all(what%in%c("samples", "amplicons"))){
         stop("please indicate `what` you want to concatenate, `samples` or
 `amplicons`?")
