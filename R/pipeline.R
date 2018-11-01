@@ -237,10 +237,11 @@ mergeMulti <- function(MA, mc.cores=getOption("mc.cores", 1L), ...){
 makeSequenceTableMulti <- function(MA, mc.cores=getOption("mc.cores", 1L), ...){
     .complainWhenAbsent(MA, "mergers")
     exp.args <- .extractEllipsis(list(...), nrow(MA))
-    sequenceTable <- mclapply(seq_along(MA@mergers), function (i){
+    mergers <- getMergers(MA)
+    sequenceTable <- mclapply(seq_along(mergers), function (i){
         args.here <- lapply(exp.args, "[", i)
         .paramMessage("makeSequenceTable", args.here)
-        do.call(makeSequenceTable, c(list(MA@mergers[[i]]), args.here))
+        do.call(makeSequenceTable, c(list(mergers[[i]]), args.here))
     }, mc.cores=mc.cores)
     names(sequenceTable) <- names(MA@PrimerPairsSet)
     initialize(MA, sequenceTable = sequenceTable)
@@ -370,13 +371,13 @@ setMethod("calcPropMerged", "MultiAmplicon",
               getN <- function(x) {
                   ## check length for every sample in amplicon for
                   ## mergers or just to have dada otherwise 
-                  if(any(unlist(sapply(x, nrow)) > 0 ||
+                  if(any(unlist(sapply(x, nrow)) > 1 ||
                      all(sapply(x, class)%in%"dada"))){ 
-                      sum(unlist(sapply(x, sgt)))
+                      sum(unlist(sapply(x, sgt, simplify=FALSE)))
                   } else {0}
               }
-              nMerged <- sapply(getMergers(MA), getN)
-              nBefore <- sapply(getDadaF(MA), getN)
+              nMerged <- sapply(getMergers(MA), getN, simplify=FALSE)
+              nBefore <- sapply(getDadaF(MA), getN, simplify=FALSE)
               nMerged/nBefore
           })
 
