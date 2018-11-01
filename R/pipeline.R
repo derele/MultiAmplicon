@@ -376,9 +376,11 @@ setMethod("calcPropMerged", "MultiAmplicon",
                       sum(unlist(sapply(x, sgt, simplify=FALSE)))
                   } else {0}
               }
-              nMerged <- sapply(getMergers(MA), getN, simplify=FALSE)
-              nBefore <- sapply(getDadaF(MA), getN, simplify=FALSE)
-              nMerged/nBefore
+              nMerged <- sapply(getMergers(MA), getN)
+              nBefore <- sapply(getDadaF(MA), getN)
+              prop <- nMerged/nBefore
+              prop[is.nan(prop)] <- 0
+              prop
           })
 
 
