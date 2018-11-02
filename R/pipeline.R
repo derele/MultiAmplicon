@@ -238,6 +238,9 @@ makeSequenceTableMulti <- function(MA, mc.cores=getOption("mc.cores", 1L), ...){
     .complainWhenAbsent(MA, "mergers")
     exp.args <- .extractEllipsis(list(...), nrow(MA))
     mergers <- getMergers(MA)
+    ## hack to remove mergers of length 1 which don't get properly
+    ## named dataframes    
+    mergers[unlist(lapply(mergers, length ))==1] <- list(list())
     sequenceTable <- mclapply(seq_along(mergers), function (i){
         args.here <- lapply(exp.args, "[", i)
         .paramMessage("makeSequenceTable", args.here)
@@ -370,7 +373,9 @@ setMethod("calcPropMerged", "MultiAmplicon",
               sgt <- function(x) sum(getUniques(x))
               getN <- function(x) {
                   ## check length for every sample in amplicon for
-                  ## mergers or just to have dada otherwise 
+                  ## mergers or just to have dada otherwise >1 as a
+                  ## hack to remove mergers that don't get properly
+                  ## named dataframes (FIX in dada2???)
                   if(any(unlist(sapply(x, nrow)) > 1 ||
                      all(sapply(x, class)%in%"dada"))){ 
                       sum(unlist(sapply(x, sgt, simplify=FALSE)))
