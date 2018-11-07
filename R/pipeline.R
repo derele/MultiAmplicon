@@ -289,7 +289,7 @@ removeChimeraMulti <- function(MA, mc.cores = getOption("mc.cores", 1L), ...){
                 args.here <- lapply(exp.args, "[", i)
                 .paramMessage("removeBimeraDenovo", args.here)
                 do.call(removeBimeraDenovo, c(list(MA@sequenceTable[[i]]), args.here))
-            } else {matrix()}
+            } else {matrix(nrow=0, ncol=0)}
         },
         mc.cores = mc.cores)
     names(sequenceTableNoChime) <- MA@PrimerPairsSet@names
@@ -374,9 +374,7 @@ setMethod("calcPropMerged", "MultiAmplicon",
               getN <- function(x) {
                   ## check length for every sample in amplicon for
                   ## mergers or just to have dada otherwise >1 as a
-                  ## hack to remove mergers that don't get properly
-                  ## named dataframes (FIX in dada2???)
-                  if(any(unlist(sapply(x, nrow)) > 1 ||
+                  if(any(unlist(sapply(x, nrow)) > 0 ||
                      all(sapply(x, class)%in%"dada"))){ 
                       sum(unlist(sapply(x, sgt, simplify=FALSE)))
                   } else {0}
