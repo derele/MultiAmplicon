@@ -122,8 +122,6 @@ MA3 <- dadaMulti(MA2, selfConsist=TRUE, pool=FALSE, OMEGA_C=0,
 MA3.R <- dadaMulti(MA2, selfConsist=TRUE, pool=FALSE, 
                    multithread=TRUE)
 
-
-
 context("Denoising works?")
 test_that("dada2 denoising produces a list of derep objects ", {
     expect_equal(length(MA3@dada), nrow(MA3))
@@ -152,10 +150,9 @@ test_that("merging produces a list of derep objects ", {
 })
 
 context("Merging works?")
-test_that("merging produces a list of derep objects ", {
+test_that("proportion of merged is between zero and one ", {
     expect_true(
-    all((calcPropMerged(MA4) > 0 & calcPropMerged(MA4) <= 1) |
-        calcPropMerged(MA4) %in% NaN) ## when zero merged
+    all((calcPropMerged(MA4) >= 0 & calcPropMerged(MA4) <= 1))
     )
 })
 
@@ -214,7 +211,7 @@ test_that("sorting a subsetted object same as subsetting a sorted object", {
 ## expect_equal(getStratifiedFilesR(MA2.alt), getStratifiedFilesR(MA2[2:5, 2:6]))
 
 
-context("Subsetting and concatenatingMultiAmplicon objects")
+context("Subsetting and concatenating MultiAmplicon objects")
 
 foo  <- concatenateMultiAmplicon((MA6[, 1:3]), MA6[, 4:7])
 

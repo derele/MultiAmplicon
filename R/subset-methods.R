@@ -180,7 +180,7 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
               if(length(x@sequenceTable)>0){
                   newST <- lapply(seq_along(i), function (ii){
                       ST <- x@sequenceTable[[i[[ii]]]]
-                      if(nrow(ST)>=new.j[[ii]]){
+                      if(nrow(ST)>=length(new.j[[ii]])){
                           ST[new.j[[ii]], , drop=FALSE]
                       } else {matrix()}
                   })
@@ -189,7 +189,7 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
               if(length(x@sequenceTableNoChime)>0){
                   newSTnC <- lapply(seq_along(i), function (ii){
                       ST <- x@sequenceTableNoChime[[i[[ii]]]]
-                      if(nrow(ST)>=new.j[[ii]]){
+                      if(nrow(ST)>=length(new.j[[ii]])){
                           ST[new.j[[ii]], , drop=FALSE]
                       } else {matrix()}
                   })
