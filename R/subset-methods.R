@@ -208,9 +208,7 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                                        sequenceTable = newST,
                                        sequenceTableNoChime = newSTnC)
               )
-              if(length(x@sequenceTableFilled)>0){           
-                  fillSampleTables(MA.out, samples="union")
-              } else {MA.out}
+              MA.out
           })
 
 ## empty column

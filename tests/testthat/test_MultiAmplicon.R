@@ -86,9 +86,11 @@ test_that("files for each amplicon contain the number of reads reported", {
 
 context("SortAmplcion can be made less stringent?")
 test_that("less stringent sorting results in more reads accepted", {
-    expect_true(all(sortAmplicons(MA, filedir=tempfile(), countOnly=TRUE, starting.at=1:2) >=
+    expect_true(all(sortAmplicons(MA, filedir=tempfile(), countOnly=TRUE,
+                                  starting.at=1:2) >=
                     getRawCounts(MA1)))
-    expect_true(all(sortAmplicons(MA, filedir=tempfile(), countOnly=TRUE, max.mismatch=1) >=
+    expect_true(all(sortAmplicons(MA, filedir=tempfile(), countOnly=TRUE,
+                                  max.mismatch=1) >=
                    getRawCounts(MA1)))
 })
 
