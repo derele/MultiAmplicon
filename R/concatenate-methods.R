@@ -58,7 +58,7 @@
     tt <- lapply(seq_along(x), function (i){
         rbind(x[[i]], y[[i]])
     })
-    names(tt) <- names(x@taxonTable)
+    names(tt) <- names(x)
     tt
 }
 
