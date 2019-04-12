@@ -59,17 +59,28 @@ setMethod("show", "MultiAmplicon", function(object){
         length(object@mergers), " x ",
         paste(.replace_inf_range(lapply(object@mergers, length)),
               collapse=" to "),
-        " samples \n")
+        " samples ==>", 
+        paste(.replace_inf_range(lapply(object@mergers, function (x) {
+            sum(unlist(lapply(x, nrow)))
+        })),
+        collapse=" to "),
+        "ASVs \n")
     cat("\nContaining slot sequenceTable of dimensions:",
         length(object@sequenceTable), " x ",
         paste(.replace_inf_range(lapply(object@sequenceTable, nrow)),
               collapse=" to "),
-        " samples \n")
+        " samples ==>",
+        paste(.replace_inf_range(lapply(object@sequenceTable, ncol)),
+              collapse=" to "),
+        "ASVs \n")
     cat("\nContaining slot sequenceTableNoChime of dimensions:",
         length(object@sequenceTableNoChime), " x ",
         paste(.replace_inf_range(lapply(object@sequenceTableNoChime, nrow)),
               collapse=" to "),
-        " samples \n")
+        " samples ==>",
+        paste(.replace_inf_range(lapply(object@sequenceTableNoChime, ncol)),
+              collapse=" to "),
+        "ASVs \n")
     cat("\nContaining slot taxonTable of dimensions:",
         length(object@taxonTable), " x ",
         "NA (without) samples ==>", 
