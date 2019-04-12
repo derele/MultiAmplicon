@@ -402,7 +402,6 @@ setMethod("calcPropMerged", "MultiAmplicon",
 ##' @param MA MultiAmplicon object with all slots filled for tracking.
 ##' @return a data.frame of sample, unique sequences and sequencing
 ##'     reads numbers per amplicon.
-##' @importFrom reshape melt
 ##' @importFrom plyr revalue
 ##' @export
 ##' @author Emanuel Heitlinger
@@ -434,7 +433,7 @@ getPipelineSummary <- function(MA){
             noChime=sum(getSequenceTableNoChime(MA[i, ])))
         list(samples, uniques, reads)
     })
-    track <- melt(track.l)
+    track <- reshape::melt(track.l)
     track$L2 <- revalue(as.factor(track$L2), c("1"="samples",
                                                "2"="uniques", "3"="reads"))
     track$L3 <- factor(track$L3, levels = c("sorted", "derep",

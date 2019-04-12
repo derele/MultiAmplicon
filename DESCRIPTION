@@ -29,5 +29,6 @@ Suggests:
     covr,
     knitr,
     rmarkdown,
-    SRAdb
+    SRAdb,
+    taxonomizr
 VignetteBuilder: knitr
