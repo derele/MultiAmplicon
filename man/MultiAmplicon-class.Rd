@@ -33,7 +33,7 @@ MultiAmplicon(PrimerPairsSet = PrimerPairsSet(),
   PairedReadFileSet = PairedReadFileSet(), rawCounts = matrix(),
   stratifiedFiles = list(), derep = list(), dada = list(),
   mergers = list(), sequenceTable = list(),
-  sequenceTableNoChime = list(), sequenceTableFilled = list())
+  sequenceTableNoChime = list(), taxonTable = list())
 
 \S4method{colnames}{MultiAmplicon}(x)
 
@@ -108,8 +108,8 @@ slot is created by \code{\link{makeSequenceTableMulti}}}
 \item{sequenceTableNoChime}{Users should not supply this parameter,
 the slot is created by \code{\link{removeChimeraMulti}}}
 
-\item{sequenceTableFilled}{Users should not supply this parameter,
-the slot is created by \code{\link{fillSampleTables}}}
+\item{taxonTable}{Users should not supply this parameter,
+the slot is created by \code{\link{getBlastTaxAnnot}}}
 
 \item{x}{MultiAmplicon-class object}
 
@@ -181,7 +181,7 @@ pairs of dada-class objects created by \code{dada2}’s
 
 \item{\code{sequenceTableNoChime}}{}
 
-\item{\code{sequenceTableFilled}}{MultiAmplicon(PrimerPairsSet, PairedReadFileSet)}
+\item{\code{taxonTable}}{MultiAmplicon(PrimerPairsSet, PairedReadFileSet)}
 }}
 
 \examples{
@@ -221,7 +221,7 @@ MA5 <- makeSequenceTableMulti(MA4)
 
 MA6 <- removeChimeraMulti(MA5, mc.cores=1)
 
-MA7 <- fillSampleTables(MA6)
+MA7 <- getBlastTaxAnnot(MA6)
 
 }
 \seealso{

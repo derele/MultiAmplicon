@@ -242,7 +242,7 @@ setMethod("length", "PairedDada", function(x){
 ##'
 ##' @slot sequenceTableNoChime
 ##'
-##' @slot sequenceTableFilled
+##' @slot taxonTable
 ##'
 ##' MultiAmplicon(PrimerPairsSet, PairedReadFileSet)
 ##' 
@@ -273,8 +273,8 @@ setMethod("length", "PairedDada", function(x){
 ##' @param sequenceTableNoChime Users should not supply this parameter,
 ##'     the slot is created by \code{\link{removeChimeraMulti}}
 ##'
-##' @param sequenceTableFilled Users should not supply this parameter,
-##'     the slot is created by \code{\link{fillSampleTables}}
+##' @param taxonTable Users should not supply this parameter,
+##'     the slot is created by \code{\link{getBlastTaxAnnot}}
 ##' 
 ##' @examples
 ##'
@@ -313,7 +313,7 @@ setMethod("length", "PairedDada", function(x){
 ##'
 ##' MA6 <- removeChimeraMulti(MA5, mc.cores=1)
 ##'
-##' MA7 <- fillSampleTables(MA6)
+##' MA7 <- getBlastTaxAnnot(MA6)
 ##' 
 ##' @seealso \code{\link[dada2]{derepFastq}},\code{\link[dada2]{dada}}
 ##' @importFrom dada2 derepFastq dada
@@ -329,7 +329,7 @@ setClass("MultiAmplicon",
                         mergers="list",
                         sequenceTable="list",
                         sequenceTableNoChime="list",
-                        sequenceTableFilled="list"))
+                        taxonTable="list"))
 
 
 ##' @export MultiAmplicon
@@ -344,7 +344,7 @@ MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
                           mergers = list(),
                           sequenceTable = list(),
                           sequenceTableNoChime = list(),
-                          sequenceTableFilled = list()
+                          taxonTable = list()
                           ){
     new("MultiAmplicon",
         PrimerPairsSet = PrimerPairsSet,
@@ -356,7 +356,7 @@ MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
         mergers = mergers,
         sequenceTable = sequenceTable,
         sequenceTableNoChime = sequenceTableNoChime,
-        sequenceTableFilled = sequenceTableFilled
+        taxonTable = taxonTable
         )
 }
 

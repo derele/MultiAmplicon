@@ -2,7 +2,7 @@
 % Please edit documentation in R/annotateTaxa.R
 \name{getBlastTaxAnnot}
 \alias{getBlastTaxAnnot}
-\title{annotateTaxa}
+\title{getBlastTaxAnnot}
 \usage{
 getBlastTaxAnnot(MA, dataBaseDir = Sys.getenv("BLASTDB"), db = "nt/nt",
   num_threads = 10, negative_gilist = "/SAN/db/blastdb/uncultured.gi",
