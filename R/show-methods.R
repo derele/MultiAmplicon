@@ -72,9 +72,10 @@ setMethod("show", "MultiAmplicon", function(object){
         " samples \n")
     cat("\nContaining slot taxonTable of dimensions:",
         length(object@taxonTable), " x ",
+        "NA (without) samples ==>", 
         paste(.replace_inf_range(lapply(object@taxonTable, nrow)),
               collapse=" to "),
-        " samples \n")
+        " ASVs \n")
 })
 
 .replace_inf_range<- function(x){

@@ -217,26 +217,39 @@ foo  <- concatenateMultiAmplicon((MA6[, 1:3]), MA6[, 4:7])
 
 ## Again this fails, despite the fact that there is no new
 ## stratification involved!  Hove to FIX THIS!!!
-
 ## test_that("subsetting and concatenation go hand in hand", {
 ##     expect_equal(MA6@stratifiedFiles, foo@stratifiedFiles)
 ## })
 
+Test_that("subsetting and concatenation go hand in hand", {
+    expect_equal(MA6@rawCounts, foo@rawCounts)
+})
 
-## FILLING SAMPLES DOES NOT WORK. FIX THIS!!!!
-## MA7 <- fillSampleTables(MA6)
+test_that("subsetting and concatenation go hand in hand", {
+    expect_equal(MA6@dada, foo@dada)
+})
 
-## MA7.fillalt <- fillSampleTables(MA6, samples = c("S03_F_filt.fastq.gz",
-##                                                  "S04_F_filt.fastq.gz",
-##                                                  "S05_F_filt.fastq.gz"))
+test_that("subsetting and concatenation go hand in hand", {
+    expect_equal(MA6@derep, foo@derep)
+})
 
-## MA7.fillsub <- MA7[,  which(colnames(MA7)%in%
-##                             c("S03_F_filt.fastq.gz",
-##                               "S04_F_filt.fastq.gz",
-##                               "S05_F_filt.fastq.gz"))]
+## Again this fails, the problem being likely the one empty amplicon
+## mess...HAVE TO FIX THIS!!!
 
-## ## everything but statified files would be equal...
-## expect_equal(MA7.fillalt@stratifiedFiles, MA7.fillsub@stratifiedFiles)
+## test_that("subsetting and concatenation
+## go hand in hand", { expect_equal(MA6@sequenceTable,
+## foo@sequenceTable) })
+
+## test_that("subsetting and concatenation
+## go hand in hand", { expect_equal(MA6@sequenceTableNoChime,
+## foo@sequenceTableNoChime) })
+
+
+MA7 <- getBlastTaxAnnot(MA6)
+
+test_that("subsetting and concatenation
+go hand in hand", { expect_equal(MA6@taxonTable,
+foo@taxonTable) })
 
 
 ## getPipelineSummary(MA7)

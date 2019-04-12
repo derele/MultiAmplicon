@@ -34,6 +34,7 @@
 ##'     \code{\link[taxonomizeR]{taxonomizeR}}
 ##' @return An MultiAmplicon object with the taxonomy slot filled
 ##' @import data.table
+##' @importFrom taxonomizr getTaxonomy
 ##' @author Emanuel Heitlinger
 getBlastTaxAnnot <- function (MA, dataBaseDir=Sys.getenv("BLASTDB"),
                               db="nt/nt",
@@ -45,7 +46,7 @@ getBlastTaxAnnot <- function (MA, dataBaseDir=Sys.getenv("BLASTDB"),
                               ) {
     DBmessage <-
         paste0("using directory given by environmental varibale $BLASTDB=",
-               dataBaseDir, " and database, ", db, "\n")
+               dataBaseDir, " and database ", db, "\n")
     message(DBmessage)
     SEQ <- getSequencesFromTable(MA)
     Ssplit <- lapply(seq_along(SEQ), function (i) {
@@ -164,6 +165,6 @@ getBlastTaxAnnot <- function (MA, dataBaseDir=Sys.getenv("BLASTDB"),
         as.matrix(taxDF)
     })
     names(annot.l) <- names(SEQ)[as.numeric(names(annot.l))]
-    annot.l <- annot.l[names(SEQ)]
+    annot.l <- lapply(annot.l[names(SEQ)], function (x) x) ## drop array
     initialize(MA, taxonTable = annot.l)
 }
