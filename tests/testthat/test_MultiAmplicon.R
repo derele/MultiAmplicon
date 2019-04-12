@@ -17,8 +17,6 @@ SA <- MultiAmplicon(PrimerPairsSet(primerF[1], primerR[1]), PRF)
 
 context("sortAmplicons resut doesn't change results over executions")
 
-## MA1 <- sortAmplicons(MA, max.mismatch=3)
-
 MA1 <- sortAmplicons(MA, filedir=tempfile())
 
 test_that("sortAmplicons resut doesn't change over executions", {

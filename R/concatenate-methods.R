@@ -54,6 +54,13 @@
     st
 }
 
+.concatenateTaxonTable <- function(x, y){
+    tt <- lapply(seq_along(x), function (i){
+        rbind(x[[i]], y[[i]])
+    })
+    names(tt) <- names(x@taxonTable)
+    tt
+}
 
 ##' Concatenate two MultiAmplicon objects
 ##'
@@ -91,8 +98,8 @@ concatenateMultiAmplicon <- function (MA1, MA2, what="samples") {
                                             MA2@sequenceTable),
                   .concatenateSequenceTable(MA1@sequenceTableNoChime,
                                             MA2@sequenceTableNoChime),
-                  .concatenateSequenceTable(MA1@sequenceTableFilled,
-                                            MA2@sequenceTableFilled)
+                  .concatenateTaxonTable(MA1@taxonTable,
+                                         MA2@taxonTable)
                   )
 }
 

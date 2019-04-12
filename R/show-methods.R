@@ -70,9 +70,9 @@ setMethod("show", "MultiAmplicon", function(object){
         paste(.replace_inf_range(lapply(object@sequenceTableNoChime, nrow)),
               collapse=" to "),
         " samples \n")
-    cat("\nContaining slot sequenceTableFilled of dimensions:",
-        length(object@sequenceTableFilled), " x ",
-        paste(.replace_inf_range(lapply(object@sequenceTableFilled, nrow)),
+    cat("\nContaining slot taxonTable of dimensions:",
+        length(object@taxonTable), " x ",
+        paste(.replace_inf_range(lapply(object@taxonTable, nrow)),
               collapse=" to "),
         " samples \n")
 })
