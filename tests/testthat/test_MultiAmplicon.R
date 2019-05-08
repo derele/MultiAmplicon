@@ -6,7 +6,9 @@ primerR <- c(Amp1R = "CTGCWGCCNCCCGTAGG", Amp2R = "GACTACHVGGGTATCTAATCC",
              Amp3R = "AAGGGCATCACAGACCTGTTAT", Amp4R = "TCCTTCTGCAGGTTCACCTAC",
              Amp5R = "AAAAACCCCGGGGGGTTTTT", Amp6R = "CCTACGGGTGGCAGATGCAG")
 PPS <- PrimerPairsSet(primerF, primerR)
+
 fastq.dir <- system.file("extdata", "fastq", package = "MultiAmplicon")
+
 fastq.files <- list.files(fastq.dir, full.names=TRUE)
 Ffastq.file <- fastq.files[grepl("F_filt", fastq.files)]
 Rfastq.file <- fastq.files[grepl("R_filt", fastq.files)]
@@ -211,9 +213,19 @@ test_that("sorting a subsetted object same as subsetting a sorted object", {
 ## expect_equal(getStratifiedFilesR(MA2.alt), getStratifiedFilesR(MA2[2:5, 2:6]))
 
 
-context("Subsetting and concatenating MultiAmplicon objects")
+context("Taxonomy annotation works")
 
-MA7 <- getBlastTaxAnnot(MA6)
+MA7 <- getBlastTaxAnnot(MA6,
+                        infasta=system.file("extdata", "in.fasta", package = "MultiAmplicon"),
+                        outblast=system.file("extdata", "out.blt", package = "MultiAmplicon"))
+
+test_that("sequence and taxon annotation are in same order", {
+    expect_equal(unlist(lapply(MA7@taxonTable, rownames)),
+                 unlist(lapply(MA7@sequenceTableNoChime, colnames)))
+ })
+
+
+context("Subsetting and concatenating MultiAmplicon objects")
 
 foo  <- concatenateMultiAmplicon((MA7[, 1:3]), MA7[, 4:7])
 
