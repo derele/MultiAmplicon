@@ -296,56 +296,12 @@ removeChimeraMulti <- function(MA, mc.cores = getOption("mc.cores", 1L), ...){
     initialize(MA, sequenceTableNoChime = sequenceTableNoChime)
 }
 
-##' Fill multiple sequence tables in a MultiAmplicon object to include
-##' all or selected samples.
-##'
-##' In a MultiAmplicon object for some primer pairs some samples might
-##' have no amplified sequence variants at all. This function adds a
-##' \code{sequenceTableFilled} slot to a MultiAmplicon object. It uses
-##' the \code{sequenceTableNoChime} slot and fills tables for all
-##' samples appearing in any table or for requested samples.
-##' 
-##' @title fillSampleTables
-##' @param MA MultiAmplicon object
-##' @param samples either a character vector of length one giving
-##'     "union" to use all samples appearing for any of the amplicons
-##'     or a longer character vector giving names of samples to
-##'     retain
-##' @return MultiAmplicon object with the \code{sequenceTableFilled}
-##'     slot filled
-##' @export
-##' @author Emanuel Heitlinger
-fillSampleTables <- function (MA, samples="union"){
-    .complainWhenAbsent(MA, "sequenceTableNoChime")
-    seqtab <- getSequenceTableNoChime(MA)
-    if (length(samples) == 1){
-        if(samples %in% "union") {
-            all.samples <- unique(unlist(lapply(seqtab, rownames)))
-        } else {stop("please specify either \"union\" to use all samples", 
-                     "or a list of sample names")
-        }
-    } else{all.samples <- samples}
-    if(any(!all.samples%in%names(MA@PairedReadFileSet))){
-        warning("requested samples " ,
-                all.samples[!all.samples%in%names(MA@PairedReadFileSet)],
-                " not found in original sample names")
-    }    
-    filledST <- lapply(seqtab, function (ampST){
-        missing.samples <- all.samples[!all.samples%in%rownames(ampST)]
-        if(length(missing.samples)>0){
-            fill <- matrix(0, nrow=length(missing.samples), ncol=ncol(ampST))
-            rownames(fill) <- missing.samples
-            full <- rbind(ampST, fill)
-        } else {full <- ampST}
-        full[all.samples, ]
-    })
-    cat("\n class Colnames:", class(colnames(MA)), "\n")
-    cat("\n Colnames:", colnames(MA), "\n")
-    cat("\n Which:", which(colnames(MA)%in%all.samples), "\n")
-    new.MA <- MA[, which(colnames(MA)%in%all.samples)]
-    new.MA@sequenceTableFilled <- filledST ## empty slot for subset operations
-    new.MA
-}
+
+
+
+
+
+
 
 
 ##' Calculate the proportion of merged sequences for a MultiAmplicon

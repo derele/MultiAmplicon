@@ -194,6 +194,10 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                       } else {matrix()}
                   })
                   names(newSTnC) <- names(x@sequenceTableNoChime[i])         
+              }
+              if(length(x@taxonTable)>0){
+                  newTT <- x@taxonTable[i]
+                  names(newTT) <- names(x@taxonTable[i])         
               }              
               ## avoid warnings from ValidityCheck
               suppressWarnings(
@@ -206,7 +210,8 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                                        dada = newdada,
                                        mergers = newmergers,
                                        sequenceTable = newST,
-                                       sequenceTableNoChime = newSTnC)
+                                       sequenceTableNoChime = newSTnC,
+                                       taxonTable = newTT)
               )
               MA.out
           })

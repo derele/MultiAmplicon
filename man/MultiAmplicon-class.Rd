@@ -20,6 +20,7 @@
 \alias{getMergers}
 \alias{getSequenceTable}
 \alias{getSequenceTableNoChime}
+\alias{getTaxonTable}
 \alias{getSequencesFromTable}
 \alias{getSequencesFromTable,MultiAmplicon-method}
 \alias{show,MultiAmplicon-method}
@@ -64,6 +65,8 @@ getMergers(MA, simplify = TRUE)
 getSequenceTable(MA, simplify = TRUE)
 
 getSequenceTableNoChime(MA, simplify = TRUE)
+
+getTaxonTable(MA, simplify = TRUE)
 
 getSequencesFromTable(MA)
 
