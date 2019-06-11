@@ -444,6 +444,14 @@ getSequenceTableNoChime <- function(MA, simplify=TRUE){
     .simpfy(MA@sequenceTableNoChime, simplify)
 }
 
+##' @rdname MultiAmplicon-class
+##' @export
+getTaxonTable <- function(MA, simplify=TRUE){
+    .simpfy(MA@taxonTable, simplify)
+}
+
+
+
 
 ##' @rdname MultiAmplicon-class
 ##' @export

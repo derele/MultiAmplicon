@@ -15,7 +15,9 @@ Imports:
     plyr,
     ggplot2,
     reshape,
-    assertthat
+    assertthat,
+    taxonomizr,
+    data.table    
 Depends:
     R (>= 3.3),
     ShortRead (>= 1.30.0),
@@ -29,6 +31,5 @@ Suggests:
     covr,
     knitr,
     rmarkdown,
-    SRAdb,
-    taxonomizr
+    SRAdb
 VignetteBuilder: knitr

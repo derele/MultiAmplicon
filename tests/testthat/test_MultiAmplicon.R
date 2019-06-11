@@ -217,13 +217,23 @@ context("Taxonomy annotation works")
 
 MA7 <- getBlastTaxAnnot(MA6,
                         infasta=system.file("extdata", "in.fasta", package = "MultiAmplicon"),
-                        outblast=system.file("extdata", "out.blt", package = "MultiAmplicon"))
+                        outblast=system.file("extdata", "out.blt", package = "MultiAmplicon")
 
 test_that("sequence and taxon annotation are in same order", {
     expect_equal(unlist(lapply(MA7@taxonTable, rownames)),
                  unlist(lapply(MA7@sequenceTableNoChime, colnames)))
  })
 
+## ## This is  more stringent then even only the number
+## STnoC <- getSequenceTableNoChime(MA7)
+## nAnnot <- lapply(getTaxonTable(MA7), nrow)
+#### now are they in sync??
+## cbind(nAnnot, unlist(lapply(STnoC, ncol)))
+
+
+## ## this might be a suitable test for something...
+## all(unique(unlist(lapply(getSequenceTableNoChime(MA), rownames)))%in%colnames(MA))
+## all(colnames(MA)%in%unique(unlist(lapply(getSequenceTableNoChime(MA), rownames))))
 
 context("Subsetting and concatenating MultiAmplicon objects")
 
