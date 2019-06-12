@@ -34,11 +34,12 @@
 ##'     \code{\link[taxonomizer]{taxonomizer}}
 ##' @param ... String (of other options) passed to blastn (see blastn
 ##' -help in the terminal)
-##' @return An MultiAmplicon object with the taxonomy slot filled
+##' @return A MultiAmplicon object with the taxonTable slot filled
 ##' @import data.table
 ##' @importFrom taxonomizr getTaxonomy
 ##' @importFrom utils read.csv
 ##' @author Emanuel Heitlinger
+##' @export
 getBlastTaxAnnot <- function (MA, dataBaseDir=Sys.getenv("BLASTDB"),
                               db="nt/nt",
                               num_threads= getOption("mc.cores", 1L),

@@ -44,7 +44,7 @@ folder by default.}
 -help in the terminal)}
 }
 \value{
-An MultiAmplicon object with the taxonomy slot filled
+A MultiAmplicon object with the taxonTable slot filled
 }
 \description{
 Annotate amplified sequence variants (ASVs) with taxa labels
