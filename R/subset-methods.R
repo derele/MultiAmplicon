@@ -198,7 +198,7 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
               if(length(x@taxonTable)>0){
                   newTT <- x@taxonTable[i]
                   names(newTT) <- names(x@taxonTable[i])         
-              }              
+              } else {newTT <- list()}        
               ## avoid warnings from ValidityCheck
               suppressWarnings(
                   MA.out <- initialize(x,

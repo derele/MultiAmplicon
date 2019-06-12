@@ -82,11 +82,11 @@ setMethod("show", "MultiAmplicon", function(object){
               collapse=" to "),
         "ASVs \n")
     cat("\nContaining slot taxonTable of dimensions:",
-        length(object@taxonTable), " x ",
+        length(object@taxonTable), "(taxon ranks) x ",
         "NA (without) samples ==>", 
         paste(.replace_inf_range(lapply(object@taxonTable, nrow)),
               collapse=" to "),
-        " ASVs \n")
+        " taxonomically annotated ASVs \n")
 })
 
 .replace_inf_range<- function(x){
