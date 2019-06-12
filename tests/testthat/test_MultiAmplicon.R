@@ -217,7 +217,7 @@ context("Taxonomy annotation works")
 
 MA7 <- getBlastTaxAnnot(MA6,
                         infasta=system.file("extdata", "in.fasta", package = "MultiAmplicon"),
-                        outblast=system.file("extdata", "out.blt", package = "MultiAmplicon")
+                        outblast=system.file("extdata", "out.blt", package = "MultiAmplicon"))
 
 test_that("sequence and taxon annotation are in same order", {
     expect_equal(unlist(lapply(MA7@taxonTable, rownames)),
