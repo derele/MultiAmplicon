@@ -56,7 +56,7 @@ setMethod("show", "MultiAmplicon", function(object){
         paste(.replace_inf_range(lapply(object@dada, length)), collapse=" to "),
         " samples \n")
     cat("\nContaining slot mergers of dimensions:",
-        length(object@mergers), " x ",
+        length(object@mergers), "amplicons x ",
         paste(.replace_inf_range(lapply(object@mergers, length)),
               collapse=" to "),
         " samples ==>", 
@@ -66,7 +66,7 @@ setMethod("show", "MultiAmplicon", function(object){
         collapse=" to "),
         "ASVs \n")
     cat("\nContaining slot sequenceTable of dimensions:",
-        length(object@sequenceTable), " x ",
+        length(object@sequenceTable), "amplicons  x ",
         paste(.replace_inf_range(lapply(object@sequenceTable, nrow)),
               collapse=" to "),
         " samples ==>",
@@ -74,7 +74,7 @@ setMethod("show", "MultiAmplicon", function(object){
               collapse=" to "),
         "ASVs \n")
     cat("\nContaining slot sequenceTableNoChime of dimensions:",
-        length(object@sequenceTableNoChime), " x ",
+        length(object@sequenceTableNoChime), "amplicons  x ",
         paste(.replace_inf_range(lapply(object@sequenceTableNoChime, nrow)),
               collapse=" to "),
         " samples ==>",
@@ -82,7 +82,7 @@ setMethod("show", "MultiAmplicon", function(object){
               collapse=" to "),
         "ASVs \n")
     cat("\nContaining slot taxonTable of dimensions:",
-        length(object@taxonTable), "(taxon ranks) x ",
+        length(object@taxonTable), "amplicons  x ",
         "NA (without) samples ==>", 
         paste(.replace_inf_range(lapply(object@taxonTable, nrow)),
               collapse=" to "),
