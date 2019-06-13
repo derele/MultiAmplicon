@@ -3,10 +3,13 @@
 ##' @title toPhyloseq
 ##' @param MA MultiAmplicon object with the \code{taxonTable} and
 ##'     \code{sequenceTableNoChime} slots filled.
-##' @return a \code{phyloseq} object or a list of such objects
+##' @param samples samples to include in phyloseq object
+##' @param ... additional arguments to be passed to
+##'     \code{\link[phyloseq]{phyloseq}}
+##' @return a \code{\link[phyloseq]{phyloseq}} object
 ##' @author Emanuel Heitlinger
 ##' @export
-setGeneric("toPhyloseq", function(MA, ...) {standardGeneric("toPhyloseq")})
+setGeneric("toPhyloseq", function(MA, samples, ...) {standardGeneric("toPhyloseq")})
 
 ##' Populate a phyloseq object with the contents of a MultiAmplicon
 ##' object
@@ -17,8 +20,10 @@ setGeneric("toPhyloseq", function(MA, ...) {standardGeneric("toPhyloseq")})
 ##' @title toPhyloseq
 ##' @param MA MultiAmplicon object with the \code{taxonTable} and
 ##'     \code{sequenceTableNoChime} slots filled.
-##' @param samples names of samples to be included in the phyloseq object
-##' @return a \code{\link[phyloseq]{phyloseq}} object or a list of such objects
+##' @param samples samples to include in phyloseq object
+##' @param ... additional arguments to be passed to
+##'     \code{\link[phyloseq]{phyloseq}}
+##' @return a \code{\link[phyloseq]{phyloseq}} object
 ##' @author Emanuel Heitlinger
 ##' @export
 setMethod("toPhyloseq", "MultiAmplicon",
@@ -57,7 +62,7 @@ setMethod("toPhyloseq", "MultiAmplicon",
 .fillSampleTables <- function (MA, samples){
     message("extracting ", length(samples), " requested samples")
     .complainWhenAbsent(MA, "sequenceTableNoChime")
-    seqtab <- getSequenceTableNoChime(MA)
+    seqtab <- getSequenceTableNoChime(MA, simplify=FALSE)
     filledST <- lapply(seqtab, function (ampST){
         missing.samples <- samples[!samples%in%rownames(ampST)]
         if(length(missing.samples)>0){
@@ -65,8 +70,7 @@ setMethod("toPhyloseq", "MultiAmplicon",
             rownames(fill) <- missing.samples
             full <- rbind(ampST, fill)
             message("filling zeros for amplicon missing ", nrow(fill),
-                     " samples ")
-
+                    " samples ")
         } else {full <- ampST}
         full[samples, ]
     })

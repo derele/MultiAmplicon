@@ -4,14 +4,19 @@
 \alias{toPhyloseq}
 \title{toPhyloseq}
 \usage{
-toPhyloseq(MA, ...)
+toPhyloseq(MA, samples, ...)
 }
 \arguments{
 \item{MA}{MultiAmplicon object with the \code{taxonTable} and
 \code{sequenceTableNoChime} slots filled.}
+
+\item{samples}{samples to include in phyloseq object}
+
+\item{...}{additional arguments to be passed to
+\code{\link[phyloseq]{phyloseq}}}
 }
 \value{
-a \code{phyloseq} object or a list of such objects
+a \code{\link[phyloseq]{phyloseq}} object
 }
 \description{
 Populate a phyloseq object for
