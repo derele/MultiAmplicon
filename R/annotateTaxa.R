@@ -38,6 +38,7 @@
 ##' @import data.table
 ##' @importFrom taxonomizr getTaxonomy
 ##' @importFrom utils read.csv
+##' @import phyloseq
 ##' @author Emanuel Heitlinger
 ##' @export
 getBlastTaxAnnot <- function (MA, dataBaseDir=Sys.getenv("BLASTDB"),
@@ -178,5 +179,10 @@ getBlastTaxAnnot <- function (MA, dataBaseDir=Sys.getenv("BLASTDB"),
     })
     names(annot.l) <- names(SEQ)[as.numeric(names(annot.l))]
     annot.l <- lapply(annot.l[names(SEQ)], function (x) x) ## drop array
-    initialize(MA, taxonTable = annot.l)
+    taxTab.l <- lapply(annot.l, function (x) {
+        if (!is.null(x)) {
+            new("taxonomyTable", x)
+        } else {NULL}
+    })
+    initialize(MA, taxonTable = taxTab.l)
 }
