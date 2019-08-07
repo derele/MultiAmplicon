@@ -176,7 +176,7 @@ ggplot syntax.
 ## Hand over to phyloseq
 
 ```{r filling, mesage=FALSE}
-MAf <- fillSampleTables(MA)
+PH <- toPhyloseq(MA)
 ```
 
 ## Comparing sample data 

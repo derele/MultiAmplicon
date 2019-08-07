@@ -34,7 +34,8 @@ setMethod("toPhyloseq", "MultiAmplicon",
               filledST <- .fillSampleTables(MA, samples=samples)
               allST <- as.matrix(Reduce(cbind, filledST))
               ## The same for taxon annotations
-              all.tax <- as.matrix(Reduce(rbind, getTaxonTable(MA)))
+              all.tax <- as.matrix(Reduce(rbind, getTaxonTable(MA,
+                                                               simplify=FALSE)))
               ## wrap it up into one Phyloseq object
               phyloseq(otu_table(allST, taxa_are_rows=FALSE),
                        tax_table(all.tax),
