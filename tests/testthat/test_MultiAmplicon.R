@@ -215,7 +215,7 @@ test_that("sorting a subsetted object same as subsetting a sorted object", {
 
 context("Taxonomy annotation works")
 
-MA7 <- getBlastTaxAnnot(MA6,
+MA7 <- blastTaxAnnot(MA6,
                         infasta=system.file("extdata", "in.fasta", package = "MultiAmplicon"),
                         outblast=system.file("extdata", "out.blt", package = "MultiAmplicon"))
 
