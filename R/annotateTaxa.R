@@ -10,7 +10,7 @@
 ##' annotations in case of seperate HSPs for (concatenated) non-merged
 ##' sequences.
 ##' 
-##' @title getBlastTaxAnnot
+##' @title blastTaxAnnot
 ##' @param MA A MultiAmplicon for which taxa shoudl be annotated. This
 ##'     should contain a \code{sequenceTableNoChime} slot, meaning
 ##'     that the MultiAmplicon pipeline needs to be followed to that
@@ -41,7 +41,7 @@
 ##' @import phyloseq
 ##' @author Emanuel Heitlinger
 ##' @export
-getBlastTaxAnnot <- function (MA, dataBaseDir=Sys.getenv("BLASTDB"),
+blastTaxAnnot <- function (MA, dataBaseDir=Sys.getenv("BLASTDB"),
                               db="nt/nt",
                               num_threads= getOption("mc.cores", 1L),
                               negative_gilist = system.file("extdata", "uncultured.gi",
