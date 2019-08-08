@@ -255,6 +255,12 @@ setMethod("length", "PairedDada", function(x){
 ##' @param rawCounts Users should not supply this parameter, the slot
 ##'     is created by \code{\link{sortAmplicons}}.
 ##'
+##' @param sampleData Users should not supply this parameter. It's
+##'     filled with a sample_data object from
+##'     \code{\link[phyloseq]{phyloseq}}. The slot is created from
+##'     sample names (same as \code{colnames(MA)}) and more data can
+##'     be added by \code{\link{addSampleData}}.
+##'
 ##' @param stratifiedFiles Users should not supply this parameter, the
 ##'     slot is created by \code{\link{sortAmplicons}}.
 ##'
@@ -273,8 +279,10 @@ setMethod("length", "PairedDada", function(x){
 ##' @param sequenceTableNoChime Users should not supply this parameter,
 ##'     the slot is created by \code{\link{removeChimeraMulti}}
 ##'
-##' @param taxonTable Users should not supply this parameter,
-##'     the slot is created by \code{\link{getBlastTaxAnnot}}
+##' @param taxonTable Users should not supply this parameter, the slot
+##'     is created by \code{\link{blastTaxAnnot}}. It's filled with a
+##'     list of taxonomyTable objects from
+##'     \code{\link[phyloseq]{phyloseq}}.
 ##' 
 ##' @examples
 ##'
@@ -313,10 +321,11 @@ setMethod("length", "PairedDada", function(x){
 ##'
 ##' MA6 <- removeChimeraMulti(MA5, mc.cores=1)
 ##'
-##' MA7 <- getBlastTaxAnnot(MA6)
+##' MA7 <- blastTaxAnnot(MA6)
 ##' 
 ##' @seealso \code{\link[dada2]{derepFastq}},\code{\link[dada2]{dada}}
 ##' @importFrom dada2 derepFastq dada
+##' @import phyloseq
 ##' @author Emanuel Heitlinger
 ##' @exportClass MultiAmplicon
 setClass("MultiAmplicon",
@@ -324,6 +333,7 @@ setClass("MultiAmplicon",
                         PairedReadFileSet="PairedReadFileSet",
                         rawCounts="matrix",
                         stratifiedFiles="list",
+                        sampleData="sample_data", 
                         derep="list",
                         dada="list",
                         mergers="list",
@@ -339,6 +349,10 @@ MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
                           PairedReadFileSet = PairedReadFileSet(),
                           rawCounts = matrix(),
                           stratifiedFiles = list(),
+                          sampleData = new("sample_data",
+                                           data.frame(row.names=names(PairedReadFileSet),
+                                                      readsF=PairedReadFileSet@readsF,
+                                                      readsR=PairedReadFileSet@readsF)),
                           derep = list(),
                           dada = list(),
                           mergers = list(),
@@ -350,7 +364,8 @@ MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
         PrimerPairsSet = PrimerPairsSet,
         PairedReadFileSet = PairedReadFileSet,
         rawCounts = rawCounts,
-        stratifiedFiles = stratifiedFiles, 
+        stratifiedFiles = stratifiedFiles,
+        sampleData = sampleData,
         derep = derep,
         dada = dada,
         mergers = mergers,

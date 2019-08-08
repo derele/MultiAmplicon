@@ -32,9 +32,12 @@
 \usage{
 MultiAmplicon(PrimerPairsSet = PrimerPairsSet(),
   PairedReadFileSet = PairedReadFileSet(), rawCounts = matrix(),
-  stratifiedFiles = list(), derep = list(), dada = list(),
-  mergers = list(), sequenceTable = list(),
-  sequenceTableNoChime = list(), taxonTable = list())
+  stratifiedFiles = list(), sampleData = new("sample_data",
+  data.frame(row.names = names(PairedReadFileSet), readsF =
+  PairedReadFileSet@readsF, readsR = PairedReadFileSet@readsF)),
+  derep = list(), dada = list(), mergers = list(),
+  sequenceTable = list(), sequenceTableNoChime = list(),
+  taxonTable = list())
 
 \S4method{colnames}{MultiAmplicon}(x)
 
@@ -96,6 +99,12 @@ is created by \code{\link{sortAmplicons}}.}
 \item{stratifiedFiles}{Users should not supply this parameter, the
 slot is created by \code{\link{sortAmplicons}}.}
 
+\item{sampleData}{Users should not supply this parameter. It's
+filled with a sample_data object from
+\code{\link[phyloseq]{phyloseq}}. The slot is created from
+sample names (same as \code{colnames(MA)}) and more data can
+be added by \code{\link{addSampleData}}.}
+
 \item{derep}{Users should not supply this parameter, the slot is
 created by \code{\link{derepMulti}}}
 
@@ -111,8 +120,10 @@ slot is created by \code{\link{makeSequenceTableMulti}}}
 \item{sequenceTableNoChime}{Users should not supply this parameter,
 the slot is created by \code{\link{removeChimeraMulti}}}
 
-\item{taxonTable}{Users should not supply this parameter,
-the slot is created by \code{\link{getBlastTaxAnnot}}}
+\item{taxonTable}{Users should not supply this parameter, the slot
+is created by \code{\link{blastTaxAnnot}}. It's filled with a
+list of taxonomyTable objects from
+\code{\link[phyloseq]{phyloseq}}.}
 
 \item{x}{MultiAmplicon-class object}
 
@@ -224,7 +235,7 @@ MA5 <- makeSequenceTableMulti(MA4)
 
 MA6 <- removeChimeraMulti(MA5, mc.cores=1)
 
-MA7 <- getBlastTaxAnnot(MA6)
+MA7 <- blastTaxAnnot(MA6)
 
 }
 \seealso{

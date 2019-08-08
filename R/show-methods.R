@@ -47,6 +47,8 @@ setMethod("show", "MultiAmplicon", function(object){
         length(object@stratifiedFiles), "amplicons x ",
         paste(.replace_inf_range(lapply(object@stratifiedFiles, length)), collapse=" to "),
         " samples \n")
+    cat("\nContaining slot sampleData:")
+    show(object@sampleData)        
     cat("\nContaining slot derep of dimensions:",
         length(object@derep), "amplicons x ",
         paste(.replace_inf_range(lapply(object@derep, length)), collapse=" to "),
