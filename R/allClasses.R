@@ -339,7 +339,32 @@ setClass("MultiAmplicon",
                         mergers="list",
                         sequenceTable="list",
                         sequenceTableNoChime="list",
-                        taxonTable="list"))
+                        taxonTable="list"),
+         validity=function(object) {
+             ## constructors check for PairedReadFileSet,
+             ## PrimerPairsSet, rawCounts and sampleData
+             ## directly. Other slots are list can additionally be
+             ## checked at deeper levels
+             if(!.isListOf(object@dada, "PairedDada")){
+                 "PairedDada objects or an empty list must be provided for a valid MultiAmplicon object"
+             }
+             if(!all(unlist(lapply(object@derep, .isListOf, "PairedDerep")))){
+                 "PairedDerep objects or an empty list must be provided for a valid MultiAmplicon object"
+             }
+             if(!all(unlist(lapply(object@mergers, .isListOf, "data.frame")))){
+                 "data.frame objects or an empty list must be provided for valid mergers in MultiAmplicon object"
+             }
+             if(!.isListOf(object@sequenceTable, "matrix")){
+                 "matrix objects or an empty list must be provided for valid sequenceTables in MultiAmplicon object"
+             }
+             if(!.isListOf(object@sequenceTableNoChime, "matrix")){
+                     "matrix objects or an empty list must be provided for valid sequenceTableNoChime in MultiAmplicon object"
+             }
+             if(!.isListOf(object@taxonTable, "taxonomyTable", nullOk=TRUE)){
+                 "taxonomyTable objects or an empty list must be provided in MultiAmplicon object"
+             }
+         }
+         )
 
 
 ##' @export MultiAmplicon
@@ -488,3 +513,19 @@ setMethod("getSequencesFromTable", "MultiAmplicon",
     } else{x}
 }
     
+
+.isListOf <- function (x, what, nullOk=FALSE){
+    if(nullOk) {
+        what <- c(what, "NULL")
+    }
+    if(!is.list(x)){
+        return(FALSE)
+    }
+    else{
+        classes <- unlist(lapply(x, class))
+        all(classes%in%what)
+    }
+}
+
+
+

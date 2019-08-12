@@ -296,14 +296,6 @@ removeChimeraMulti <- function(MA, mc.cores = getOption("mc.cores", 1L), ...){
     initialize(MA, sequenceTableNoChime = sequenceTableNoChime)
 }
 
-
-
-
-
-
-
-
-
 ##' Calculate the proportion of merged sequences for a MultiAmplicon
 ##' object.
 ##'
