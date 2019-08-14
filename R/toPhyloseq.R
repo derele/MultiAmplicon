@@ -1,4 +1,4 @@
-##' Populate a phyloseq object for 
+##' Create a phyloseq object from a MultiAmplicon object
 ##'
 ##' @title toPhyloseq
 ##' @param MA MultiAmplicon object with the \code{taxonTable} and
@@ -42,6 +42,72 @@ setMethod("toPhyloseq", "MultiAmplicon",
                        ...)
           })
 
+
+##' Add sample data to a MultiAmplicon object
+##'
+##' The sampleData slot is filled with a
+##' \code{\link[phylose]{sample_data}} object from phyoseq created
+##' merging sample names (colnames) of the MultiAmplicon object with a
+##' data frame of sample data. The rownames of the that sampleData
+##' data frame must correspond to colnames of the MultiAmplcion
+##' object. 
+##' 
+##' @title addSampleData
+##' @param MA A \code{\link{MultiAmplicon}} object
+##' @param sampleData A data frame of providing data for samples in
+##'     the \code{\link{MultiAmplicon}} object. If set to \code{NULL}
+##'     (default) sampleData will be added based on names of the
+##'     \code{link{PairedReadFileSet}} and the resulting sampleData
+##'     will (only) give names of forward and reverse file names for
+##'     each sample. 
+##' @return A \code{\link{MultiAmplicon}} object with the sampleData
+##'     slot filled.
+##' @export
+##' @author Emanuel Heitlinger
+addSampleData <- function (MA, sampleData=NULL) {
+    ## needed to provide compatibility with MA objects before
+    ## sampleData slot was introduced
+    if(is.null(sampleData)){
+        MA@sampleData <- new("sample_data",
+                             data.frame(row.names=names(MA@PairedReadFileSet),
+                                        readsF=MA@PairedReadFileSet@readsF,
+                                        readsR=MA@PairedReadFileSet@readsF))
+        return(MA)
+    } else {
+        ## now merge... discard samples that are not either in the
+        ## sequences or in the samples 
+        missingSeq <- rownames(sampleData)[!rownames(sampleData)%in%
+                                               rownames(MA@sampleData)]
+        missingSamples <- rownames(MA@sampleData)[!rownames(MA@sampleData)%in%
+                                              rownames(sampleData)]
+        if (length(missingSamples)>0) {
+            warning(paste(length(missingSamples), "samples are missing from your",
+                          "sampleData but seem to have sequence data reported.",
+                          "They will be omitted if you continue"))
+        }
+        if (length(missingSeq)>0) {
+            warning(paste(length(missingSeq), "samples are in your sampleData but",
+                          "have no sequence data reported. They will be omitted,",
+                          "if you continue"))
+        }
+        ## Forward and reverse read file-names are now always part of
+        ## sampleData in a MA object, they are part of the merge when
+        ## subsetting (see subset-methods)
+        by.cols="row.names"
+        if (all(c("readsF", "readsR")%in%colnames(sampleData))){
+            by.cols <- c(by.cols, "readsF", "readsR")
+        }
+        mSampleData <- merge(MA@sampleData, sampleData, by=by.cols)
+        rownames(mSampleData) <- mSampleData$Row.names
+        mSampleData$Row.names <- NULL
+        SData<- new("sample_data", mSampleData)
+        initialize(MA, sampleData = SData)
+    }
+}
+
+
+
+
 ##' Fill sequence tables in a MultiAmplicon object to include selected
 ##' samples for all amplicons.
 ##'
@@ -77,3 +143,4 @@ setMethod("toPhyloseq", "MultiAmplicon",
     })
     filledST
 }
+

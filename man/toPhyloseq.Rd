@@ -19,7 +19,7 @@ toPhyloseq(MA, samples, ...)
 a \code{\link[phyloseq]{phyloseq}} object
 }
 \description{
-Populate a phyloseq object for
+Create a phyloseq object from a MultiAmplicon object
 }
 \author{
 Emanuel Heitlinger

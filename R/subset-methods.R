@@ -200,7 +200,7 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                   newTT <- x@taxonTable[i]
                   names(newTT) <- names(x@taxonTable[i])         
               }              
-              ## avoid warnings from ValidityCheck
+              ## avoid warnings from ValidityCheck??
               suppressWarnings(
                   MA.out <- initialize(x,
                                        PrimerPairsSet = newPrimer,
@@ -212,7 +212,12 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                                        mergers = newmergers,
                                        sequenceTable = newST,
                                        sequenceTableNoChime = newSTnC,
-                                       taxonTable = newTT)
+                                       taxonTable = newTT))
+              suppressWarnings(
+              ## sample data con be subsetted to the names of the new
+              ## samples == names of the new (left) file names.
+              MA.out <- addSampleData(MA.out,
+                                      MA.out@sampleData[names(newFiles),])
               )
               MA.out
           })
