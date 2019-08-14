@@ -16,6 +16,11 @@
     cbind(x@rawCounts, y@rawCounts)
 }
 
+.concatenateSampleData <- function(x, y){
+    bound <- rbind(x@sampleData, y@sampleData)
+    new("sample_data", bound)
+}
+
 .concatenateDerep <- function(x, y){
     dr <- lapply(seq_along(x@derep), function (i){
         c(x@derep[[i]], y@derep[[i]])
@@ -56,7 +61,10 @@
 
 .concatenateTaxonTable <- function(x, y){
     tt <- lapply(seq_along(x), function (i){
-        rbind(x[[i]], y[[i]])
+        bound <- rbind(x[[i]], y[[i]])
+        if(!is.null(bound)){
+            new("taxonomyTable", bound)
+        } else NULL
     })
     names(tt) <- names(x)
     tt
@@ -83,7 +91,7 @@ concatenateMultiAmplicon <- function (MA1, MA2, what="samples") {
 `amplicons`?")
     }
     if(what%in%"amplicons"){
-        stop("concatenation of amplicons is not yet implemented, plaese open and issue on github and ask  prioritize this feature if you need it!")
+        stop("concatenation of amplicons is not yet implemented, plaese open and issue on github and ask me prioritize this feature if you need it!")
     }
     MultiAmplicon(MA1@PrimerPairsSet,
                   .concatenatePairedReadFileSets(MA1@PairedReadFileSet,
@@ -91,6 +99,7 @@ concatenateMultiAmplicon <- function (MA1, MA2, what="samples") {
                   .concatenateRawCounts(MA1, MA2),
                   .concatenateStratifiedFiles(MA1@stratifiedFiles,
                                               MA2@stratifiedFiles),
+                  .concatenateSampleData(MA1, MA2),
                   .concatenateDerep(MA1, MA2),
                   .concatenateDada(MA1, MA2),
                   .concatenateMergers(MA1, MA2),
