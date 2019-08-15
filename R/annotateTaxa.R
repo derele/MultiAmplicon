@@ -63,15 +63,19 @@ blastTaxAnnot <- function (MA, dataBaseDir=Sys.getenv("BLASTDB"),
         })
         Biostrings::writeXStringSet(DNAStringSet(unlist(Ssplit)),
                                     infasta)
+        message("wrote file ", infasta, 
+                " storing input sequences for blast\n")
     } else {
-        message("file", infasta, " exists, using existing file!",
-                " To extract input sequences for blast  again delete the file")
+        message("file ", infasta, " exists, using existing file!",
+                " To extract input sequences for blast  again delete the file\n")
     }
 
     if(!file.exists(outblast)){
+        dbf <- paste(dataBaseDir, db, sep="/")
         DBmessage <-
             paste0("using directory given by environmental varibale $BLASTDB=",
-                   dataBaseDir, " and database ", db, "\n")
+                   dataBaseDir, " and database ", db, " resulting in ", dbf,
+                   " as database full path\n")
         message(DBmessage)
         
         ## We blast this file against NR with a gi-list excluding all
@@ -84,7 +88,7 @@ blastTaxAnnot <- function (MA, dataBaseDir=Sys.getenv("BLASTDB"),
         command <- paste("blastn", 
                          "-negative_gilist",  negative_gilist,
                          "-query", infasta,
-                         "-db", db,
+                         "-db", dbf,
                          "-evalue",  1e-15,
                          "-num_threads", num_threads,
                          "-max_hsps", 1,
