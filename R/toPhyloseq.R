@@ -94,10 +94,13 @@ addSampleData <- function (MA, sampleData=NULL) {
         ## Forward and reverse read file-names are now always part of
         ## sampleData in a MA object, they are part of the merge when
         ## subsetting (see subset-methods)
-        by.cols="row.names"
-        if (all(c("readsF", "readsR")%in%colnames(sampleData))){
-            by.cols <- c(by.cols, "readsF", "readsR")
-        }
+        ## by.cols="row.names"
+        ## if (all(c("readsF", "readsR")%in%colnames(sampleData))){
+        ##     by.cols <- c(by.cols, "readsF", "readsR")
+        ## }
+        by.cols <- c("row.names", 
+                     intersect(colnames(sampleData),
+                               colnames(MA@sampleData)))
         mSampleData <- merge(MA@sampleData, sampleData, by=by.cols)
         rownames(mSampleData) <- mSampleData$Row.names
         mSampleData$Row.names <- NULL
