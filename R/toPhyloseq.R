@@ -39,6 +39,7 @@ setMethod("toPhyloseq", "MultiAmplicon",
               ## wrap it up into one Phyloseq object
               phyloseq(otu_table(allST, taxa_are_rows=FALSE),
                        tax_table(all.tax),
+                       sample_data(MA@sampleData),
                        ...)
           })
 
@@ -100,7 +101,7 @@ addSampleData <- function (MA, sampleData=NULL) {
         mSampleData <- merge(MA@sampleData, sampleData, by=by.cols)
         rownames(mSampleData) <- mSampleData$Row.names
         mSampleData$Row.names <- NULL
-        SData<- new("sample_data", mSampleData)
+        SData <- new("sample_data", mSampleData)
         initialize(MA, sampleData = SData)
     }
 }
