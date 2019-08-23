@@ -27,20 +27,34 @@ setGeneric("toPhyloseq", function(MA, samples, ...) {standardGeneric("toPhyloseq
 ##' @author Emanuel Heitlinger
 ##' @export
 setMethod("toPhyloseq", "MultiAmplicon",
-          function(MA, samples, ...){
+          function(MA, samples, multi2Single=TRUE, ...){
               .complainWhenAbsent(MA, "taxonTable")
-              ## get sample tables filled with zeros for non-assessed
-              ## samples for particular amplicons
-              filledST <- .fillSampleTables(MA, samples=samples)
-              allST <- as.matrix(Reduce(cbind, filledST))
-              ## The same for taxon annotations
-              all.tax <- as.matrix(Reduce(rbind, getTaxonTable(MA,
+              if(multi2Single){
+                  ## get sample tables filled with zeros for non-assessed
+                  ## samples for particular amplicons
+                  filledST <- .fillSampleTables(MA, samples=samples)
+                  allST <- as.matrix(Reduce(cbind, filledST))
+                  ## The same for taxon annotations
+                  all.tax <- as.matrix(Reduce(rbind, getTaxonTable(MA,
                                                                simplify=FALSE)))
-              ## wrap it up into one Phyloseq object
-              phyloseq(otu_table(allST, taxa_are_rows=FALSE),
-                       tax_table(all.tax),
-                       sample_data(MA@sampleData),
-                       ...)
+                  ## wrap it up into one Phyloseq object
+                  phyloseq(otu_table(allST, taxa_are_rows=FALSE),
+                           tax_table(all.tax),
+                           sample_data(MA@sampleData),
+                           ...)
+              } else {
+                  STl <- getSequenceTableNoChime(MA)
+                  TTl <- getTaxonTable(MA)
+                  PS.l <- lapply(seq_along(STl), function (i) {
+                      phyloseq(otu_table(STl[[i]], taxa_are_rows=FALSE),
+                               tax_table(TTl[[i]]),
+                               sample_data(MA@sampleData[rownames(STl[[i]]),]),
+                               ...)
+                  })
+                  ## somehow can't use rownames(MA)
+                  names(PS.l) <- names(MA@PrimerPairsSet)
+                  PS.l
+              }
           })
 
 
