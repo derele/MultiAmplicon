@@ -50,10 +50,23 @@ setMethod("toPhyloseq", "MultiAmplicon",
                   STl <- getSequenceTableNoChime(MA)
                   TTl <- getTaxonTable(MA)
                   PS.l <- lapply(seq_along(STl), function (i) {
-                      phyloseq(otu_table(STl[[i]], taxa_are_rows=FALSE),
-                               tax_table(TTl[[i]]),
-                               sample_data(MA@sampleData[rownames(STl[[i]]),]),
-                               ...)
+                      ## currently taxa tables are NULL if empty and
+                      ## sequence Tables have zero dimensions
+                      seqExists <- nrow(STl[[i]])>0 && ncol(STl[[i]])>0
+                      taxExists <- !is.null(TTl[[i]])
+                      if(isTRUE(seqExists) && isTRUE(taxExists)) {                      
+                          phyloseq(otu_table(STl[[i]], taxa_are_rows=FALSE),
+                                   tax_table(TTl[[i]]),
+                                   sample_data(MA@sampleData[rownames(STl[[i]]),]),
+                                   ...)
+                      } else if(!isTRUE(seqExists) && !isTRUE(taxExists)){
+                          NULL
+                      } else  {
+                          stop(paste("inconsistent taxa data provided for",
+                                     "sequences in amplicon", i, 
+                                     rownames(MA)[[i]], "\n")
+                               )
+                      }
                   })
                   ## somehow can't use rownames(MA)
                   names(PS.l) <- names(MA@PrimerPairsSet)
