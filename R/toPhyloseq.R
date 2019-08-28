@@ -36,7 +36,11 @@ setMethod("toPhyloseq", "MultiAmplicon",
                   allST <- as.matrix(Reduce(cbind, filledST))
                   ## The same for taxon annotations
                   all.tax <- as.matrix(Reduce(rbind, getTaxonTable(MA,
-                                                               simplify=FALSE)))
+                                                                   simplify=FALSE)))
+                  ## to avoid problems with duplicated rownames (same sequences
+                  ## recovered for different amplicons), this can happen after trimming
+                  rownames(all.tax) <- make.unique(rownames(all.tax))
+                  colnames(allST) <- make.unique(colnames(allST))
                   ## wrap it up into one Phyloseq object
                   phyloseq(otu_table(allST, taxa_are_rows=FALSE),
                            tax_table(all.tax),
