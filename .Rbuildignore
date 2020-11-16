@@ -12,3 +12,5 @@ stratified_files/*
 vignettes/MultiAmplicon-real-world-example_cache
 vignettes/MultiAmplicon-small-example_cache
 ^appveyor\.yml$
+testdraft/*
+testdraft

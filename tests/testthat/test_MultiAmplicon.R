@@ -213,49 +213,49 @@ test_that("sorting a subsetted object same as subsetting a sorted object", {
 ## expect_equal(getStratifiedFilesR(MA2.alt), getStratifiedFilesR(MA2[2:5, 2:6]))
 
 
-context("Taxonomy annotation works")
+## context("Taxonomy annotation works")
 
-MA7 <- blastTaxAnnot(MA6,
-                        infasta=system.file("extdata", "in.fasta", package = "MultiAmplicon"),
-                        outblast=system.file("extdata", "out.blt", package = "MultiAmplicon"))
+## MA7 <- blastTaxAnnot(MA6,
+##                         infasta=system.file("extdata", "in.fasta", package = "MultiAmplicon"),
+##                         outblast=system.file("extdata", "out.blt", package = "MultiAmplicon"))
 
-test_that("sequence and taxon annotation are in same order", {
-    expect_equal(unlist(lapply(MA7@taxonTable, rownames)),
-                 unlist(lapply(MA7@sequenceTableNoChime, colnames)))
- })
+## test_that("sequence and taxon annotation are in same order", {
+##     expect_equal(unlist(lapply(MA7@taxonTable, rownames)),
+##                  unlist(lapply(MA7@sequenceTableNoChime, colnames)))
+##  })
 
-## ## This is  more stringent then even only the number
-## STnoC <- getSequenceTableNoChime(MA7)
-## nAnnot <- lapply(getTaxonTable(MA7), nrow)
-#### now are they in sync??
-## cbind(nAnnot, unlist(lapply(STnoC, ncol)))
+## ## ## This is  more stringent then even only the number
+## ## STnoC <- getSequenceTableNoChime(MA7)
+## ## nAnnot <- lapply(getTaxonTable(MA7), nrow)
+## #### now are they in sync??
+## ## cbind(nAnnot, unlist(lapply(STnoC, ncol)))
 
 
-## ## this might be a suitable test for something...
-## all(unique(unlist(lapply(getSequenceTableNoChime(MA), rownames)))%in%colnames(MA))
-## all(colnames(MA)%in%unique(unlist(lapply(getSequenceTableNoChime(MA), rownames))))
+## ## ## this might be a suitable test for something...
+## ## all(unique(unlist(lapply(getSequenceTableNoChime(MA), rownames)))%in%colnames(MA))
+## ## all(colnames(MA)%in%unique(unlist(lapply(getSequenceTableNoChime(MA), rownames))))
 
-context("Subsetting and concatenating MultiAmplicon objects")
+## context("Subsetting and concatenating MultiAmplicon objects")
 
-foo  <- concatenateMultiAmplicon((MA7[, 1:3]), MA7[, 4:7])
+## foo  <- concatenateMultiAmplicon((MA7[, 1:3]), MA7[, 4:7])
 
-## Again this fails, despite the fact that there is no new
-## stratification involved!  Hove to FIX THIS!!!
+## ## Again this fails, despite the fact that there is no new
+## ## stratification involved!  Hove to FIX THIS!!!
+## ## test_that("subsetting and concatenation go hand in hand", {
+## ##     expect_equal(MA6@stratifiedFiles, foo@stratifiedFiles)
+## ## })
+
 ## test_that("subsetting and concatenation go hand in hand", {
-##     expect_equal(MA6@stratifiedFiles, foo@stratifiedFiles)
+##     expect_equal(MA7@rawCounts, foo@rawCounts)
 ## })
 
-test_that("subsetting and concatenation go hand in hand", {
-    expect_equal(MA7@rawCounts, foo@rawCounts)
-})
+## test_that("subsetting and concatenation go hand in hand", {
+##     expect_equal(MA7@dada, foo@dada)
+## })
 
-test_that("subsetting and concatenation go hand in hand", {
-    expect_equal(MA7@dada, foo@dada)
-})
-
-test_that("subsetting and concatenation go hand in hand", {
-    expect_equal(MA7@derep, foo@derep)
-})
+## test_that("subsetting and concatenation go hand in hand", {
+##     expect_equal(MA7@derep, foo@derep)
+## })
 
 ## Again this fails, the problem being likely the one empty amplicon
 ## mess...HAVE TO FIX THIS!!!
