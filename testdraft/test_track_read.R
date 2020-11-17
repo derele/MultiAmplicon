@@ -41,16 +41,16 @@ MA <- MultiAmplicon(primer, PRF)
 ### The UNIQUE BUG doesn't change with 
 MA1 <- sortAmplicons(MA, filedir=tempfile())
 
-## MA2 <- derepMulti(MA1, mc.cores=1)
-## MA3 <- dadaMulti(MA2, selfConsist=TRUE, pool=FALSE, 
-##                  multithread=TRUE)
-## MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
-## MA5 <- makeSequenceTableMulti(MA4)
-## MA6 <- removeChimeraMulti(MA5)
+MA2 <- derepMulti(MA1, mc.cores=1)
+MA3 <- dadaMulti(MA2, selfConsist=TRUE, pool=FALSE, 
+                 multithread=TRUE)
+MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
+MA5 <- makeSequenceTableMulti(MA4)
+MA6 <- removeChimeraMulti(MA5)
 
 #################### SAMPLE CONFUSION #########################
 ## BAD2 <- derepMulti(MA1[c(6:4,1L,3L,2L), c(6:4,1L,3L,2L, 7L)], mc.cores=1)
-BAD2 <- derepMulti(MA1, mc.cores=1)
+## BAD2 <- derepMulti(MA1, mc.cores=1)
 
 ### THIS LEADS TO the same SAMPLE CONFUSION
 ## BAD3 <- dadaMulti(BAD2[c(6:4,1L,3L,2L), c(6:4,1L,3L,2L, 7L)],
@@ -62,12 +62,8 @@ BAD2 <- derepMulti(MA1, mc.cores=1)
 
 ## resorting samples is enough to cause trouble... easy resort does
 ## the job
-BAD3 <- dadaMulti(BAD2[, 7:1],
+BAD3 <- dadaMulti(MA2[, 7:1],
                    selfConsist=TRUE, pool=FALSE, multithread=TRUE)
-
-MA3 <- dadaMulti(BAD2,
-                   selfConsist=TRUE, pool=FALSE, multithread=TRUE)
-
 
 ## resorting samples is enough to cause trouble... easy resort does
 ## the job... BUT NOT subsetting without resorting!!!!
@@ -83,17 +79,13 @@ MA3 <- dadaMulti(BAD2,
 ##                    justConcatenate=TRUE)
 BAD4 <- mergeMulti(BAD3, justConcatenate=TRUE)
 
-MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
-
 ## here it doesn't produce an error
 ## BAD5 <- makeSequenceTableMulti(BAD4[c(6:4,1L,3L,2L), c(6:4,1L,3L,2L, 7L)])
 BAD5 <- makeSequenceTableMulti(BAD4)
-MA5 <- makeSequenceTableMulti(MA4)
 
 ## here it doesn't produce an error
 ## BAD6 <- removeChimeraMulti(BAD5[c(6:4,1L,3L,2L), c(6:4,1L,3L,2L, 7L)])
 BAD6 <- removeChimeraMulti(BAD5)
-MA6 <- removeChimeraMulti(MA5)
 
 ################# EVALUATE #############
 seqtabs <- getSequenceTableNoChime(MA6)
@@ -111,7 +103,7 @@ confusion <- lapply(names(SamSums), function(name) {
     df[is.na(df)] <- 0
     df
 })
-
+confusion
 
 ### OKAY THIS IS ONE BUG found! FIX IT!!!!
 
@@ -123,6 +115,7 @@ confusion <- lapply(names(SamSums), function(name) {
 
 ########################################
 ### but the reads confusion must be in the sorting is 
+
 
 
 trackReadSorting <- function (MA) { 
@@ -158,16 +151,83 @@ trackReadSorting <- function (MA) {
 
 
 trackReadSorting(MA1)
+trackReadSorting(BAD3)
 
 
 ### This shows another (small?) problem, some reads are sorted into
-### multiple amplicons
-lapply(MA1@stratifiedFiles, function (x){
-    readsF_stratified <- readFastq(unlist(x@readsF))
-    table(duplicated(ShortRead::id(readsF_stratified)))
+### multiple amplicons but the "problems" column remains zero. No
+### reads (by their ids) are sorted into different samples
+
+stratFdnaL <- lapply(MA1@stratifiedFiles, function (x){
+    readFastq(unlist(x@readsF))
 })
+
+lapply(stratFdnaL, function (x)  table(duplicated(ShortRead::id(x))))
 ## this shows that reads are still unique within on amplicon
 
+stratFreadsL <- lapply(stratFdnaL, ShortRead::sread)
+stratFreadsL <- stratFreadsL[unlist(lapply(stratFreadsL, length))>0]
+
+seqtabL <- getSequenceTableNoChime(MA6)
+
+seqtabL <- seqtabL[unlist(lapply(seqtabL, function(x) all(dim(x)>0)))]
+
+seqTabreadsF <- lapply(seqtabL, function(x){
+    split <- strsplit(colnames(x), "NNNNNNNNNN")
+    lapply(split, "[[", 1)
+})
+
+
+names(seqTabreadsF) %in% names(stratFreadsL)
+
+stratFreadsL <- stratFreadsL[names(seqTabreadsF)]
+
+lapply(seq_along(seqTabreadsF), function (i) {
+    seqTabreadsF[[i]]%in%as.vector(stratFreadsL[[i]])
+})
+
+### OKAY ALL reads remain in the same amplicon!
+
+
+## NOW are all reads counted for the right sample?
 
 
 
+getReadsBySample <- function(MA){
+    snames <- colnames(MA)
+    sreads <- lapply(snames, function (sampl) { 
+        strat <- lapply(MA@stratifiedFiles, function(x) {
+            grep(sampl, x@readsF, value=TRUE)
+        })
+        readFastq(unlist(strat))
+    })
+    names(sreads) <- snames
+    sreads
+}
+
+
+mapReadsStratTab <- function(MA) 
+
+RbyS <- getReadsBySample(MA)
+RbyS <- lapply(RbyS, ShortRead::sread)
+
+seqtabL <- getSequenceTableNoChime(MA)
+seqtabL <- seqtabL[unlist(lapply(seqtabL, function(x) all(dim(x)>0)))]
+
+stRbyS <- lapply(seqtabL, function(ST) {
+    SbyS <- sapply(rownames(ST), function(st){
+        cn <- colnames(ST)[which(ST[st,]>0)]
+        split <- strsplit(cn, "NNNNNNNNNN")
+        unlist(lapply(split, "[[", 1))
+    })
+    SbyS <- SbyS[!unlist(lapply(SbyS, is.null))]
+})
+
+SbyS <- SbyS[intersect(names(SbyS), names(RbyS))]
+RbyS <- RbyS[intersect(names(SbyS), names(RbyS))]
+
+sapply(names(SbyS), function (na) {
+    SbyS[[na]] %in% RbyS[[na]]
+})
+
+### read matching trackter draft 
