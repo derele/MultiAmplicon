@@ -192,42 +192,61 @@ lapply(seq_along(seqTabreadsF), function (i) {
 ## NOW are all reads counted for the right sample?
 
 
-
-getReadsBySample <- function(MA){
-    snames <- colnames(MA)
-    sreads <- lapply(snames, function (sampl) { 
+mapReadsStratTab <- function(MA) {
+    getReadsBySample <- function(MA){
+    sreads <- lapply(colnames(MA), function (sampl) { 
         strat <- lapply(MA@stratifiedFiles, function(x) {
             grep(sampl, x@readsF, value=TRUE)
         })
         readFastq(unlist(strat))
     })
-    names(sreads) <- snames
+    names(sreads) <- colnames(MA)
     sreads
+    }
+    RbyS <- getReadsBySample(MA)
+    RbyS <- lapply(RbyS, ShortRead::sread)
+    
+    seqtabL <- getSequenceTableNoChime(MA)
+    seqtabL <- seqtabL[unlist(lapply(seqtabL, function(x) all(dim(x)>0)))]
+
+    SbyS <- lapply(colnames(MA), function(sampl){
+        sbys <- lapply(seqtabL, function(ST) {
+            sampl.here <- sampl[sampl%in%rownames(ST)]
+            cn <- colnames(ST)[which(ST[sampl.here,]>0)]
+            split <- strsplit(cn, "NNNNNNNNNN")
+            unlist(lapply(split, "[[", 1))
+            ## it might be necessary to also track the counts here
+        })
+        sbys[!unlist(lapply(sbys, is.null))]
+    })
+    names(SbyS) <- colnames(MA)
+
+    SbyS <- SbyS[intersect(names(SbyS), names(RbyS))]
+    RbyS <- RbyS[intersect(names(SbyS), names(RbyS))]
+
+    sapply(names(SbyS), function (na) {
+        unlist(SbyS[[na]]) %in% unique(as.vector(RbyS[[na]]))
+    })
 }
 
 
-mapReadsStratTab <- function(MA) 
 
-RbyS <- getReadsBySample(MA)
-RbyS <- lapply(RbyS, ShortRead::sread)
+## ### super difficult to test this tracking code.
+### So far: 
+## - no track referenced problems  on the MA test data
+## - few (but considerable) track referenced problems in the Hy test (this script)
+## - super abundant referenced problems in the complet Hy data
 
-seqtabL <- getSequenceTableNoChime(MA)
-seqtabL <- seqtabL[unlist(lapply(seqtabL, function(x) all(dim(x)>0)))]
 
-stRbyS <- lapply(seqtabL, function(ST) {
-    SbyS <- sapply(rownames(ST), function(st){
-        cn <- colnames(ST)[which(ST[st,]>0)]
-        split <- strsplit(cn, "NNNNNNNNNN")
-        unlist(lapply(split, "[[", 1))
-    })
-    SbyS <- SbyS[!unlist(lapply(SbyS, is.null))]
-})
-
-SbyS <- SbyS[intersect(names(SbyS), names(RbyS))]
-RbyS <- RbyS[intersect(names(SbyS), names(RbyS))]
-
-sapply(names(SbyS), function (na) {
-    SbyS[[na]] %in% RbyS[[na]]
-})
 
 ### read matching trackter draft 
+## lapply(mapReadsStratTab(MA6), table)
+
+## notInStrat <- which(!SbyS[["S1131_P1_FLD0093"]] %in%
+##                     unique(as.vector(RbyS[["S1131_P1_FLD0093"]])))
+
+
+## ST <- seqtabL[["ACM_008_17_F.Klin0341_CR_18_R"]]
+## sequence <- unlist(SbyS[["S1131_P1_FLD0093"]][notInStrat][x])
+## which(grepl(sequence[[1]][1], rownames(ST)))
+## })
