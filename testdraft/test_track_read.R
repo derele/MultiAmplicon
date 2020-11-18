@@ -41,12 +41,18 @@ MA <- MultiAmplicon(primer, PRF)
 ### The UNIQUE BUG doesn't change with 
 MA1 <- sortAmplicons(MA, filedir=tempfile())
 
-MA2 <- derepMulti(MA1, mc.cores=1)
+## doesn't make a difference
+## MA2 <- derepMulti(MA1, mc.cores=1, keep.single.singlets = TRUE)
+
+MA2 <- derepMulti(MA1[5:6,], mc.cores=1)
+
 MA3 <- dadaMulti(MA2, selfConsist=TRUE, pool=FALSE, 
                  multithread=TRUE)
 MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
 MA5 <- makeSequenceTableMulti(MA4)
 MA6 <- removeChimeraMulti(MA5)
+
+mapReadsStratTab(MA6)
 
 #################### SAMPLE CONFUSION #########################
 ## BAD2 <- derepMulti(MA1[c(6:4,1L,3L,2L), c(6:4,1L,3L,2L, 7L)], mc.cores=1)
