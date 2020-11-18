@@ -151,12 +151,16 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                       zero.i <- which(getRawCounts(x)[i[[ii]], ]>1) # >1 singl seq rm
                       which(zero.i%in%j)
                   })
-                  new.jz <- lapply(seq_along(i), function (ii) {
-                      zero.i <- which(getRawCounts(x)[i[[ii]], ]>0) # >0 zero seq rm
-                      which(zero.i%in%j)
-                  })
+                  ### had a HUGE BUG here when using new.jz for
+                  ### statified files, I thought this would be
+                  ### required because of the freaking "skip one"
+                  ### option in derepMulti
+                  ## new.jz <- lapply(seq_along(i), function (ii) {
+                  ##     zero.i <- which(getRawCounts(x)[i[[ii]], ]>0) # >0 zero seq rm
+                  ##     which(zero.i%in%j)
+                  ## })
                   newSF <-  lapply(seq_along(i), function (ii) {
-                      x@stratifiedFiles[[i[[ii]]]][new.jz[[ii]]]
+                      x@stratifiedFiles[[i[[ii]]]][new.j[[ii]]]
                   })
                   names(newSF) <- names(x@stratifiedFiles[i])
               }
@@ -266,3 +270,4 @@ name.to.numeric <- function(x, names){
         stop("only numeric/ingeger indices are currently supported for indexing")
 ##     which(names%in%x)
 }
+
