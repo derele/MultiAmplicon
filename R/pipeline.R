@@ -35,6 +35,8 @@
 ##' @author Emanuel Heitlinger
 derepMulti <- function(MA, mc.cores = getOption("mc.cores", 1L),
                        keep.single.singlets = FALSE, ...){
+    stop(paste("this function is unfunctional at the moment use",
+               "stratified files directly in dada/dadaMulti"))
     .complainWhenAbsent(MA, "stratifiedFiles")
     exp.args <- .extractEllipsis(list(...), nrow(MA))    
     PPderep <- mclapply(seq_along(MA@PrimerPairsSet), function (i){
@@ -114,17 +116,17 @@ derepMulti <- function(MA, mc.cores = getOption("mc.cores", 1L),
 dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
                       Ferr=NULL, Rerr=NULL, ...){
     ## alternatives: 
-    .complainWhenAbsent(MA, "derep")
+    ### .complainWhenAbsent(MA, "derep")
     .complainWhenAbsent(MA, "stratifiedFiles")
     exp.args <- .extractEllipsis(list(...), nrow(MA))
     ## needs to be computed on pairs of amplicons
     PPdada <- mclapply(seq_along(MA@PrimerPairsSet), function (i){
         ## ## From a derep object 
-        dF <- getDerepF(MA[i, ])
-        dR <- getDerepR(MA[i, ])
+        ## dF <- getDerepF(MA[i, ])
+        ## dR <- getDerepR(MA[i, ])
         ## ## Or directly from stratified files
-        ## dF <- getStratifiedFilesF(MA[i, ])
-        ## dR <- getStratifiedFilesR(MA[i, ])
+        dF <- getStratifiedFilesF(MA[i, ])
+        dR <- getStratifiedFilesR(MA[i, ])
         message("\n\namplicon ", names(MA@PrimerPairsSet)[i],
            ": dada estimation of sequence variants from ",
             length(dF), " of ",
@@ -193,11 +195,11 @@ mergeMulti <- function(MA, mc.cores=getOption("mc.cores", 1L), ...){
         daF <- getDadaF(MA[i, ])
         daR <- getDadaR(MA[i, ])
         ## ## From a derep object 
-        deF <- getDerepF(MA[i, ])
-        deR <- getDerepR(MA[i, ])
+        ##  deF <- getDerepF(MA[i, ])
+        ##  deR <- getDerepR(MA[i, ])
         ## ## Or directly from stratified files
-        ### deF <- getStratifiedFilesF(MA[i, ])
-        ### deR <- getStratifiedFilesR(MA[i, ])
+        deF <- getStratifiedFilesF(MA[i, ])
+        deR <- getStratifiedFilesR(MA[i, ])
         message("\nmerging sequences from " , length(MA@dada[[i]]),
                 " samples for amplicon ",
                 MA@PrimerPairsSet@names[[i]])

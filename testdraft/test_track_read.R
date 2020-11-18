@@ -38,15 +38,14 @@ PRF <- PairedReadFileSet(filtFs, filtRs)
 
 MA <- MultiAmplicon(primer, PRF)
 
-### The UNIQUE BUG doesn't change with 
 MA1 <- sortAmplicons(MA, filedir=tempfile())
 
-## doesn't make a difference
+
+## DerepMulti is defunct for the moment
 ## MA2 <- derepMulti(MA1, mc.cores=1, keep.single.singlets = TRUE)
+## MA2 <- derepMulti(MA1)
 
-MA2 <- derepMulti(MA1)
-
-MA3 <- dadaMulti(MA2, selfConsist=TRUE, pool=FALSE, 
+MA3 <- dadaMulti(MA1, selfConsist=TRUE, pool=FALSE, 
                  multithread=TRUE)
 
 MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
@@ -56,52 +55,16 @@ MA6 <- removeChimeraMulti(MA5)
 mapReadsStratTab(MA6)
 
 #################### SAMPLE CONFUSION #########################
-## BAD2 <- derepMulti(MA1[c(6:4,1L,3L,2L), c(6:4,1L,3L,2L, 7L)], mc.cores=1)
-BAD2 <- derepMulti(MA1, mc.cores=1)
+## derep made unfunctional for now!!
 
 ### THIS LEADS TO the same SAMPLE CONFUSION
-## BAD3 <- dadaMulti(BAD2[c(6:4,1L,3L,2L), c(6:4,1L,3L,2L, 7L)],
-##                   selfConsist=TRUE, pool=FALSE, multithread=TRUE)
-
 ## resorting samples is enough to cause trouble
-## BAD3 <- dadaMulti(BAD2[, c(6:4,1L,3L,2L, 7L)],
-##                   selfConsist=TRUE, pool=FALSE, multithread=TRUE)
-
-## resorting samples is enough to cause trouble... easy resort does
-## the job
-BAD3 <- dadaMulti(MA1,
+BAD3 <- dadaMulti(MA1[, c(6:4,1L,3L,2L, 7L, 10:8)],
                   selfConsist=TRUE, pool=FALSE, multithread=TRUE)
 
-BADofBAD <-  dadaMulti(MA1[5L, ],
-                       selfConsist=TRUE, pool=FALSE, multithread=TRUE)
-
-BADofBAD_manF <-  dada(getStratifiedFilesF(MA1[5L, ]),
-                       selfConsist=TRUE, pool=FALSE, multithread=TRUE)
-
-BADofBAD_manR <-  dada(getStratifiedFilesR(MA1[5L, ]),
-                       selfConsist=TRUE, pool=FALSE, multithread=TRUE)
-
-
-## resorting samples is enough to cause trouble... easy resort does
-## the job... BUT NOT subsetting without resorting!!!!
-## BAD3 <- dadaMulti(BAD2[, 1:7],
-##                  selfConsist=TRUE, pool=FALSE, multithread=TRUE)
-
-### this resorting ampicons doesn't matter
-## BAD3 <- dadaMulti(MA2[c(6:4,1L,3L,2L), ], selfConsist=TRUE, pool=FALSE, 
-##                   multithread=TRUE)
-
-## here it doesn't produce an error
-## BAD4 <- mergeMulti(BAD3[c(6:4,1L,3L,2L), c(6:4,1L,3L,2L, 7L)],
-##                    justConcatenate=TRUE)
-BAD4 <- mergeMulti(BADofBAD, justConcatenate=TRUE)
-
-## here it doesn't produce an error
-## BAD5 <- makeSequenceTableMulti(BAD4[c(6:4,1L,3L,2L), c(6:4,1L,3L,2L, 7L)])
+## in all other steps resorting does not produce an error
+BAD4 <- mergeMulti(BAD3, justConcatenate=TRUE)
 BAD5 <- makeSequenceTableMulti(BAD4)
-
-## here it doesn't produce an error
-## BAD6 <- removeChimeraMulti(BAD5[c(6:4,1L,3L,2L), c(6:4,1L,3L,2L, 7L)])
 BAD6 <- removeChimeraMulti(BAD5)
 
 ################# EVALUATE #############
@@ -120,19 +83,14 @@ confusion <- lapply(names(SamSums), function(name) {
     df[is.na(df)] <- 0
     df
 })
+
 confusion
-
-### OKAY THIS IS ONE BUG found! FIX IT!!!!
-
-#### Summary:
-
-## If before the dada step samples are resorted we have a
-## mess!!!######
+### okay this is one bug found! IT's not FIXED!!!!
+### WRITE A TEST FOR IT!!
 
 
 ########################################
 ### but the reads confusion must be in the sorting is 
-
 trackReadSorting <- function (MA) { 
 ### somehow stupid that this is necessary (inherit form list) to
 ### improve (small TODO)
