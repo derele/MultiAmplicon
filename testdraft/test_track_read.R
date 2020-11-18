@@ -44,10 +44,11 @@ MA1 <- sortAmplicons(MA, filedir=tempfile())
 ## doesn't make a difference
 ## MA2 <- derepMulti(MA1, mc.cores=1, keep.single.singlets = TRUE)
 
-MA2 <- derepMulti(MA1[5:6,], mc.cores=1)
+MA2 <- derepMulti(MA1)
 
 MA3 <- dadaMulti(MA2, selfConsist=TRUE, pool=FALSE, 
                  multithread=TRUE)
+
 MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
 MA5 <- makeSequenceTableMulti(MA4)
 MA6 <- removeChimeraMulti(MA5)
@@ -56,7 +57,7 @@ mapReadsStratTab(MA6)
 
 #################### SAMPLE CONFUSION #########################
 ## BAD2 <- derepMulti(MA1[c(6:4,1L,3L,2L), c(6:4,1L,3L,2L, 7L)], mc.cores=1)
-## BAD2 <- derepMulti(MA1, mc.cores=1)
+BAD2 <- derepMulti(MA1, mc.cores=1)
 
 ### THIS LEADS TO the same SAMPLE CONFUSION
 ## BAD3 <- dadaMulti(BAD2[c(6:4,1L,3L,2L), c(6:4,1L,3L,2L, 7L)],
@@ -68,8 +69,18 @@ mapReadsStratTab(MA6)
 
 ## resorting samples is enough to cause trouble... easy resort does
 ## the job
-BAD3 <- dadaMulti(MA2[, 7:1],
-                   selfConsist=TRUE, pool=FALSE, multithread=TRUE)
+BAD3 <- dadaMulti(MA1,
+                  selfConsist=TRUE, pool=FALSE, multithread=TRUE)
+
+BADofBAD <-  dadaMulti(MA1[5L, ],
+                       selfConsist=TRUE, pool=FALSE, multithread=TRUE)
+
+BADofBAD_manF <-  dada(getStratifiedFilesF(MA1[5L, ]),
+                       selfConsist=TRUE, pool=FALSE, multithread=TRUE)
+
+BADofBAD_manR <-  dada(getStratifiedFilesR(MA1[5L, ]),
+                       selfConsist=TRUE, pool=FALSE, multithread=TRUE)
+
 
 ## resorting samples is enough to cause trouble... easy resort does
 ## the job... BUT NOT subsetting without resorting!!!!
@@ -83,7 +94,7 @@ BAD3 <- dadaMulti(MA2[, 7:1],
 ## here it doesn't produce an error
 ## BAD4 <- mergeMulti(BAD3[c(6:4,1L,3L,2L), c(6:4,1L,3L,2L, 7L)],
 ##                    justConcatenate=TRUE)
-BAD4 <- mergeMulti(BAD3, justConcatenate=TRUE)
+BAD4 <- mergeMulti(BADofBAD, justConcatenate=TRUE)
 
 ## here it doesn't produce an error
 ## BAD5 <- makeSequenceTableMulti(BAD4[c(6:4,1L,3L,2L), c(6:4,1L,3L,2L, 7L)])
@@ -121,8 +132,6 @@ confusion
 
 ########################################
 ### but the reads confusion must be in the sorting is 
-
-
 
 trackReadSorting <- function (MA) { 
 ### somehow stupid that this is necessary (inherit form list) to
@@ -245,14 +254,7 @@ mapReadsStratTab <- function(MA) {
 
 
 
-### read matching trackter draft 
-## lapply(mapReadsStratTab(MA6), table)
-
-## notInStrat <- which(!SbyS[["S1131_P1_FLD0093"]] %in%
-##                     unique(as.vector(RbyS[["S1131_P1_FLD0093"]])))
+### HAVE TO CHECK THE SEQUENCES IN THE (PAIRED) DEREP OBJECTS
 
 
-## ST <- seqtabL[["ACM_008_17_F.Klin0341_CR_18_R"]]
-## sequence <- unlist(SbyS[["S1131_P1_FLD0093"]][notInStrat][x])
-## which(grepl(sequence[[1]][1], rownames(ST)))
-## })
+MA
