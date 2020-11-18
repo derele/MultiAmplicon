@@ -147,7 +147,7 @@ setMethod(names, "PrimerPairsSet", function (x) x@names)
 ##' reverse read pairs in this object
 ##' @title PairedDerep-class
 ##'
-##' @slot derep object containing forward read pairs created by
+##' @slot derepF derep object containing forward read pairs created by
 ##'     \code{dada2}'s \code{\link[dada2]{derepFastq}} function
 ##' @slot derepR derep object containing reverse read pairs created by
 ##'     \code{dada2}'s \code{\link[dada2]{derepFastq}} function
