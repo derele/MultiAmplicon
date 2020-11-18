@@ -52,6 +52,15 @@ MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
 MA5 <- makeSequenceTableMulti(MA4)
 MA6 <- removeChimeraMulti(MA5)
 
+
+stList <- lapply(getSequenceTableNoChime(MA6), function(ST) {
+    newST <- ST
+    rownames(newST) <- gsub("_F_filt.*", "", rownames(ST))
+    newST
+})
+
+MA6@sequenceTableNoChime <- stList
+
 mapReadsStratTab(MA6)
 
 #################### SAMPLE CONFUSION #########################
@@ -66,6 +75,17 @@ BAD3 <- dadaMulti(MA1[, c(6:4,1L,3L,2L, 7L, 10:8)],
 BAD4 <- mergeMulti(BAD3, justConcatenate=TRUE)
 BAD5 <- makeSequenceTableMulti(BAD4)
 BAD6 <- removeChimeraMulti(BAD5)
+
+stList <- lapply(getSequenceTableNoChime(BAD6), function(ST) {
+    newST <- ST
+    rownames(newST) <- gsub("_F_filt.*", "", rownames(ST))
+    newST
+})
+
+BAD6@sequenceTableNoChime <- stList
+
+mapReadsStratTab(BAD6)
+
 
 ################# EVALUATE #############
 seqtabs <- getSequenceTableNoChime(MA6)
@@ -212,7 +232,6 @@ mapReadsStratTab <- function(MA) {
 
 
 
-### HAVE TO CHECK THE SEQUENCES IN THE (PAIRED) DEREP OBJECTS
-
-
-MA
+### HAVE TO CHECK THE SEQUENCES IN THE (PAIRED) DADA OBJECTS
+mapReadsStratTab(MA6)
+mapReadsStratTab(BAD6)

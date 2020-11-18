@@ -145,8 +145,10 @@ dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
            if (class(dadaR)%in%"dada"){dadaR <- list(dadaR)}
            ## naming the dada objects
            ## this induces a BAD BUG in sample naming being OFF
-           names(dadaF) <- names(dadaR) <-
-               names(getRawCounts(MA)[i, ])[getRawCounts(MA)[i, ]>1]
+
+           ## names(dadaF) <- names(dadaR) <-
+           ##     names(getRawCounts(MA)[i, ])[getRawCounts(MA)[i, ]>1]
+
            Pdada <- PairedDada(dadaF = dadaF, dadaR = dadaR)
        } else {
            Pdada <- PairedDada()
