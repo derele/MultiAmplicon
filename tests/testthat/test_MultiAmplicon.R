@@ -97,31 +97,31 @@ test_that("less stringent sorting results in more reads accepted", {
 })
 
 
-MA2 <- derepMulti(MA1, mc.cores=1)
+## MA2 <- derepMulti(MA1, mc.cores=1)
 
-context("Dereplication works?")
-test_that("dereplication produces a list of derep objects ", {
-    expect_equal(length(MA2@derep), nrow(MA2))
-    expect_equal(length(MA2@derep), nrow(getRawCounts(MA2)))
-    expect_equal(unlist(lapply(MA2@derep, length)),
-                 rowSums(getRawCounts(MA2)>1)) # >1 singl seq rm
-})
+## context("Dereplication works?")
+## test_that("dereplication produces a list of derep objects ", {
+##     expect_equal(length(MA2@derep), nrow(MA2))
+##     expect_equal(length(MA2@derep), nrow(getRawCounts(MA2)))
+##     expect_equal(unlist(lapply(MA2@derep, length)),
+##                  rowSums(getRawCounts(MA2)>1)) # >1 singl seq rm
+## })
 
-up1.counts <- t(getRawCounts(MA2))[t(getRawCounts(MA2))>1] # >1 singl seq rm
+## up1.counts <- t(getRawCounts(MA2))[t(getRawCounts(MA2))>1] # >1 singl seq rm
 
-up1.dereps <- unname(unlist(lapply(MA2@derep, function (x){
-    lapply(x, function (y) sum(slot(y, "derepF")$uniques))
-})))
+## up1.dereps <- unname(unlist(lapply(MA2@derep, function (x){
+##     lapply(x, function (y) sum(slot(y, "derepF")$uniques))
+## })))
 
-test_that("all sequences are dereplicated ", {
-expect_equal(up1.counts, up1.dereps)
-})
+## test_that("all sequences are dereplicated ", {
+## expect_equal(up1.counts, up1.dereps)
+## })
 
 ## set OMEGA_C to avoid removing sequences
-MA3 <- dadaMulti(MA2, selfConsist=TRUE, pool=FALSE, OMEGA_C=0, 
+MA3 <- dadaMulti(MA1, selfConsist=TRUE, pool=FALSE, OMEGA_C=0, 
                  multithread=TRUE)
 
-MA3.R <- dadaMulti(MA2, selfConsist=TRUE, pool=FALSE, 
+MA3.R <- dadaMulti(MA3, selfConsist=TRUE, pool=FALSE, 
                    multithread=TRUE)
 
 context("Denoising works?")
@@ -136,9 +136,9 @@ up1.dadas <- unname(unlist(lapply(MA3@dada, function (x)
     lapply(slot(x, "dadaF"), function (y) sum(getUniques(y))))))
 
 
-test_that("all sequences are dereplicated ", {
-    expect_equal(up1.counts, up1.dadas)
-})
+## test_that("all sequences are dereplicated ", {
+##     expect_equal(up1.counts, up1.dadas)
+## })
 
 MA4 <- mergeMulti(MA3, justConcatenate=c(TRUE, TRUE),
                   verbose=FALSE, maxMismatch = c(15, 20, 18))
@@ -163,9 +163,9 @@ up1.merge <- unname(unlist(lapply(MA4@mergers, function (x)
 
 ## this is only expected when concantenating during merge, otherwise
 ## non-merging sequences would be removed
-test_that("all sequences are dereplicated ", {
-    expect_equal(up1.counts, up1.merge)
-})
+## test_that("all sequences are dereplicated ", {
+##     expect_equal(up1.counts, up1.merge)
+## })
 
 MA5 <- makeSequenceTableMulti(MA4)
 
@@ -197,19 +197,22 @@ test_that("subsetting leaves rawCounts intact", {
     })
 
 MA1.alt <- sortAmplicons(MA1[2:5, 2:6], filedir=tempfile())
-MA2.alt <- derepMulti(MA1.alt)
+MA3.alt <- dadaMulti(MA1.alt, selfConsist=TRUE, pool=FALSE, 
+                     multithread=TRUE)
 
 test_that("sorting a subsetted object same as subsetting a sorted object", {
-   expect_equal(MA2.alt@derep, MA2[2:5, 2:6]@derep)
-   expect_equal(MA2.alt@rawCounts, MA2[2:5, 2:6]@rawCounts)
-   ## expect_equal(MA2.alt, MA2[2:5, 2:6])
-   ## expect_equal(MA2.alt@stratifiedFiles, MA2[2:5, 2:6]@stratifiedFiles)
+   expect_equal(MA3.alt@rawCounts, MA3[2:5, 2:6]@rawCounts)
+   ##  expect_equal(MA3.alt, MA3[2:5, 2:6])
+   ##  expect_equal(MA3.alt@stratifiedFiles, MA3[2:5, 2:6]@stratifiedFiles)
 })
 
 ## Thought I had a bug in stratified file subsetting before, but this
 ## can't work as subsetting creates different stratified file names by
 ## default
-## expect_equal(getStratifiedFilesF(MA2.alt), getStratifiedFilesF(MA2[2:5, 2:6]))
+
+## This shouldn't be the case and needs FIXING!!!
+
+## expect_equal(getStratifiedFilesF(MA3.alt), getStratifiedFilesF(MA3[2:5, 2:6]))
 ## expect_equal(getStratifiedFilesR(MA2.alt), getStratifiedFilesR(MA2[2:5, 2:6]))
 
 

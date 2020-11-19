@@ -143,12 +143,6 @@ dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
            dadaR <- do.call(dada, c(list(derep = dR, err=Rerr), args.here))
            ## make it a list in case of only one sample
            if (class(dadaR)%in%"dada"){dadaR <- list(dadaR)}
-           ## naming the dada objects
-           ## this induces a BAD BUG in sample naming being OFF
-
-           ## names(dadaF) <- names(dadaR) <-
-           ##     names(getRawCounts(MA)[i, ])[getRawCounts(MA)[i, ]>1]
-
            Pdada <- PairedDada(dadaF = dadaF, dadaR = dadaR)
        } else {
            Pdada <- PairedDada()
@@ -262,6 +256,8 @@ makeSequenceTableMulti <- function(MA, mc.cores=getOption("mc.cores", 1L), ...){
         do.call(makeSequenceTable, c(list(mergers[[i]]), args.here))
     }, mc.cores=mc.cores)
     names(sequenceTable) <- names(MA@PrimerPairsSet)
+    sequenceTable <- .fixTableNames(sequenceTable,
+                                    MA@PairedReadFileSet@names) 
     initialize(MA, sequenceTable = sequenceTable)
 }
 
@@ -308,6 +304,8 @@ removeChimeraMulti <- function(MA, mc.cores = getOption("mc.cores", 1L), ...){
         },
         mc.cores = mc.cores)
     names(sequenceTableNoChime) <- MA@PrimerPairsSet@names
+    sequenceTableNoChime <- .fixTableNames(sequenceTableNoChime,
+                                           MA@PairedReadFileSet@names) 
     initialize(MA, sequenceTableNoChime = sequenceTableNoChime)
 }
 
@@ -446,4 +444,14 @@ getPipelineSummary <- function(MA){
         stop("Slot ", names(fslot), " not filled ",
              "for MultiAmplicon object: consult ?MultiAmplicon")
    }
+}
+
+.fixTableNames <- function (seqtableList, sampleNames) {
+    pattern <- paste(sampleNames, collapse="|")
+    pattern <- paste0(".*(", pattern, ").*")
+    lapply(seqtableList, function(ST) {
+        newST <- ST
+        rownames(newST) <- gsub(pattern, "\\1", rownames(ST))
+        newST
+    })
 }
