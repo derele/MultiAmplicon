@@ -17,7 +17,8 @@ Imports:
     reshape,
     assertthat,
     taxonomizr,
-    data.table    
+    data.table,
+    phyloseq
 Depends:
     R (>= 3.3),
     ShortRead (>= 1.30.0),

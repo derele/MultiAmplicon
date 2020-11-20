@@ -230,9 +230,11 @@ ncol(MA)
 ## sort into amplicons
 MA1 <- sortAmplicons(MA, filedir=tempfile(pattern = "dir"))
 
-MA2 <- derepMulti(MA1)
+## dereplication is currently not supported
+## MA2 <- derepMulti(MA1)
 
-MA3 <- dadaMulti(MA2, selfConsist = TRUE)
+### use dada directly after sorting
+MA3 <- dadaMulti(MA1, selfConsist = TRUE)
 
 MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
 
