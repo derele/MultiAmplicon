@@ -4,7 +4,9 @@
 \name{carnivoreSeqRuns}
 \alias{carnivoreSeqRuns}
 \title{Sequencing run files for the carnivore biome dataset}
-\format{An object of class \code{data.frame} with 192 rows and 5 columns.}
+\format{
+An object of class \code{data.frame} with 192 rows and 5 columns.
+}
 \source{
 \url{https://www.ncbi.nlm.nih.gov/bioproject/PRJNA386767}
 }
@@ -36,7 +38,7 @@ BioProject PRJNA386767 "Intestinal biome sequencing of carnivores".
 ## carnivoreSeqRuns <- carnivoreSeqRuns[, c('run','study','sample',
 ##                                        'experiment', 'sample_attribute')]
 
-## sample.vars <- strsplit(carnivoreSeqRuns$sample_attribute, " \\\\|\\\\| ")
+## sample.vars <- strsplit(carnivoreSeqRuns$sample_attribute, " \\|\\| ")
 
 ## sample.variable <- lapply(sample.vars, function(x){
 ##    what <- strsplit(x, ": ")
@@ -49,9 +51,9 @@ BioProject PRJNA386767 "Intestinal biome sequencing of carnivores".
 ## carnivoreSeqRuns <- cbind(carnivoreSeqRuns, do.call(rbind, sample.variable))
 
 ## The data linked at
-##\\url{https://svalbard.biologie.hu-berlin.de:443/d/c291b870178f4abc8c59/}
+##\url{https://svalbard.biologie.hu-berlin.de:443/d/c291b870178f4abc8c59/}
 ##for download in the vignette #
-##\\url{https://derele.github.io/MultiAmplicon/articles/MultiAmplicon-real-world-example.html}
+##\url{https://derele.github.io/MultiAmplicon/articles/MultiAmplicon-real-world-example.html}
 ##can then be downloaded as follows
 ## carnivoreSeqRuns$sample_attribute <- NULL
 

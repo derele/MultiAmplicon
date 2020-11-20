@@ -4,8 +4,12 @@
 \alias{derepMulti}
 \title{derepMulti}
 \usage{
-derepMulti(MA, mc.cores = getOption("mc.cores", 1L),
-  keep.single.singlets = FALSE, ...)
+derepMulti(
+  MA,
+  mc.cores = getOption("mc.cores", 1L),
+  keep.single.singlets = FALSE,
+  ...
+)
 }
 \arguments{
 \item{MA}{MultiAmplicon object to be dereplicated.}

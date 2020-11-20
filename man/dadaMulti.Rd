@@ -4,8 +4,13 @@
 \alias{dadaMulti}
 \title{dadaMulti}
 \usage{
-dadaMulti(MA, mc.cores = getOption("mc.cores", 1L), Ferr = NULL,
-  Rerr = NULL, ...)
+dadaMulti(
+  MA,
+  mc.cores = getOption("mc.cores", 1L),
+  Ferr = NULL,
+  Rerr = NULL,
+  ...
+)
 }
 \arguments{
 \item{MA}{MultiAmplicon-class object.}

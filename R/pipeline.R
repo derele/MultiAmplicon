@@ -140,9 +140,15 @@ dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
            ## make it a list of length 1 in case of only one sample,
            ## otherwise it is simplified and can't be handled
            if (class(dadaF)%in%"dada"){dadaF <- list(dadaF)}
+           ## fix the names of the samples DANGEROUS! 
+           names(dadaF) <- .fixSortedSampleNames(names(dadaF),
+                                                 MA@PairedReadFileSet@names)
            dadaR <- do.call(dada, c(list(derep = dR, err=Rerr), args.here))
            ## make it a list in case of only one sample
            if (class(dadaR)%in%"dada"){dadaR <- list(dadaR)}
+           ## fix the names of the samples DANGEROUS! 
+           names(dadaR) <- .fixSortedSampleNames(names(dadaR),
+                                                 MA@PairedReadFileSet@names)
            Pdada <- PairedDada(dadaF = dadaF, dadaR = dadaR)
        } else {
            Pdada <- PairedDada()
@@ -256,8 +262,6 @@ makeSequenceTableMulti <- function(MA, mc.cores=getOption("mc.cores", 1L), ...){
         do.call(makeSequenceTable, c(list(mergers[[i]]), args.here))
     }, mc.cores=mc.cores)
     names(sequenceTable) <- names(MA@PrimerPairsSet)
-    sequenceTable <- .fixTableNames(sequenceTable,
-                                    MA@PairedReadFileSet@names) 
     initialize(MA, sequenceTable = sequenceTable)
 }
 
@@ -304,8 +308,6 @@ removeChimeraMulti <- function(MA, mc.cores = getOption("mc.cores", 1L), ...){
         },
         mc.cores = mc.cores)
     names(sequenceTableNoChime) <- MA@PrimerPairsSet@names
-    sequenceTableNoChime <- .fixTableNames(sequenceTableNoChime,
-                                           MA@PairedReadFileSet@names) 
     initialize(MA, sequenceTableNoChime = sequenceTableNoChime)
 }
 
@@ -446,12 +448,15 @@ getPipelineSummary <- function(MA){
    }
 }
 
-.fixTableNames <- function (seqtableList, sampleNames) {
-    pattern <- paste(sampleNames, collapse="|")
-    pattern <- paste0(".*(", pattern, ").*")
-    lapply(seqtableList, function(ST) {
-        newST <- ST
-        rownames(newST) <- gsub(pattern, "\\1", rownames(ST))
-        newST
-    })
+.fixSortedSampleNames <- function (oldNames, sampleNames) {
+    ## most elegant would be one gigantic pattern, but sadly this
+    ## fails with a strange (but known) C-level error. So have to
+    ## break it down.
+    ### pattern <- paste(sampleNames, collapse="|")
+    pattern <- paste0(".*(", sampleNames, ").*")
+    newNames <- oldNames
+    for(pat in pattern) {
+        newNames <- gsub(pat, "\\1", newNames)
+    }
+    newNames
 }

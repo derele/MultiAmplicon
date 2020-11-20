@@ -150,9 +150,7 @@ you can also overwrite the old object.
 
 
 ```{r pipeline, cache=TRUE, message=FALSE}
-MA2 <- derepMulti(MA.sub, mc.cores=1) 
-
-MA3 <- dadaMulti(MA2, Ferr=errF, Rerr=errR,  pool=FALSE)
+MA3 <- dadaMulti(MA1, Ferr=errF, Rerr=errR,  pool=FALSE)
 
 MA4 <- mergeMulti(MA3, justConcatenate=TRUE)
 

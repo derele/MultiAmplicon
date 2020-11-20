@@ -30,14 +30,20 @@
 \alias{[,MultiAmplicon,missing,missing,ANY-method}
 \title{The central data structure of the MultiAmplicon package}
 \usage{
-MultiAmplicon(PrimerPairsSet = PrimerPairsSet(),
-  PairedReadFileSet = PairedReadFileSet(), rawCounts = matrix(),
-  stratifiedFiles = list(), sampleData = new("sample_data",
-  data.frame(row.names = names(PairedReadFileSet), readsF =
-  PairedReadFileSet@readsF, readsR = PairedReadFileSet@readsF)),
-  derep = list(), dada = list(), mergers = list(),
-  sequenceTable = list(), sequenceTableNoChime = list(),
-  taxonTable = list())
+MultiAmplicon(
+  PrimerPairsSet = PrimerPairsSet(),
+  PairedReadFileSet = PairedReadFileSet(),
+  rawCounts = matrix(),
+  stratifiedFiles = list(),
+  sampleData = new("sample_data", data.frame(row.names = names(PairedReadFileSet),
+    readsF = PairedReadFileSet@readsF, readsR = PairedReadFileSet@readsF)),
+  derep = list(),
+  dada = list(),
+  mergers = list(),
+  sequenceTable = list(),
+  sequenceTableNoChime = list(),
+  taxonTable = list()
+)
 
 \S4method{colnames}{MultiAmplicon}(x)
 
@@ -83,8 +89,7 @@ getSequencesFromTable(MA)
 
 \S4method{[}{MultiAmplicon,missing,index,ANY}(x, i, j, ..., drop = FALSE)
 
-\S4method{[}{MultiAmplicon,missing,missing,ANY}(x, i, j, ...,
-  drop = FALSE)
+\S4method{[}{MultiAmplicon,missing,missing,ANY}(x, i, j, ..., drop = FALSE)
 }
 \arguments{
 \item{PrimerPairsSet}{a set of primer pairs specifiying your

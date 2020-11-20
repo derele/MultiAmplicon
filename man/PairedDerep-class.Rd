@@ -37,7 +37,7 @@ reverse read pairs in this object
 \section{Slots}{
 
 \describe{
-\item{\code{derep}}{object containing forward read pairs created by
+\item{\code{derepF}}{derep object containing forward read pairs created by
 \code{dada2}'s \code{\link[dada2]{derepFastq}} function}
 
 \item{\code{derepR}}{derep object containing reverse read pairs created by
