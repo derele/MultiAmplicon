@@ -155,10 +155,9 @@ MA <- removeChimeraMulti(MA)
 ## Check what happend within the pipeline 
 
 ```{r tracking, mesage=FALSE, fig.show='hold'}
-## ## pipeline summary is now defunction
 
-## tracking <- getPipelineSummary(MA)
-## plotPipelineSummary(tracking)
+tracking <- getPipelineSummary(MA)
+plotPipelineSummary(tracking)
 
 ```
 
