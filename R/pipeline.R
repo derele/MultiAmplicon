@@ -370,7 +370,7 @@ setMethod("calcPropMerged", "MultiAmplicon",
 ##' @author Emanuel Heitlinger
 getPipelineSummary <- function(MA){
     ## fix this! BETTER CODE... TAX ANNOTATION!!
-    slots <- slotNames(MA)[c(3, 4, 7:10]
+    slots <- slotNames(MA)[c(3, 4, 7:10)]
     sapply(slots, function (x) .complainWhenAbsent(MA, x))
     getN <- function(x) unlist(lapply(x, function (y) sum(getUniques(y))))
     getU <- function(x) unlist(lapply(x, function (y) length(getUniques(y))))
