@@ -376,20 +376,23 @@ getPipelineSummary <- function(MA){
     track.l <- lapply(seq_along(getDadaF(MA)), function (i) {
         samples <- list(
             sorted=length(getRawCounts(MA[i, ])[getRawCounts(MA[i, ])>0]),
-            derep=length(getDerepF(MA[i, ])),
+            ##  ## derep is currently defunct 
+            ##  derep=length(getDerepF(MA[i, ])),
             denoised=length(getDadaF(MA[i,])),
             merged=length(getMergers(MA[i,])),
             tabulated=nrow(getSequenceTable(MA[i,])),
             noChime=nrow(getSequenceTableNoChime(MA[i,])))
         uniques <- list(
-            derep=sum(getU(getDerepF(MA[i, ]))),
+            ##  ## derep is currently defunct 
+            ##  derep=sum(getU(getDerepF(MA[i, ]))),
             denoised=sum(getU(getDadaF(MA[i, ]))),
             merged=sum(getU(getMergers(MA[i, ]))),
             tabulated=ncol(getSequenceTable(MA[i, ])),
             noChime=ncol(getSequenceTableNoChime(MA[i, ])))
         reads <- list(
             sorted=sum(getRawCounts(MA[i, ])),
-            derep=sum(getN(getDerepF(MA[i, ]))),
+            ##  ## derep is currently defunct 
+            ##  derep=sum(getN(getDerepF(MA[i, ]))),
             denoised=sum(getN(getDadaF(MA[i, ]))),
             merged=sum(getN(getMergers(MA[i, ]))),
             tabulated=sum(getSequenceTable(MA[i, ])),
@@ -399,7 +402,7 @@ getPipelineSummary <- function(MA){
     track <- reshape::melt(track.l)
     track$L2 <- revalue(as.factor(track$L2), c("1"="samples",
                                                "2"="uniques", "3"="reads"))
-    track$L3 <- factor(track$L3, levels = c("sorted", "derep",
+    track$L3 <- factor(track$L3, levels = c("sorted", ## "derep",
                                           "denoised", "merged",
                                           "tabulated", "noChime"))
     names(track) <- c("value", "pipeStep", "what", "primer")

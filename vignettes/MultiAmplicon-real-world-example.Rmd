@@ -4,7 +4,7 @@ author: "Emanuel Heitlinger"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{MultiAmplicon - a real world example}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -122,7 +122,6 @@ errF <- learnErrors(unlist(getStratifiedFilesF(MA)), nbase=1e8,
 errR <- learnErrors(unlist(getStratifiedFilesR(MA)), nbase=1e8,
                     verbose=0)
 
-MA <- derepMulti(MA) 
 MA <- dadaMulti(MA, Ferr=errF, Rerr=errR,  pool=FALSE,
                 verbose=0)
 ```
@@ -156,8 +155,10 @@ MA <- removeChimeraMulti(MA)
 ## Check what happend within the pipeline 
 
 ```{r tracking, mesage=FALSE, fig.show='hold'}
-tracking <- getPipelineSummary(MA)
-plotPipelineSummary(tracking)
+## ## pipeline summary is now defunction
+
+## tracking <- getPipelineSummary(MA)
+## plotPipelineSummary(tracking)
 
 ```
 

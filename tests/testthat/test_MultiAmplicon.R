@@ -168,12 +168,6 @@ test_that("dada2 denoising produces a list of dada objects ", {
 })
 
 
-
-## so these are the names that need to be fixed!!!
-lapply(getDadaR(MA3[, which(colnames(MA3)%in%"S05_F_filt.fastq.gz")]), names)
-
-getDadaR(MA3[, which(colnames(MA3)%in%"S05_F_filt.fastq.gz")])
-
 test_that("dada2 denoising produces identical results for replicate samplesd", {
     expect_equal(lapply(getDadaF(MA3[, which(colnames(MA3)%in%"S05D_F_filt.fastq.gz")]),
                         unname),
@@ -289,8 +283,9 @@ test_that("Reads in sequence tables map to stratified files", {
             unlist(SbyS[[na]]) %in% unique(as.vector(RbyS[[na]]))
         })
     }
-
+    ## Map the reads
     map <- mapReadsStratTab(MA6)
+    ## and execute the testing
     expect_true(all(unlist(lapply(map, all))))
     expect_true(any(unlist(lapply(map, length))>0))
 })

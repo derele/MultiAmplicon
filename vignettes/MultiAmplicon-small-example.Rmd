@@ -4,7 +4,7 @@ author: "Emanuel Heitlinger"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{MultiAmplicon - a small example}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -158,7 +158,6 @@ MA5 <- makeSequenceTableMulti(MA4)
 
 MA6 <- removeChimeraMulti(MA5, mc.cores=1)
 
-MA7 <- fillSampleTables(MA6)
 ```
 
 The steps after `sortAmplcions` until `removeChimeraMulti`
@@ -177,7 +176,7 @@ from each previous processing steps).
 
 
 ```{r altdada, cache=TRUE, message=FALSE}
-MA.alt <- dadaMulti(MA2, selfConsist=TRUE, pool=FALSE)
+MA.alt <- dadaMulti(MA3, selfConsist=TRUE, pool=FALSE)
 
 MA.alt <- mergeMulti(MA.alt, justConcatenate=TRUE)
 
@@ -217,10 +216,11 @@ package allows all those arguments to be vectors with values varying
 for different amplicons.
 
 Let's suppose for this we e.g. want to merge a subset of our
-amplicons, while we concatenate others using N's. 
+amplicons, while we concatenate others (with Ns between forward and
+reverser reads).
 
 ```{r mixmerge, cache=TRUE}
-MA.mixed <- mergeMulti(MA3, justConcatenate=c(TRUE, FALSE, FALSE, TRUE))
+MA.mixed <- mergeMulti(MA3, justConcatenate=c(TRUE, FALSE, FALSE, TRUE, TRUE, TRUE))
 ```
 The above example would make sense if (only) amplicons Amp1F.Amp1R and
 Amp4F.Amp4R (1st and 4th in our object) had too little overlap between
@@ -236,10 +236,10 @@ parameters `NULL` when using self consistent estimation within one
 amplicon.
 
 ```{r mixdada, cache=TRUE}
-MA.mixed <- dadaMulti(MA2,
+MA.mixed <- dadaMulti(MA3,
                       Ferr=c(NULL, errF,  NULL, errF),
                       Rerr=c(NULL, errF,  NULL, errF),
-               selfConsist=c(TRUE, FALSE, TRUE, FALSE))
+               selfConsist=c(TRUE, FALSE, TRUE, FALSE, TRUE, TRUE))
 ```
 
 
