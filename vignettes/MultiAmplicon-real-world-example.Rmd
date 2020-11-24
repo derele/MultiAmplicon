@@ -156,17 +156,17 @@ MA <- removeChimeraMulti(MA)
 
 ```{r tracking, mesage=FALSE, fig.show='hold'}
 
-tracking <- getPipelineSummary(MA)
-plotPipelineSummary(tracking)
-
+## tracking <- getPipelineSummary(MA)
+## plotPipelineSummary(tracking)
+print("Pipeline tracking broken for now")
 ```
 
 Blah
 
 ```{r plottrack, mesage=FALSE, fig.show='hold'}
-library(ggplot2)
-plotPipelineSummary(tracking) + scale_y_log10()
-
+## library(ggplot2)
+## plotPipelineSummary(tracking) + scale_y_log10()
+print("Pipeline tracking broken for now")
 ```
 
 The output of the pipeline summary can be modified with standard
@@ -176,7 +176,9 @@ ggplot syntax.
 ## Hand over to phyloseq
 
 ```{r filling, mesage=FALSE}
-PH <- toPhyloseq(MA)
+## # a taxon table is needed here
+## PH <- toPhyloseq(MA)
+print("to Phyloseq broken for now")
 ```
 
 ## Comparing sample data 
