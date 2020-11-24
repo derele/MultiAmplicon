@@ -122,6 +122,7 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
               suppressWarnings( ## to avoid validity messages
                   newFiles <- x@PairedReadFileSet[j]
               )
+              newSampleData <- x@sampleData[j,]
               newRC <- matrix()
               newSF <- list()
               newderep <- list()
@@ -210,6 +211,7 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                                        PrimerPairsSet = newPrimer,
                                        PairedReadFileSet = newFiles,
                                        rawCounts = newRC,
+                                       sampleData = newSampleData,
                                        stratifiedFiles = newSF,
                                        derep = newderep,
                                        dada = newdada,
@@ -217,12 +219,12 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                                        sequenceTable = newST,
                                        sequenceTableNoChime = newSTnC,
                                        taxonTable = newTT))
-              suppressWarnings(
+              ## suppressWarnings(
               ## sample data con be subsetted to the names of the new
               ## samples == names of the new (left) file names.
-              MA.out <- addSampleData(MA.out,
-                                      MA.out@sampleData[names(newFiles),])
-              )
+                  ## before              MA.out <- addSampleData(MA.out,
+                  ## before MA.out@sampleData[names(newFiles),])
+              ## )
               MA.out
           })
 
