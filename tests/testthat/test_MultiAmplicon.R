@@ -333,3 +333,5 @@ test_that("Resorting produces identical output over samples", {
         expect_equal(x[, "Correct"], x[, "Shuffle"])
     })
 })
+
+

@@ -247,7 +247,17 @@ MA.mixed <- dadaMulti(MA3,
 ## Taxnomical annotation
 
 Taxonimical annotation is difficult as for 18S markers reference
-databases are not as mature as for 16S.
+databases are not as mature as for 16S. As we use Multiamplicon in our
+own research it includes for now only a 18S annotation via blast. This
+only works on 
+
+
+```{r taxonAnnot, echo=TRUE}
+MA7 <- blastTaxAnnot(MA6, db="/SAN/db/blastdb/nt/nt",
+                     negative_gilist = "/SAN/db/blastdb/uncultured_gilist.txt",
+                     taxonSQL="/SAN/db/taxonomy/taxonomizr.sql", num_threads=20)
+```
+
 
 
 ## Handing over to phyloseq
