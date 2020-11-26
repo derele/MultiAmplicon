@@ -54,8 +54,8 @@ derived from a BLAST search.
 \details{
 Based on a BLAST search taxonomic labels are assigned to
 ASVs. Currently supported taxonomy levels are c("superkingdom",
-"phylum", "order", "family", "genus", "species"). For each
-taxonomic level unique best taxa (based on bitscores) are
+"phylum", "class", "order", "family", "genus", "species"). For
+each taxonomic level unique best taxa (based on bitscores) are
 reported. If no unique best taxon exists at a particular level NA
 is returned for this. The function combines evidence for taxnomic
 annotations in case of seperate HSPs for (concatenated) non-merged
