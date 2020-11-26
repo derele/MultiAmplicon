@@ -83,6 +83,8 @@ setMethod("plotPipelineSummary", "MultiAmplicon",
 
 
 ##' @rdname plotAmpliconNumbers
+##' @importFrom ggplot2 ggplot aes theme theme_bw() scale_y_continuous
+##'     scale_x_discrete geom_point geom_line facet_wrap
 setMethod("plotPipelineSummary", "data.frame",
           function(MA){
               if(!all(c("pipeStep", "value", "primer")%in%colnames(MA))){
