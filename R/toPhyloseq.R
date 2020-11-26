@@ -21,6 +21,9 @@ setGeneric("toPhyloseq", function(MA, samples, ...) {standardGeneric("toPhyloseq
 ##' @param MA MultiAmplicon object with the \code{taxonTable} and
 ##'     \code{sequenceTableNoChime} slots filled.
 ##' @param samples samples to include in phyloseq object
+##' @param multi2Single should data from different amplicon be
+##'     combined into one phyloseq object (TRUE) or should a list of
+##'     seperate objects, one for each amplicon, be returned?
 ##' @param ... additional arguments to be passed to
 ##'     \code{\link[phyloseq]{phyloseq}}
 ##' @return a \code{\link[phyloseq]{phyloseq}} object
