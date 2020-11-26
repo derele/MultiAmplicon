@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>dadaMulti — dadaMulti • MultiAmplicon</title>
+<title>blastTaxAnnot — blastTaxAnnot • MultiAmplicon</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,9 @@
 
 
 
-<meta property="og:title" content="dadaMulti — dadaMulti" />
-<meta property="og:description" content="A wrapper around dada of the dada2
-packager for multiple amplicons." />
+<meta property="og:title" content="blastTaxAnnot — blastTaxAnnot" />
+<meta property="og:description" content="Annotate amplified sequence variants (ASVs) with taxa labels
+derived from a BLAST search." />
 
 
 
@@ -124,22 +124,24 @@ packager for multiple amplicons." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>dadaMulti</h1>
-    <small class="dont-index">Source: <a href='https://github.com/derele/MultiAmplicon/blob/master/R/pipeline.R'><code>R/pipeline.R</code></a></small>
-    <div class="hidden name"><code>dadaMulti.Rd</code></div>
+    <h1>blastTaxAnnot</h1>
+    <small class="dont-index">Source: <a href='https://github.com/derele/MultiAmplicon/blob/master/R/annotateTaxa.R'><code>R/annotateTaxa.R</code></a></small>
+    <div class="hidden name"><code>blastTaxAnnot.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A wrapper around <code><a href='https://rdrr.io/pkg/dada2/man/dada.html'>dada</a></code> of the <code>dada2</code>
-packager for multiple amplicons.</p>
+    <p>Annotate amplified sequence variants (ASVs) with taxa labels
+derived from a BLAST search.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>dadaMulti</span><span class='op'>(</span>
+    <pre class="usage"><span class='fu'>blastTaxAnnot</span><span class='op'>(</span>
   <span class='va'>MA</span>,
-  mc.cores <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"mc.cores"</span>, <span class='fl'>1L</span><span class='op'>)</span>,
-  Ferr <span class='op'>=</span> <span class='cn'>NULL</span>,
-  Rerr <span class='op'>=</span> <span class='cn'>NULL</span>,
-  <span class='va'>...</span>
+  db <span class='op'>=</span> <span class='st'>"nt/nt"</span>,
+  num_threads <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"mc.cores"</span>, <span class='fl'>1L</span><span class='op'>)</span>,
+  negative_gilist <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"uncultured.gi"</span>, package <span class='op'>=</span> <span class='st'>"MultiAmplicon"</span><span class='op'>)</span>,
+  infasta <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>".fasta"</span><span class='op'>)</span>,
+  outblast <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>".blt"</span><span class='op'>)</span>,
+  <span class='va'>taxonSQL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -147,48 +149,59 @@ packager for multiple amplicons.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>MA</th>
-      <td><p>MultiAmplicon-class object.</p></td>
+      <td><p>A MultiAmplicon for which taxa shoudl be annotated. This
+should contain a <code>sequenceTableNoChime</code> slot, meaning
+that the MultiAmplicon pipeline needs to be followed to that
+point.</p></td>
     </tr>
     <tr>
-      <th>mc.cores</th>
-      <td><p>mc.cores number or compute cores for parallel
-denoising of different amplicons (values &gt; 1 are only allowed
-on Unix/Linux systems). Also consider parallelization at the
-level of each individual amplicon via
-<code><a href='https://rdrr.io/pkg/dada2/man/dada.html'>dada</a></code>.</p></td>
+      <th>db</th>
+      <td><p>The blast database. Either a full path or the path
+relative to the you data base directory set in an
+environmental variable.</p></td>
     </tr>
     <tr>
-      <th>Ferr</th>
-      <td><p>As in the "err" parameter of dada: the matrix of
-estimated rates for each possible nucleotide change. In this
-case for forward reads.</p></td>
+      <th>num_threads</th>
+      <td><p>The number of threads used for the blast
+search.</p></td>
     </tr>
     <tr>
-      <th>Rerr</th>
-      <td><p>the same for the reverse reads.</p></td>
+      <th>negative_gilist</th>
+      <td><p>A file containing NCBI GI numbers to
+exclude from blast searches.</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>additional parameters to be passed to the
-<code><a href='https://rdrr.io/pkg/dada2/man/dada.html'>dada</a></code> function of <code>dada2</code>. All
-arguments to dadaMulti can be given as a vector of the same
-length as the number of primer pairs in the MultiAmplicon
-object. This allows to specify different parameters for each
-amplicon. If a shorter vector is given it will be recycled to
-match the number of amplicons.</p></td>
+      <th>infasta</th>
+      <td><p>A fasta file generated for the blast searche, a
+temporary file in the respective R temporary folder by
+default.</p></td>
+    </tr>
+    <tr>
+      <th>outblast</th>
+      <td><p>A blast tabular output file generated by the blast
+searche, a temporary file in the respective R temporary folder
+by default.</p></td>
+    </tr>
+    <tr>
+      <th>taxonSQL</th>
+      <td><p>An SQL file generated by the package
+<code><a href='https://rdrr.io/pkg/taxonomizr/man/taxonomizr-package.html'>taxonomizr</a></code></p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>MultiAmplicon object with dadaF and dadaR slots filled.</p>
+    <p>A MultiAmplicon object with the taxonTable slot filled</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The function runs <code><a href='https://rdrr.io/pkg/dada2/man/dada.html'>dada</a></code> from the package
- <a href='https://benjjneb.github.io/dada2/'><code>dada2</code></a> to perform
- 'High resolution sample inference from amplicon data' on multiple
- amplicons stored as dereplicated sequences in a
- MultiAmplicon-class object.</p>
+    <p>Based on a BLAST search taxonomic labels are assigned to
+ASVs. Currently supported taxonomy levels are c("superkingdom",
+"phylum", "order", "family", "genus", "species"). For each
+taxonomic level unique best taxa (based on bitscores) are
+reported. If no unique best taxon exists at a particular level NA
+is returned for this. The function combines evidence for taxnomic
+annotations in case of seperate HSPs for (concatenated) non-merged
+sequences.</p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Emanuel Heitlinger</p>
