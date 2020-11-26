@@ -169,7 +169,7 @@ blastTaxAnnot <- function (MA, db="nt/nt",
         n.seq <- as.numeric(x$sequence)
         rownames(taxDF) <- SEQ[[n.amp]][n.seq]
         taxDF <- taxDF[SEQ[[n.amp]],
-                       c("superkingdom", "phylum", "order", "family",
+                       c("superkingdom", "phylum", "class", "order", "family",
                          "genus", "species")]
         rownames(taxDF) <- SEQ[[n.amp]]
         as.matrix(taxDF)
