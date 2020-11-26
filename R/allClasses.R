@@ -323,8 +323,6 @@ setMethod("length", "PairedDada", function(x){
 ##'
 ##' MA6 <- removeChimeraMulti(MA5, mc.cores=1)
 ##'
-##' MA7 <- blastTaxAnnot(MA6)
-##' 
 ##' @seealso \code{\link[dada2]{derepFastq}},\code{\link[dada2]{dada}}
 ##' @importFrom dada2 derepFastq dada
 ##' @import phyloseq
