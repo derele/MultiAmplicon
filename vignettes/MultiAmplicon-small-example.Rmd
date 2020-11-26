@@ -246,9 +246,7 @@ MA.mixed <- dadaMulti(MA3,
 
 ## Taxnomical annotation
 
-For the examples above (which represent a sequence a subset of the
-[real world example](https://derele.github.io/MultiAmplicon/articles/MultiAmplicon-real-world-example.html))
-taxonimical annotation is difficult as for 18S markers reference
+Taxonimical annotation is difficult as for 18S markers reference
 databases are not as mature as for 16S.
 
 

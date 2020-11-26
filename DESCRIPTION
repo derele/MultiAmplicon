@@ -8,6 +8,8 @@ Description: This package allows to run a typical R/bioconductor (i.e. dada2) wo
 biocViews: Metagenomics,  Genetics, Sequencing, Microbiome,
     Metagenomics, Clustering, Classification, MultipleComparison,
     GeneticVariability
+URL: https://derele.github.io/MultiAmplicon/
+BugReports: https://github.com/derele/MultiAmplicon/issues
 Imports:
     Biostrings (>= 2.42.0),
     pheatmap,
