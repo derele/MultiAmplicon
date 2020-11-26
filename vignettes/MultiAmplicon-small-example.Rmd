@@ -262,3 +262,7 @@ MA7 <- blastTaxAnnot(MA6, db="/SAN/db/blastdb/nt/nt",
 
 ## Handing over to phyloseq
 
+```{r toPhloseq, echo=TRUE}
+PHY <- toPhyloseq(MA7, samples=colnames(MA7))
+PHY.list <- toPhyloseq(MA7, samples=colnames(MA7), multi2Single=FALSE)
+```
