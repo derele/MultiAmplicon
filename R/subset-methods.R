@@ -123,7 +123,7 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                   newFiles <- x@PairedReadFileSet[j]
               )
               newSampleData <- x@sampleData[j,]
-              newRC <- matrix()
+              newRC <- matrix(ncol=0, nrow=0)
               newSF <- list()
               newderep <- list()
               newdada <- list()
@@ -142,7 +142,7 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                   i <- name.to.numeric(i, rownames(x))
                   j <- name.to.numeric(j, colnames(x))
               }
-              if(not_empty(x@rawCounts)){
+              if(all(dim(x@rawCounts)>0)){
                   newRC <- as.matrix(getRawCounts(x)[i, j, drop=FALSE])
                   ## we drop empty files from statified files
                   ## therefore we have to find new indices j. These
@@ -188,7 +188,7 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                       ST <- x@sequenceTable[[i[[ii]]]]
                       if(nrow(ST)>=length(new.j[[ii]])){
                           ST[new.j[[ii]], , drop=FALSE]
-                      } else {matrix()}
+                      } else {matrix(ncol=0, nrow=0)}
                   })
                   names(newST) <- names(x@sequenceTable[i])
               }
@@ -197,7 +197,7 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                       ST <- x@sequenceTableNoChime[[i[[ii]]]]
                       if(nrow(ST)>=length(new.j[[ii]])){
                           ST[new.j[[ii]], , drop=FALSE]
-                      } else {matrix()}
+                      } else {matrix(ncol=0, nrow=0)}
                   })
                   names(newSTnC) <- names(x@sequenceTableNoChime[i])         
               }
