@@ -168,8 +168,8 @@ recapitulate different processes in the
 
 The above workflow assumes that errors could be estimated for each
 amplicon together. This would be beneficial if errors were largely
-similar between different amplicons (i.e. not influenced by the
-removed primer having starting the original sequence). Below an
+similar between different amplicons (i.e. not influenced by the primer
+sequence comprising the first bases the original sequence). Below an
 alternative approach is demonstrated with error probabilities
 estimated separately for each amplicon (here also overwrite objects
 from each previous processing steps).
@@ -192,18 +192,20 @@ together <- getSequencesFromTable(MA6)
 alt <- getSequencesFromTable(MA.alt)
 
 lapply(seq_along(together), function (i){
-    table(alt[[i]]%in%together[[i]])
+  union <- union(alt[[i]], together[[i]])
+  table("combined Inference"=union%in%together[[i]],
+        "seperate amplicon"=union%in%alt[[i]])
 })
 ```
-So in this case we got nearly the same output: 215 of 8 (for the first
-amplicon) and even higher proportions of identical speaks for error
+So for all amplicons we got very similar output, the overwhelming
+majority of ASVs was found using both methods. This speaks for error
 rates not differing between amplicons (and for the robustness of the
-ASV inference of the amazing dada2). Which one you should use depends
-on your data: if each amplicon has enough reads you can estimate
-seperately and potentially get a better estimate of errors for
-amplicons with different errors. If on the other hand some amplicons
-have very few reads, it might make sense to pool them to improve error
-estimates with larger size for the training set.
+ASV inference of the amazing dada2). Which method you should use
+depends on your data: if each amplicon has enough reads you can
+estimate seperately and potentially get a better estimate of errors
+for amplicons with different errors. If on the other hand some
+amplicons have very few reads, it might make sense to pool them to
+improve error estimates with larger size for the training set.
 
 ## Using different parameters for each amplicon
 
@@ -228,7 +230,6 @@ forward and reverse reads to be merged and would better be
 concatenated. Btw: Here this makes not really sense as to much
 sequences for the 2nd and 3rd amplicon don't merge for this dataset.
 
-
 Coming back to our example on dada sequence inference, we could also
 mix err estimates to use errors either seperately or accross
 amplicons. Always set the references to both pre-computed error
@@ -237,19 +238,20 @@ amplicon.
 
 ```{r mixdada, cache=TRUE}
 MA.mixed <- dadaMulti(MA3,
-                      Ferr=c(NULL, errF,  NULL, errF),
-                      Rerr=c(NULL, errF,  NULL, errF),
+                      Ferr=c(NULL, errF,  NULL, errF, NULL, NULL),
+                      Rerr=c(NULL, errR,  NULL, errR, NULL, NULL),
                selfConsist=c(TRUE, FALSE, TRUE, FALSE, TRUE, TRUE))
 ```
 
 
-
-## Taxnomical annotation
+## Taxnomic annotation
 
 Taxonimical annotation is difficult as for 18S markers reference
 databases are not as mature as for 16S. As we use Multiamplicon in our
-own research it includes for now only a 18S annotation via blast. This
-only works on 
+own research it includes for now only a 18S annotation via
+BLAST+. This only works on UNIX systems with the NCBI BLAST+ toolkit
+installed. In addition we have to build a
+[taxonomizr](https://github.com/sherrillmix/taxonomizr) database.
 
 
 ```{r taxonAnnot, echo=TRUE}
@@ -258,11 +260,18 @@ MA7 <- blastTaxAnnot(MA6, db="/SAN/db/blastdb/nt/nt",
                      taxonSQL="/SAN/db/taxonomy/taxonomizr.sql", num_threads=20)
 ```
 
-
+In the above code you have to adjust the path's for the BLAST and
+taxonomizr databases.
 
 ## Handing over to phyloseq
+
+The [phyloseq](https://github.com/sherrillmix/taxonomizr) package
+provides impressive tools for microbiome data handling and
+analysis. We can now convert our MultiAmpicon object into a phlyoseq
+object.
 
 ```{r toPhloseq, echo=TRUE}
 PHY <- toPhyloseq(MA7, samples=colnames(MA7))
 PHY.list <- toPhyloseq(MA7, samples=colnames(MA7), multi2Single=FALSE)
-```
+n```
+The `multi2Single` option. 

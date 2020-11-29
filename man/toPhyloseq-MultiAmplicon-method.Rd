@@ -12,6 +12,10 @@
 
 \item{samples}{samples to include in phyloseq object}
 
+\item{multi2Single}{should data from different amplicon be
+combined into one phyloseq object (TRUE) or should a list of
+seperate objects, one for each amplicon, be returned?}
+
 \item{...}{additional arguments to be passed to
 \code{\link[phyloseq]{phyloseq}}}
 }

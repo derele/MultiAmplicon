@@ -56,7 +56,15 @@ PairedReadFileSet <- function(readsF=character(), readsR=character()){
 
 ## Methods
 ##' @rdname PairedReadFileSet-class
+##' @export
 setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
+
+## Methods
+##' @rdname PairedReadFileSet-class
+##' @export
+setMethod("names", "PairedReadFileSet", function(x) x@names)
+
+
 
 ##' A class representing sequences of forward and reverse primers.
 ##'
@@ -132,11 +140,13 @@ PrimerPairsSet <- function(primerF=character(), primerR=character()){
 ##' \code{length} gives the number of read pairs in a
 ##' \code{PrimerPairsSet-class} object
 ##' @param x A \code{PrimerPairsSet-class} object.
+##' @export
 ##' @rdname PrimerPairsSet-class
 setMethod(length, "PrimerPairsSet", function(x) length(x@primerF))
 
 ##' \code{names} of primer-pairs (amplicons) in a
 ##' \code{PrimerPairsSet-class} object
+##' @export
 ##' @rdname PrimerPairsSet-class
 setMethod(names, "PrimerPairsSet", function (x) x@names)
 
@@ -331,6 +341,8 @@ setMethod("length", "PairedDada", function(x){
 setClass("MultiAmplicon",
          representation(PrimerPairsSet="PrimerPairsSet",
                         PairedReadFileSet="PairedReadFileSet",
+                        rownames = "character",
+                        colnames = "character",
                         rawCounts="matrix",
                         stratifiedFiles="list",
                         sampleData="sample_data", 
@@ -388,6 +400,8 @@ MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
     new("MultiAmplicon",
         PrimerPairsSet = PrimerPairsSet,
         PairedReadFileSet = PairedReadFileSet,
+        rownames = PrimerPairsSet@names,
+        colnames = PairedReadFileSet@names,        
         rawCounts = rawCounts,
         stratifiedFiles = stratifiedFiles,
         sampleData = sampleData,
@@ -402,11 +416,11 @@ MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-setMethod("colnames", "MultiAmplicon", function (x) x@PairedReadFileSet@names)
+setMethod("colnames", "MultiAmplicon", function (x) x@colnames)
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-setMethod("rownames", "MultiAmplicon", function (x) x@PrimerPairsSet@names)
+setMethod("rownames", "MultiAmplicon", function (x) x@rownames)
 
 ##' @rdname MultiAmplicon-class
 ##' @export

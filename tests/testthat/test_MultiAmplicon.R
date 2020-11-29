@@ -14,7 +14,18 @@ Ffastq.file <- fastq.files[grepl("F_filt", fastq.files)]
 Rfastq.file <- fastq.files[grepl("R_filt", fastq.files)]
 PRF <- PairedReadFileSet(Ffastq.file, Rfastq.file)
 
+
 MA <- MultiAmplicon(PPS, PRF)
+
+cat("\n\nJust a reminder for myself that this still doesn't work: \n", 
+    "colnames(MA) (samples) :",
+    paste(colnames(MA), colapse="\n"),
+    "= so I have to get the colnames for samples via\n\n")
+
+cat("\n\nCOLNAMES direct slot accession MA@colnames (samples) :",
+    paste(MA@colnames, colapse="\n"),
+    "\nSO I CAN'T USE MY OWN NAMESPACE WITHIN MY PACKAGE?!!\n\n")
+
 
 SA <- MultiAmplicon(PrimerPairsSet(primerF[1], primerR[1]), PRF)
 SA1 <- sortAmplicons(SA, filedir=tempfile())
@@ -30,10 +41,10 @@ test_that("no reads were sorted into different samples" , {
     trackReadSorting <- function (MA) { 
         readsFL <- lapply(seq_along(MA@PairedReadFileSet), function(i) {
             rawFiles <- MA@PairedReadFileSet@readsF[[i]]
-            rawFiles <- rawFiles[file.exists(rawFiles)]
+            rawFiles <- rawFiles[which(file.exists(rawFiles))]
             readFastq(rawFiles)
         })
-        snames <- colnames(MA)
+        snames <- MA@colnames
         names(readsFL) <- snames
         sort_track <- lapply(snames, function (sampl) { 
             strat <- lapply(MA@stratifiedFiles, function(x) {
@@ -47,7 +58,9 @@ test_that("no reads were sorted into different samples" , {
                   UniqueRawReads = length(unique(IDsRaw)),
                   SortedReads = length(readsF_stratified),
                   UniqueSortedReads = length(unique(IDsStrat)),
-                  Problems = length(IDsStrat[!IDsStrat %in% IDsRaw]))
+                  Problems = length(IDsStrat[which(!as.vector(IDsStrat) %in%
+                                                   as.vector(IDsRaw))])
+                  )
         })
         sort_track <- as.data.frame(do.call(rbind, sort_track))
         rownames(sort_track) <- snames
@@ -59,11 +72,16 @@ test_that("no reads were sorted into different samples" , {
     }
 
     sortingStats <- trackReadSorting(MA1)
-
+    cat("\n\n Read sorting statistics\n")
+    print(sortingStats)
+    cat("\n\n")
+    ## has the table been generated with the proper column
+    expect_gt(length(sortingStats$Problems), 0)
+    ## are there no sorting problems
     expect_equal(sum(sortingStats$Problems), 0)
-
+    ## and are thery the sam for replicated samples
     expect_equal(unname(t(sortingStats["S05_F_filt.fastq.gz", ])),
-                 unname(t(sortingStats["S05_F_filt.fastq.gz", ])))
+                 unname(t(sortingStats["S05D_F_filt.fastq.gz", ])))
 })
 
 
@@ -168,11 +186,15 @@ test_that("dada2 denoising produces a list of dada objects ", {
 })
 
 
+cat("\n\nCOLNAMES MA3 DIRECTLY (samples) :",
+    paste(MA3@colnames, colapse="\n"),
+    "= COLNAMES MA3 (samples)\n\n")
+
 test_that("dada2 denoising produces identical results for replicate samplesd", {
-    expect_equal(lapply(getDadaF(MA3[, which(colnames(MA3)%in%"S05D_F_filt.fastq.gz")]),
+    expect_equal(lapply(getDadaF(MA3[, which(MA3@colnames%in%"S05_F_filt.fastq.gz")]),
                         unname),
                  ## have to unname the amplicon naming
-                 lapply(getDadaF(MA3[, which(colnames(MA3)%in%"S05D_F_filt.fastq.gz")]),
+                 lapply(getDadaF(MA3[, which(MA3@colnames%in%"S05D_F_filt.fastq.gz")]),
                         unname))
 })
 
@@ -233,7 +255,7 @@ test_that("Identical files produce identical sequence tables ", {
 MA6 <- removeChimeraMulti(MA5)
 
 
-test_that("Identical files produce identical sequence tables ", {
+test_that("Identical files produce identical NoChime sequence tables ", {
     lapply(MA6@sequenceTableNoChime, function(x) {
         if("S05_F_filt.fastq.gz" %in% rownames(x)){
             expect_equal(
@@ -249,13 +271,13 @@ test_that("Reads in sequence tables map to stratified files", {
     ### the package itself
     mapReadsStratTab <- function(MA) {
         getReadsBySample <- function(MA){
-            sreads <- lapply(colnames(MA), function (sampl) { 
+            sreads <- lapply(MA@colnames, function (sampl) { 
                 strat <- lapply(MA@stratifiedFiles, function(x) {
                     grep(sampl, x@readsF, value=TRUE)
                 })
                 readFastq(unlist(strat))
             })
-            names(sreads) <- colnames(MA)
+            names(sreads) <- MA@colnames
             sreads
         }
         RbyS <- getReadsBySample(MA)
@@ -264,7 +286,7 @@ test_that("Reads in sequence tables map to stratified files", {
         seqtabL <- getSequenceTableNoChime(MA)
         seqtabL <- seqtabL[unlist(lapply(seqtabL, function(x) all(dim(x)>0)))]
 
-        SbyS <- lapply(colnames(MA), function(sampl){
+        SbyS <- lapply(MA@colnames, function(sampl){
             sbys <- lapply(seqtabL, function(ST) {
                 sampl.here <- sampl[sampl%in%rownames(ST)]
                 cn <- colnames(ST)[which(ST[sampl.here,]>0)]
@@ -274,7 +296,7 @@ test_that("Reads in sequence tables map to stratified files", {
             })
             sbys[!unlist(lapply(sbys, is.null))]
         })
-        names(SbyS) <- colnames(MA)
+        names(SbyS) <- MA@colnames
 
         SbyS <- SbyS[intersect(names(SbyS), names(RbyS))]
         RbyS <- RbyS[intersect(names(SbyS), names(RbyS))]
@@ -319,7 +341,7 @@ test_that("Resorting produces identical output over samples", {
     Sorttabs <- getSequenceTableNoChime(resortedMA6)
     SamSums <- lapply(seqtabs, rowSums)
     SortSums <- lapply(Sorttabs, rowSums)
-    samorder <- colnames(MA6)
+    samorder <- MA6@colnames
     ## over samples
     confusion <- lapply(names(SamSums), function(name) {
         df <- cbind(SamSums[[name]][samorder], SortSums[[name]][samorder])

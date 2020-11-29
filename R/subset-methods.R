@@ -39,7 +39,10 @@ setMethod("[", c("PairedReadFileSet", "index", "missing", "ANY"),
               }
               newF <- x@readsF[i]
               newR <- x@readsR[i]
-              PairedReadFileSet(newF, newR)
+              new("PairedReadFileSet",
+                  readsF = newF,
+                  readsR = newR,
+                  names = x@names[i])
           })
 
 ##' @param x PairedDerep-class

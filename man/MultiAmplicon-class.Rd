@@ -33,7 +33,7 @@
 MultiAmplicon(
   PrimerPairsSet = PrimerPairsSet(),
   PairedReadFileSet = PairedReadFileSet(),
-  rawCounts = matrix(),
+  rawCounts = matrix(ncol = 0, nrow = 0),
   stratifiedFiles = list(),
   sampleData = new("sample_data", data.frame(row.names = names(PairedReadFileSet),
     readsF = PairedReadFileSet@readsF, readsR = PairedReadFileSet@readsF)),
