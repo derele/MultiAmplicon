@@ -31,36 +31,52 @@ setGeneric("toPhyloseq", function(MA, samples, ...) {standardGeneric("toPhyloseq
 ##' @export
 setMethod("toPhyloseq", "MultiAmplicon",
           function(MA, samples, multi2Single=TRUE, ...){
-              .complainWhenAbsent(MA, "taxonTable")
+              if(length(MA@taxonTable) == nrow(MA)){
+                  TAX <- TRUE
+              } else if(length(MA@taxonTable) ==0){
+                  message("No taxon table provided, so your phyloseq object will lack",
+                          " taxonomical annotations")
+                  TAX <- FALSE
+              } else {
+                  stop("\nTaxon tables in provided in Multiamplicon object for are",
+                       " incongruent with the number of amplicons")
+              }
               if(multi2Single){
                   ## get sample tables filled with zeros for non-assessed
                   ## samples for particular amplicons
-                  filledST <- .fillSampleTables(MA, samples=samples)
+                  filledST <- .fillSampleTables(getSequenceTableNoChime(MA), samples=samples)
                   allST <- as.matrix(Reduce(cbind, filledST))
                   ## The same for taxon annotations
-                  all.tax <- as.matrix(Reduce(rbind, getTaxonTable(MA,
-                                                                   simplify=FALSE)))
-                  ## to avoid problems with duplicated rownames (same sequences
-                  ## recovered for different amplicons), this can happen after trimming
-                  rownames(all.tax) <- make.unique(rownames(all.tax))
+                  if(TAX){
+                      all.tax <- as.matrix(Reduce(rbind, getTaxonTable(MA,
+                                                                       simplify=FALSE)))
+                      ## to avoid problems with duplicated rownames (same sequences
+                      ## recovered for different amplicons), this can happen after trimming
+                      rownames(all.tax) <- make.unique(rownames(all.tax))
+                  }
                   colnames(allST) <- make.unique(colnames(allST))
                   ## wrap it up into one Phyloseq object
                   phyloseq(otu_table(allST, taxa_are_rows=FALSE),
-                           tax_table(all.tax),
                            sample_data(MA@sampleData),
+                           if (TAX) tax_table(all.tax),
                            ...)
               } else {
                   STl <- getSequenceTableNoChime(MA)
-                  TTl <- getTaxonTable(MA)
+                  if(TAX) TTl <- getTaxonTable(MA)
                   PS.l <- lapply(seq_along(STl), function (i) {
                       ## currently taxa tables are NULL if empty and
                       ## sequence Tables have zero dimensions
-                      seqExists <- nrow(STl[[i]])>0 && ncol(STl[[i]])>0
-                      taxExists <- !is.null(TTl[[i]])
-                      if(isTRUE(seqExists) && isTRUE(taxExists)) {                      
-                          phyloseq(otu_table(STl[[i]], taxa_are_rows=FALSE),
-                                   tax_table(TTl[[i]]),
-                                   sample_data(MA@sampleData[rownames(STl[[i]]),]),
+                      seqExists <- all(dim(STl[[i]])>0)
+                      if(TAX) {
+                          taxExists <- !is.null(TTl[[i]])
+                      } else {
+                          taxExists <- FALSE
+                      }
+                      allSampleTable <- .fillSampleTables(STl[i], samples=samples)[[1]]
+                      if(seqExists) {                      
+                          phyloseq(otu_table(allSampleTable, taxa_are_rows=FALSE),
+                                   if(TAX && taxExists) tax_table(TTl[[i]]),
+                                   sample_data(MA@sampleData[rownames(allSampleTable),]),
                                    ...)
                       } else if(!isTRUE(seqExists) && !isTRUE(taxExists)){
                           NULL
@@ -112,7 +128,7 @@ addSampleData <- function (MA, sampleData=NULL) {
         ## now merge... discard samples that are not either in the
         ## sequences or in the samples 
         missingSeq <- rownames(sampleData)[!rownames(sampleData)%in%
-                                               rownames(MA@sampleData)]
+                                           rownames(MA@sampleData)]
         missingSamples <- rownames(MA@sampleData)[!rownames(MA@sampleData)%in%
                                               rownames(sampleData)]
         if (length(missingSamples)>0) {
@@ -164,11 +180,10 @@ addSampleData <- function (MA, sampleData=NULL) {
 ##'     slot filled
 ##' @noRd
 ##' @author Emanuel Heitlinger
-.fillSampleTables <- function (MA, samples){
+.fillSampleTables <- function (ST, samples){
     message("extracting ", length(samples), " requested samples")
-    .complainWhenAbsent(MA, "sequenceTableNoChime")
-    seqtab <- getSequenceTableNoChime(MA, simplify=FALSE)
-    filledST <- lapply(seqtab, function (ampST){
+    if(!is.list(ST)) ST <- list(ST)
+    filledST <- lapply(ST, function (ampST){
         missing.samples <- samples[!samples%in%rownames(ampST)]
         if(length(missing.samples)>0){
             fill <- matrix(0, nrow=length(missing.samples), ncol=ncol(ampST))

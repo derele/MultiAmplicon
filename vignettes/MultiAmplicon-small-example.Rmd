@@ -273,5 +273,11 @@ object.
 ```{r toPhloseq, echo=TRUE}
 PHY <- toPhyloseq(MA7, samples=colnames(MA7))
 PHY.list <- toPhyloseq(MA7, samples=colnames(MA7), multi2Single=FALSE)
-n```
-The `multi2Single` option. 
+```
+The `multi2Single` option controls... 
+
+
+```{r toPhloseqWOtax, echo=TRUE}
+PHYWO <- toPhyloseq(MA6, samples=colnames(MA6))
+PHYWO.list <- toPhyloseq(MA6, samples=colnames(MA6), multi2Single=FALSE)
+```
