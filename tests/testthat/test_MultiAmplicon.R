@@ -369,3 +369,9 @@ test_that("toPhyloseq multi2Single TRUE/FALSE work and give same resultsw ", {
     all.seq <- colnames(otu_table(PHYWO))
     expect_equal(all.seqL, all.seq)
 })
+
+context("Get the pipeline summary")
+test_that("pipelin Summary is a data.frame", {
+    expect_s3_class(getPipelineSummary(MA6), "data.frame")
+    expect_s3_class(getPipelineSummary(MA3), "data.frame")
+})

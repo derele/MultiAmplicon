@@ -369,9 +369,10 @@ setMethod("calcPropMerged", "MultiAmplicon",
 ##' @export
 ##' @author Emanuel Heitlinger
 getPipelineSummary <- function(MA){
-    ## fix this! BETTER CODE... TAX ANNOTATION!!
-    slots <- slotNames(MA)[c(3, 4, 7:10)]
-    sapply(slots, function (x) .complainWhenAbsent(MA, x))
+    slots <- c("rawCounts", "stratifiedFiles", "dada", "mergers",
+               "sequenceTable", "sequenceTableNoChime")
+    slotFilled <- unlist(sapply(slots, function (x) length(slot(MA, x)))>0)
+    ### helper functions
     getN <- function(x) unlist(lapply(x, function (y) sum(getUniques(y))))
     getU <- function(x) unlist(lapply(x, function (y) length(getUniques(y))))
     track.l <- lapply(seq_along(getDadaF(MA)), function (i) {
@@ -379,33 +380,60 @@ getPipelineSummary <- function(MA){
             sorted=length(getRawCounts(MA[i, ])[getRawCounts(MA[i, ])>0]),
             ##  ## derep is currently defunct 
             ##  derep=length(getDerepF(MA[i, ])),
-            denoised=length(getDadaF(MA[i,])),
-            merged=length(getMergers(MA[i,])),
-            tabulated=nrow(getSequenceTable(MA[i,])),
-            noChime=nrow(getSequenceTableNoChime(MA[i,])))
+            denoised = if(slotFilled["dada"]) {
+                           length(getDadaF(MA[i,]))
+                       } else{0},
+            merged = if(slotFilled["mergers"]) {
+                         length(getMergers(MA[i,]))
+                     } else{0},
+            tabulated = if(slotFilled["sequenceTable"]) {
+                            nrow(getSequenceTable(MA[i,]))
+                        } else{0},
+            noChime= if(slotFilled["sequenceTableNoChime"]) {
+                         nrow(getSequenceTableNoChime(MA[i,]))
+                     } else{0}
+        )
         uniques <- list(
             ##  ## derep is currently defunct 
             ##  derep=sum(getU(getDerepF(MA[i, ]))),
-            denoised=sum(getU(getDadaF(MA[i, ]))),
-            merged=sum(getU(getMergers(MA[i, ]))),
-            tabulated=ncol(getSequenceTable(MA[i, ])),
-            noChime=ncol(getSequenceTableNoChime(MA[i, ])))
+            denoised = if(slotFilled["dada"]) {
+                           sum(getU(getDadaF(MA[i, ])))
+                       } else{0},
+            merged = if(slotFilled["mergers"]) {
+                         sum(getU(getMergers(MA[i, ])))
+                     } else{0},
+            tabulated = if(slotFilled["sequenceTable"]) {
+                            ncol(getSequenceTable(MA[i, ]))
+                        } else{0},
+            noChime = if(slotFilled["sequenceTableNoChime"]) {
+                          ncol(getSequenceTableNoChime(MA[i, ]))
+                      } else{0}
+        )
         reads <- list(
             sorted=sum(getRawCounts(MA[i, ])),
             ##  ## derep is currently defunct 
             ##  derep=sum(getN(getDerepF(MA[i, ]))),
-            denoised=sum(getN(getDadaF(MA[i, ]))),
-            merged=sum(getN(getMergers(MA[i, ]))),
-            tabulated=sum(getSequenceTable(MA[i, ])),
-            noChime=sum(getSequenceTableNoChime(MA[i, ])))
+            denoised = if(slotFilled["dada"]) {
+                           sum(getN(getDadaF(MA[i, ])))
+                       } else{0},
+            merged = if(slotFilled["mergers"]) {
+                         sum(getN(getMergers(MA[i, ])))
+                     } else {0}, 
+            tabulated = if(slotFilled["sequenceTable"]) {
+                            sum(getSequenceTable(MA[i, ]))
+                        } else{0},
+            noChime= if(slotFilled["sequenceTableNoChime"]) {
+                         sum(getSequenceTableNoChime(MA[i, ]))
+                     } else {0}
+        )
         list(samples, uniques, reads)
     })
     track <- reshape::melt(track.l)
     track$L2 <- revalue(as.factor(track$L2), c("1"="samples",
                                                "2"="uniques", "3"="reads"))
     track$L3 <- factor(track$L3, levels = c("sorted", ## "derep",
-                                          "denoised", "merged",
-                                          "tabulated", "noChime"))
+                                            "denoised", "merged",
+                                            "tabulated", "noChime"))
     names(track) <- c("value", "pipeStep", "what", "primer")
     return(track)
 }
@@ -441,15 +469,15 @@ getPipelineSummary <- function(MA){
 }
 
 #' @importFrom methods slotNames
-.complainWhenAbsent <- function(MA, slots=TRUE){
-    allSlots <- slotNames(MA)
-    slotL <- sapply(allSlots, function (x){
-                    length(slot(MA, name=x))})
-    fslot <- slotL[slots]
-    if(!fslot){
-        stop("Slot ", names(fslot), " not filled ",
+.complainWhenAbsent <- function(MA, slotName){
+    if(!slotName %in% slotNames(MA)) {
+        stop("no valid slot name for class MultiAmplicon")
+    }
+    isSlot <- length(slot(MA, name=slotName))
+    if(!isSlot){
+        stop("Slot ", slotName, " not filled ",
              "for MultiAmplicon object: consult ?MultiAmplicon")
-   }
+    }
 }
 
 .fixSortedSampleNames <- function (oldNames, sampleNames) {
