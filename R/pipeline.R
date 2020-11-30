@@ -344,7 +344,6 @@ setMethod("calcPropMerged", "MultiAmplicon",
               }
               nMerged <- sapply(getMergers(MA, simplify=FALSE), getN)
               nBefore <- sapply(getDadaF(MA, simplify=FALSE), getN)
-              cat("\n\nNmerged: ", nMerged, "nBefore:", nBefore, "\n\n")
               prop <- nMerged/nBefore
               prop[is.nan(prop)] <- 0
               prop
