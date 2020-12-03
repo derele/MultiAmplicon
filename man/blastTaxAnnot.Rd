@@ -11,7 +11,8 @@ blastTaxAnnot(
   negative_gilist = system.file("extdata", "uncultured.gi", package = "MultiAmplicon"),
   infasta = paste0(tempfile(), ".fasta"),
   outblast = paste0(tempfile(), ".blt"),
-  taxonSQL
+  taxonSQL,
+  ...
 )
 }
 \arguments{

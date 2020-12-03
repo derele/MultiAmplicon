@@ -45,7 +45,7 @@ blastTaxAnnot <- function (MA, db="nt/nt",
                                                             package = "MultiAmplicon"),
                               infasta=paste0(tempfile(), ".fasta"),
                               outblast=paste0(tempfile(), ".blt"),
-                              taxonSQL
+                              taxonSQL, ...
                               ) {
     SEQ <- getSequencesFromTable(MA)    
     if(!file.exists(infasta)){
@@ -89,7 +89,8 @@ blastTaxAnnot <- function (MA, db="nt/nt",
                          "-max_target_seqs 25",
                          "-out", outblast,
                          "-outfmt", "'10 qaccver saccver pident length mismatch gapopen",
-                         "qstart qend sstart send evalue bitscore staxid'")
+                         "qstart qend sstart send evalue bitscore staxid'",
+                         ...)
         message("STARTED running blast with command:\n",
                 command)
         system(command)
