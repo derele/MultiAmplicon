@@ -185,6 +185,12 @@ supplied by the user.}
 origial fastq files. Created with the object, should not be
 supplied by the user.}
 
+\item{\code{sampleData}}{A sample_data object from
+\code{\link[phyloseq]{phyloseq}}. The slot is created from
+sample names (names of the \code{\link{PrimerPairsSet}} same
+as \code{colnames(MA)}) and more data can be added by
+\code{\link{addSampleData}}.}
+
 \item{\code{rawCounts}}{A numeric matrix of sequencing read counts per
 amplicon and sample. Created by the function
 \code{\link{sortAmplicons}} in the MultiAmplicon pipeline.}
