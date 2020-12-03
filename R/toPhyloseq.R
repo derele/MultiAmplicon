@@ -97,7 +97,7 @@ setMethod("toPhyloseq", "MultiAmplicon",
 ##' Add sample data to a MultiAmplicon object
 ##'
 ##' The sampleData slot is filled with a
-##' \code{\link[phylose]{sample_data}} object from phyoseq created
+##' \code{\link[phyloseq]{sample_data}} object from phyoseq created
 ##' merging sample names (colnames) of the MultiAmplicon object with a
 ##' data frame of sample data. The rownames of the that sampleData
 ##' data frame must correspond to colnames of the MultiAmplcion
