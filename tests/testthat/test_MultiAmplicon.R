@@ -214,13 +214,15 @@ test_that("merging produces a list of derep objects ", {
                  rowSums(getRawCounts(MA3)>1)) # >1 singl seq rm
 })
 
-### ## for some weird reason this fails (only on TravisCI) NO IDEA WHY
-## context("Merging works?")
-## test_that("proportion of merged is between zero and one ", {
-##     expect_true(
-##     all((calcPropMerged(MA4) >= 0 & calcPropMerged(MA4) <= 1))
-##     )
-## })
+## for some weird reason this fails (only on TravisCI) NO IDEA WHY
+context("Merging works?")
+test_that("proportion of merged is between zero and one ", {
+    expect_true(
+    all((calcPropMerged(MA4) >= 0 & calcPropMerged(MA4) <= 1))
+    )
+})
+
+
 
 up1.merge <- unname(unlist(lapply(MA4@mergers, function (x)
     lapply(x, function (y) sum(getUniques(y))))))

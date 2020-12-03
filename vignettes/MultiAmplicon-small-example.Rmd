@@ -222,7 +222,7 @@ amplicons, while we concatenate others (with Ns between forward and
 reverser reads).
 
 ```{r mixmerge, cache=TRUE}
-MA.mixed <- mergeMulti(MA3, justConcatenate=c(TRUE, FALSE, FALSE, TRUE, TRUE, TRUE))
+MA.mixed <- mergeMulti(MA3, justConcatenate=c(TRUE, FALSE, FALSE, TRUE, FALSE, FALSE))
 ```
 The above example would make sense if (only) amplicons Amp1F.Amp1R and
 Amp4F.Amp4R (1st and 4th in our object) had too little overlap between

@@ -337,10 +337,15 @@ setMethod("calcPropMerged", "MultiAmplicon",
               getN <- function(x) {
                   ## check length for every sample in amplicon for
                   ## mergers or just to have dada otherwise >1 as a
-                  if(any(unlist(sapply(x, nrow)) > 0 ||
-                     all(sapply(x, class)%in%"dada"))){ 
+                  if(any(unlist(sapply(x, nrow)) > 0) ||
+                     all(sapply(x, class)%in%"dada")){
+                      cat("\n we execute\n")
+                      cat("\n any(unlist(sapply(x, nrow)) > 0)", 
+                          any(unlist(sapply(x, nrow)) > 0), "\n")
+                      cat("\n ", "all(sapply(x, class)%in%dada)",
+                          all(sapply(x, class)%in%"dada"), "\n")
                       sum(unlist(sapply(x, sgt, simplify=FALSE)))
-                  } else {0}
+                  } else {0; cat("\n we skipped\n")}
               }
               nMerged <- sapply(getMergers(MA, simplify=FALSE), getN)
               nBefore <- sapply(getDadaF(MA, simplify=FALSE), getN)
