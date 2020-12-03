@@ -218,7 +218,9 @@ setMethod("length", "PairedDada", function(x){
 ##' pairs, read files and progressively processed data in an 'amplicon
 ##' x samples' format. The slots in this object are incrementally
 ##' filled with by running wrappers functions (mostly around functions
-##' from the \code{dada2} package).
+##' from the \code{dada2} package). The object is treated (subsetted
+##' etc.) like a (pseudo) matrix, colums are samples, rows are
+##' different amplicons.
 ##' 
 ##' @slot PrimerPairsSet The primer pairs used in your experiment to
 ##'     specify amplicons stored in a
@@ -227,32 +229,59 @@ setMethod("length", "PairedDada", function(x){
 ##' @slot PairedReadFileSet The (quality filtered) fastq files (one
 ##'     file pair for each sample) that store your sequencing data.
 ##'
+##' @slot rownames Names of the amplicons: derived from the names of
+##'     the primer pairs. Created with the object, should not be
+##'     supplied by the user.
+##'
+##' @slot colnames Names of the samples: these are names of the
+##'     origial fastq files. Created with the object, should not be
+##'     supplied by the user.
+##' 
 ##' @slot rawCounts A numeric matrix of sequencing read counts per
 ##'     amplicon and sample. Created by the function
-##'     \code{\link{sortAmplicons}}
+##'     \code{\link{sortAmplicons}} in the MultiAmplicon pipeline.
 ##'
 ##' @slot stratifiedFiles temporary files as a result of stratifying
-##'     into amplicons and samples using the function
-##'     \code{\link{sortAmplicons}}. Forward (sometimes called R1) and
-##'     reverse (sometimes called R2) files are stored as a (amplicons
-##'     x samples) matrix of \code{\link{PairedReadFileSet-class}}
-##'     objects.
+##'     into amplicons and samples using the MultiAmplicon pipeline
+##'     function \code{\link{sortAmplicons}}. Forward (sometimes
+##'     called R1) and reverse (sometimes called R2) files are stored
+##'     as a (amplicons x samples) matrix of
+##'     \code{\link{PairedReadFileSet-class}} objects.
 ##'
-##' @slot derep A \code{\link{PairedDerep-class}} object containing
-##'     pairs of derep-class objects created by \code{dada2}’s
-##'     \code{\link[dada2]{derepFastq}} function
+##' @slot derep A list of \code{\link{PairedDerep-class}} objects
+##'     containing pairs of derep-class objects created by
+##'     \code{dada2}’s \code{\link[dada2]{derepFastq}} function or
+##'     withing the MultiAmplicon pipeline by
+##'     \code{\link{derepMulti}}.
 ##'
-##' @slot dada A \code{\link{PairedDada-class}} object containing
-##'     pairs of dada-class objects created by \code{dada2}’s
-##'     \code{\link[dada2]{dada}} function
+##' @slot dada A list of \code{\link{PairedDada-class}} object
+##'     containing pairs of dada-class objects created by
+##'     \code{dada2}’s \code{\link[dada2]{dada}} function. Within the
+##'     MultiAmplicon pipeline this slot is filled by
+##'     \code{\link{dadaMulti}}.
 ##'
-##' @slot mergers
+##' @slot mergers A list of objects containing merged pairs of forward
+##'     and reverse reads as created by by \code{dada2}’s
+##'     \code{\link[dada2]{mergePairs}} function. Within the
+##'     MultiAmplicon pipeline this slot is filled by
+##'     \code{\link{mergeMulti}}.
 ##'
-##' @slot sequenceTable
+##' @slot sequenceTable A list of matrix objects created by
+##'     \code{dada2}’s \code{\link[dada2]{makeSequenceTable}}.
+##'     Samples (in rows) and amplified sequence variants (ASVs) in
+##'     columns.  Within the MultiAmplicon pipeline this slot is
+##'     filled by \code{\link{makeSequenceTableMulti}}.
 ##'
-##' @slot sequenceTableNoChime
+##' @slot sequenceTableNoChime A list of matrix objects created by
+##'     \code{dada2}’s \code{\link[dada2]{removeBimeraDenovo}}.
+##'     Samples (in rows) and ASVs screened for PCR chimeras in
+##'     columns. Within the MultiAmplicon pipeline this slot is filled
+##'     by \code{\link{removeChimeraMulti}}.
 ##'
-##' @slot taxonTable
+##' @slot taxonTable A list of matrix objects created by a function
+##'     for taxonomical annotation (for example
+##'     \code{\link{blastTaxAnnot}}.  ASVs are in rows and taxnomical
+##'     ranks are in columns. 
 ##'
 ##' MultiAmplicon(PrimerPairsSet, PairedReadFileSet)
 ##' 
