@@ -17,16 +17,6 @@ PRF <- PairedReadFileSet(Ffastq.file, Rfastq.file)
 
 MA <- MultiAmplicon(PPS, PRF)
 
-cat("\n\nJust a reminder for myself that this still doesn't work: \n", 
-    "colnames(MA) (samples) :",
-    paste(colnames(MA), colapse="\n"),
-    "= so I have to get the colnames for samples via\n\n")
-
-cat("\n\nCOLNAMES direct slot accession MA@colnames (samples) :",
-    paste(MA@colnames, colapse="\n"),
-    "\nSO I CAN'T USE MY OWN NAMESPACE WITHIN MY PACKAGE?!!\n\n")
-
-
 SA <- MultiAmplicon(PrimerPairsSet(primerF[1], primerR[1]), PRF)
 SA1 <- sortAmplicons(SA, filedir=tempfile())
 
@@ -42,7 +32,7 @@ test_that("no reads were sorted into different samples" , {
         readsFL <- lapply(seq_along(MA@PairedReadFileSet), function(i) {
             rawFiles <- MA@PairedReadFileSet@readsF[[i]]
             rawFiles <- rawFiles[which(file.exists(rawFiles))]
-            readFastq(rawFiles)
+            ShortRead::readFastq(rawFiles)
         })
         snames <- MA@colnames
         names(readsFL) <- snames
@@ -50,7 +40,7 @@ test_that("no reads were sorted into different samples" , {
             strat <- lapply(MA@stratifiedFiles, function(x) {
                 grep(sampl, x@readsF, value=TRUE)
             })
-            readsF_stratified <- readFastq(unlist(strat))
+            readsF_stratified <- ShortRead::readFastq(unlist(strat))
             IDsStrat <- ShortRead::id(readsF_stratified)
             readsF <- readsFL[[sampl]]        
             IDsRaw <- ShortRead::id(readsF)
@@ -126,12 +116,12 @@ test_that("files for each amplicon contain the number of reads reported", {
     ## For multi amplicon objects
     expect_equivalent(
         unlist(lapply(MA1@stratifiedFiles,
-                      function (x) length(readFastq(x@readsR)))),
+                      function (x) length(ShortRead::readFastq(x@readsR)))),
         rowSums(getRawCounts(MA1)))
     ## For single amplicon objects
     expect_equivalent(
         unlist(lapply(SA1@stratifiedFiles,
-                      function (x) length(readFastq(x@readsR)))),
+                      function (x) length(ShortRead::readFastq(x@readsR)))),
         rowSums(getRawCounts(SA1)))
 })
 
@@ -274,7 +264,7 @@ test_that("Reads in sequence tables map to stratified files", {
                 strat <- lapply(MA@stratifiedFiles, function(x) {
                     grep(sampl, x@readsF, value=TRUE)
                 })
-                readFastq(unlist(strat))
+                ShortRead::readFastq(unlist(strat))
             })
             names(sreads) <- MA@colnames
             sreads
