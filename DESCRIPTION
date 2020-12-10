@@ -20,11 +20,11 @@ Imports:
     assertthat,
     taxonomizr,
     data.table,
-    phyloseq
+    phyloseq,
+    ShortRead,              
+    dada2
 Depends:
-    R (>= 3.3),
-    ShortRead (>= 1.30.0),
-    dada2 (>= 1.2.0)
+    R (>= 3.3)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

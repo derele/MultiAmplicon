@@ -20,3 +20,5 @@ docs/articles/MultiAmplicon-real-world-example.Rmd
 docs/articles/MultiAmplicon-small-example.Rmd
 docs/articles/*.R
 /SRAmetadb.sqlite
+/download_sra
+/filtered_sra
