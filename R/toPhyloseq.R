@@ -27,6 +27,7 @@ setGeneric("toPhyloseq", function(MA, samples, ...) {standardGeneric("toPhyloseq
 ##' @param ... additional arguments to be passed to
 ##'     \code{\link[phyloseq]{phyloseq}}
 ##' @return a \code{\link[phyloseq]{phyloseq}} object
+##' @importFrom phyloseq tax_table sample_data otu_table phyloseq
 ##' @author Emanuel Heitlinger
 ##' @export
 setMethod("toPhyloseq", "MultiAmplicon",
@@ -72,8 +73,8 @@ setMethod("toPhyloseq", "MultiAmplicon",
                       } else {
                           taxExists <- FALSE
                       }
-                      allSampleTable <- .fillSampleTables(STl[i], samples=samples)[[1]]
                       if(seqExists) {                      
+                          allSampleTable <- .fillSampleTables(STl[i], samples=samples)[[1]]
                           phyloseq(otu_table(allSampleTable, taxa_are_rows=FALSE),
                                    if(TAX && taxExists) tax_table(TTl[[i]]),
                                    sample_data(MA@sampleData[rownames(allSampleTable),]),

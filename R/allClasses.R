@@ -370,7 +370,7 @@ setMethod("length", "PairedDada", function(x){
 ##'
 ##' @seealso \code{\link[dada2]{derepFastq}},\code{\link[dada2]{dada}}
 ##' @importFrom dada2 derepFastq dada
-##' @import phyloseq
+##' @importClassesFrom phyloseq sample_data
 ##' @author Emanuel Heitlinger
 ##' @exportClass MultiAmplicon
 setClass("MultiAmplicon",

@@ -35,10 +35,12 @@
 ##' @return A MultiAmplicon object with the taxonTable slot filled
 ##' @importFrom taxonomizr getTaxonomy
 ##' @importFrom utils read.csv
-##' @import data.table
-##' @import phyloseq
+##' @importFrom data.table as.data.table
+##' @importClassesFrom phyloseq taxonomyTable
 ##' @author Emanuel Heitlinger
 ##' @export
+
+
 blastTaxAnnot <- function (MA, db="nt/nt",
                               num_threads= getOption("mc.cores", 1L),
                               negative_gilist = system.file("extdata", "uncultured.gi",
@@ -47,6 +49,15 @@ blastTaxAnnot <- function (MA, db="nt/nt",
                               outblast=paste0(tempfile(), ".blt"),
                               taxonSQL, ...
                               ) {
+
+    ## Prevent R CMD check from complaining about the use of pipe expressions
+    ## standard data.table variables
+    if (getRversion() >= "2.15.1")
+        utils::globalVariables(c(".", ".I", ".N", ".SD"), utils::packageName())
+
+    ## Make sure data.table knows we know we're using it
+    .datatable.aware = TRUE
+
     SEQ <- getSequencesFromTable(MA)    
     if(!file.exists(infasta)){
         Ssplit <- lapply(seq_along(SEQ), function (i) {
