@@ -186,14 +186,16 @@ setMethod("length", "PairedDerep", function(x){
 setClass("PairedDada",
          slots = c(dadaF="list", dadaR="list"),
          validity=function(object) {
+             dF <- object@dadaF
+             dR <- object@dadaR
+             if (!.isListOf(dF, "dada") || !.isListOf(dR, "dada")){
+                 "only lists of dada class objects can form PairedDada-class objects"
+             }
              if (length(object@dadaF) != length(object@dadaR)){
                  "Same number of forward and reverse dada objects needed to constitute forward and reverse sequence read pairs"
              }
              if (any(names(object@dadaF) != names(object@dadaR))){
                  "all forward and reverse dada objects needed to be named exactly the same (being produced from the same samples"
-             }
-             if (!all(unlist(lapply(object@dadaF, class))%in%"dada")){
-                 "only lists of dada class objects can form PairedDada-class objects"
              }
          })
 
