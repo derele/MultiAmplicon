@@ -186,16 +186,15 @@ setMethod("length", "PairedDerep", function(x){
 setClass("PairedDada",
          slots = c(dadaF="list", dadaR="list"),
          validity=function(object) {
-             dF <- object@dadaF
-             dR <- object@dadaR
+             dF <- slot(object, "dadaF")
+             dR <- slot(object, "dadaR")
              if (!.isListOf(dF, "dada") || !.isListOf(dR, "dada")){
                  "only lists of dada class objects can form PairedDada-class objects"
              }
-             if (length(object@dadaF) != length(object@dadaR)){
-                 "Same number of forward and reverse dada objects needed to constitute forward and reverse sequence read pairs"
+             if (length(dF) != length(dR)){"Same number of forward and reverse dada objects needed to constitute forward and reverse sequence read pairs"
              }
-             if (any(names(object@dadaF) != names(object@dadaR))){
-                 "all forward and reverse dada objects needed to be named exactly the same (being produced from the same samples"
+             if (any(names(dF) != names(dR))){
+                 paste("all forward and reverse dada objects needed to be named exactly the same (being produced from the same samples, names are, Forward:", names(dF), "Reverse:",  names(dR), "\n")
              }
          })
 
@@ -472,6 +471,18 @@ setMethod("nrow", "MultiAmplicon", function (x) length(x@PrimerPairsSet))
 setMethod("dim", "MultiAmplicon", function (x) {
     as.integer(c(length(x@PrimerPairsSet), length(x@PairedReadFileSet)))
 })
+
+
+##' @rdname MultiAmplicon-class
+##' @param MA MultiAmplicon-class object
+##' @export
+getPrimerPairsSet <- function (MA) slot(MA, "PrimerPairsSet")
+
+
+##' @rdname MultiAmplicon-class
+##' @param MA MultiAmplicon-class object
+##' @export
+getPairedReadFileSet <- function (MA) slot(MA, "PairedReadFileSet")
 
 
 ##' @rdname MultiAmplicon-class

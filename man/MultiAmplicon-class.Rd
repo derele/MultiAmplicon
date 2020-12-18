@@ -10,6 +10,8 @@
 \alias{ncol,MultiAmplicon-method}
 \alias{nrow,MultiAmplicon-method}
 \alias{dim,MultiAmplicon-method}
+\alias{getPrimerPairsSet}
+\alias{getPairedReadFileSet}
 \alias{getRawCounts}
 \alias{getStratifiedFilesF}
 \alias{getStratifiedFilesR}
@@ -54,6 +56,10 @@ MultiAmplicon(
 \S4method{nrow}{MultiAmplicon}(x)
 
 \S4method{dim}{MultiAmplicon}(x)
+
+getPrimerPairsSet(MA)
+
+getPairedReadFileSet(MA)
 
 getRawCounts(MA)
 

@@ -120,17 +120,17 @@ dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
     .complainWhenAbsent(MA, "stratifiedFiles")
     exp.args <- .extractEllipsis(list(...), nrow(MA))
     ## needs to be computed on pairs of amplicons
-    PPdada <- mclapply(seq_along(MA@PrimerPairsSet), function (i){
+    PPdada <- mclapply(seq_along(rownames(MA)), function (i){
         ## ## From a derep object 
         ## dF <- getDerepF(MA[i, ])
         ## dR <- getDerepR(MA[i, ])
         ## ## Or directly from stratified files
         dF <- getStratifiedFilesF(MA[i, ])
         dR <- getStratifiedFilesR(MA[i, ])
-        message("\n\namplicon ", names(MA@PrimerPairsSet)[i],
+        message("\n\namplicon ", rownames(MA)[i],
            ": dada estimation of sequence variants from ",
             length(dF), " of ",
-           length(MA@PairedReadFileSet), " possible sample files")
+           length(getPairedReadFileSet(MA[i, ])), " possible sample files")
        if(length(dF)>0 && length(dR)>0){
            ## run functions for reverse and forward
            ## work on possilbe different paramters for this particular amplicon
@@ -139,16 +139,36 @@ dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
            dadaF <- do.call(dada, c(list(derep = dF, err=Ferr), args.here))
            ## make it a list of length 1 in case of only one sample,
            ## otherwise it is simplified and can't be handled
-           if (class(dadaF)%in%"dada"){dadaF <- list(dadaF)}
-           ## fix the names of the samples DANGEROUS! 
+           if (class(dadaF)%in%"dada"){
+               dadaF <- list(dadaF)
+               ## then there should be only one stratified file
+               if (length(dF) > 1) {
+                   stop("dada collapsed but more than one stratified file found")
+               }
+               names(dadaF) <- dF
+           }
+           if(!.isListOf(dadaF, "dada")) {
+               stop(paste("incorrect classes reported for dadaF in amplicon",
+                          rownames(MA)[i], "\n"))
+           }
+           ## fix the names of the samples DANGEROUS!
            names(dadaF) <- .fixSortedSampleNames(names(dadaF),
-                                                 MA@PairedReadFileSet@names)
+                                                 colnames(MA)[i])
            dadaR <- do.call(dada, c(list(derep = dR, err=Rerr), args.here))
            ## make it a list in case of only one sample
-           if (class(dadaR)%in%"dada"){dadaR <- list(dadaR)}
+           if (class(dadaR)%in%"dada"){
+               dadaR <- list(dadaR)
+               ## using the stratfile fom the dadaF
+               names(dadaR) <- basename(dF)
+           }
+           if(!.isListOf(dadaR, "dada")) {
+               stop(paste("incorrect classes reported for dadaR in amplicon",
+                          rownames(MA)[i], "\n"))
+           }
            ## fix the names of the samples DANGEROUS! 
-           names(dadaR) <- .fixSortedSampleNames(names(dadaR),
-                                                 MA@PairedReadFileSet@names)
+           ### I even fix them here with the F (forward) names for equivalence
+           names(dadaR) <- .fixSortedSampleNames(names(dadaF),
+                                                 colnames(MA)[i])
            Pdada <- PairedDada(dadaF = dadaF, dadaR = dadaR)
        } else {
            Pdada <- PairedDada()
@@ -156,7 +176,7 @@ dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
        }
        return(Pdada)
     }, mc.cores=mc.cores)
-    names(PPdada) <- names(MA@PrimerPairsSet)
+    names(PPdada) <- rownames(MA)
     initialize(MA, dada = PPdada)
 }
 
@@ -299,7 +319,7 @@ removeChimeraMulti <- function(MA, mc.cores = getOption("mc.cores", 1L), ...){
     .complainWhenAbsent(MA, "sequenceTable")
     exp.args <- .extractEllipsis(list(...), nrow(MA))
     sequenceTableNoChime <-
-    mclapply(seq_along(MA@sequenceTable), function (i) { 
+        mclapply(seq_along(MA@sequenceTable), function (i) { 
             if (nrow(MA@sequenceTable[[i]])>0 && ncol(MA@sequenceTable[[i]])>0){
                 args.here <- lapply(exp.args, "[", i)
                 .paramMessage("removeBimeraDenovo", args.here)
@@ -487,8 +507,10 @@ getPipelineSummary <- function(MA){
     ### pattern <- paste(sampleNames, collapse="|")
     pattern <- paste0(".*(", sampleNames, ").*")
     newNames <- oldNames
+    ##     message(paste("replacing", oldNames, "\n"))
     for(pat in pattern) {
         newNames <- gsub(pat, "\\1", newNames)
+        ##    message(paste("with", newNames, "\n"))
     }
     newNames
 }
