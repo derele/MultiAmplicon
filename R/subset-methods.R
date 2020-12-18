@@ -91,21 +91,6 @@ setMethod("[", c("PairedDada", "index", "missing", "ANY"),
                   dadaF=newF, dadaR=newR)
           })
 
-## ##' @param x PairedDada-class object
-## ##' @param i integer to select
-## ##' @param j integer to select
-## ##' @param ... not used
-## ##' @param drop not used
-## ##' @rdname PairedDada-class
-## setMethod("[", c("PairedDada", "integer", "integer", "ANY"),
-##           function(x, i, j, ..., drop=TRUE){
-##     newF <- lapply(x@dadaF[i], "[", j)
-##     newR <- lapply(x@dadaR[i], "[", j)
-##     new("PairedDada",
-##         dadaF=newF, dadaR=newR)
-## })
-
-
 ##' Subsetting for MultiAmplicon objects should conveniently subset
 ##' all (potentially) filled slots
 ##' 
@@ -121,6 +106,8 @@ setMethod("[", c("PairedDada", "index", "missing", "ANY"),
 ##' @rdname MultiAmplicon-class
 setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
           function(x, i, j, ..., drop=FALSE){
+              newRownames <- rownames(x)[i]
+              newColnames <- rownames(x)[j]
               newPrimer <- x@PrimerPairsSet[i]
               suppressWarnings( ## to avoid validity messages
                   newFiles <- x@PairedReadFileSet[j]
@@ -211,6 +198,8 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
               ## avoid warnings from ValidityCheck??
               suppressWarnings(
                   MA.out <- initialize(x,
+                                       rownames = newRownames,
+                                       colnames = newColnames,
                                        PrimerPairsSet = newPrimer,
                                        PairedReadFileSet = newFiles,
                                        rawCounts = newRC,
@@ -222,12 +211,6 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                                        sequenceTable = newST,
                                        sequenceTableNoChime = newSTnC,
                                        taxonTable = newTT))
-              ## suppressWarnings(
-              ## sample data con be subsetted to the names of the new
-              ## samples == names of the new (left) file names.
-                  ## before              MA.out <- addSampleData(MA.out,
-                  ## before MA.out@sampleData[names(newFiles),])
-              ## )
               MA.out
           })
 
