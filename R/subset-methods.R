@@ -107,7 +107,7 @@ setMethod("[", c("PairedDada", "index", "missing", "ANY"),
 setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
           function(x, i, j, ..., drop=FALSE){
               newRownames <- rownames(x)[i]
-              newColnames <- rownames(x)[j]
+              newColnames <- colnames(x)[j]
               newPrimer <- x@PrimerPairsSet[i]
               suppressWarnings( ## to avoid validity messages
                   newFiles <- x@PairedReadFileSet[j]
