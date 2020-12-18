@@ -75,7 +75,7 @@ derepMulti <- function(MA, mc.cores = getOption("mc.cores", 1L),
         })
         return(Pderep)
     }, mc.cores = mc.cores)
-    names(PPderep) <- names(MA@PrimerPairsSet)
+    names(PPderep) <- rownames(MA)
     initialize(MA, derep = PPderep)
 }
 
@@ -153,7 +153,7 @@ dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
            }
            ## fix the names of the samples DANGEROUS!
            names(dadaF) <- .fixSortedSampleNames(names(dadaF),
-                                                 colnames(MA)[i])
+                                                 colnames(MA[i, ]))
            dadaR <- do.call(dada, c(list(derep = dR, err=Rerr), args.here))
            ## make it a list in case of only one sample
            if (class(dadaR)%in%"dada"){
@@ -168,7 +168,7 @@ dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
            ## fix the names of the samples DANGEROUS! 
            ### I even fix them here with the F (forward) names for equivalence
            names(dadaR) <- .fixSortedSampleNames(names(dadaF),
-                                                 colnames(MA)[i])
+                                                 colnames(MA[i, ]))
            Pdada <- PairedDada(dadaF = dadaF, dadaR = dadaR)
        } else {
            Pdada <- PairedDada()

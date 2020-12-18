@@ -330,7 +330,7 @@ test_that("Resorting produces identical output over samples", {
     Sorttabs <- getSequenceTableNoChime(resortedMA6)
     SamSums <- lapply(seqtabs, rowSums)
     SortSums <- lapply(Sorttabs, rowSums)
-    samorder <- MA6@colnames
+    samorder <- colnames(MA6)
     ## over samples
     confusion <- lapply(names(SamSums), function(name) {
         df <- cbind(SamSums[[name]][samorder], SortSums[[name]][samorder])
