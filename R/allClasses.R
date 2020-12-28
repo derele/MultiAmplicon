@@ -591,3 +591,20 @@ setMethod("getSequencesFromTable", "MultiAmplicon",
 
 
 
+
+
+## Prevent R CMD check from complaining about the use of pipe expressions
+## standard data.table variables
+if (getRversion() >= "2.15.1")
+    utils::globalVariables(c(".", ".I", ".N", ".SD",
+                             "query", "subject", "pident",
+                             "length", "mismatch",
+                             "gapopen", "qstart", "qend", "sstart", "send",
+                             "evalue",  "bitscore", "staxid",
+                             "qtaxid", "bitsum", "ampProd",
+                             "superkingdom", "phylum", "class", "order", "family",
+                             "genus", "species"), utils::packageName(), add=FALSE)
+
+## Make sure data.table knows we know we're using it
+.datatable.aware = TRUE
+
