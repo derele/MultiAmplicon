@@ -371,7 +371,7 @@ setMethod("length", "PairedDada", function(x){
 ##'
 ##' @seealso \code{\link[dada2]{derepFastq}},\code{\link[dada2]{dada}}
 ##' @importFrom dada2 derepFastq dada
-##' @importClassesFrom phyloseq sample_data
+##' @importClassesFrom phyloseq sample_data sample_names
 ##' @author Emanuel Heitlinger
 ##' @exportClass MultiAmplicon
 setClass("MultiAmplicon",
@@ -393,6 +393,9 @@ setClass("MultiAmplicon",
              ## PrimerPairsSet, rawCounts and sampleData
              ## directly. Other slots are list can additionally be
              ## checked at deeper levels
+             if(!all(rownames(object)%in%sample_names(object@sampleData))){
+                 "Sample_names of SampleData must be equeal rownames of  MultiAmplicon object"
+             }
              if(!.isListOf(object@dada, "PairedDada")){
                  "PairedDada objects or an empty list must be provided for a valid MultiAmplicon object"
              }
