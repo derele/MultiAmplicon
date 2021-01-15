@@ -1,16 +1,3 @@
-##' Create a phyloseq object from a MultiAmplicon object
-##'
-##' @title toPhyloseq
-##' @param MA MultiAmplicon object with the \code{taxonTable} and
-##'     \code{sequenceTableNoChime} slots filled.
-##' @param samples samples to include in phyloseq object
-##' @param ... additional arguments to be passed to
-##'     \code{\link[phyloseq]{phyloseq}}
-##' @return a \code{\link[phyloseq]{phyloseq}} object
-##' @author Emanuel Heitlinger
-##' @export
-setGeneric("toPhyloseq", function(MA, samples, ...) {standardGeneric("toPhyloseq")})
-
 ##' Populate a phyloseq object with the contents of a MultiAmplicon
 ##' object
 ##'
@@ -30,69 +17,73 @@ setGeneric("toPhyloseq", function(MA, samples, ...) {standardGeneric("toPhyloseq
 ##' @importFrom phyloseq tax_table sample_data otu_table phyloseq
 ##' @author Emanuel Heitlinger
 ##' @export
-setMethod("toPhyloseq", "MultiAmplicon",
-          function(MA, samples, multi2Single=TRUE, ...){
-              if(length(MA@taxonTable) == nrow(MA)){
-                  TAX <- TRUE
-              } else if(length(MA@taxonTable) ==0){
-                  message("No taxon table provided, so your phyloseq object will lack",
-                          " taxonomical annotations")
-                  TAX <- FALSE
-              } else {
-                  stop("\nTaxon tables in provided in Multiamplicon object for are",
-                       " incongruent with the number of amplicons")
-              }
-              if(multi2Single){
-                  ## get sample tables filled with zeros for non-assessed
-                  ## samples for particular amplicons
-                  filledST <- .fillSampleTables(getSequenceTableNoChime(MA), samples=samples)
-                  allST <- as.matrix(Reduce(cbind, filledST))
-                  ## The same for taxon annotations
-                  if(TAX){
-                      all.tax <- as.matrix(Reduce(rbind, getTaxonTable(MA,
-                                                                       simplify=FALSE)))
-                      ## to avoid problems with duplicated rownames (same sequences
-                      ## recovered for different amplicons), this can happen after trimming
-                      rownames(all.tax) <- make.unique(rownames(all.tax))
+toPhyloseq <- function(MA, samples, multi2Single=TRUE, ...){
+    STL <- getSequenceTableNoChime(MA, simplify=FALSE)
+    TTL <- getTaxonTable(MA, simplify=FALSE)
+    if(length(TTL) == nrow(MA)){
+        TAX <- TRUE
+    } else if(length(TTL) == 0){
+        message("No taxon table provided, so your phyloseq object will lack",
+                " taxonomical annotations")
+        TAX <- FALSE
+    } else {
+        stop("\nTaxon tables in provided in Multiamplicon object for are",
+             " incongruent with the number of amplicons")
+    }
+    if(multi2Single){
+        ## get sample tables filled with zeros for non-assessed
+        ## samples for particular amplicons
+        filledST <- lapply(STL, .fillSampleTables, samples=samples)
+        allST <- as.matrix(Reduce(cbind, filledST))
+        if (!all(dim(allST)>0)) {
+            stop(paste("\nempty OTU table\n",
+                       "rownames",  unlist(lapply(STL, rownames)),
+                       "don't match sample names:",  samples, "\n"))
                   }
-                  colnames(allST) <- make.unique(colnames(allST))
-                  ## wrap it up into one Phyloseq object
-                  phyloseq(otu_table(allST, taxa_are_rows=FALSE),
-                           sample_data(MA@sampleData),
-                           if (TAX) tax_table(all.tax),
-                           ...)
-              } else {
-                  STl <- getSequenceTableNoChime(MA)
-                  if(TAX) TTl <- getTaxonTable(MA)
-                  PS.l <- lapply(seq_along(STl), function (i) {
-                      ## currently taxa tables are NULL if empty and
-                      ## sequence Tables have zero dimensions
-                      seqExists <- all(dim(STl[[i]])>0)
-                      if(TAX) {
-                          taxExists <- !is.null(TTl[[i]])
-                      } else {
-                          taxExists <- FALSE
-                      }
-                      if(seqExists) {                      
-                          allSampleTable <- .fillSampleTables(STl[i], samples=samples)[[1]]
-                          phyloseq(otu_table(allSampleTable, taxa_are_rows=FALSE),
-                                   if(TAX && taxExists) tax_table(TTl[[i]]),
-                                   sample_data(MA@sampleData[rownames(allSampleTable),]),
-                                   ...)
-                      } else if(!isTRUE(seqExists) && !isTRUE(taxExists)){
-                          NULL
-                      } else  {
-                          stop(paste("inconsistent taxa data provided for",
-                                     "sequences in amplicon", i, 
-                                     rownames(MA)[[i]], "\n")
-                               )
-                      }
-                  })
-                  ## somehow can't use rownames(MA)
-                  names(PS.l) <- names(MA@PrimerPairsSet)
-                  PS.l
-              }
-          })
+        ## The same for taxon annotations
+        if(TAX){
+            all.tax <- as.matrix(Reduce(rbind, TTL))
+            ## to avoid problems with duplicated rownames (same sequences
+            ## recovered for different amplicons), this can happen after trimming
+            rownames(all.tax) <- make.unique(rownames(all.tax))
+        }
+        colnames(allST) <- make.unique(colnames(allST))
+        ## wrap it up into one Phyloseq object
+        phyloseq(otu_table(allST, taxa_are_rows=FALSE),
+                 sample_data(MA@sampleData),
+                 if (TAX) tax_table(all.tax),
+                 ...)
+    } else {
+        PS.l <- lapply(seq_along(STL), function (i) {
+            ## currently taxa tables are NULL if empty and
+            ## sequence Tables have zero dimensions
+            seqExists <- all(dim(STL[[i]])>0)
+            if(TAX) {
+                taxExists <- !is.null(TTL[[i]])
+            } else {
+                taxExists <- FALSE
+            }
+            if(seqExists) {                          
+                allSampleTable <- .fillSampleTables(STL[[i]], samples=samples)
+                phyloseq(otu_table(allSampleTable, taxa_are_rows=FALSE),
+                         if(TAX && taxExists) tax_table(TTL[[i]]),
+                         sample_data(MA@sampleData[rownames(allSampleTable),]),
+                         ...)
+            } else if(!isTRUE(seqExists) && !isTRUE(taxExists)){
+                NULL
+            } else  {
+                stop(paste("inconsistent taxa data provided for",
+                           "sequences in amplicon", i, 
+                           rownames(MA)[[i]], "\n")
+                     )
+            }
+        })
+        ## somehow can't use rownames(MA)
+        names(PS.l) <- rownames(MA)
+        PS.l
+    }
+}
+         
 
 
 ##' Add sample data to a MultiAmplicon object
@@ -167,34 +158,29 @@ addSampleData <- function (MA, sampleData=NULL) {
 ##' samples for all amplicons.
 ##'
 ##' In a MultiAmplicon object for some primer pairs some samples might
-##' have no amplified sequence variants at all. This gets matching
-##' matrices from the \code{sequenceTableNoChime} slot of a
-##' MultiAmplicon object and returnes filled tables for all requested
-##' samplese. Tables are filled with 0 (zeros) for samples originally
+##' have no amplified sequence variants at all. This function creates 
+##' matrices including consistent samples for all the \code{sequenceTableNoChime}
+##' slots of a MultiAmplicon object and returnes filled tables for all requested
+##' samplese. Cells are filled with 0 (zeros) for samples originally
 ##' not recoverd in an amplicon.
 ##' 
 ##' @title .fillSampleTables
-##' @param MA MultiAmplicon object
+##' @param ST a sequence tabel from a MultiAmplicon object
 ##' @param samples a character vector giving names of samples to
 ##'     retain.
-##' @return MultiAmplicon object with the \code{sequenceTableFilled}
-##'     slot filled
-##' @noRd
+##' @return a sequence table for use in a MultiAmplicon object
+##' @export
 ##' @author Emanuel Heitlinger
 .fillSampleTables <- function (ST, samples){
     message("extracting ", length(samples), " requested samples")
-    if(!is.list(ST)) ST <- list(ST)
-    filledST <- lapply(ST, function (ampST){
-        missing.samples <- samples[!samples%in%rownames(ampST)]
-        if(length(missing.samples)>0){
-            fill <- matrix(0, nrow=length(missing.samples), ncol=ncol(ampST))
-            rownames(fill) <- missing.samples
-            full <- rbind(ampST, fill)
-            message("filling zeros for amplicon missing ", nrow(fill),
-                    " samples ")
-        } else {full <- ampST}
-        full[samples, ]
-    })
-    filledST
+    missing.samples <- samples[!samples%in%rownames(ST)]
+    if(length(missing.samples)>0){
+        fill <- matrix(0, nrow=length(missing.samples), ncol=ncol(ST))
+        rownames(fill) <- missing.samples
+        message("filling zeros for amplicon missing ", nrow(fill),
+                " samples ")
+        full <- rbind(ST, fill)
+    } else {full <- ST}
+    full[samples, ]
 }
 
