@@ -7,14 +7,13 @@
 .fillSampleTables(ST, samples)
 }
 \arguments{
+\item{ST}{a sequence tabel from a MultiAmplicon object}
+
 \item{samples}{a character vector giving names of samples to
 retain.}
-
-\item{MA}{MultiAmplicon object}
 }
 \value{
-MultiAmplicon object with the \code{sequenceTableFilled}
-    slot filled
+a sequence table for use in a MultiAmplicon object
 }
 \description{
 Fill sequence tables in a MultiAmplicon object to include selected

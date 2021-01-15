@@ -4,13 +4,17 @@
 \alias{toPhyloseq}
 \title{toPhyloseq}
 \usage{
-toPhyloseq(MA, samples, ...)
+toPhyloseq(MA, samples, multi2Single = TRUE, ...)
 }
 \arguments{
 \item{MA}{MultiAmplicon object with the \code{taxonTable} and
 \code{sequenceTableNoChime} slots filled.}
 
 \item{samples}{samples to include in phyloseq object}
+
+\item{multi2Single}{should data from different amplicon be
+combined into one phyloseq object (TRUE) or should a list of
+seperate objects, one for each amplicon, be returned?}
 
 \item{...}{additional arguments to be passed to
 \code{\link[phyloseq]{phyloseq}}}
@@ -19,7 +23,12 @@ toPhyloseq(MA, samples, ...)
 a \code{\link[phyloseq]{phyloseq}} object
 }
 \description{
-Create a phyloseq object from a MultiAmplicon object
+Populate a phyloseq object with the contents of a MultiAmplicon
+object
+}
+\details{
+Information stored in a \code{MultiAmplicon} object is transferred
+to a \code{\link[phyloseq]{phyloseq}} object.
 }
 \author{
 Emanuel Heitlinger
