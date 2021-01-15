@@ -49,6 +49,8 @@ a very small data set included in the MultiAmplicon package.
 
 ```{r buildup, message=FALSE}
 library(MultiAmplicon)
+## we'll also use some dada2 functions directly
+library(dada2)
 
 fastq.dir <- system.file("extdata", "fastq", package = "MultiAmplicon")
 fastq.files <- list.files(fastq.dir, full.names=TRUE)
@@ -171,7 +173,7 @@ amplicon together. This would be beneficial if errors were largely
 similar between different amplicons (i.e. not influenced by the primer
 sequence comprising the first bases the original sequence). Below an
 alternative approach is demonstrated with error probabilities
-estimated separately for each amplicon (here also overwrite objects
+estimated separately for each amplicon (here we also overwrite objects
 from each previous processing steps).
 
 
@@ -185,7 +187,7 @@ MA.alt <- makeSequenceTableMulti(MA.alt)
 MA.alt <- removeChimeraMulti(MA.alt, mc.cores=1)
 ```
 
-So we can make a comparison between the two different versions:
+Now we can make a comparison between the two different versions:
 
 ```{r compdata, cache=TRUE, message=FALSE}
 together <- getSequencesFromTable(MA6)
@@ -196,6 +198,7 @@ lapply(seq_along(together), function (i){
   table("combined Inference"=union%in%together[[i]],
         "seperate amplicon"=union%in%alt[[i]])
 })
+
 ```
 So for all amplicons we got very similar output, the overwhelming
 majority of ASVs was found using both methods. This speaks for error
@@ -254,10 +257,16 @@ installed. In addition we have to build a
 [taxonomizr](https://github.com/sherrillmix/taxonomizr) database.
 
 
-```{r taxonAnnot, echo=TRUE}
+```{r taxonAnnot}
+## echo=TRUE for this?
+inputFasta <- system.file("extdata", "in.fasta", package = "MultiAmplicon")
+outputBlast <- system.file("extdata", "out.blt", package = "MultiAmplicon")
+
 MA7 <- blastTaxAnnot(MA6, db="/SAN/db/blastdb/nt/nt",
                      negative_gilist = "/SAN/db/blastdb/uncultured_gilist.txt",
-                     taxonSQL="/SAN/db/taxonomy/taxonomizr.sql", num_threads=20)
+                     taxonSQL="/SAN/db/taxonomy/taxonomizr.sql", num_threads=20,
+                     infasta = inputFasta,
+                     outblast = outputBlast)
 ```
 
 In the above code you have to adjust the path's for the BLAST and
@@ -270,14 +279,33 @@ provides impressive tools for microbiome data handling and
 analysis. We can now convert our MultiAmpicon object into a phlyoseq
 object.
 
-```{r toPhloseq, echo=TRUE}
-PHY <- toPhyloseq(MA7, samples=colnames(MA7))
-PHY.list <- toPhyloseq(MA7, samples=colnames(MA7), multi2Single=FALSE)
+```{r toPhloseq} 
+## echo=TRUE for this?
+library(phyloseq)
+
+smpls<- MA7@colnames
+
+colnames(MA7)
+
+cat("\n vignette samples:", smpls, "\n")
+
+cat("\n vignette rownames:", colnames(MA7), "\n")
+
+## PHY <- toPhyloseq(MA7, samples=smpls, multi2Single=TRUE)
+## PHY.list <- toPhyloseq(MA7, samples=smpls, multi2Single=FALSE)
+## PHYgenus <- tax_glom(PHY, "genus")
+
+## knitr::kable(table(tax_table(PHYgenus)[, "superkingdom"]))
+## knitr::kable(table(tax_table(PHYgenus)[, "phylum"]))
 ```
 The `multi2Single` option controls... 
 
-
 ```{r toPhloseqWOtax, echo=TRUE}
-PHYWO <- toPhyloseq(MA6, samples=colnames(MA6))
-PHYWO.list <- toPhyloseq(MA6, samples=colnames(MA6), multi2Single=FALSE)
+## PHYWO <- toPhyloseq(MA6, samples=colnames(MA6))
+## PHYWO.list <- toPhyloseq(MA6, samples=colnames(MA6), multi2Single=FALSE)
+
+cat("\n for some strange reason toPhyloseq fails in the vignette building,
+but works in iteractive sessions... have to investigate this later.")
+
+### reminder: I should really look into something like showMethods("sample_names")
 ```

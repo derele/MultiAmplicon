@@ -36,7 +36,8 @@ of quite low quality, so we have to trim and screen quite harshly.
 
 ```{r filter, message=FALSE}
 library(MultiAmplicon)
-
+## And we'll also use some dada2 functions directly
+library(dada2)
 path <- "download_sra" ## change according to where you downloaded
 
 fastqFiles <- list.files(path, pattern=".fastq.gz$", full.names=TRUE)
@@ -155,18 +156,18 @@ MA <- removeChimeraMulti(MA)
 ## Check what happend within the pipeline 
 
 ```{r tracking, mesage=FALSE, fig.show='hold'}
-
-## tracking <- getPipelineSummary(MA)
-## plotPipelineSummary(tracking)
-print("Pipeline tracking broken for now")
+tracking <- getPipelineSummary(MA)
+plotPipelineSummary(tracking)
 ```
 
-Blah
+The pipeline summary tells us how many samples, how many unique
+sequences and how many sequence read (pairs) in total were recovered
+through the pipeline for different amplicons.
+
 
 ```{r plottrack, mesage=FALSE, fig.show='hold'}
-## library(ggplot2)
-## plotPipelineSummary(tracking) + scale_y_log10()
-print("Pipeline tracking broken for now")
+library(ggplot2)
+plotPipelineSummary(tracking) + scale_y_log10()
 ```
 
 The output of the pipeline summary can be modified with standard
@@ -175,10 +176,10 @@ ggplot syntax.
 
 ## Hand over to phyloseq
 
-```{r filling, mesage=FALSE}
-## # a taxon table is needed here
-## PH <- toPhyloseq(MA)
-print("to Phyloseq broken for now")
+```{r handover, mesage=FALSE}
+library(phyloseq)
+PH <- toPhyloseq(MA, samples=colnames(MA))
+PHlist <- toPhyloseq(MA, samples=colnames(MA), multi2Single=FALSE)
 ```
 
 ## Comparing sample data 
