@@ -86,7 +86,7 @@
       <h1 data-toc-skip>MultiAmplicon - a real world example</h1>
                         <h4 class="author">Emanuel Heitlinger</h4>
             
-            <h4 class="date">2020-11-26</h4>
+            <h4 class="date">2021-01-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/derele/MultiAmplicon/blob/master/vignettes/MultiAmplicon-real-world-example.Rmd"><code>vignettes/MultiAmplicon-real-world-example.Rmd</code></a></small>
       <div class="hidden name"><code>MultiAmplicon-real-world-example.Rmd</code></div>
@@ -102,9 +102,8 @@
 <p>Now we can run our standard workflow. But as usual with real data we have to filter the input files first. This particular sequencing was of quite low quality, so we have to trim and screen quite harshly.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://derele.github.io/MultiAmplicon/">MultiAmplicon</a></span><span class="op">)</span>
-<span class="co">#&gt; Warning: replacing previous import 'data.table:::=' by 'ggplot2:::=' when</span>
-<span class="co">#&gt; loading 'MultiAmplicon'</span>
-
+<span class="co">## And we'll also use some dada2 functions directly</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://benjjneb.github.io/dada2/">dada2</a></span><span class="op">)</span>
 <span class="va">path</span> <span class="op">&lt;-</span> <span class="st">"download_sra"</span> <span class="co">## change according to where you downloaded</span>
 
 <span class="va">fastqFiles</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span><span class="op">(</span><span class="va">path</span>, pattern<span class="op">=</span><span class="st">".fastq.gz$"</span>, full.names<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
@@ -129,7 +128,7 @@
 
 <span class="kw">if</span><span class="op">(</span><span class="va">redo</span><span class="op">)</span><span class="op">{</span>
     <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_along</a></span><span class="op">(</span><span class="va">fastqF</span><span class="op">)</span>,  <span class="kw">function</span> <span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span>
-        <span class="fu">filterAndTrim</span><span class="op">(</span><span class="va">fastqF</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="va">filtFs</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="va">fastqR</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="va">filtRs</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>,
+        <span class="fu"><a href="https://rdrr.io/pkg/dada2/man/filterAndTrim.html">filterAndTrim</a></span><span class="op">(</span><span class="va">fastqF</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="va">filtFs</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="va">fastqR</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="va">filtRs</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>,
                       truncLen<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">170</span>,<span class="fl">170</span><span class="op">)</span>, minLen<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">170</span>,<span class="fl">170</span><span class="op">)</span>, 
                       maxN<span class="op">=</span><span class="fl">0</span>, maxEE<span class="op">=</span><span class="fl">2</span>, truncQ<span class="op">=</span><span class="fl">2</span>, 
                       compress<span class="op">=</span><span class="cn">TRUE</span>, verbose<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
@@ -173,9 +172,9 @@
 <span class="va">MA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sortAmplicons.html">sortAmplicons</a></span><span class="op">(</span><span class="va">MA</span>, n<span class="op">=</span><span class="fl">1e+05</span>, filedir<span class="op">=</span><span class="va">filedir</span><span class="op">)</span></code></pre></div>
 <p>The function is “streaming” fastq files, so that potentially large files can be handled on machines with modest memory. The parameter “n” controls how big the streamed chunks are. Increasing this value leads to faster processing and higher memory usage.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">errF</span> <span class="op">&lt;-</span> <span class="fu">learnErrors</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="../reference/MultiAmplicon-class.html">getStratifiedFilesF</a></span><span class="op">(</span><span class="va">MA</span><span class="op">)</span><span class="op">)</span>, nbase<span class="op">=</span><span class="fl">1e8</span>,
+<code class="sourceCode R"><span class="va">errF</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/dada2/man/learnErrors.html">learnErrors</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="../reference/MultiAmplicon-class.html">getStratifiedFilesF</a></span><span class="op">(</span><span class="va">MA</span><span class="op">)</span><span class="op">)</span>, nbase<span class="op">=</span><span class="fl">1e8</span>,
                     verbose<span class="op">=</span><span class="fl">0</span><span class="op">)</span>
-<span class="va">errR</span> <span class="op">&lt;-</span> <span class="fu">learnErrors</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="../reference/MultiAmplicon-class.html">getStratifiedFilesR</a></span><span class="op">(</span><span class="va">MA</span><span class="op">)</span><span class="op">)</span>, nbase<span class="op">=</span><span class="fl">1e8</span>,
+<span class="va">errR</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/dada2/man/learnErrors.html">learnErrors</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="../reference/MultiAmplicon-class.html">getStratifiedFilesR</a></span><span class="op">(</span><span class="va">MA</span><span class="op">)</span><span class="op">)</span>, nbase<span class="op">=</span><span class="fl">1e8</span>,
                     verbose<span class="op">=</span><span class="fl">0</span><span class="op">)</span>
 
 <span class="va">MA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dadaMulti.html">dadaMulti</a></span><span class="op">(</span><span class="va">MA</span>, Ferr<span class="op">=</span><span class="va">errF</span>, Rerr<span class="op">=</span><span class="va">errR</span>,  pool<span class="op">=</span><span class="cn">FALSE</span>,
@@ -187,8 +186,8 @@
 <span class="va">propMerged</span> <span class="op">&lt;-</span> <span class="fu">MultiAmplicon</span><span class="fu">::</span><span class="fu"><a href="../reference/calcPropMerged.html">calcPropMerged</a></span><span class="op">(</span><span class="va">MA</span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">propMerged</span><span class="op">)</span>
-<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
-<span class="co">#&gt; 0.00000 0.00000 0.00000 0.02015 0.00000 0.88175</span>
+<span class="co">#&gt;      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. </span>
+<span class="co">#&gt; 0.0000000 0.0002201 0.0013316 0.0416265 0.0063945 0.8817513</span>
 <span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">propMerged</span><span class="op">&lt;</span><span class="fl">0.8</span><span class="op">)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; FALSE  TRUE </span>
@@ -443,27 +442,172 @@
 <h2 class="hasAnchor">
 <a href="#check-what-happend-within-the-pipeline" class="anchor"></a>Check what happend within the pipeline</h2>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="co">## tracking &lt;- getPipelineSummary(MA)</span>
-<span class="co">## plotPipelineSummary(tracking)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="st">"Pipeline tracking broken for now"</span><span class="op">)</span>
-<span class="co">#&gt; [1] "Pipeline tracking broken for now"</span></code></pre></div>
-<p>Blah</p>
+<code class="sourceCode R"><span class="va">tracking</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getPipelineSummary.html">getPipelineSummary</a></span><span class="op">(</span><span class="va">MA</span><span class="op">)</span>
+<span class="fu"><a href="../reference/plotPipelineSummary.html">plotPipelineSummary</a></span><span class="op">(</span><span class="va">tracking</span><span class="op">)</span></code></pre></div>
+<p><img src="MultiAmplicon-real-world-example_files/figure-html/tracking-1.png" width="700"></p>
+<p>The pipeline summary tells us how many samples, how many unique sequences and how many sequence read (pairs) in total were recovered through the pipeline for different amplicons.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">## library(ggplot2)</span>
-<span class="co">## plotPipelineSummary(tracking) + scale_y_log10()</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="st">"Pipeline tracking broken for now"</span><span class="op">)</span>
-<span class="co">#&gt; [1] "Pipeline tracking broken for now"</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+<span class="fu"><a href="../reference/plotPipelineSummary.html">plotPipelineSummary</a></span><span class="op">(</span><span class="va">tracking</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_log10</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; Scale for 'y' is already present. Adding another scale for 'y', which will</span>
+<span class="co">#&gt; replace the existing scale.</span></code></pre></div>
+<p><img src="MultiAmplicon-real-world-example_files/figure-html/plottrack-1.png" width="700"></p>
 <p>The output of the pipeline summary can be modified with standard ggplot syntax.</p>
 </div>
 <div id="hand-over-to-phyloseq" class="section level2">
 <h2 class="hasAnchor">
 <a href="#hand-over-to-phyloseq" class="anchor"></a>Hand over to phyloseq</h2>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">## # a taxon table is needed here</span>
-<span class="co">## PH &lt;- toPhyloseq(MA)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="st">"to Phyloseq broken for now"</span><span class="op">)</span>
-<span class="co">#&gt; [1] "to Phyloseq broken for now"</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://dx.plos.org/10.1371/journal.pone.0061217">phyloseq</a></span><span class="op">)</span>
+<span class="va">PH</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/toPhyloseq.html">toPhyloseq</a></span><span class="op">(</span><span class="va">MA</span>, samples<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">MA</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; No taxon table provided, so your phyloseq object will lack taxonomical annotations</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 17 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 24 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 28 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 12 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 21 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 7 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 26 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 5 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 11 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 29 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 57 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 28 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 12 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 34 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 15 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 1 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 7 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 6 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 49 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 30 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 27 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 33 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 27 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 18 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 21 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 25 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 17 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 20 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 23 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 11 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 55 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 31 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 49 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 8 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 4 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 49 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 74 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 116 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 89 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 29 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 17 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 31 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 28 samples </span>
+<span class="co">#&gt; filling zeros for amplicon missing 28 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 5 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 11 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 9 samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 33 samples</span>
+<span class="va">PHlist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/toPhyloseq.html">toPhyloseq</a></span><span class="op">(</span><span class="va">MA</span>, samples<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">MA</span><span class="op">)</span>, multi2Single<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>
+<span class="co">#&gt; No taxon table provided, so your phyloseq object will lack taxonomical annotations</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 17 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 24 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 28 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 12 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 21 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 7 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 26 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 5 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 11 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 29 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 57 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 28 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 12 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 34 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 15 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 1 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 7 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 6 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 49 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 30 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 27 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 33 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 27 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 18 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 21 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 25 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 17 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 20 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 23 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 11 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 55 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 31 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 49 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 8 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 4 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 49 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 74 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 116 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 89 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 29 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 17 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 31 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 28 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 28 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 5 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 11 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 9 samples</span>
+<span class="co">#&gt; extracting 192 requested samples</span>
+<span class="co">#&gt; filling zeros for amplicon missing 33 samples</span></code></pre></div>
 </div>
 <div id="comparing-sample-data" class="section level2">
 <h2 class="hasAnchor">

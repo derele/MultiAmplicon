@@ -230,10 +230,10 @@ processing via standard metabarcoding pipelines.</p>
 <span class='va'>PRF</span> <span class='op'>&lt;-</span> <span class='fu'><a href='PairedReadFileSet-class.html'>PairedReadFileSet</a></span><span class='op'>(</span><span class='va'>Ffastq.file</span>, <span class='va'>Rfastq.file</span><span class='op'>)</span>
 
 <span class='va'>MA</span> <span class='op'>&lt;-</span> <span class='fu'><a href='MultiAmplicon-class.html'>MultiAmplicon</a></span><span class='op'>(</span><span class='va'>PPS</span>, <span class='va'>PRF</span><span class='op'>)</span>
-
+</div><div class='output co'>#&gt; <span class='error'>Error in sample_names(object@sampleData): could not find function "sample_names"</span></div><div class='input'>
 <span class='co'>## sort into amplicons</span>
 <span class='va'>MA1</span> <span class='op'>&lt;-</span> <span class='fu'>sortAmplicons</span><span class='op'>(</span><span class='va'>MA</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in sortAmplicons(MA): directory for amplicon sorted files must be empty</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='error'>Error in h(simpleError(msg, call)): error in evaluating the argument 'MA' in selecting a method for function 'sortAmplicons': object 'MA' not found</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

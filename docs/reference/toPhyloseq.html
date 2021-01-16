@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="toPhyloseq — toPhyloseq" />
-<meta property="og:description" content="Create a phyloseq object from a MultiAmplicon object" />
+<meta property="og:description" content="Populate a phyloseq object with the contents of a MultiAmplicon
+object" />
 
 
 
@@ -129,10 +130,11 @@
     </div>
 
     <div class="ref-description">
-    <p>Create a phyloseq object from a MultiAmplicon object</p>
+    <p>Populate a phyloseq object with the contents of a MultiAmplicon
+object</p>
     </div>
 
-    <pre class="usage"><span class='fu'>toPhyloseq</span><span class='op'>(</span><span class='va'>MA</span>, <span class='va'>samples</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>toPhyloseq</span><span class='op'>(</span><span class='va'>MA</span>, <span class='va'>samples</span>, multi2Single <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -147,6 +149,12 @@
       <td><p>samples to include in phyloseq object</p></td>
     </tr>
     <tr>
+      <th>multi2Single</th>
+      <td><p>should data from different amplicon be
+combined into one phyloseq object (TRUE) or should a list of
+seperate objects, one for each amplicon, be returned?</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>additional arguments to be passed to
 <code><a href='https://rdrr.io/pkg/phyloseq/man/phyloseq.html'>phyloseq</a></code></p></td>
@@ -156,6 +164,10 @@
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>a <code><a href='https://rdrr.io/pkg/phyloseq/man/phyloseq.html'>phyloseq</a></code> object</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Information stored in a <code>MultiAmplicon</code> object is transferred
+to a <code><a href='https://rdrr.io/pkg/phyloseq/man/phyloseq.html'>phyloseq</a></code> object.</p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Emanuel Heitlinger</p>
