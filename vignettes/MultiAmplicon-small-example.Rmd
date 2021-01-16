@@ -257,7 +257,7 @@ installed. In addition we have to build a
 [taxonomizr](https://github.com/sherrillmix/taxonomizr) database.
 
 
-```{r taxonAnnot}
+```{r taxonAnnot, cache=TRUE}
 ## echo=TRUE for this?
 inputFasta <- system.file("extdata", "in.fasta", package = "MultiAmplicon")
 outputBlast <- system.file("extdata", "out.blt", package = "MultiAmplicon")
@@ -279,7 +279,7 @@ provides impressive tools for microbiome data handling and
 analysis. We can now convert our MultiAmpicon object into a phlyoseq
 object.
 
-```{r toPhloseq} 
+```{r toPhloseq, cache=TRUE} 
 ## echo=TRUE for this?
 library(phyloseq)
 
@@ -300,7 +300,7 @@ cat("\n vignette rownames:", colnames(MA7), "\n")
 ```
 The `multi2Single` option controls... 
 
-```{r toPhloseqWOtax, echo=TRUE}
+```{r toPhloseqWOtax, echo=TRUE, cache=TRUE}
 ## PHYWO <- toPhyloseq(MA6, samples=colnames(MA6))
 ## PHYWO.list <- toPhyloseq(MA6, samples=colnames(MA6), multi2Single=FALSE)
 
