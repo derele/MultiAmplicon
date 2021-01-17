@@ -5,11 +5,6 @@
 \name{MultiAmplicon-class}
 \alias{MultiAmplicon-class}
 \alias{MultiAmplicon}
-\alias{colnames,MultiAmplicon-method}
-\alias{rownames,MultiAmplicon-method}
-\alias{ncol,MultiAmplicon-method}
-\alias{nrow,MultiAmplicon-method}
-\alias{dim,MultiAmplicon-method}
 \alias{getPrimerPairsSet}
 \alias{getPairedReadFileSet}
 \alias{getRawCounts}
@@ -46,16 +41,6 @@ MultiAmplicon(
   sequenceTableNoChime = list(),
   taxonTable = list()
 )
-
-\S4method{colnames}{MultiAmplicon}(x)
-
-\S4method{rownames}{MultiAmplicon}(x)
-
-\S4method{ncol}{MultiAmplicon}(x)
-
-\S4method{nrow}{MultiAmplicon}(x)
-
-\S4method{dim}{MultiAmplicon}(x)
 
 getPrimerPairsSet(MA)
 
@@ -136,14 +121,14 @@ is created by \code{\link{blastTaxAnnot}}. It's filled with a
 list of taxonomyTable objects from
 \code{\link[phyloseq]{phyloseq}}.}
 
-\item{x}{MultiAmplicon-class object}
-
 \item{MA}{MultiAmplicon-class object}
 
 \item{simplify}{Should a list of objects be simplified to only one
 object if it has length one?}
 
 \item{object}{A \code{MultiAmplicon-class} object.}
+
+\item{x}{MultiAmplicon-class object}
 
 \item{i}{numeric, logical or names vector for subsetting rows (==
 amplicons)}
@@ -182,14 +167,6 @@ specify amplicons stored in a
 
 \item{\code{PairedReadFileSet}}{The (quality filtered) fastq files (one
 file pair for each sample) that store your sequencing data.}
-
-\item{\code{rownames}}{Names of the amplicons: derived from the names of
-the primer pairs. Created with the object, should not be
-supplied by the user.}
-
-\item{\code{colnames}}{Names of the samples: these are names of the
-origial fastq files. Created with the object, should not be
-supplied by the user.}
 
 \item{\code{sampleData}}{A sample_data object from
 \code{\link[phyloseq]{phyloseq}}. The slot is created from

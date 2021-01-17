@@ -230,14 +230,6 @@ setMethod("length", "PairedDada", function(x){
 ##' @slot PairedReadFileSet The (quality filtered) fastq files (one
 ##'     file pair for each sample) that store your sequencing data.
 ##'
-##' @slot rownames Names of the amplicons: derived from the names of
-##'     the primer pairs. Created with the object, should not be
-##'     supplied by the user.
-##'
-##' @slot colnames Names of the samples: these are names of the
-##'     origial fastq files. Created with the object, should not be
-##'     supplied by the user.
-##'
 ##' @slot sampleData A sample_data object from
 ##'     \code{\link[phyloseq]{phyloseq}}. The slot is created from
 ##'     sample names (names of the \code{\link{PrimerPairsSet}} same
@@ -378,8 +370,6 @@ setMethod("length", "PairedDada", function(x){
 setClass("MultiAmplicon",
          representation(PrimerPairsSet="PrimerPairsSet",
                         PairedReadFileSet="PairedReadFileSet",
-                        rownames = "character",
-                        colnames = "character",
                         rawCounts="matrix",
                         stratifiedFiles="list",
                         sampleData="sample_data", 
@@ -440,8 +430,6 @@ MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
     new("MultiAmplicon",
         PrimerPairsSet = PrimerPairsSet,
         PairedReadFileSet = PairedReadFileSet,
-        rownames = PrimerPairsSet@names,
-        colnames = PairedReadFileSet@names,        
         rawCounts = rawCounts,
         stratifiedFiles = stratifiedFiles,
         sampleData = sampleData,
@@ -453,28 +441,6 @@ MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
         taxonTable = taxonTable
         )
 }
-
-##' @rdname MultiAmplicon-class
-##' @export
-setMethod("colnames", "MultiAmplicon", function (x) x@colnames)
-
-##' @rdname MultiAmplicon-class
-##' @export
-setMethod("rownames", "MultiAmplicon", function (x) x@rownames)
-
-##' @rdname MultiAmplicon-class
-##' @export
-setMethod("ncol", "MultiAmplicon", function (x) length(x@PairedReadFileSet))
-
-##' @rdname MultiAmplicon-class
-##' @export
-setMethod("nrow", "MultiAmplicon", function (x) length(x@PrimerPairsSet))
-
-##' @rdname MultiAmplicon-class
-##' @export
-setMethod("dim", "MultiAmplicon", function (x) {
-    as.integer(c(length(x@PrimerPairsSet), length(x@PairedReadFileSet)))
-})
 
 
 ##' @rdname MultiAmplicon-class
