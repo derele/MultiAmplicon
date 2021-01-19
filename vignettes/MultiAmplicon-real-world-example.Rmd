@@ -18,21 +18,17 @@ knitr::opts_chunk$set(
 
 ## Data preparation (download and filtering)
 
-We first
-[download the data](https://svalbard.biologie.hu-berlin.de:443/d/c291b870178f4abc8c59/)
-set from consisting of 192 fastq file-pairs from 18S and 16S amplicon
-sequencing of feces and intestinal contents of carnivores (hyenas and
-wolves). Use the botton on the upper right of the page to download a
-zipped folder and unzip it after downloading. The help file
-for the
+We first download the dataset consisting of 192 fastq file-pairs from
+18S and 16S amplicon sequencing of feces and intestinal contents of
+carnivores (hyenas and wolves). The help files
 [`carnivoreSeqRuns`](https://derele.github.io/MultiAmplicon/reference/carnivoreSeqRuns.html)
-(containing sample data included in the package), shows how this data
-has been downloaded from
+shows how this data has been downloaded from
 [NCBI-SRA](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA386767).
 
-Now we can run our standard workflow. But as usual with real data we
-have to filter the input files first. This particular sequencing was
-of quite low quality, so we have to trim and screen quite harshly.
+After download we can run our standard workflow. But as usual with
+real data we have to filter the input files first. This particular
+sequencing was of quite low quality, so we have to trim and screen
+quite harshly.
 
 ```{r filter, message=FALSE}
 library(MultiAmplicon)
