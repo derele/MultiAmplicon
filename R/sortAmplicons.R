@@ -70,16 +70,16 @@ setGeneric(name="sortAmplicons",
 setMethod("sortAmplicons", "MultiAmplicon",
           function(MA, filedir="stratified_files",
                    n = 1e6, countOnly = FALSE, rmPrimer = TRUE, ...){
-    .complainWhenAbsent(MA, "PrimerPairsSet")
-    .complainWhenAbsent(MA, "PairedReadFileSet")          
+##    .complainWhenAbsent(MA, "PrimerPairsSet")
+##    .complainWhenAbsent(MA, "PairedReadFileSet")          
     ## the data matrix of amplicons x samples stratified counts 
     NR <- length(MA@PrimerPairsSet@primerF)
     NC <- length(MA@PairedReadFileSet@readsF)
     data <- matrix(0, nrow=NR, ncol=NC)
     ## colnames are sample names taken from file names
-    colnames(data) <- names(MA@PairedReadFileSet)
+    base::colnames(data) <- names(MA@PairedReadFileSet)
     ## rownames have to come from (matched) primers
-    rownames(data) <- names(MA@PrimerPairsSet)
+    base::rownames(data) <- names(MA@PrimerPairsSet)
     filepathF <- matrix("", nrow=NR, ncol=NC)
     filepathR <- matrix("", nrow=NR, ncol=NC)
     readsF <- MA@PairedReadFileSet@readsF
@@ -100,7 +100,7 @@ setMethod("sortAmplicons", "MultiAmplicon",
         filebaseF <- paste0(filedir, "/", basename(readsF[[x]]))
         filebaseR <- paste0(filedir, "/", basename(readsR[[x]]))
         if(!file.exists(readsF[[x]]) | !file.exists(readsR[[x]])){
-            data[, colnames(data)[[x]]] <- 0
+            data[, base::colnames(data)[[x]]] <- 0
             filepathF[,x] <- paste0(filebaseF, names(MA@PrimerPairsSet),
                                    ".fastq.gz")
             filepathR[,x] <- paste0(filebaseR, names(MA@PrimerPairsSet),
@@ -160,16 +160,16 @@ setMethod("sortAmplicons", "MultiAmplicon",
                        matches[y] <- length(select[select==TRUE])
                    }
                    ## need to add over the while loop because of fastq streaming 
-                   data[, colnames(data)[[x]]] <-
-                       data[, colnames(data)[[x]]] + matches
+                   data[, base::colnames(data)[[x]]] <-
+                       data[, base::colnames(data)[[x]]] + matches
                }
         close(f)
         close(r)
         doing <- ifelse(countOnly, "counting", "sorting")
-        msg <- paste("finished", doing, sum(data[, colnames(data)[[x]]]),
-            "sequencing reads for", colnames(data)[[x]], "in",
+        msg <- paste("finished", doing, sum(data[, base::colnames(data)[[x]]]),
+            "sequencing reads for", base::colnames(data)[[x]], "in",
             "\n", readsF[[x]], "and \n ", readsR[[x]], "\n",
-            "into", sum(data[, colnames(data)[[x]]]>0), " amplicons")
+            "into", sum(data[, base::colnames(data)[[x]]]>0), " amplicons")
         if(doing%in%"sorting"){
             msg <- paste(msg, "and written into",  normalizePath(filedir))
         }
@@ -186,7 +186,7 @@ setMethod("sortAmplicons", "MultiAmplicon",
                                                         filepathR[i, existing])
                                   })
         names(stratifiedFiles) <- names(MA@PrimerPairsSet)        
-        new.MA <- initialize(MA, rawCounts = data,
+        new.MA <- initialize(MA, data,
                              stratifiedFiles = stratifiedFiles)
         new.MA
     }else{

@@ -14,3 +14,5 @@ vignettes/MultiAmplicon-small-example_cache
 ^appveyor\.yml$
 testdraft/*
 testdraft
+^doc$
+^Meta$

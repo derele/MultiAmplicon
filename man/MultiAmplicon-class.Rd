@@ -24,13 +24,12 @@
 \alias{[,MultiAmplicon,index,index,ANY-method}
 \alias{[,MultiAmplicon,index,missing,ANY-method}
 \alias{[,MultiAmplicon,missing,index,ANY-method}
-\alias{[,MultiAmplicon,missing,missing,ANY-method}
 \title{The central data structure of the MultiAmplicon package}
 \usage{
 MultiAmplicon(
   PrimerPairsSet = PrimerPairsSet(),
   PairedReadFileSet = PairedReadFileSet(),
-  rawCounts = matrix(ncol = 0, nrow = 0),
+  .Data = matrix(ncol = 0, nrow = 0),
   stratifiedFiles = list(),
   sampleData = new("sample_data", data.frame(row.names = names(PairedReadFileSet),
     readsF = PairedReadFileSet@readsF, readsR = PairedReadFileSet@readsF)),
@@ -79,8 +78,6 @@ getSequencesFromTable(MA)
 \S4method{[}{MultiAmplicon,index,missing,ANY}(x, i, j, ..., drop = FALSE)
 
 \S4method{[}{MultiAmplicon,missing,index,ANY}(x, i, j, ..., drop = FALSE)
-
-\S4method{[}{MultiAmplicon,missing,missing,ANY}(x, i, j, ..., drop = FALSE)
 }
 \arguments{
 \item{PrimerPairsSet}{a set of primer pairs specifiying your
@@ -88,9 +85,6 @@ amplicons see \code{\link{PrimerPairsSet-class}}}
 
 \item{PairedReadFileSet}{a set of paired end sequencing data files
 \code{\link{PairedReadFileSet-class}}}
-
-\item{rawCounts}{Users should not supply this parameter, the slot
-is created by \code{\link{sortAmplicons}}.}
 
 \item{stratifiedFiles}{Users should not supply this parameter, the
 slot is created by \code{\link{sortAmplicons}}.}
@@ -173,10 +167,6 @@ file pair for each sample) that store your sequencing data.}
 sample names (names of the \code{\link{PrimerPairsSet}} same
 as \code{colnames(MA)}) and more data can be added by
 \code{\link{addSampleData}}.}
-
-\item{\code{rawCounts}}{A numeric matrix of sequencing read counts per
-amplicon and sample. Created by the function
-\code{\link{sortAmplicons}} in the MultiAmplicon pipeline.}
 
 \item{\code{stratifiedFiles}}{temporary files as a result of stratifying
 into amplicons and samples using the MultiAmplicon pipeline

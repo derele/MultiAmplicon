@@ -48,23 +48,19 @@ PairedReadFileSet <- function(readsF=character(), readsR=character()){
     if(length(names(readsF)) == length(readsF)) {
         na <- as.character(names(readsF)) ## as.c to catch empty (NULL)
     } else {na <- basename(readsF)} ## otherwise use filenames
+    ## set all names the same!
+    names(readsF) <- na
+    names(readsR) <- na
     new("PairedReadFileSet",
         readsF = readsF,
         readsR = readsR,
         names = na)
 }
 
-## Methods
+## ## probably could implement this more cleverly using inheritance
 ##' @rdname PairedReadFileSet-class
 ##' @export
 setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
-
-## Methods
-##' @rdname PairedReadFileSet-class
-##' @export
-setMethod("names", "PairedReadFileSet", function(x) x@names)
-
-
 
 ##' A class representing sequences of forward and reverse primers.
 ##'
@@ -125,6 +121,9 @@ PrimerPairsSet <- function(primerF=character(), primerR=character()){
        length(names(primerF))== length(primerF)) {
         na <- paste0(names(primerF), ".", names(primerR))
     } else {na <- paste0(primerF, ".", primerR)} # otherwise use primer sequences
+    ## set all names the same!
+    names(primerF) <- na
+    names(primerR) <- na
     new("PrimerPairsSet",
         primerF = DNAStringSet(primerF),
         primerR = DNAStringSet(primerR),
@@ -236,10 +235,6 @@ setMethod("length", "PairedDada", function(x){
 ##'     as \code{colnames(MA)}) and more data can be added by
 ##'     \code{\link{addSampleData}}.
 ##' 
-##' @slot rawCounts A numeric matrix of sequencing read counts per
-##'     amplicon and sample. Created by the function
-##'     \code{\link{sortAmplicons}} in the MultiAmplicon pipeline.
-##'
 ##' @slot stratifiedFiles temporary files as a result of stratifying
 ##'     into amplicons and samples using the MultiAmplicon pipeline
 ##'     function \code{\link{sortAmplicons}}. Forward (sometimes
@@ -289,9 +284,6 @@ setMethod("length", "PairedDada", function(x){
 ##' 
 ##' @param PairedReadFileSet a set of paired end sequencing data files
 ##'     \code{\link{PairedReadFileSet-class}}
-##'
-##' @param rawCounts Users should not supply this parameter, the slot
-##'     is created by \code{\link{sortAmplicons}}.
 ##'
 ##' @param sampleData Users should not supply this parameter. It's
 ##'     filled with a sample_data object from
@@ -370,7 +362,6 @@ setMethod("length", "PairedDada", function(x){
 setClass("MultiAmplicon",
          representation(PrimerPairsSet="PrimerPairsSet",
                         PairedReadFileSet="PairedReadFileSet",
-                        rawCounts="matrix",
                         stratifiedFiles="list",
                         sampleData="sample_data", 
                         derep="list",
@@ -379,6 +370,7 @@ setClass("MultiAmplicon",
                         sequenceTable="list",
                         sequenceTableNoChime="list",
                         taxonTable="list"),
+                        contains="matrix",
          validity=function(object) {
              ## constructors check for PairedReadFileSet,
              ## PrimerPairsSet, rawCounts and sampleData
@@ -414,7 +406,7 @@ setClass("MultiAmplicon",
 ##'     MultiAmplicon-class
 MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
                           PairedReadFileSet = PairedReadFileSet(),
-                          rawCounts = matrix(ncol=0, nrow=0),
+                          .Data = matrix(ncol=0, nrow=0),
                           stratifiedFiles = list(),
                           sampleData = new("sample_data",
                                            data.frame(row.names=names(PairedReadFileSet),
@@ -430,7 +422,7 @@ MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
     new("MultiAmplicon",
         PrimerPairsSet = PrimerPairsSet,
         PairedReadFileSet = PairedReadFileSet,
-        rawCounts = rawCounts,
+        .Data = .Data,
         stratifiedFiles = stratifiedFiles,
         sampleData = sampleData,
         derep = derep,
@@ -458,7 +450,9 @@ getPairedReadFileSet <- function (MA) slot(MA, "PairedReadFileSet")
 ##' @rdname MultiAmplicon-class
 ##' @param MA MultiAmplicon-class object
 ##' @export
-getRawCounts <- function (MA) slot(MA, "rawCounts")
+getRawCounts <- function (MA) {
+    return(slot(MA, ".Data"))
+}
 
 ##' @rdname MultiAmplicon-class
 ##' @param simplify Should a list of objects be simplified to only one

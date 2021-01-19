@@ -14,12 +14,11 @@ Ffastq.file <- fastq.files[grepl("F_filt", fastq.files)]
 Rfastq.file <- fastq.files[grepl("R_filt", fastq.files)]
 PRF <- PairedReadFileSet(Ffastq.file, Rfastq.file)
 
-
 MA <- MultiAmplicon(PPS, PRF)
 
 SA <- MultiAmplicon(PrimerPairsSet(primerF[1], primerR[1]), PRF)
-SA1 <- sortAmplicons(SA, filedir=tempfile())
 
+SA1 <- sortAmplicons(SA, filedir=tempfile())
 
 MA1 <- sortAmplicons(MA, filedir=tempfile())
 
@@ -34,7 +33,7 @@ test_that("no reads were sorted into different samples" , {
             rawFiles <- rawFiles[which(file.exists(rawFiles))]
             ShortRead::readFastq(rawFiles)
         })
-        snames <- MA@colnames
+        snames <- colnames(MA)
         names(readsFL) <- snames
         sort_track <- lapply(snames, function (sampl) { 
             strat <- lapply(MA@stratifiedFiles, function(x) {
@@ -53,7 +52,7 @@ test_that("no reads were sorted into different samples" , {
                   )
         })
         sort_track <- as.data.frame(do.call(rbind, sort_track))
-        rownames(sort_track) <- snames
+        base::rownames(sort_track) <- snames
         sort_track$DuplicateRaw <- sort_track$RawReads -
             sort_track$UniqueRawReads
         sort_track$DuplicateSorted  <- sort_track$SortedReads -
@@ -177,10 +176,10 @@ test_that("dada2 denoising produces a list of dada objects ", {
 
 
 test_that("dada2 denoising produces identical results for replicate samplesd", {
-    expect_equal(lapply(getDadaF(MA3[, which(MA3@colnames%in%"S05_F_filt.fastq.gz")]),
+    expect_equal(lapply(getDadaF(MA3[, "S05_F_filt.fastq.gz"]),
                         unname),
                  ## have to unname the amplicon naming
-                 lapply(getDadaF(MA3[, which(MA3@colnames%in%"S05D_F_filt.fastq.gz")]),
+                 lapply(getDadaF(MA3[, "S05D_F_filt.fastq.gz"]),
                         unname))
 })
 
@@ -232,7 +231,7 @@ test_that("stratified files result in the number of columns of sequence tables "
 
 test_that("Identical files produce identical sequence tables ", {
     lapply(MA5@sequenceTable, function(x) {
-        if("S05_F_filt.fastq.gz" %in% rownames(x)){
+        if("S05_F_filt.fastq.gz" %in% base::rownames(x)){
             expect_equal(
                 unname(t(x["S05_F_filt.fastq.gz", ])),
                 unname(t(x["S05D_F_filt.fastq.gz", ])))
@@ -246,7 +245,7 @@ MA6 <- removeChimeraMulti(MA5)
 
 test_that("Identical files produce identical NoChime sequence tables ", {
     lapply(MA6@sequenceTableNoChime, function(x) {
-        if("S05_F_filt.fastq.gz" %in% rownames(x)){
+        if("S05_F_filt.fastq.gz" %in% base::rownames(x)){
             expect_equal(
                 unname(t(x["S05_F_filt.fastq.gz", ])),
                 unname(t(x["S05D_F_filt.fastq.gz", ])))
@@ -260,13 +259,13 @@ test_that("Reads in sequence tables map to stratified files", {
     ### the package itself
     mapReadsStratTab <- function(MA) {
         getReadsBySample <- function(MA){
-            sreads <- lapply(MA@colnames, function (sampl) { 
+            sreads <- lapply(colnames(MA), function (sampl) { 
                 strat <- lapply(MA@stratifiedFiles, function(x) {
                     grep(sampl, x@readsF, value=TRUE)
                 })
                 ShortRead::readFastq(unlist(strat))
             })
-            names(sreads) <- MA@colnames
+            names(sreads) <- colnames(MA)
             sreads
         }
         RbyS <- getReadsBySample(MA)
@@ -275,17 +274,17 @@ test_that("Reads in sequence tables map to stratified files", {
         seqtabL <- getSequenceTableNoChime(MA)
         seqtabL <- seqtabL[unlist(lapply(seqtabL, function(x) all(dim(x)>0)))]
 
-        SbyS <- lapply(MA@colnames, function(sampl){
+        SbyS <- lapply(colnames(MA), function(sampl){
             sbys <- lapply(seqtabL, function(ST) {
-                sampl.here <- sampl[sampl%in%rownames(ST)]
-                cn <- colnames(ST)[which(ST[sampl.here,]>0)]
+                sampl.here <- sampl[sampl%in%base::rownames(ST)]
+                cn <- base::colnames(ST)[which(ST[sampl.here,]>0)]
                 split <- strsplit(cn, "NNNNNNNNNN")
                 unlist(lapply(split, "[[", 1))
                 ## it might be necessary to also track the counts here
             })
             sbys[!unlist(lapply(sbys, is.null))]
         })
-        names(SbyS) <- MA@colnames
+        names(SbyS) <- colnames(MA)
 
         SbyS <- SbyS[intersect(names(SbyS), names(RbyS))]
         RbyS <- RbyS[intersect(names(SbyS), names(RbyS))]
@@ -328,14 +327,14 @@ resortedMA6 <- removeChimeraMulti(resortedMA5)
 test_that("Resorting produces identical output over samples", {
     seqtabs <- getSequenceTableNoChime(MA6)
     Sorttabs <- getSequenceTableNoChime(resortedMA6)
-    SamSums <- lapply(seqtabs, rowSums)
-    SortSums <- lapply(Sorttabs, rowSums)
+    SamSums <- lapply(seqtabs, base::rowSums)
+    SortSums <- lapply(Sorttabs, base::rowSums)
     samorder <- colnames(MA6)
     ## over samples
-    confusion <- lapply(names(SamSums), function(name) {
+    confusion <- lapply(base::colnames(SamSums), function(name) {
         df <- cbind(SamSums[[name]][samorder], SortSums[[name]][samorder])
-        rownames(df) <- samorder
-        colnames(df) <- c("Correct", "Shuffle")
+        base::rownames(df) <- samorder
+        base::colnames(df) <- c("Correct", "Shuffle")
         df[is.na(df)] <- 0
         df
     })
@@ -349,8 +348,8 @@ test_that("Resorting produces identical output over samples", {
 context("Handing over to Phyloseq")
 
 test_that("toPhyloseq multi2Single TRUE/FALSE work and give same resultsw ", {
-    PHYWO <- toPhyloseq(MA6, samples=MA6@colnames)
-    PHYWO.list <- toPhyloseq(MA6, samples=MA6@colnames, multi2Single=FALSE)
+    PHYWO <- toPhyloseq(MA6, samples=colnames(MA6))
+    PHYWO.list <- toPhyloseq(MA6, samples=colnames(MA6), multi2Single=FALSE)
     expect_s4_class(PHYWO, "phyloseq")
     expect_true(all(unlist(lapply(PHYWO.list, class))%in%c("phyloseq", "NULL")))
     PHYWO.list <- PHYWO.list[!unlist(lapply(PHYWO.list, is.null))]
@@ -363,7 +362,7 @@ test_that("toPhyloseq multi2Single TRUE/FALSE work and give same resultsw ", {
 })
 
 context("Get the pipeline summary")
-test_that("pipelin Summary is a data.frame", {
+test_that("pipeline Summary is a data.frame", {
     expect_s3_class(getPipelineSummary(MA6), "data.frame")
     expect_s3_class(getPipelineSummary(MA3), "data.frame")
 })

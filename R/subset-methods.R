@@ -107,7 +107,7 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
               newST <- list()
               newSTnC <- list()
               newTT <- list()
-              if(all(dim(x@rawCounts)>0)){
+              if(all(dim(getRawCounts(x)>0))){
                   newRC <- as.matrix(getRawCounts(x)[i, j, drop=FALSE])
                   ## we drop empty files from statified files
                   ## therefore we have to find new indices j. These
@@ -175,7 +175,7 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                   MA.out <- initialize(x,
                                        PrimerPairsSet = newPrimer,
                                        PairedReadFileSet = newFiles,
-                                       rawCounts = newRC,
+                                       .Data= newRC,
                                        sampleData = newSampleData,
                                        stratifiedFiles = newSF,
                                        derep = newderep,
@@ -191,7 +191,7 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
 ##' @rdname MultiAmplicon-class
 setMethod("[", c("MultiAmplicon", "index", "missing", "ANY"),
           function(x, i, j, ..., drop=FALSE){
-          x[i, 1:ncol(x)]    
+          x[i, 1:length(x@PairedReadFileSet)]    
           }
 )
 
@@ -199,17 +199,10 @@ setMethod("[", c("MultiAmplicon", "index", "missing", "ANY"),
 ##' @rdname MultiAmplicon-class
 setMethod("[", c("MultiAmplicon", "missing", "index", "ANY"),
           function(x, i, j, ..., drop=FALSE){
-          x[1:nrow(x), j]    
+          x[1:length(x@PrimerPairsSet), j]    
           }
 )
 
-## all empty
-##' @rdname MultiAmplicon-class
-setMethod("[", c("MultiAmplicon", "missing", "missing", "ANY"),
-          function(x, i, j, ..., drop=FALSE){
-          x
-          }
-)
 
 
 

@@ -177,7 +177,15 @@ dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
        return(Pdada)
     }, mc.cores=mc.cores)
     names(PPdada) <- rownames(MA)
-    initialize(MA, dada = PPdada)
+    MultiAmplicon(
+        PrimerPairsSet = MA@PrimerPairsSet,
+        PairedReadFileSet = MA@PairedReadFileSet,
+        .Data=MA@.Data,
+        stratifiedFiles = MA@stratifiedFiles,
+        sampleData = MA@sampleData,
+        derep = MA@derep,
+        dada = PPdada
+    )
 }
 
 ##' Merge denoised pairs of forward and reverse reads inside an
@@ -236,7 +244,16 @@ mergeMulti <- function(MA, mc.cores=getOption("mc.cores", 1L), ...){
         return(MP)
     }, mc.cores=mc.cores)
     names(mergers) <- names(MA@PrimerPairsSet)
-    initialize(MA, mergers = mergers)
+    MultiAmplicon(
+        PrimerPairsSet = MA@PrimerPairsSet,
+        PairedReadFileSet = MA@PairedReadFileSet,
+        .Data=MA@.Data,
+        stratifiedFiles = MA@stratifiedFiles,
+        sampleData = MA@sampleData,
+        derep = MA@derep,
+        dada = MA@dada,
+        mergers = mergers
+    )
 }
 
 ##' Create a sequence table inside a MultiAmplicon object.
@@ -282,7 +299,17 @@ makeSequenceTableMulti <- function(MA, mc.cores=getOption("mc.cores", 1L), ...){
         do.call(makeSequenceTable, c(list(mergers[[i]]), args.here))
     }, mc.cores=mc.cores)
     names(sequenceTable) <- names(MA@PrimerPairsSet)
-    initialize(MA, sequenceTable = sequenceTable)
+    MultiAmplicon(
+        PrimerPairsSet = MA@PrimerPairsSet,
+        PairedReadFileSet = MA@PairedReadFileSet,
+        .Data=MA@.Data,
+        stratifiedFiles = MA@stratifiedFiles,
+        sampleData = MA@sampleData,
+        derep = MA@derep,
+        dada = MA@dada,
+        mergers = MA@mergers,
+        sequenceTable = sequenceTable
+    )
 }
 
 ##' Remove chimeric sequencing read pairs from a MultiAmplicon
@@ -328,7 +355,18 @@ removeChimeraMulti <- function(MA, mc.cores = getOption("mc.cores", 1L), ...){
         },
         mc.cores = mc.cores)
     names(sequenceTableNoChime) <- MA@PrimerPairsSet@names
-    initialize(MA, sequenceTableNoChime = sequenceTableNoChime)
+    MultiAmplicon(
+        PrimerPairsSet = MA@PrimerPairsSet,
+        PairedReadFileSet = MA@PairedReadFileSet,
+        .Data=MA@.Data,
+        stratifiedFiles = MA@stratifiedFiles,
+        sampleData = MA@sampleData,
+        derep = MA@derep,
+        dada = MA@dada,
+        mergers = MA@mergers,
+        sequenceTable = MA@sequenceTable,
+        sequenceTableNoChime = sequenceTableNoChime
+    )
 }
 
 ##' Calculate the proportion of merged sequences for a MultiAmplicon
@@ -389,7 +427,7 @@ setMethod("calcPropMerged", "MultiAmplicon",
 ##' @export
 ##' @author Emanuel Heitlinger
 getPipelineSummary <- function(MA){
-    slots <- c("rawCounts", "stratifiedFiles", "dada", "mergers",
+    slots <- c("stratifiedFiles", "dada", "mergers",
                "sequenceTable", "sequenceTableNoChime")
     slotFilled <- unlist(sapply(slots, function (x) length(slot(MA, x)))>0)
     ### helper functions
