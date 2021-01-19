@@ -16,3 +16,4 @@ testdraft/*
 testdraft
 ^doc$
 ^Meta$
+^\.github$
