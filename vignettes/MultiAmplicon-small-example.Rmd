@@ -289,8 +289,8 @@ each of the many phyloseq objects contains only ASVs from one amplicon.
 ## echo=TRUE for this?
 library(phyloseq)
 
-PHY <- toPhyloseq(MA7, samples=colnames(MA), multi2Single=TRUE)
-PHY.list <- toPhyloseq(MA7, samples=colnames(MA), multi2Single=FALSE)
+PHY <- toPhyloseq(MA7, samples=colnames(MA7), multi2Single=TRUE)
+PHY.list <- toPhyloseq(MA7, samples=colnames(MA7), multi2Single=FALSE)
 PHYgenus <- tax_glom(PHY, "genus")
 
 knitr::kable(table(tax_table(PHYgenus)[, "superkingdom"]))
