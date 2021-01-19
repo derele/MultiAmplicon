@@ -155,24 +155,28 @@ MA <- removeChimeraMulti(MA)
 
 ## Check what happend within the pipeline 
 
+When we are done with our processing, we usually want to know what
+happened to our raw data (sequencing reads) along the MultiAmplicon/dada2 pipeline.  
+
 ```{r tracking, mesage=FALSE, fig.show='hold'}
 tracking <- getPipelineSummary(MA)
 plotPipelineSummary(tracking)
 ```
 
 The pipeline summary tells us how many samples, how many unique
-sequences and how many sequence read (pairs) in total were recovered
-through the pipeline for different amplicons.
-
-
-```{r plottrack, mesage=FALSE, fig.show='hold'}
-library(ggplot2)
-plotPipelineSummary(tracking) + scale_y_log10()
-```
+sequences and how many sequence read pairs were recovered at different
+steps through the pipeline. It gives this information for the
+different amplicons.
 
 The output of the pipeline summary can be modified with standard
 ggplot syntax.
 
+```{r plottrack, mesage=FALSE, fig.show='hold'}
+library(ggplot2)
+plotPipelineSummary(tracking) +
+  scale_y_log10() +
+  geom_line()
+```
 
 ## Hand over to phyloseq
 
