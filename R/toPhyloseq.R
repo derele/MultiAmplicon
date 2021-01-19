@@ -98,7 +98,8 @@ toPhyloseq <- function(MA, samples, multi2Single=TRUE, ...){
 ##' @title addSampleData
 ##' @param MA A \code{\link{MultiAmplicon}} object
 ##' @param sampleData A data frame of providing data for samples in
-##'     the \code{\link{MultiAmplicon}} object. If set to \code{NULL}
+##'     the \code{\link{MultiAmplicon}} object. This has to have the same rownames
+##'     as the colnames of the MultiAmplicon object. If NULL, 
 ##'     (default) sampleData will be added based on names of the
 ##'     \code{link{PairedReadFileSet}} and the resulting sampleData
 ##'     will (only) give names of forward and reverse file names for

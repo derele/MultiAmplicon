@@ -229,11 +229,15 @@ setMethod("length", "PairedDada", function(x){
 ##' @slot PairedReadFileSet The (quality filtered) fastq files (one
 ##'     file pair for each sample) that store your sequencing data.
 ##'
+##' @slot .Data A numeric matrix of sequencing read counts per
+##'    amplicon and sample. Created by the function
+##'    \code{\link{sortAmplicons}} in the MultiAmplicon pipeline.
+##'
 ##' @slot sampleData A sample_data object from
 ##'     \code{\link[phyloseq]{phyloseq}}. The slot is created from
-##'     sample names (names of the \code{\link{PrimerPairsSet}} same
-##'     as \code{colnames(MA)}) and more data can be added by
-##'     \code{\link{addSampleData}}.
+##'     sample names (names of the \code{\link{PrimerPairsSet}}, which
+##'     have tto be the same as \code{colnames(MA)}). More data can be
+##'     added by \code{\link{addSampleData}}.
 ##' 
 ##' @slot stratifiedFiles temporary files as a result of stratifying
 ##'     into amplicons and samples using the MultiAmplicon pipeline
@@ -284,6 +288,9 @@ setMethod("length", "PairedDada", function(x){
 ##' 
 ##' @param PairedReadFileSet a set of paired end sequencing data files
 ##'     \code{\link{PairedReadFileSet-class}}
+##'
+##' @param .Data Users should not supply this parameter, the slot
+##'     is created by \code{\link{sortAmplicons}}.
 ##'
 ##' @param sampleData Users should not supply this parameter. It's
 ##'     filled with a sample_data object from
@@ -356,7 +363,7 @@ setMethod("length", "PairedDada", function(x){
 ##' @seealso \code{\link[dada2]{derepFastq}},\code{\link[dada2]{dada}}
 ##' @importFrom dada2 derepFastq dada
 ##' @importClassesFrom phyloseq sample_data
-## ## ##' @importFrom phyloseq sample_names ### 
+## ##' @importFrom phyloseq sample_names ###  this doesn't work for some reasons for now
 ##' @author Emanuel Heitlinger
 ##' @exportClass MultiAmplicon
 setClass("MultiAmplicon",
