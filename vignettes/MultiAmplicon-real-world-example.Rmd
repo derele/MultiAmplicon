@@ -167,7 +167,7 @@ different amplicons.
 The output of the pipeline summary can be modified with standard
 ggplot syntax.
 
-```{r plottrack, mesage=FALSE, fig.show='hold'}
+```{r plottrack, message=FALSE, fig.show='hold'}
 library(ggplot2)
 plotPipelineSummary(tracking) +
   scale_y_log10() +
@@ -176,10 +176,18 @@ plotPipelineSummary(tracking) +
 
 ## Hand over to phyloseq
 
-```{r handover, mesage=FALSE}
+We haven't genereated a taxonomical annotation for this ASVs yet. oing
+so within MulitAmplicon is currently only supported on Unix systems
+(see `blastTaxAnnot`). You will need to generat a taxonomical
+annotation in one way or the other at some point, but here we can do
+an export to a phyloseq object first. 
+
+```{r handover, message=FALSE}
 library(phyloseq)
 PH <- toPhyloseq(MA, samples=colnames(MA))
 PHlist <- toPhyloseq(MA, samples=colnames(MA), multi2Single=FALSE)
 ```
 
 ## Comparing sample data 
+
+We now can use phyloseq for one of the many supported analyses. Here..
