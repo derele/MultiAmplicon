@@ -88,7 +88,7 @@ all (potentially) filled slots" />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -114,7 +114,7 @@ all (potentially) filled slots" />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/derele/MultiAmplicon/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -151,7 +151,7 @@ all (potentially) filled slots</p>
     <pre class="usage">MultiAmplicon(
   PrimerPairsSet = PrimerPairsSet(),
   PairedReadFileSet = PairedReadFileSet(),
-  rawCounts = matrix(ncol = 0, nrow = 0),
+  .Data = matrix(ncol = 0, nrow = 0),
   stratifiedFiles = list(),
   sampleData = new("sample_data", data.frame(row.names = names(PairedReadFileSet),
     readsF = PairedReadFileSet@readsF, readsR = PairedReadFileSet@readsF)),
@@ -162,21 +162,6 @@ all (potentially) filled slots</p>
   sequenceTableNoChime = list(),
   taxonTable = list()
 )
-
-# S4 method for MultiAmplicon
-colnames(x)
-
-# S4 method for MultiAmplicon
-rownames(x)
-
-# S4 method for MultiAmplicon
-ncol(x)
-
-# S4 method for MultiAmplicon
-nrow(x)
-
-# S4 method for MultiAmplicon
-dim(x)
 
 getPrimerPairsSet(MA)
 
@@ -219,9 +204,6 @@ show(object)
 [(x, i, j, ..., drop = FALSE)
 
 # S4 method for MultiAmplicon,missing,index,ANY
-[(x, i, j, ..., drop = FALSE)
-
-# S4 method for MultiAmplicon,missing,missing,ANY
 [(x, i, j, ..., drop = FALSE)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -238,7 +220,7 @@ amplicons see <code><a href='PrimerPairsSet-class.html'>PrimerPairsSet-class</a>
 <code><a href='PairedReadFileSet-class.html'>PairedReadFileSet-class</a></code></p></td>
     </tr>
     <tr>
-      <th>rawCounts</th>
+      <th>.Data</th>
       <td><p>Users should not supply this parameter, the slot
 is created by <code><a href='sortAmplicons.html'>sortAmplicons</a></code>.</p></td>
     </tr>
@@ -288,10 +270,6 @@ list of taxonomyTable objects from
 <code><a href='https://rdrr.io/pkg/phyloseq/man/phyloseq.html'>phyloseq</a></code>.</p></td>
     </tr>
     <tr>
-      <th>x</th>
-      <td><p>MultiAmplicon-class object</p></td>
-    </tr>
-    <tr>
       <th>MA</th>
       <td><p>MultiAmplicon-class object</p></td>
     </tr>
@@ -303,6 +281,10 @@ object if it has length one?</p></td>
     <tr>
       <th>object</th>
       <td><p>A <code>MultiAmplicon-class</code> object.</p></td>
+    </tr>
+    <tr>
+      <th>x</th>
+      <td><p>MultiAmplicon-class object</p></td>
     </tr>
     <tr>
       <th>i</th>
@@ -343,23 +325,15 @@ specify amplicons stored in a
 <dt><code>PairedReadFileSet</code></dt><dd><p>The (quality filtered) fastq files (one
 file pair for each sample) that store your sequencing data.</p></dd>
 
-<dt><code>rownames</code></dt><dd><p>Names of the amplicons: derived from the names of
-the primer pairs. Created with the object, should not be
-supplied by the user.</p></dd>
-
-<dt><code>colnames</code></dt><dd><p>Names of the samples: these are names of the
-origial fastq files. Created with the object, should not be
-supplied by the user.</p></dd>
+<dt><code>.Data</code></dt><dd><p>A numeric matrix of sequencing read counts per
+amplicon and sample. Created by the function
+<code><a href='sortAmplicons.html'>sortAmplicons</a></code> in the MultiAmplicon pipeline.</p></dd>
 
 <dt><code>sampleData</code></dt><dd><p>A sample_data object from
 <code><a href='https://rdrr.io/pkg/phyloseq/man/phyloseq.html'>phyloseq</a></code>. The slot is created from
-sample names (names of the <code><a href='PrimerPairsSet-class.html'>PrimerPairsSet</a></code> same
-as <code><a href='https://rdrr.io/r/base/colnames.html'>colnames(MA)</a></code>) and more data can be added by
-<code><a href='addSampleData.html'>addSampleData</a></code>.</p></dd>
-
-<dt><code>rawCounts</code></dt><dd><p>A numeric matrix of sequencing read counts per
-amplicon and sample. Created by the function
-<code><a href='sortAmplicons.html'>sortAmplicons</a></code> in the MultiAmplicon pipeline.</p></dd>
+sample names (names of the <code><a href='PrimerPairsSet-class.html'>PrimerPairsSet</a></code>, which
+have tto be the same as <code><a href='https://rdrr.io/r/base/colnames.html'>colnames(MA)</a></code>). More data can be
+added by <code><a href='addSampleData.html'>addSampleData</a></code>.</p></dd>
 
 <dt><code>stratifiedFiles</code></dt><dd><p>temporary files as a result of stratifying
 into amplicons and samples using the MultiAmplicon pipeline
@@ -428,28 +402,117 @@ by <code><a href='removeChimeraMulti.html'>removeChimeraMulti</a></code>.</p></d
 <span class='va'>PRF</span> <span class='op'>&lt;-</span> <span class='fu'><a href='PairedReadFileSet-class.html'>PairedReadFileSet</a></span><span class='op'>(</span><span class='va'>Ffastq.file</span>, <span class='va'>Rfastq.file</span><span class='op'>)</span>
 
 <span class='va'>MA</span> <span class='op'>&lt;-</span> <span class='fu'>MultiAmplicon</span><span class='op'>(</span><span class='va'>PPS</span>, <span class='va'>PRF</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in sample_names(object@sampleData): could not find function "sample_names"</span></div><div class='input'>
+
 <span class='co'>## the number of amplicons (primer pairs)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>MA</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'nrow': object 'MA' not found</span></div><div class='input'>
+</div><div class='output co'>#&gt; [1] 0</div><div class='input'>
 <span class='co'>## the number of samples (sequencing read file pairs)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>MA</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'ncol': object 'MA' not found</span></div><div class='input'>
+</div><div class='output co'>#&gt; [1] 0</div><div class='input'>
 <span class='co'>## sort into amplicons</span>
 <span class='va'>MA1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sortAmplicons.html'>sortAmplicons</a></span><span class='op'>(</span><span class='va'>MA</span>, filedir<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span>pattern <span class='op'>=</span> <span class='st'>"dir"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in h(simpleError(msg, call)): error in evaluating the argument 'MA' in selecting a method for function 'sortAmplicons': object 'MA' not found</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>creating directory /tmp/RtmpWFGhCS/dirb2491543708e</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 0 sequencing reads for S00_F_filt.fastq.gz in </span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S00_F_filt.fastq.gz and </span>
+#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S00_R_filt.fastq.gz </span>
+#&gt; <span class='message'> into 0  amplicons and written into /tmp/RtmpWFGhCS/dirb2491543708e</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 0 sequencing reads for S01_F_filt.fastq.gz in </span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S01_F_filt.fastq.gz and </span>
+#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S01_R_filt.fastq.gz </span>
+#&gt; <span class='message'> into 0  amplicons and written into /tmp/RtmpWFGhCS/dirb2491543708e</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 9348 sequencing reads for S02_F_filt.fastq.gz in </span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S02_F_filt.fastq.gz and </span>
+#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S02_R_filt.fastq.gz </span>
+#&gt; <span class='message'> into 4  amplicons and written into /tmp/RtmpWFGhCS/dirb2491543708e</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 5 sequencing reads for S03_F_filt.fastq.gz in </span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S03_F_filt.fastq.gz and </span>
+#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S03_R_filt.fastq.gz </span>
+#&gt; <span class='message'> into 1  amplicons and written into /tmp/RtmpWFGhCS/dirb2491543708e</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 14 sequencing reads for S04_F_filt.fastq.gz in </span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S04_F_filt.fastq.gz and </span>
+#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S04_R_filt.fastq.gz </span>
+#&gt; <span class='message'> into 3  amplicons and written into /tmp/RtmpWFGhCS/dirb2491543708e</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 51777 sequencing reads for S05_F_filt.fastq.gz in </span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S05_F_filt.fastq.gz and </span>
+#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S05_R_filt.fastq.gz </span>
+#&gt; <span class='message'> into 3  amplicons and written into /tmp/RtmpWFGhCS/dirb2491543708e</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 51777 sequencing reads for S05D_F_filt.fastq.gz in </span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S05D_F_filt.fastq.gz and </span>
+#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S05D_R_filt.fastq.gz </span>
+#&gt; <span class='message'> into 3  amplicons and written into /tmp/RtmpWFGhCS/dirb2491543708e</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 17358 sequencing reads for S06_F_filt.fastq.gz in </span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S06_F_filt.fastq.gz and </span>
+#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S06_R_filt.fastq.gz </span>
+#&gt; <span class='message'> into 4  amplicons and written into /tmp/RtmpWFGhCS/dirb2491543708e</span></div><div class='input'>
 <span class='co'>## dereplication is currently not supported</span>
 <span class='co'>## MA2 &lt;- derepMulti(MA1)</span>
 
 <span class='co'>### use dada directly after sorting</span>
 <span class='va'>MA3</span> <span class='op'>&lt;-</span> <span class='fu'><a href='dadaMulti.html'>dadaMulti</a></span><span class='op'>(</span><span class='va'>MA1</span>, selfConsist <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in is(x, "classRepresentation"): object 'MA1' not found</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>amplicon AGAGTTTGATCCTGGCTCAG.CTGCWGCCNCCCGTAGG: dada estimation of sequence variants from 6 of 8 possible sample files</span></div><div class='output co'>#&gt; <span class='message'>calling dada with selfConsist=TRUE parameters</span></div><div class='output co'>#&gt; Initializing error rates to maximum possible estimate.
+#&gt; selfConsist step 1 ......
+#&gt;    selfConsist step 2
+#&gt;    selfConsist step 3
+#&gt;    selfConsist step 4
+#&gt;    selfConsist step 5
+#&gt;    selfConsist step 6
+#&gt; Convergence after  6  rounds.
+#&gt; Initializing error rates to maximum possible estimate.
+#&gt; selfConsist step 1 ......
+#&gt;    selfConsist step 2
+#&gt;    selfConsist step 3
+#&gt;    selfConsist step 4
+#&gt;    selfConsist step 5
+#&gt; Convergence after  5  rounds.</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>amplicon ACTCCTACGGGAGGCAGC.GACTACHVGGGTATCTAATCC: dada estimation of sequence variants from 5 of 8 possible sample files</span></div><div class='output co'>#&gt; <span class='message'>calling dada with selfConsist=TRUE parameters</span></div><div class='output co'>#&gt; Initializing error rates to maximum possible estimate.
+#&gt; selfConsist step 1 .....
+#&gt;    selfConsist step 2
+#&gt;    selfConsist step 3
+#&gt;    selfConsist step 4
+#&gt;    selfConsist step 5
+#&gt;    selfConsist step 6
+#&gt; Convergence after  6  rounds.
+#&gt; Initializing error rates to maximum possible estimate.
+#&gt; selfConsist step 1 .....
+#&gt;    selfConsist step 2
+#&gt;    selfConsist step 3
+#&gt;    selfConsist step 4
+#&gt;    selfConsist step 5
+#&gt; Convergence after  5  rounds.</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>amplicon GAATTGACGGAAGGGCACC.AAGGGCATCACAGACCTGTTAT: dada estimation of sequence variants from 2 of 8 possible sample files</span></div><div class='output co'>#&gt; <span class='message'>calling dada with selfConsist=TRUE parameters</span></div><div class='output co'>#&gt; Initializing error rates to maximum possible estimate.
+#&gt; selfConsist step 1 ..
+#&gt;    selfConsist step 2
+#&gt;    selfConsist step 3
+#&gt;    selfConsist step 4
+#&gt;    selfConsist step 5
+#&gt; Convergence after  5  rounds.
+#&gt; Initializing error rates to maximum possible estimate.
+#&gt; selfConsist step 1 ..
+#&gt;    selfConsist step 2
+#&gt;    selfConsist step 3
+#&gt;    selfConsist step 4
+#&gt;    selfConsist step 5
+#&gt; Convergence after  5  rounds.</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>amplicon YGGTGRTGCATGGCCGYT.TCCTTCTGCAGGTTCACCTAC: dada estimation of sequence variants from 5 of 8 possible sample files</span></div><div class='output co'>#&gt; <span class='message'>calling dada with selfConsist=TRUE parameters</span></div><div class='output co'>#&gt; Initializing error rates to maximum possible estimate.
+#&gt; selfConsist step 1 .....
+#&gt;    selfConsist step 2
+#&gt;    selfConsist step 3
+#&gt;    selfConsist step 4
+#&gt;    selfConsist step 5
+#&gt; Convergence after  5  rounds.
+#&gt; Initializing error rates to maximum possible estimate.
+#&gt; selfConsist step 1 .....
+#&gt;    selfConsist step 2
+#&gt;    selfConsist step 3
+#&gt;    selfConsist step 4
+#&gt; Convergence after  4  rounds.</div><div class='input'>
 <span class='va'>MA4</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mergeMulti.html'>mergeMulti</a></span><span class='op'>(</span><span class='va'>MA3</span>, justConcatenate<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in is(x, "classRepresentation"): object 'MA3' not found</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>merging sequences from 6 samples for amplicon AGAGTTTGATCCTGGCTCAG.CTGCWGCCNCCCGTAGG</span></div><div class='output co'>#&gt; <span class='message'>calling mergePairs with justConcatenate=TRUE parameters</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>merging sequences from 5 samples for amplicon ACTCCTACGGGAGGCAGC.GACTACHVGGGTATCTAATCC</span></div><div class='output co'>#&gt; <span class='message'>calling mergePairs with justConcatenate=TRUE parameters</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>merging sequences from 2 samples for amplicon GAATTGACGGAAGGGCACC.AAGGGCATCACAGACCTGTTAT</span></div><div class='output co'>#&gt; <span class='message'>calling mergePairs with justConcatenate=TRUE parameters</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>merging sequences from 5 samples for amplicon YGGTGRTGCATGGCCGYT.TCCTTCTGCAGGTTCACCTAC</span></div><div class='output co'>#&gt; <span class='message'>calling mergePairs with justConcatenate=TRUE parameters</span></div><div class='input'>
 <span class='va'>MA5</span> <span class='op'>&lt;-</span> <span class='fu'><a href='makeSequenceTableMulti.html'>makeSequenceTableMulti</a></span><span class='op'>(</span><span class='va'>MA4</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in is(x, "classRepresentation"): object 'MA4' not found</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>calling makeSequenceTable with default parameters</span></div><div class='output co'>#&gt; <span class='message'>calling makeSequenceTable with default parameters</span></div><div class='output co'>#&gt; <span class='message'>calling makeSequenceTable with default parameters</span></div><div class='output co'>#&gt; <span class='message'>calling makeSequenceTable with default parameters</span></div><div class='input'>
 <span class='va'>MA6</span> <span class='op'>&lt;-</span> <span class='fu'><a href='removeChimeraMulti.html'>removeChimeraMulti</a></span><span class='op'>(</span><span class='va'>MA5</span>, mc.cores<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in is(x, "classRepresentation"): object 'MA5' not found</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>calling removeBimeraDenovo with default parameters</span></div><div class='output co'>#&gt; <span class='message'>calling removeBimeraDenovo with default parameters</span></div><div class='output co'>#&gt; <span class='message'>calling removeBimeraDenovo with default parameters</span></div><div class='output co'>#&gt; <span class='message'>calling removeBimeraDenovo with default parameters</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
