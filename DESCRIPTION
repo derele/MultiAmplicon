@@ -1,6 +1,6 @@
 Package: MultiAmplicon
 Title: Metabarcoding and microbiome analysis using multiple amplicons
-Version: 0.1.0.9000
+Version: 0.1.1
 Authors@R: person("Emanuel", "Heitlinger", email = "emanuelheitlinger@gmail.com", role = c("aut", "cre"))
 Description: This package allows to run a typical R/bioconductor (i.e. dada2) workflow on
     multiple amplicons defined by different primer pairs (e.g. on the 16S or 18S
