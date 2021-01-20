@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Emanuel Heitlinger" />
+
+<meta name="date" content="2021-01-17" />
+
+<title>MultiAmplicon - a real world example</title>
+
+<style type="text/css">
+a.anchor-section {margin-left: 10px; visibility: hidden; color: inherit;}
+a.anchor-section::before {content: '#';}
+.hasAnchor:hover a.anchor-section {visibility: visible;}
+</style>
+<script>// Anchor sections v1.0 written by Atsushi Yasumoto on Oct 3rd, 2020.
+document.addEventListener('DOMContentLoaded', function() {
+  // Do nothing if AnchorJS is used
+  if (typeof window.anchors === 'object' && anchors.hasOwnProperty('hasAnchorJSLink')) {
+    return;
+  }
+
+  const h = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+
+  // Do nothing if sections are already anchored
+  if (Array.from(h).some(x => x.classList.contains('hasAnchor'))) {
+    return null;
+  }
+
+  // Use section id when pandoc runs with --section-divs
+  const section_id = function(x) {
+    return ((x.classList.contains('section') || (x.tagName === 'SECTION'))
+            ? x.id : '');
+  };
+
+  // Add anchors
+  h.forEach(function(x) {
+    const id = x.id || section_id(x.parentElement);
+    if (id === '') {
+      return null;
+    }
+    let anchor = document.createElement('a');
+    anchor.href = '#' + id;
+    anchor.classList = ['anchor-section'];
+    x.classList.add('hasAnchor');
+    x.appendChild(anchor);
+  });
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">MultiAmplicon - a real world example</h1>
+<h4 class="author">Emanuel Heitlinger</h4>
+<h4 class="date">2021-01-17</h4>
+
+
+
+<div id="data-preparation-download-and-filtering" class="section level2">
+<h2>Data preparation (download and filtering)</h2>
+<p>We first <a href="https://svalbard.biologie.hu-berlin.de:443/d/c291b870178f4abc8c59/">download the data</a> set from consisting of 192 fastq file-pairs from 18S and 16S amplicon sequencing of feces and intestinal contents of carnivores (hyenas and wolves). Use the botton on the upper right of the page to download a zipped folder and unzip it after downloading. The help file for the <a href="https://derele.github.io/MultiAmplicon/reference/carnivoreSeqRuns.html"><code>carnivoreSeqRuns</code></a> (containing sample data included in the package), shows how this data has been downloaded from <a href="https://www.ncbi.nlm.nih.gov/bioproject/PRJNA386767">NCBI-SRA</a>.</p>
+<p>Now we can run our standard workflow. But as usual with real data we have to filter the input files first. This particular sequencing was of quite low quality, so we have to trim and screen quite harshly.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(MultiAmplicon)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="co">## And we'll also use some dada2 functions directly</span></a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="kw">library</span>(dada2)</a>
+<a class="sourceLine" id="cb1-4" title="4">path &lt;-<span class="st"> &quot;download_sra&quot;</span> <span class="co">## change according to where you downloaded</span></a>
+<a class="sourceLine" id="cb1-5" title="5"></a>
+<a class="sourceLine" id="cb1-6" title="6">fastqFiles &lt;-<span class="st"> </span><span class="kw">list.files</span>(path, <span class="dt">pattern=</span><span class="st">&quot;.fastq.gz$&quot;</span>, <span class="dt">full.names=</span><span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb1-7" title="7"></a>
+<a class="sourceLine" id="cb1-8" title="8">fastqF &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="st">&quot;_1.fastq.gz&quot;</span>, fastqFiles, <span class="dt">value =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb1-9" title="9">fastqR &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="st">&quot;_2.fastq.gz&quot;</span>, fastqFiles, <span class="dt">value =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb1-10" title="10"></a>
+<a class="sourceLine" id="cb1-11" title="11">samples &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;_1.fastq</span><span class="ch">\\</span><span class="st">.gz&quot;</span>, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">1&quot;</span>, <span class="kw">basename</span>(fastqF))</a>
+<a class="sourceLine" id="cb1-12" title="12"></a>
+<a class="sourceLine" id="cb1-13" title="13">filt_path &lt;-<span class="st"> &quot;filtered_sra&quot;</span></a>
+<a class="sourceLine" id="cb1-14" title="14"><span class="cf">if</span>(<span class="op">!</span><span class="kw">file_test</span>(<span class="st">&quot;-d&quot;</span>, filt_path)) <span class="kw">dir.create</span>(filt_path)</a>
+<a class="sourceLine" id="cb1-15" title="15"></a>
+<a class="sourceLine" id="cb1-16" title="16">filtFs &lt;-<span class="st"> </span><span class="kw">file.path</span>(filt_path, <span class="kw">paste0</span>(samples, <span class="st">&quot;_F_filt.fastq.gz&quot;</span>))</a>
+<a class="sourceLine" id="cb1-17" title="17"><span class="kw">names</span>(filtFs) &lt;-<span class="st"> </span>samples</a>
+<a class="sourceLine" id="cb1-18" title="18">filtRs &lt;-<span class="st"> </span><span class="kw">file.path</span>(filt_path, <span class="kw">paste0</span>(samples, <span class="st">&quot;_R_filt.fastq.gz&quot;</span>))</a>
+<a class="sourceLine" id="cb1-19" title="19"><span class="kw">names</span>(filtRs) &lt;-<span class="st"> </span>samples</a>
+<a class="sourceLine" id="cb1-20" title="20"></a>
+<a class="sourceLine" id="cb1-21" title="21"><span class="co">## some files will be filtered out completely, therefore allowing 50</span></a>
+<a class="sourceLine" id="cb1-22" title="22"><span class="co">## files less present and still don't redo filtering</span></a>
+<a class="sourceLine" id="cb1-23" title="23">redo &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">file.exists</span>(fastqF)) <span class="op">-</span></a>
+<a class="sourceLine" id="cb1-24" title="24"><span class="st">    </span><span class="kw">sum</span>(<span class="kw">file.exists</span>(filtFs)) <span class="op">&gt;</span><span class="st"> </span><span class="dv">50</span></a>
+<a class="sourceLine" id="cb1-25" title="25"></a>
+<a class="sourceLine" id="cb1-26" title="26"><span class="cf">if</span>(redo){</a>
+<a class="sourceLine" id="cb1-27" title="27">    <span class="kw">lapply</span>(<span class="kw">seq_along</span>(fastqF),  <span class="cf">function</span> (i) {</a>
+<a class="sourceLine" id="cb1-28" title="28">        <span class="kw">filterAndTrim</span>(fastqF[i], filtFs[i], fastqR[i], filtRs[i],</a>
+<a class="sourceLine" id="cb1-29" title="29">                      <span class="dt">truncLen=</span><span class="kw">c</span>(<span class="dv">170</span>,<span class="dv">170</span>), <span class="dt">minLen=</span><span class="kw">c</span>(<span class="dv">170</span>,<span class="dv">170</span>), </a>
+<a class="sourceLine" id="cb1-30" title="30">                      <span class="dt">maxN=</span><span class="dv">0</span>, <span class="dt">maxEE=</span><span class="dv">2</span>, <span class="dt">truncQ=</span><span class="dv">2</span>, </a>
+<a class="sourceLine" id="cb1-31" title="31">                      <span class="dt">compress=</span><span class="ot">TRUE</span>, <span class="dt">verbose=</span><span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb1-32" title="32">    })</a>
+<a class="sourceLine" id="cb1-33" title="33">}</a>
+<a class="sourceLine" id="cb1-34" title="34"></a>
+<a class="sourceLine" id="cb1-35" title="35"><span class="kw">names</span>(filtFs) &lt;-<span class="st"> </span><span class="kw">names</span>(filtRs) &lt;-<span class="st"> </span>samples</a>
+<a class="sourceLine" id="cb1-36" title="36"></a>
+<a class="sourceLine" id="cb1-37" title="37">files &lt;-<span class="st"> </span><span class="kw">PairedReadFileSet</span>(filtFs, filtRs)</a>
+<a class="sourceLine" id="cb1-38" title="38"><span class="co">#&gt; Warning in validityMethod(object): </span></a>
+<a class="sourceLine" id="cb1-39" title="39"><span class="co">#&gt; file filtered_sra/SRR5569127_F_filt.fastq.gz does not exist on your system</span></a>
+<a class="sourceLine" id="cb1-40" title="40"><span class="co">#&gt; file filtered_sra/SRR5569127_R_filt.fastq.gz does not exist on your system</span></a></code></pre></div>
+</div>
+<div id="data-preparation-primer-set" class="section level2">
+<h2>Data preparation (primer set)</h2>
+<p>Now we have our sequencing read input data, only the primers are still missing. The primer set for the above is included in the MultiAmplicon package. The data has been generated using a microfluidics PCR system, if you want to know more about this you can consult <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5472691/">Heitlinger et al. (2017)</a> or <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5269671/">Lesniak et al. (2017)</a>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">primer.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;real_world_primers.csv&quot;</span>,</a>
+<a class="sourceLine" id="cb2-2" title="2">                           <span class="dt">package =</span> <span class="st">&quot;MultiAmplicon&quot;</span>)</a>
+<a class="sourceLine" id="cb2-3" title="3"></a>
+<a class="sourceLine" id="cb2-4" title="4">ptable &lt;-<span class="st"> </span><span class="kw">read.csv</span>(primer.file, <span class="dt">sep=</span><span class="st">&quot;,&quot;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>, <span class="dt">stringsAsFactors=</span><span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb2-5" title="5"></a>
+<a class="sourceLine" id="cb2-6" title="6">primerF &lt;-<span class="st"> </span>ptable[, <span class="st">&quot;TS.SequenceF&quot;</span>]</a>
+<a class="sourceLine" id="cb2-7" title="7">primerR &lt;-<span class="st"> </span>ptable[, <span class="st">&quot;TS.SequenceR&quot;</span>]</a>
+<a class="sourceLine" id="cb2-8" title="8"></a>
+<a class="sourceLine" id="cb2-9" title="9"><span class="kw">names</span>(primerF) &lt;-<span class="st"> </span><span class="kw">as.character</span>(ptable[, <span class="st">&quot;corrected.NameF&quot;</span>])</a>
+<a class="sourceLine" id="cb2-10" title="10"><span class="kw">names</span>(primerR) &lt;-<span class="st"> </span><span class="kw">as.character</span>(ptable[, <span class="st">&quot;corrected.NameR&quot;</span>])</a>
+<a class="sourceLine" id="cb2-11" title="11"></a>
+<a class="sourceLine" id="cb2-12" title="12">primers &lt;-<span class="st"> </span><span class="kw">PrimerPairsSet</span>(primerF, primerR)</a>
+<a class="sourceLine" id="cb2-13" title="13"></a>
+<a class="sourceLine" id="cb2-14" title="14">MA &lt;-<span class="st"> </span><span class="kw">MultiAmplicon</span>(primers, files)</a></code></pre></div>
+</div>
+<div id="running-the-multiamplicon-pipeline" class="section level2">
+<h2>Running the MultiAmplicon pipeline</h2>
+<p>We start by sorting our amplicons by primer sequences cutting off the latter from sequencing reads. The directory for sorted amplicons must be empty before that.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">filedir &lt;-<span class="st"> &quot;stratified_files&quot;</span></a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="cf">if</span>(<span class="kw">dir.exists</span>(filedir)) <span class="kw">unlink</span>(filedir, <span class="dt">recursive=</span><span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb3-3" title="3">MA &lt;-<span class="st"> </span><span class="kw">sortAmplicons</span>(MA, <span class="dt">n=</span><span class="fl">1e+05</span>, <span class="dt">filedir=</span>filedir)</a></code></pre></div>
+<p>The function is “streaming” fastq files, so that potentially large files can be handled on machines with modest memory. The parameter “n” controls how big the streamed chunks are. Increasing this value leads to faster processing and higher memory usage.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">errF &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw">getStratifiedFilesF</span>(MA)), <span class="dt">nbase=</span><span class="fl">1e8</span>,</a>
+<a class="sourceLine" id="cb4-2" title="2">                    <span class="dt">verbose=</span><span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb4-3" title="3">errR &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw">getStratifiedFilesR</span>(MA)), <span class="dt">nbase=</span><span class="fl">1e8</span>,</a>
+<a class="sourceLine" id="cb4-4" title="4">                    <span class="dt">verbose=</span><span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb4-5" title="5"></a>
+<a class="sourceLine" id="cb4-6" title="6">MA &lt;-<span class="st"> </span><span class="kw">dadaMulti</span>(MA, <span class="dt">Ferr=</span>errF, <span class="dt">Rerr=</span>errR,  <span class="dt">pool=</span><span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb4-7" title="7">                <span class="dt">verbose=</span><span class="dv">0</span>)</a></code></pre></div>
+<p>The sequences were quite low quality and we shortened them massively. Therefore we have to assume that most sequences won’t have enough overlap to merge. Now we figure out for which amplicons this is the case.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">MA &lt;-<span class="st"> </span><span class="kw">mergeMulti</span>(MA)</a>
+<a class="sourceLine" id="cb5-2" title="2"></a>
+<a class="sourceLine" id="cb5-3" title="3">propMerged &lt;-<span class="st"> </span>MultiAmplicon<span class="op">::</span><span class="kw">calcPropMerged</span>(MA)</a>
+<a class="sourceLine" id="cb5-4" title="4"></a>
+<a class="sourceLine" id="cb5-5" title="5"><span class="kw">summary</span>(propMerged)</a>
+<a class="sourceLine" id="cb5-6" title="6"><span class="co">#&gt;      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. </span></a>
+<a class="sourceLine" id="cb5-7" title="7"><span class="co">#&gt; 0.0000000 0.0002201 0.0013316 0.0416265 0.0063945 0.8817513</span></a>
+<a class="sourceLine" id="cb5-8" title="8"><span class="kw">table</span>(propMerged<span class="op">&lt;</span><span class="fl">0.8</span>)</a>
+<a class="sourceLine" id="cb5-9" title="9"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb5-10" title="10"><span class="co">#&gt; FALSE  TRUE </span></a>
+<a class="sourceLine" id="cb5-11" title="11"><span class="co">#&gt;     1    47</span></a></code></pre></div>
+<p>So we just found out that for this dataset only one amplicon could be merged retaining over 80% of the sequence. Lets run the merge again, concatenating all amplicons with less than 80% merged by setting <code>justConcatenate</code> to <code>TRUE</code> for those.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">MA &lt;-<span class="st"> </span><span class="kw">mergeMulti</span>(MA, <span class="dt">justConcatenate=</span>propMerged<span class="op">&lt;</span><span class="fl">0.8</span>)</a>
+<a class="sourceLine" id="cb6-2" title="2"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-3" title="3"><span class="co">#&gt; merging sequences from 175 samples for amplicon ACM_008.ADM330_CR</span></a>
+<a class="sourceLine" id="cb6-4" title="4"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-5" title="5"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-6" title="6"><span class="co">#&gt; merging sequences from 168 samples for amplicon MarkN.Amann</span></a>
+<a class="sourceLine" id="cb6-7" title="7"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-8" title="8"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-9" title="9"><span class="co">#&gt; merging sequences from 164 samples for amplicon Medin.Amann</span></a>
+<a class="sourceLine" id="cb6-10" title="10"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-11" title="11"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-12" title="12"><span class="co">#&gt; merging sequences from 180 samples for amplicon MarkN.Euk360_CR</span></a>
+<a class="sourceLine" id="cb6-13" title="13"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-14" title="14"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-15" title="15"><span class="co">#&gt; merging sequences from 171 samples for amplicon proti1702.EukB_MH</span></a>
+<a class="sourceLine" id="cb6-16" title="16"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-17" title="17"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-18" title="18"><span class="co">#&gt; merging sequences from 185 samples for amplicon Nem_0425_6CR.EukB_MH</span></a>
+<a class="sourceLine" id="cb6-19" title="19"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-20" title="20"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-21" title="21"><span class="co">#&gt; merging sequences from 166 samples for amplicon Hadz_1200CR.EukB_MH</span></a>
+<a class="sourceLine" id="cb6-22" title="22"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-23" title="23"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-24" title="24"><span class="co">#&gt; merging sequences from 187 samples for amplicon Nem_0425_6CR.EukB_MV</span></a>
+<a class="sourceLine" id="cb6-25" title="25"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-26" title="26"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-27" title="27"><span class="co">#&gt; merging sequences from 181 samples for amplicon proti1702.EukB_MV</span></a>
+<a class="sourceLine" id="cb6-28" title="28"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-29" title="29"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-30" title="30"><span class="co">#&gt; merging sequences from 163 samples for amplicon Hadz_1200CR.EukB_MV</span></a>
+<a class="sourceLine" id="cb6-31" title="31"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-32" title="32"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-33" title="33"><span class="co">#&gt; merging sequences from 135 samples for amplicon Medin.Gen_600_CR</span></a>
+<a class="sourceLine" id="cb6-34" title="34"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-35" title="35"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-36" title="36"><span class="co">#&gt; merging sequences from 164 samples for amplicon Hadz_566.Hadz_1200</span></a>
+<a class="sourceLine" id="cb6-37" title="37"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-38" title="38"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-39" title="39"><span class="co">#&gt; merging sequences from 180 samples for amplicon Gen_600.Hadz_1200</span></a>
+<a class="sourceLine" id="cb6-40" title="40"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-41" title="41"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-42" title="42"><span class="co">#&gt; merging sequences from 158 samples for amplicon AmannCR.Hadz_1200</span></a>
+<a class="sourceLine" id="cb6-43" title="43"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-44" title="44"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-45" title="45"><span class="co">#&gt; merging sequences from 177 samples for amplicon Mach1.Hadz_1200</span></a>
+<a class="sourceLine" id="cb6-46" title="46"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-47" title="47"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-48" title="48"><span class="co">#&gt; merging sequences from 191 samples for amplicon ACM_008.Klin0341_CR</span></a>
+<a class="sourceLine" id="cb6-49" title="49"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-50" title="50"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-51" title="51"><span class="co">#&gt; merging sequences from 185 samples for amplicon ADM330.Klin0785_CR</span></a>
+<a class="sourceLine" id="cb6-52" title="52"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-53" title="53"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-54" title="54"><span class="co">#&gt; merging sequences from 186 samples for amplicon Klin0341.Klin0785_CR</span></a>
+<a class="sourceLine" id="cb6-55" title="55"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-56" title="56"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-57" title="57"><span class="co">#&gt; merging sequences from 143 samples for amplicon MarkN.Mach1CR</span></a>
+<a class="sourceLine" id="cb6-58" title="58"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-59" title="59"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-60" title="60"><span class="co">#&gt; merging sequences from 162 samples for amplicon Gen_600.Mach2Gen</span></a>
+<a class="sourceLine" id="cb6-61" title="61"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-62" title="62"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-63" title="63"><span class="co">#&gt; merging sequences from 165 samples for amplicon Hadz_566.Mach2Gen</span></a>
+<a class="sourceLine" id="cb6-64" title="64"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-65" title="65"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-66" title="66"><span class="co">#&gt; merging sequences from 159 samples for amplicon AmannCR.Mach2Gen</span></a>
+<a class="sourceLine" id="cb6-67" title="67"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-68" title="68"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-69" title="69"><span class="co">#&gt; merging sequences from 165 samples for amplicon Mach1.Mach2Gen</span></a>
+<a class="sourceLine" id="cb6-70" title="70"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-71" title="71"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-72" title="72"><span class="co">#&gt; merging sequences from 174 samples for amplicon MarkN.Mark</span></a>
+<a class="sourceLine" id="cb6-73" title="73"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-74" title="74"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-75" title="75"><span class="co">#&gt; merging sequences from 171 samples for amplicon Mach1.Nem_0425_2</span></a>
+<a class="sourceLine" id="cb6-76" title="76"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-77" title="77"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-78" title="78"><span class="co">#&gt; merging sequences from 167 samples for amplicon Hadz_566.Nem_0425_4R</span></a>
+<a class="sourceLine" id="cb6-79" title="79"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-80" title="80"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-81" title="81"><span class="co">#&gt; merging sequences from 175 samples for amplicon Gen_600.Nem_0425_4R</span></a>
+<a class="sourceLine" id="cb6-82" title="82"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-83" title="83"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-84" title="84"><span class="co">#&gt; merging sequences from 172 samples for amplicon Mach1.Nem_0425_4R</span></a>
+<a class="sourceLine" id="cb6-85" title="85"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-86" title="86"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-87" title="87"><span class="co">#&gt; merging sequences from 169 samples for amplicon Nem_0425_4F.Nem_0425_4R</span></a>
+<a class="sourceLine" id="cb6-88" title="88"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-89" title="89"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-90" title="90"><span class="co">#&gt; merging sequences from 181 samples for amplicon wang1141.Nem_0425_6</span></a>
+<a class="sourceLine" id="cb6-91" title="91"><span class="co">#&gt; calling mergePairs with justConcatenate=FALSE parameters</span></a>
+<a class="sourceLine" id="cb6-92" title="92"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-93" title="93"><span class="co">#&gt; merging sequences from 137 samples for amplicon proti440.proti1580_R</span></a>
+<a class="sourceLine" id="cb6-94" title="94"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-95" title="95"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-96" title="96"><span class="co">#&gt; merging sequences from 161 samples for amplicon proti643.proti1580_R</span></a>
+<a class="sourceLine" id="cb6-97" title="97"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-98" title="98"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-99" title="99"><span class="co">#&gt; merging sequences from 143 samples for amplicon proti482.proti1580_R</span></a>
+<a class="sourceLine" id="cb6-100" title="100"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-101" title="101"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-102" title="102"><span class="co">#&gt; merging sequences from 184 samples for amplicon proti15.proti440_R</span></a>
+<a class="sourceLine" id="cb6-103" title="103"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-104" title="104"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-105" title="105"><span class="co">#&gt; merging sequences from 188 samples for amplicon MarkN.proti440_R</span></a>
+<a class="sourceLine" id="cb6-106" title="106"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-107" title="107"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-108" title="108"><span class="co">#&gt; merging sequences from 143 samples for amplicon proti15.proti482_R</span></a>
+<a class="sourceLine" id="cb6-109" title="109"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-110" title="110"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-111" title="111"><span class="co">#&gt; merging sequences from 118 samples for amplicon MarkN.proti628_R</span></a>
+<a class="sourceLine" id="cb6-112" title="112"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-113" title="113"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-114" title="114"><span class="co">#&gt; merging sequences from 76 samples for amplicon proti89.proti628_R</span></a>
+<a class="sourceLine" id="cb6-115" title="115"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-116" title="116"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-117" title="117"><span class="co">#&gt; merging sequences from 103 samples for amplicon proti15.proti628_R</span></a>
+<a class="sourceLine" id="cb6-118" title="118"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-119" title="119"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-120" title="120"><span class="co">#&gt; merging sequences from 163 samples for amplicon proti15.proti643_R</span></a>
+<a class="sourceLine" id="cb6-121" title="121"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-122" title="122"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-123" title="123"><span class="co">#&gt; merging sequences from 175 samples for amplicon proti89.proti643_R</span></a>
+<a class="sourceLine" id="cb6-124" title="124"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-125" title="125"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-126" title="126"><span class="co">#&gt; merging sequences from 161 samples for amplicon proti440.wang1141CR</span></a>
+<a class="sourceLine" id="cb6-127" title="127"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-128" title="128"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-129" title="129"><span class="co">#&gt; merging sequences from 164 samples for amplicon proti643.wang1141CR</span></a>
+<a class="sourceLine" id="cb6-130" title="130"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-131" title="131"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-132" title="132"><span class="co">#&gt; merging sequences from 164 samples for amplicon proti628.wang1141CR</span></a>
+<a class="sourceLine" id="cb6-133" title="133"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-134" title="134"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-135" title="135"><span class="co">#&gt; merging sequences from 187 samples for amplicon proti1580.wang1624CR6L</span></a>
+<a class="sourceLine" id="cb6-136" title="136"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-137" title="137"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-138" title="138"><span class="co">#&gt; merging sequences from 181 samples for amplicon Hadz_1200CR.wang1624CR6L</span></a>
+<a class="sourceLine" id="cb6-139" title="139"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-140" title="140"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-141" title="141"><span class="co">#&gt; merging sequences from 183 samples for amplicon proti1702.wang1624CR6L</span></a>
+<a class="sourceLine" id="cb6-142" title="142"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-143" title="143"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-144" title="144"><span class="co">#&gt; merging sequences from 159 samples for amplicon Hadz_1200CR.wang1624CR6S</span></a>
+<a class="sourceLine" id="cb6-145" title="145"><span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span></a>
+<a class="sourceLine" id="cb6-146" title="146">MA &lt;-<span class="st"> </span><span class="kw">makeSequenceTableMulti</span>(MA)</a>
+<a class="sourceLine" id="cb6-147" title="147"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-148" title="148"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-149" title="149"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-150" title="150"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-151" title="151"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-152" title="152"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-153" title="153"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-154" title="154"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-155" title="155"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-156" title="156"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-157" title="157"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-158" title="158"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-159" title="159"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-160" title="160"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-161" title="161"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-162" title="162"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-163" title="163"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-164" title="164"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-165" title="165"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-166" title="166"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-167" title="167"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-168" title="168"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-169" title="169"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-170" title="170"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-171" title="171"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-172" title="172"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-173" title="173"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-174" title="174"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-175" title="175"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-176" title="176"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-177" title="177"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-178" title="178"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-179" title="179"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-180" title="180"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-181" title="181"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-182" title="182"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-183" title="183"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-184" title="184"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-185" title="185"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-186" title="186"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-187" title="187"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-188" title="188"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-189" title="189"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-190" title="190"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-191" title="191"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-192" title="192"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-193" title="193"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-194" title="194"><span class="co">#&gt; calling makeSequenceTable with default parameters</span></a>
+<a class="sourceLine" id="cb6-195" title="195">MA &lt;-<span class="st"> </span><span class="kw">removeChimeraMulti</span>(MA)</a>
+<a class="sourceLine" id="cb6-196" title="196"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-197" title="197"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-198" title="198"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-199" title="199"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-200" title="200"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-201" title="201"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-202" title="202"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-203" title="203"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-204" title="204"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-205" title="205"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-206" title="206"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-207" title="207"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-208" title="208"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-209" title="209"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-210" title="210"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-211" title="211"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-212" title="212"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-213" title="213"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-214" title="214"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-215" title="215"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-216" title="216"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-217" title="217"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-218" title="218"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-219" title="219"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-220" title="220"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-221" title="221"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-222" title="222"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-223" title="223"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-224" title="224"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-225" title="225"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-226" title="226"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-227" title="227"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-228" title="228"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-229" title="229"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-230" title="230"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-231" title="231"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-232" title="232"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-233" title="233"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-234" title="234"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-235" title="235"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-236" title="236"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-237" title="237"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-238" title="238"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-239" title="239"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-240" title="240"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-241" title="241"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-242" title="242"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a>
+<a class="sourceLine" id="cb6-243" title="243"><span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></a></code></pre></div>
+</div>
+<div id="check-what-happend-within-the-pipeline" class="section level2">
+<h2>Check what happend within the pipeline</h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">tracking &lt;-<span class="st"> </span><span class="kw">getPipelineSummary</span>(MA)</a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="kw">plotPipelineSummary</span>(tracking)</a></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>The pipeline summary tells us how many samples, how many unique sequences and how many sequence read (pairs) in total were recovered through the pipeline for different amplicons.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw">library</span>(ggplot2)</a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="kw">plotPipelineSummary</span>(tracking) <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_log10</span>()</a>
+<a class="sourceLine" id="cb8-3" title="3"><span class="co">#&gt; Scale for 'y' is already present. Adding another scale for 'y', which will</span></a>
+<a class="sourceLine" id="cb8-4" title="4"><span class="co">#&gt; replace the existing scale.</span></a></code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAADAFBMVEUAAAABAQECAgIDAwMEBAQFBQUGBgYHBwcICAgJCQkKCgoLCwsMDAwNDQ0ODg4PDw8QEBARERESEhITExMUFBQVFRUWFhYXFxcYGBgZGRkaGhobGxscHBwdHR0eHh4fHx8gICAhISEiIiIjIyMkJCQlJSUmJiYnJycoKCgpKSkqKiorKyssLCwtLS0uLi4vLy8wMDAxMTEyMjIzMzM0NDQ1NTU2NjY3Nzc4ODg5OTk6Ojo7Ozs8PDw9PT0+Pj4/Pz9AQEBBQUFCQkJDQ0NERERFRUVGRkZHR0dISEhJSUlKSkpLS0tMTExNTU1OTk5PT09QUFBRUVFSUlJTU1NUVFRVVVVWVlZXV1dYWFhZWVlaWlpbW1tcXFxdXV1eXl5fX19gYGBhYWFiYmJjY2NkZGRlZWVmZmZnZ2doaGhpaWlqampra2tsbGxtbW1ubm5vb29wcHBxcXFycnJzc3N0dHR1dXV2dnZ3d3d4eHh5eXl6enp7e3t8fHx9fX1+fn5/f3+AgICBgYGCgoKDg4OEhISFhYWGhoaHh4eIiIiJiYmKioqLi4uMjIyNjY2Ojo6Pj4+QkJCRkZGSkpKTk5OUlJSVlZWWlpaXl5eYmJiZmZmampqbm5ucnJydnZ2enp6fn5+goKChoaGioqKjo6OkpKSlpaWmpqanp6eoqKipqamqqqqrq6usrKytra2urq6vr6+wsLCxsbGysrKzs7O0tLS1tbW2tra3t7e4uLi5ubm6urq7u7u8vLy9vb2+vr6/v7/AwMDBwcHCwsLDw8PExMTFxcXGxsbHx8fIyMjJycnKysrLy8vMzMzNzc3Ozs7Pz8/Q0NDR0dHS0tLT09PU1NTV1dXW1tbX19fY2NjZ2dna2trb29vc3Nzd3d3e3t7f39/g4ODh4eHi4uLj4+Pk5OTl5eXm5ubn5+fo6Ojp6enq6urr6+vs7Ozt7e3u7u7v7+/w8PDx8fHy8vLz8/P09PT19fX29vb39/f4+Pj5+fn6+vr7+/v8/Pz9/f3+/v7////isF19AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAgAElEQVR4nO2dB1gUx/v4544iqKgosYJiib0GNRoTg9HYIopgQ1FRUMGaGBRbosZosCQGv2pEo2LBWKKxhdi7QRSMlXi2ELsevRztuPnPzDsLHB5w7O5F+f2Z59HZ213emf3stHfmfWcRLgtFBvSmM/C2hzJAxYQyQMWEMkDFhDJAxYQyQMUEcYDOTDM6bCip7LPGyw4uqewLxsv+if+JOEAh+1VGhhvTSip76z5jZd+aUlLZoXuMlf23H/+TMkBlgPKFMkDFhDJAxYQyQMWEMkDFhLcD0KFepRPQkW6lEdCWZqYBFG5aQC6NWy5Rqb5p2bhPuOpI3y96D/h5RNvlqjUTRvR0OccAbe/SzjtKFe3dvEXfkspeQPK5frQqbMCcQR8cVO2qrVItbtN+RjfVLhd2Pk90y2/FAgobOKgXl8MfQjW/VYeAbkzqEjkAddp11OH6uUbnbnnMVx2pfULlPED1a3vVmrpHVIsHUEDhjY9Ej/dWrf30+qE6JZUtAKr7m2q+pyqsh2pPu7NXu+cCyhN91MGveGn6QQBUL/A6l8MfYnu7czQNJvW6DIDarKYlPFx1dbS/6sj7KtWY5aqolqo15BFuOdwmgH4YplJd7KBa3en3klcxAVAHlWqHOwU0ZaFKtSEXUJ5o8VUsrJ1KkMMfwo+ksb4bkypLFRvduP1yVXRA10+6+7OqO3aN6ioB5EUkNw0ngOa07Nq1a3dV9FfNnVxKKpsC2kAAdVepfmGAPNaRdg0AkfN5otsvFQ3oE1WuHHgImsbBbkzqcjkArdm7s82hNZ+EqxbqAeqjUl2tG00ALfdTqW6fUf15OXpbw5LKXuCsUgWOpmQ4IN9vVKpNBNBn7Hye6J2tR5ZUtgCIyOZy+ENMgjSo1DaHZADUde/V939ZNEx13nlKfkD2u/+eOpS2QWdbnoqe5qX6yuV2eJOSyv6u4eXr3fID2ux08XrvbqpD77LzeaKvdhxaUtn5AHE5/CF+IWn06cakvv+LDIA+btRy+p2Inu36rOlySADkp1oz0KWFy5+sF9vwfotBV1SRA5q07FZS2VvcmvYK8mcPsWcFiwJa0h7mzlh2Pp/oaaKrGBHK5fCHUH3dusMPI5jU6XdkAGR4HLRm3OvnZBoo6o1RhFDqRtImBHTU4/8CIEOhFKkaZYBkB3Ri3Ij5LzD+a+KotdrcSDwg7bi015LgQqe7uLisK3WAnro/y9w4B2uG382cf0CIxAP6Y4YLBRQ12TsoVTgnCB2enJUlwC89gKLWYvx4FD6/AOOrM4UI4zg/P78Zg0YbGUbmArpxyZUASvCI0a4Oor+/IP+40FRPfk9SQEDAHKNlj8oDVETpfDJr+Lx4AZC7sbJHG9cGZS8Pxr/9RArTWCECQF96jBs3zmccBB8f/Vjvgrd/njR38hBHl2AcO0EAxIXe85w67OvnVLanp+e0YfQvfQzL9skv2+cLQXIRpVM3PlIbvFIANNzPz9fH148Fn/EQj/eBeELuhQnkP0F2kYAu+obk4N9I4/BkjBBBCIki8NTZ8COOv7yUBIgz1TlwoE4n2QzQB7Rj1LRp077MBQRCY7anpG2dye/aepnKzuKyU4uQnTlDkFxE6bw2h5SvZAFQOPnxmux4QTav5WoNucsIQLpVs5+S6Nw3GF+bIURSAYWRMpP9Aj+aNs192rRMLjSTZDl+kARARZTOsIVzPNhzJJFi4X8iMTFRnZDIgjoO4rhYiOPzX4ibWjygiOnZOTk5OM3ziS5wvxBJBfRy1DPtxh+Eh+BCT01LSt+1QDIgg6Vzz6i7mbvpjSmkfZt1Kjk5SZ2YzII6HuL4WIgT1Un8QkJycoIRgDaTvtdlBK3ZE9ZocyOJgPAFX89FycJDcKG6LZ6egUJDKh6QwdJ5chmpe+78LnmrWBGBAIrq69gnkhzG+jVqv5nEOSvbNJmRQg5OfVzf/S6J/x3R4IODeoCMCwYA5QS1beyfDA9RBCCDpTN+jCpzx1f8LgLoej/HXpfyyTYVoH9rIBIeYl1XGm/B+DsaDyFlgsYN4rGmOT04IQug5VSUOzxEEYAMlk4c7jt8oZrfFRr+tC6VRV5gwrSmHTbSc7en+x2hccJ3Y9dmgmw5AM2j6aD3A8az2CEgoCo7+DygA4v7Bwxj8UhZADHWiNayQgEZF0LDf2KiJifinjT+mRR4Gi8incS7JP6QtRqyAOrCEirXoA6LLRs0MGMHdRvYsNiuASthyEUWQFWYrH+xDIACEIRK7P/awRvfZQeHj/uwmKkKsgCqyeRVwykMTCeM6zNgGM9gF07j2yweIQsgWyaLVh7JgIYAGK9PkMEwncmWA5A5CGwENcqsRw8FO+jaA0qQY4+mUKJkAQSl8SGWAVAvw2BqOsADDWSy5QCk1E/AzEw/VpgBMAtZAA2iourrsAyAvoL31rGGYVB2ROG5v+53rXRAlfUFW1pCbMFjhSUQVMoC6Amtv9/RI8mAYu2IqCqPcQrL3nvHj9ixg6BgZ/6GR84m/3dIkgyovj4gpVI/VigVMgLCi5Gt+Sh6IBkQfji62dC/yeH/SO5qkYNfaDa9ybCNlal+yIrlO0AyIGhqLG2sAYi5uX6sMAdA5vIAckcLkU0GlgPQLgdUi45/HjlbV5pBR4Zza1Z1pamENarcxsVsEOT/E7mqWAUAhawAPCpnBWDMrIBUJXkAtVT8WwkdxjIAusWydRHr2tM4EONNNB5NWh4aNx6pYANfNEwyoNp6NUwRGAgH8wPLs7hVIPSj1vIAqmKTMMKCPIV0QFNZtmq49mGxnX8AjFcWBHZncShcRyMlA4KxW7mvzVCRQZ42KEvRJOFXZJMpA6AGUMA7dYIX26CBQi+/3+oGsLirZEAWINB/QtGAFLIA+hv1S0izQr/LAMhOP3+t3oe410B4oLb4MItbyjVQRA7wRjw94U0M8YRGqbGnE4uryQJoD5qXgF3LeckAqF0xL/TsbyzuKBkQ6GAKPux5D2N7GlvoMFTiE1zVGCQLoC+Q65jDW1ClTOmAprBsfRa9DfI/fjQ8QIePhTcOSlonyYBOcXkWRb8RZ1kAtaWiZluQOiYZUH8AUwVG0mY+PjBw+2IONNbleL6tJAM6JJRJ9r8yOBgOgoLhDXQM7sdiG1kAQba7W3lJBzSs6BdaJxDqhEIyoI/z4SkimMkCCGQtVFTKlAwISv5unMRixwdXYUC387fOem9cOiD9cVChQZaRdDLIilaiMOkjaToA6kwO6Yyf9S2Md1LRozGOrUAL0M8f8oGuZEDQeylrVmSxZXAw1OXVwayxRi7BY6HIygHoCgCK6Ww9RjKgy0zUUYzD6yLUm86hXx/c+1d6LXmy80KSKrTiFSQDqsbLI9fFbGFOC1W2BVDlbOFC1ZID2nQ6MTFBb+1qGYhK+EZZ6aU6kV+IT0x8Nb2kskPDlzJZXUKOszfM1q71J+3vsBsGSQYkKKlcF1MoCsZwIIuqMQqRt62sGPcQoUNSS9Bqli2uOaKm5Jz28BbQZ66t/YdGtAg5PJWpBAlBwYfuyKkT9ALvdIKBUhU5ALVHnVBFVG4ubl3eSyogppui7xKPQFPjc+oOaaUtQzDW0ZEtswo95h+UKH3CbBCvYhCUTk5w2NoJlNWaTvVYbC8HoOoMeoUKL+ebV3kqCdDWU3MhW2O+YgPD2vUQUyYtEpOh7dmanJy878tlj41aWS0ihET5C2UH/q8DBQbVqAPaa/k6UPdkUTXMoV0r73+N6N/9b7MLYkvQVqhajWDgrKxZC/ItTBV/8AxPJFG9x5JLkLd+FavB53ir1YCHsaoBJUmO+aCn/C04WbF64chWAcUCSmtJRDRKwI+YyHoBAUCmdceK/FGg7RgtGRAofbmTHQUBleOAKsgA6CiC1+1Q6T0Wb6cXRI+DHnev2/UeOWTrP6R/Z9MbNTH+lT1PrwrwHPaSAfFu3YK3QhW4YCsem1XgZVgGQF8jNraqgIYD/DX0gqQS1JB07OlLunxG5yi17lbmbR+Rg5VVUM0DWPs5S6OOXFOu1kIdK6SbRzIA6oeqE+IWCru+UCqpyYTENmglARTYtf8f9FyU38i9NH41b+iKNIxvshuGSwb0AXAoX2B97LUgA6AmNI3lij5KJYwl9tALYgHxAhJ4nlUtQuYPGs8mfOjIsV0mxp70xAPJgI7D8wurGIUFOWYUbWxoabRs1FHRgslkRnZiAXlAweeNZ/WNu0Gp3LYbplp3kGcjkXO6dPsgur7WW4ksiwYkgzafpagKiRwsB2/jMr0gFpAbz1ghJb/q8FksXiAdkB8RM/5OpaL5ICvpgO6gCtCeua0AmSfoBWmrGoqGrUBWlXL6+a3WBrSQHpIB/c7k7E+DVQLltm3wED9vg9b7g20DWVxROqAtQuYtX0LmmU2vWEDfMBFdPOpCvoVVjWZtYRykMGvN4qaSAYERwCy8uugSVF46IF+hazRfCmtXrM+RBqj+fNDJKgdMhH545Phmevm2kwwIquqX+GcQWJEPRCtU5BNOFS3kKkEfIm4HoKgK+tJuekEsoP1MxLswYEBVAwOhxAcFfwSlM3Ioi6tJBgRK3wx8l8WVAgKgMn8e0JjFfQJAm/1QOiB7BVizoY4I6oWkXkxHq3737Ozd8B5thYkPHqw7fsriRpIBwcTTt1jHBkQh3IjTDeNIGtvHYw2zbTspHZAlgmYB1a4JpfMCvSBa1VC1tGl8FeMsRypqMlc1aqnjf2Syxw5ryOKPJQOCZS/yLOoJ9d+j1hI5P7RuxEx1T3R1GHiHxDHD63XeL90MOJkqGSzYtAZAbFc0sYCe0yJjoSLZJMpS2ySMH9AKfIAk+RmJCZUbLI1x0rv5w03JWGI9ewhjDcmNCwUAXUR80hJ5ca1+sCBbDCCw1eyHwcqVjAuja0CcSYfp1AZpOL1wXzognP1ytrIxNYszLaClqBG1xqrcEZkPBEDTBNliAPHxTyVHiP44DW3mq/ivWXyEVIXt3nOfymBpTx5CXZEuD5gYUH/U1JLVMRdUHZZSjguyxQDqBoAKM0rpz2TL4opAfTXmKpyxqQHVReWVTNWo0w91ZkVIUjfPLO6Qy9SOhgFZb0p/6WHfLkwmQAnl0W1TA7JSCorTHT6WGyXIFgMo25lIcErHGlaGGp0/AHreuGn2HJENG9EdkAcQDlB4Gg+oCLdJjK9MEE4VAISsrHmFSEsGZbW+IFtUN7+7Mqq4iRyuI2SqPcGYjXjbcx8TC0s+jfWuDIDO/HgaJ1iZq40FVJRTL345ZrxwTh9QBKpYn5eggBxYKbERZIsBBMOTi+R4R6/hdDSiW2RnMySRHJxsUL7dLXUgqB7SrTt0dE7XPedzNNNYQEW4TeLsmccZoLSQkJBvz2s0qeoUDQuxU5HCkRd+ZS9us0IvqJM1msQvSw4IzF86YjZdgy5hfI9SJ+pdNu33J8OaPXkJkgHtY3J2JVhWyCyRQ51Bt0n80+F/GSB1t27dJpyIjY1Vq2NZUJNuuQov9ssqcWOkh/QC+fc816nXWJ/80PAmTIKiHazKtIh+wGYpK7+KZy5X6CxoAqifTO5QM7EPCpLu1HtuGf63kCpWEb2j4PpS1B0+ZIzCBauYsT75oeEDDfdeQhiDdcyb44ZkQDBt0FubYP6OdKfewKEjhvUfkWgAUBRS9ERc9Q7D0+Ag9DVAxvjkp61atWrB6Zu0wVceWPmuYUCdUlPjAl3GXU1NEvz9xQJaBEW17bnBqHo75uJ4uEWjFTR+/lHdYeyNedd7/4FxTr0kGCxBN+l6uYeC16zmCWPg4PPXABnjkx9Pq+9RNTUUb/si9iw0Z435hJntO9BDWp6Ljd315XcPYl8KmxZIK0GjWsPr3cC7yw8xvktTLE8IURdExXmjnHoLAaRlDUZz7jiElA2/5q+5EEDF++SHhoPpYAjW2XPUzOC9ig6v52WoNZ2nqS196flbJu2r7JkAfscO6IpDdsBi96c7RrK4hpSBIrgNWAsGAJYVq4Em9U4hgIr3yQ8Nh5I/DuOYjsh6Cnk36tYIVQ8n18aR8ys28/bOTaYJs+5QcAoPllIAgS2TgtmefmRNSPH6YF4IoOJ98kPD4YWaDT5EVxDtn2KcTt5kpxhyLbgyqnUEa2HyqYpkQJuh1IedhwR9fCDvo3y4IbkPGJLbSQGU05ZjJsrqzkUKxNf7EYovgdeznk9+aDhYpdR2BEFdqHUWCY4Yg8HQA/wFFFuJgH4+94KSNu9QJYoN3uYnJrIq1Swx8QQlZfEqMZE9zc4X/sVLKwwQbsOLEG1A69axyDXKjhA/kh4FL1Yo4TXs4cW27wJz05P4Ikpd6aqGZpnb3NqtGjRJGGpXly0Gr6ldfSKNbzSt+iE1jsz8tOq7FyUpq/eBD2+jbfMmKZaIBwTm26h6XcNNgrILOJ8MkA6IruJNKudSuZfWZNr8D/qZf7+C8OJ7iAcEFjS2M2ARA5WrAfg7doV5XQWfxZc+J32ByZmNxihb1WtDZ4m1y5o3+II2AEe72A+gPo8Phzh02CcJ0GHOg6//71EKJaiOeEDQNKLG0As7Lp0FymkrJ3ADau0ML6GeTCPpeVOV1Wm8CWOWojs3aq4fh9OYX/gxKYA08FIFm9RXYwRAllKdWYSiWDk+h4FR6FgvT0qUEiad6ksGBMV/WTZYpBS6NYWnpAmz31D+x7n3IteUJEc0IDBK7/4O0g8VK0MibRc7sriBZED/MDn3YeuL17emeIdvTdFP2oyietcIm9yH+AHnulpHiAb0ivZWFWMKtm95AdKrLr2RvtS9kuIYGaQyMG0xZhPqlkJRPcj9ByTv3dG7RW7WzZ/0FA6/EQ0IrPa/xOksbhJ1EepvUHBzLpobwMsx5XoF7cI4gskzs7UFwZVtYY63vC30Cn2lAqrdOW/Q0shHOPpENCCwk7Iaupy1PVMxOAA2Ioo/fQDzM5NhPCR9RpE+RJORpK+CrAcGVodXGwhu1Z6BsG/OGImAVKi50ImRYWIrAZCdaECQrfKOILTytDmwlLRtNxgt/Iph/xzpRpz0IaZXJSP5vlTeXgx2MN4YXDGbpOBMNuIIlwYoYwWqltfl5Hk3KnPEAtrA/t6eyzRrUB3phX4vkpkVxhJZAJ2kdgQpc9t/SqfddVuc3/+Obo4Q6dZu3BMSv5r6Xr9z0pZ9zjjm99mrKjwV+acSC4jZWKABVxeyWFGzMQjtNQD6NYWyM6tjmwwCSjj4A76dbUxCACij2iz6w2Qj6cx6em+3Uj2hqiG0QywgPinJDerLz54EbWYrJximeK6FkaSLIUB3a9ojPKDJP0YkxNfFPFrQHyYD9Jd+8W9unrfljK+0kXTlL7lOVqMV1Nv5gaAYo7YzCwf0mUeOOVb3HmhEQhxQKBkImRDQQ31AyCPvsKlYQDX1JJoN6Afjt8q2AKo1V0XGGAJkE4HNMT5ra0RCHFC8+SpsQkA6ZmmQ1wgprXMPzV+KBNQ6r5rmD/aOcEapdGSxwY0F7M9SQCcdjEhIWHru2hObcm0+bmJDvScRNici/yJEAoJ5/0Ktu6v5AqDahgCNd04wxzdbTTQiIQHQMstkExsvmOuVobynWy8SEFtQRVUmddKXWbue8CaglNYwBCjR2QLZIrfXlyhfDwKgaDoCkhnQ5nOpqcnq5FQWYvM9hMCJaXm+Samp8SKWnucwEXUK7DCGGjTjGwpUgVJaiNfzpc377hqVEAGUvNQjMBm/O0Z2QFvCs7Mz1OnZLDw2UA0YoJYJ2dlpJZ7OFUbSwhYdqALfDcaGe2srq0Fs0G+eO1ynGJFQSFQq9btqnvJ59RyTVrGN+epXHaGKwakAnXhXhA4b8/WIDFQlDqYW6CDmhgDxezsZkVBI1EZ277oT6JIJAaUtyO8Lco3vi4b4ZM56EU69p5fA39p7scjhl3WgzQ8f6wgXeFNUztDS8x0S/trQ9rYRCQnrYjOzqswzISBnvbfcexE/4Jsi9S85oO0XwSHGbRyMhxx2HmHDc8sXanAk+3IqKGc2mZ/zP3lNFzv6iREJhUSxLS/Qdjy4jekAPdKvBugE7+Zh4h25iKlisNda3WX7kMEw4gF46bQoXFm9ZWNEQiFR2t5EzKdavAXFmAzQdwVyX44vHNpKAAR7d7TjAyGHOzcEXw0+hOb11+Cyzy0azvdtZkRCpBfT7e9uSQDEmq01GaBv9fkoctfFoKHoKMpGkdqJ98Up3+vLFib6esx2ZnGzwhvp6keNSIiNgw4xU78P+poM0D/6D5Fn2wzthIMYQKAAn8aJUJK2B4NL5rSAzvnQF7LsA0MzoxJigJ5a0e1Vl1g9NhWgy3p8bGpWEA6hjlmLAQSWdiRTC2gcCVuWokF8oq+BOgYaqdd34ozMC0YkBCPprvQToTdQqKkAqXPrFgu9hUVoXpbMxABiPFD9kJS7rZH1GJKKbmX92uPo2O9Cu3ecyTA5iS2dbHwNUL5XZURCAGhOZWr75NBlZzo9l7R1PZ1IxLo/gq6wm26u2p8tCdAT/SqmcNB37lKKAQTVtpPCmjXOC0gu6aT0VowzqFca/Wji5bao2gLda4C0ecGIhABQGLqKmcvhu4TMbTqgOEASorub0UEEXXt1SpYCaI9+CUIFFCgLUY30uU7ovSP4ji8TUeOHEOi9VA/ms/gExllrXKfcK8IV4Xo/IxICQAkWP/LN0obFxzvTuFZsPPTNx+JhXWyeFECh+kDcCriglBMFiH9XQ8VEvOb23+9sCrOkvmUI0LWOdiSUczUiIa7Nd3TH4ajI0EcKoJNcCHBpnFZgBcJKCqAcNnO2ECfBqHPbblgqt+CJGZxR7Np1e/VNG+rcNyIhDsj/HR2o2+1274YZ9dDd4LkfsBsGMROkAJqXH4c12n1dH1B5KYDwvW7I9vOsfFtT0Ma5Q9ot0Ga7GQJU8TT2OojXDzIguGDggA6gvzGzLDvNt9sjNB7RRs8pE+cw89HbUgCBHShpgpiKoSif3koPUE1JgDB+Bt+MivT1ZLvgvZo7ZDnpjx8w2dMNAap0Eq+age/bGZEQBxSnDMbZP7l4sc0iTo4YuI06IMZM7vtNEok1yz6bcEdSL8b3WbUUWule7fUADZYIqJBP19AVs2axhgB92u3B2UYZ22oYkZAwo9iKmrGbbCS9RY8HalGgG7tnGkD4auCODIO92J33lmZ1roDmG5GQAGiSPTYhoHN6PDqqLfR3JDluIkCFumRmYR1OO3zWmIQEQDtRjAkBrcttoKtaoPKtM1fplyjX/xqQ3dQoYxMSAD2jY1CTAQrmJBTd0MHY82azMWukc4tR3f8a0JqPlS2WPTUqodwPsDUaZ0JAZwUUrdskJ+D5yhPRegtAlUUBeuXfcypTicR8X+z56q4WvUKNSCgX0NgmJgQkaPO26BciO+fjOvqbQYsaSSdRP3nHl/SHqA+wZW+3M15ZJYA2o2dyOPXuHD1iifAlyzxACbyGvVs/m8p+ZMv3+OGAzMUAAhcK5rdVckCaA15Vyw/+1YiEcgE9QHtkcOq9MUadsWQjP/caIKT8H8jeo1eAxKkaMPHvRgZsL0PDoDEyGpB7BSu3ncasq+b/CKTDVBmceh/dwDmbN5PfGcePH19xMSMjTZ2WkZHBp0UrVo3LSIwnvzPYBksKQWWtnyxiZfUP+NumgdTbpyV1tNv/2cc/0E/3/T3qg6nP2V3RiYYBDQhNLiiweEAebUv2lUzDTr34pKsvnVR66eTk5H1czQP3nzOfIZy4RdlYC5YHDZ99nivaSJ980khTb163Y4OBMhnnso0Vx3JbmyaEwDnSSvm/Ph9UspAHaK0yQbpTLwnxq3+kz/nkyZPgS1ptpjpDq9XCppDI+rlWmxxPZ6oWo/yNUHVN7tKzsT75tJuPWH2OHIHnYTlnN+HzWWBRtfTpC6Z1r5UN0C10WLpT74kzpDUbx+/Ka4OOAohJubK92O/yfD29klFOvbk++Zmk+v5wLiNDw6rvv0xEzQEfGf7uRe80qU69AiDdOwHSv9R7bmKabvOy1wBdhMzez5UNE+oWfPJer5sv3ic/jlbfI0JtVbNpmS1qNSs5dV6qYZi+bDO4Q/V9IdWpVwCEXTvL8KXejaNGBya+BuhXqFB5spOo2X15BbecNisIqGif/BxSfX++qNVmseqrTVvqPOAPEv/TFCH7MHKaOvPO0WqTGlHZoYUvPZcU0PcWJlv2gZF0hXyy09ZOsnlfacbHQ0Y59er55BtSNTIP74pjB5dD6F4e+PYnyGGVTNvj0MMraL+pAGUxm+5++rK/slQKrbRRTr04v8v5f/mtZwGQ1mamqQDFMQxEmcGa37aquexXFevytfnXSlDxPvlvAhDu3jqCTiRi7bljQOrO/mcsjj1wXRogsCCxxPh+I9pOwEPkTLHmBUiUqvHfA/q9MkIfkSr+pA1RAkn6ObQvpmMaqvUMzJQC6Bi0xRi70Ng+hz1EToyFueXrJci48F8Cytr0+UaSksaeD1VYt9mIf1QR3eDGPUulADoIBQVjsHZ6gKH6epazKAWAMukOnO9n8CkJM1tuBFnQX0ySxyH0YpUwbskOUjEAEmaFxK2s/leA4Atvm/gqScPC/MW8pABKZ5P0w/CNaryU8g6gL7yMvm81IGGzW9iPaDfGQTQezTfNb5yMM9i+Ehck2SgeItTbxR2t1GKTaxPlQ3gIAgi2w0ABbx4Q6MhcK85VjjEFBEsyG8nodmZrZzqFpPu5y3uLiGR8qV+LMfTT8C/8WvY+KdEM+PmKX3I2mPdIxCkxFWfDQ9CmGrZN6PnGAYGOzLXiXOWYhpCoDLpTY3tm92I6K9fTRLNugMZmUdl+VdNyZcNu3+1FAYoe3LT/VfZDOiDQkblWLCjHOCGAhPPJsavtW6iTaYhNYFFyfBzEieokOFCTC68kbG6SyUpKR/YQCdGKn7EACExUu4gBBLMZtEOUpQ2i41OuFefObcX5+fl9eS4xMcGnPpjmx8ZDHBcLceTo1ZkAABOdSURBVEL+j6RJ2f0F7Albkp9fOdh5ObfBAiDo3kaIAQRLSUvoD9kAgVacN7eF+UAxUKlhP0xsxPkRxsy46T10RpCdwgZCy8QAAkt7D/rjCddgpQLiWjGPIDBA+9B19sN0DnXMQCQEY9j8sKGbIBtm71uKAQSbsiCnLbfJQM6PzkUfce+zluoE98d/MoMpfEf8VyaUBBDXivOUY8wB3UQ72Q/TNdLxkxt32IyFXmuB2UMuO4D9thMDSEu3ZK+1tzN4nc3jCp8vxo9oIs1JrZtEYscnJQAkaMW5yjEWdLEqsDWYaXcDpv8z3/w2yZVmcNmwb46TGECgAAdhGOja+gaAnXRQMNP30BfHQFWaKIuy2nEoPISpAV2oUBWhqn/jKVVSQXYO22gjSgwg+FjDx/xrDuWb1Df8DRuDFmYlCABoVBt4CBMDCrfpnPLYu0omvqtcx2WnL+g4+I4ol8zB7PmdsY4N9BfzryLU0WLYkmEvd2bxlQXQEitW5UwM6C/bdvE45TjdHb5v8wypX8mE9n0g6SJ7oWozSeP8kM5BHyRJ0jpGP9xKv6DrECMLoL18wGU6QA9/2nm5Wps42hU7+FKDyz+kAsqhsxBmaBTpv17COEjz6+YX7ODsTzdopNvrt/iVPBNm0Yh+A09uQCEX0tPT1KnpJFAjdbOG/5KjxHi/6qnpmqa9ozXpLKiT09OTRCw9x0DjrGh778Ks72Dm03QziunlwEpCZkC5a/MwJ+1KV+UT44+gUxkZrgjV3UN/Z6hTMjLErM2Dx6FPJSvm1sAGciaccm3hTX+YrIqBsX5TUuqXOtb0qfYFhgb0viBbfCPd5RzM67EVk5jrbE4dJ1zW8HzLBsi9C/1hMkDP2UN8imH7UDtH3UR2IliQXXJA287BPJ75PDCMqPZXxisyyGoZScokOVNrM4mj+9k125Ahz9LzvKr0h+lUDTZLOVX3TNiSHPa22SzIFgHo7AEmorU5bFqsQHXZtoDNNOmwjPtXejzTa3alygJoO6K2bCYDBFuVWgrmBeXnMrtg26eCbFHzQXQeywYNgZnhyvvGwzJ2KyeYMm7S25nF7vJUsSiqYJvaRlEpfGTYpTH+pRGqbn5JkC0G0J9M1HgL+EoW6jwHHIVHjgdfkxY94BPEneUBlKaknxswGaBfORlu+euLoolsTbuGiVg8IPDW+jIC9nZTCvaODZtBNa7nDc44Bp16SxCEhcN6tKaaDBDYB1neSGGTOBXMyn1LZd+1GYzFA4JN7hbjGBY7acP0dTElt1+rKROgXr2wyXuxGqTPnWFXyUr5ibIRkx1Ct9AXC+gZq0p74Us1qB7mu3v+GQkmxq5jYAcmR4mANl6ELWwmOdAtbBLBXzohDuIkdQocqMkFdYkfomAb9K7gtFG7Ndp4ZRsZBY2yuia+kb7Rv0GP5pWvwCBU4X78BI0JjSS6y1vTHAwOcDMkAtp8mW5hk5G9VpGQnR2XAlvZJMVDrFFnwoE6LTs7eWbx0vRDHiBw97Ren/0hlP/hSlofFuLUZs3TRAOiyz4JTlWi2F4d/s1RFVbVBPdGolzS7T6rxclUxc7Sr6SYTlmli5G1+iiaVOJNNQxeruCbVo3qd/5NPCCsbvnOzV2ek2/inKOwRP5RD5i1HLYfRuvybDSZjV+h7SbV5q99uzYBR8AOzGhUOWhQV+F0Ng14TMLC4cvm1RcO8KIDBvhES7/B8Ck/oVfrKZf5S7V5JgW0z9v/bsJUMwATblmed0Gw7DNcysrqC1a1jvD57c7CUtKDJ/ABkqFyAeribkpA02lebcvPB5MytTfb69lMMRImlCUZL8CuDt1IbqdURZ89Ime2OKAWJ8hvNtV4VC5APs1NCAh2eKv1CAOgETFgHj/Jhr19cetiAqCrTETNTDphthEmzM6tYRNmz4bWar1fNguzFZbZplY1miQG82+eT4J2YvlTmHkPlAIoDUTajj+af8qVTjDRoeSHqXIB+h2pTAcItrCxq6Bk27u9Z62AbeCtfcHLpbck6w5aTRseD4DCmTtpf4FvGDJXLkAP0H6Ta/MLY9InkKbHfTXf3acn34GhrTTzl3/W7iAZT6mCDIXucgHKKf+d6QDBTgut6cmkl2vQwU4AyCPRj8Xy+KyCL76wcDg+GLbq9JTNyrXNaNMBympA8zoDZOs+rXVK/y3XkQUQW2r140vPLdKwls0UXZIN0LCOJuzmL5FRnLuGy/7HxguWiQcEw9Rrd3kszI5y44UHE8B4Ifmrj4Zcks9OekElnQkHitrIf/Nk/w/BRPICrGHd2ZE3boJXeMgDtAs9lcGp98S4EfNf8FMGjBdAtq4H7LNu/hD/M7RO+z0SdDF92SYFdB2dkO7U+9T9WebGOfxcoYDwQ25AXitdwpz0fw0o3ex/0p16o9Zi/Jh+41rfJZOEuBSIwSUTvnlljz54Mqlt7xNaTYnN+0wD6Jj3cOrUrm8GnOur0XCSHE69OHs5Xe7Sd+p9LYATKxm5MK31kHFOvfl98k0C6MngxxnfrytoBpwLqN8ncjj1XvQNYb4qERERQX9mZaWrNVksxCZDnBRP/wen971gxI48Uo1x6tXzySeAXkzvMfmxrICeD4vLWbM+zww4JykpaUOkTpelztKR4F87Lk3HAhmrsJCh1sKBWqPTpRnj1KtbNTtvz5B8bdBLrzrNV+eD78XArMRdWNzYKKfeXJ98mu+QPxPp/I/jc5q9uFSe73gh39k83+SBsktQxXb3HzouI682PKfV4FRusQ9C9wutEiQ8zmdgUKhXYMT07JycnNcA6dhUK11ZerV6OXWXXMrAdIleVRCQMT754NQLG00uKCrLLJTAqffOxFvq9SvzakP68ePHl1+iFhgaamZxBh1NZvYWfHeEjIxUdXpGrgVGQr456UK9Aje7kDDiNUDgKNOetCZ0FWsbGcPR/XHa1Fayz0kgd6OcerHgkw9u4bBd4hSavdgknu84Id8anm/yQCVYm98eQpIYYsAMGNqgBLTaVAPFa9DW2H7EfNJqkhZCs276npy0H0EFdyoIqHif/NBw+JyqyM1NDIeLU55m7JxlwAyYu2TWmGYyXYytWbl87QYTZfdyZcPHYt8xyqlXzyefNNLUvMOmKlsyl6ub3zNm+MKXhsyAAZBzH5OpGhcbEs2LSO/IgAgOdcLeXQ2N+1Jvfp982s1Hrb0Y29Vy63/n1Ovb0HS6WHYEs5ZiSzHKjg8F2anMniFY/Eg6Y4Qi4DfvL+9Avk0MaInZUQYk88g+eFFRof+w+CnNjiyG5DhyoteBM7Ur78ZXQ5lf3Z0WFrY/SlE1dNBY0x3Ds47uhTd7NRQ2IX2244JORkB7aXMZizHd4qEuqdpaOmFMvWnWkrhnujyAWOlU91VQLZ60vayO9dBI0cXiGaCeRMVpgZDDcTJMGs4mCjCbe+2WJhugVJbQeO667ajjW9f9xV11vpURENaBgcEV7lG9UAogMF6w+MyfbZfsQE0iaLiEn7L4K9kAwVcyCw2Sv5KZHxDbHCkv9JICKIWJaNDD3nC+ZZuT5gWlUWAgrDgsCvyYxSMDYZuZsbICgi8XjQiEOenRkqY76Gjc4W/hk+0LAtn2X8gjcBKkIV8bxPanPsC7XjLOv0PjZqk4i62oX5YVEPNAaZKCs9m3WS5Jmw/6a+Eq0nSyDSKQFx+2N07G2dQUH12UD1Dagg/6sm01dn760QrqoHZtaIdJdLO0OP8ObuEy9WLCEOLGsA4TqVobP6PDwIsyTZj92uvDpfTrnjc9OvjRHSgTAjq6npezm/8P/MUKkV0qZhRxGSBDoQxQMaEMUDFhx2g/P1+vCX4sjPGB2GcsxOOFC17jyF0LSip7l/Gyvyqp7F9H5ZM9toDsCfll+83lfyIOEA3RTuAVjnuuhXiRB8SnnNhmuzjbaa9Y2Sqnv+Cgz/8gXgzusfisE/h45TjtFiv7vhP/OE+/IIiX8s8cXHCCbZRxh1/y3V4GqAxQgfCfAXq+mMv78QzEv/8MsWoxLEPlLDZ6C/iC4cXiR3Cw6hTEYeshvrsYplR04mW/WszX+1efhPhIMMT3F/OeYPHlfLeLB/T/SSgDVEwoA1RMMAWgmBsmEPqmZMsICPY7x9FbvSLy/y7lssUC0u4IZD2xJmwzrA3g05NhCH+3/xq936VctlhAe6af9r2E8eMJC0N9rmlXPsSnB/+08gK5EON1nn1X4fTgNUF//h+QLQ6QBu9Zjc/OxWnjwzC+sywwUHva+ylO98gh6UTgGyF38GnvGKzzU5d+2eIABZ58OfTV2c34t0Dy43Z/mg4Z4R5x2XKa1uNtW8atpb9Th8WUftniAE28jlfvwDmR/iGkVgcEamOo3AujTqcN25B9+GA6jhxAkkgP2Fi8pLdetjhAR2c82bgqed6079zC/pkTqMX3f39K0iHCZ81eMWfdpCuqQelYM3o51kX+VuIX/ZbJFtlIH/OZ/mzOOh0+4O4eqNUEeq72DaHpRIx64ROD1XNcL2LNSO8skpVNviVuTd8u2eLHQRdm6Kjh0Pda3aLBN/Erz39IOl4xeIvfn9fHXMC6Rd7JOTQrz71Lt2zxgLbvIf+tWovxienPpqgy3bU0HfJSFg3rT9IJGr7U92eWlaGlW7Z4QLemp6SunZKOT4/eil9O+X4ZTpgVw17KTdccXdCcFPzSbSfPSuaNe9mlVbYEVeOP4UNWavDpgZ8P2JtzdbqGDkGj2Etxyw4amYpxlutUlhXdnqEz/CffK6WypehiOjImPz32Ad7u4eYRwYag3+9gL+XhPPol+gP+fwwfRLLyPbVL/mt0bOmULVFZZQMtfIuoMWwI6j0lJeflfA0+5B6rPez5FO/3y8JHwQh+jTEfdnsLZUsDxAZaTI05DUPQraOGniXJD5zQ3z3gGT7gF4/xNJjAXL0Tn7lZCmVLLEEpLJ0IfH7ENRiCZiRB8X3wEkM6ia6wrvjVI3hrpU229Pkgkg7pJFf6RqQHbGBDUJbZrPM7d/rQdCaP+hufuEVG9iV9hrdEtnRAM47BiGs8SYcOQX08STovp83dOfgnms6eK5P3+/wVjU+7L5x1oRTKlg7o9328kzyEYQg6BuOMyWQosX3EqRsTyKhs5QBv919Oez/EiUNLOkXxFsiWY8p1D3SSwiieDEHD6Ip8ZP+JriSd4z6PVKms+Ma7PcK4ZKO6Ny9bDkB/f8E6SU3YDFI4yRBUlzR1EsZpE4P+3kfTeYlvrBr1jLaF2zFeP7+UyZZl0v4w7SQfT1j4o1t4ku+E9H+muvq+iJ4SpMP3T+4h6eBtW7xPk2fYQjoKt8hSJlueVQ3SSbJZzJCBrt4p+Kjr/Ygg1yAd6SSWuB5jM1HPhyWyZyC1oaQLEm9YtmzLPnwWc4mW5DRs+vzhgTrWSfw7AWaiBodtwTFbyTOIWZB4k7JlA7T6IMxisjf589hQ30vQSbgLM1HRWz1IRyosIpQa2bIBujLtBZvFJKN4vnbAO4nf59yjM1H4bv8h5Bn4IkLpkS3fyurZhe6B1MgvRVg7gE4iLmzFtwMuMMVnBxYWEf5++2VrNBunUtkyLj0/+Z4bQcLagQ6HDBtylq7QeY3KXnmRKD73d3vxRYSFJbXu+c9l085tnetf2m9NYbzA1g4w6QuCxp9jK3SLAr9mis/q8RGwiPDTprdcdgTr3C4t+9rdJOYvx3ymvwBFZwRfofPnis+E83wR4S2XPWEfCB9+xGT2QdAXDNgPfYSg+LjvjYFFhLdctvv/oHM7tM9kgKAvmMX7iHyKDzzD/ZNPi5PwJmUvEzo301mY8b7g+GTXudp8vzVh6/xjMFuyi3ibZWuCxrkx+KYzweOKzuwp3szMJFfxCfW5lj1mEK3nurdZ9sJ1Q65S2Sa0URQUHWZmovd7lsdjWLIrBbJNa8SZa2ai/3vydqHNePtlmxZQrqKj//s21PNSIdu0gHL7ggK/WT0vHbJNbCctKDoFf9NVltIh29SG5LmKTiG/33rZZZb2xYQyQMWEMkDFhDJAxYQyQMWEMkDFhDJAxYT/E4C0qKRrqsaHNwrowxVFXY1hm3Aac5oAKuRm6eEtBpQw65KRpwmgQm6WHt4MoEPtrB1/pB8k6I0TJ9St5HIPR9pd6FStW7RwiQXzC9g8fHD9hnvYr9w7zC/kHvI/plUs3838rDzhjQB6ZDnzciAKZyXI+eMzEcNqJUSW+yBGM8suWbhEA33mjx9ov7aie9Vi4Q4KSDjkfywA4jfzs/Lk9Y0AOq6IwfjXBxTQJYt4UkXsD0bSLzXlNFgtXKKBPvMaghO+zSvcQQHxQ+GPBUBws3BWnry+EUApHSt6btGwNmgzMicB/RCJ4siFwROFSzTQZz5Fv4HEAcEdDBAcCn8sAIKbhbPy5PUNNdLn/RrahVFA+6rCiUhEbQxdfYVLNNBnvpAPEL+DAoJD4Y8FQHCzcFae8EYAnVmOsc5lIAWkQjcxVg+4HYn2YqypHiRcoqEgILiDAYJD4Y/1AQln5cnrGwF0TLnq+v4GC3BXvwTs1vrUud6NsyNR3QPhLtWShEs0FAQEdzBA/JD/sT4g4aw8eX0zVWxZ/XIO/ll4YzU3nOZnX3nAQ/L4v7e2cb6de4kG4Zmt2Qa3uXdQQPyQ/3F+QORmflae8LaoGpGouOnSfHcUf7N8oQxQMaEMUDHhbQH01oYyQMWEMkDFhDJAxYQyQMWEMkDFhDJAxYQyQMWE/wckWLmfKgBDkAAAAABJRU5ErkJggg==" /><!-- --></p>
+<p>The output of the pipeline summary can be modified with standard ggplot syntax.</p>
+</div>
+<div id="hand-over-to-phyloseq" class="section level2">
+<h2>Hand over to phyloseq</h2>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">library</span>(phyloseq)</a>
+<a class="sourceLine" id="cb9-2" title="2">PH &lt;-<span class="st"> </span><span class="kw">toPhyloseq</span>(MA, <span class="dt">samples=</span><span class="kw">colnames</span>(MA))</a>
+<a class="sourceLine" id="cb9-3" title="3"><span class="co">#&gt; No taxon table provided, so your phyloseq object will lack taxonomical annotations</span></a>
+<a class="sourceLine" id="cb9-4" title="4"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-5" title="5"><span class="co">#&gt; filling zeros for amplicon missing 17 samples</span></a>
+<a class="sourceLine" id="cb9-6" title="6"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-7" title="7"><span class="co">#&gt; filling zeros for amplicon missing 24 samples</span></a>
+<a class="sourceLine" id="cb9-8" title="8"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-9" title="9"><span class="co">#&gt; filling zeros for amplicon missing 28 samples</span></a>
+<a class="sourceLine" id="cb9-10" title="10"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-11" title="11"><span class="co">#&gt; filling zeros for amplicon missing 12 samples</span></a>
+<a class="sourceLine" id="cb9-12" title="12"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-13" title="13"><span class="co">#&gt; filling zeros for amplicon missing 21 samples</span></a>
+<a class="sourceLine" id="cb9-14" title="14"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-15" title="15"><span class="co">#&gt; filling zeros for amplicon missing 7 samples</span></a>
+<a class="sourceLine" id="cb9-16" title="16"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-17" title="17"><span class="co">#&gt; filling zeros for amplicon missing 26 samples</span></a>
+<a class="sourceLine" id="cb9-18" title="18"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-19" title="19"><span class="co">#&gt; filling zeros for amplicon missing 5 samples</span></a>
+<a class="sourceLine" id="cb9-20" title="20"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-21" title="21"><span class="co">#&gt; filling zeros for amplicon missing 11 samples</span></a>
+<a class="sourceLine" id="cb9-22" title="22"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-23" title="23"><span class="co">#&gt; filling zeros for amplicon missing 29 samples</span></a>
+<a class="sourceLine" id="cb9-24" title="24"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-25" title="25"><span class="co">#&gt; filling zeros for amplicon missing 57 samples</span></a>
+<a class="sourceLine" id="cb9-26" title="26"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-27" title="27"><span class="co">#&gt; filling zeros for amplicon missing 28 samples</span></a>
+<a class="sourceLine" id="cb9-28" title="28"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-29" title="29"><span class="co">#&gt; filling zeros for amplicon missing 12 samples</span></a>
+<a class="sourceLine" id="cb9-30" title="30"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-31" title="31"><span class="co">#&gt; filling zeros for amplicon missing 34 samples</span></a>
+<a class="sourceLine" id="cb9-32" title="32"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-33" title="33"><span class="co">#&gt; filling zeros for amplicon missing 15 samples</span></a>
+<a class="sourceLine" id="cb9-34" title="34"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-35" title="35"><span class="co">#&gt; filling zeros for amplicon missing 1 samples</span></a>
+<a class="sourceLine" id="cb9-36" title="36"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-37" title="37"><span class="co">#&gt; filling zeros for amplicon missing 7 samples</span></a>
+<a class="sourceLine" id="cb9-38" title="38"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-39" title="39"><span class="co">#&gt; filling zeros for amplicon missing 6 samples</span></a>
+<a class="sourceLine" id="cb9-40" title="40"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-41" title="41"><span class="co">#&gt; filling zeros for amplicon missing 49 samples</span></a>
+<a class="sourceLine" id="cb9-42" title="42"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-43" title="43"><span class="co">#&gt; filling zeros for amplicon missing 30 samples</span></a>
+<a class="sourceLine" id="cb9-44" title="44"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-45" title="45"><span class="co">#&gt; filling zeros for amplicon missing 27 samples</span></a>
+<a class="sourceLine" id="cb9-46" title="46"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-47" title="47"><span class="co">#&gt; filling zeros for amplicon missing 33 samples</span></a>
+<a class="sourceLine" id="cb9-48" title="48"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-49" title="49"><span class="co">#&gt; filling zeros for amplicon missing 27 samples</span></a>
+<a class="sourceLine" id="cb9-50" title="50"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-51" title="51"><span class="co">#&gt; filling zeros for amplicon missing 18 samples</span></a>
+<a class="sourceLine" id="cb9-52" title="52"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-53" title="53"><span class="co">#&gt; filling zeros for amplicon missing 21 samples</span></a>
+<a class="sourceLine" id="cb9-54" title="54"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-55" title="55"><span class="co">#&gt; filling zeros for amplicon missing 25 samples</span></a>
+<a class="sourceLine" id="cb9-56" title="56"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-57" title="57"><span class="co">#&gt; filling zeros for amplicon missing 17 samples</span></a>
+<a class="sourceLine" id="cb9-58" title="58"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-59" title="59"><span class="co">#&gt; filling zeros for amplicon missing 20 samples</span></a>
+<a class="sourceLine" id="cb9-60" title="60"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-61" title="61"><span class="co">#&gt; filling zeros for amplicon missing 23 samples</span></a>
+<a class="sourceLine" id="cb9-62" title="62"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-63" title="63"><span class="co">#&gt; filling zeros for amplicon missing 11 samples</span></a>
+<a class="sourceLine" id="cb9-64" title="64"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-65" title="65"><span class="co">#&gt; filling zeros for amplicon missing 55 samples</span></a>
+<a class="sourceLine" id="cb9-66" title="66"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-67" title="67"><span class="co">#&gt; filling zeros for amplicon missing 31 samples</span></a>
+<a class="sourceLine" id="cb9-68" title="68"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-69" title="69"><span class="co">#&gt; filling zeros for amplicon missing 49 samples</span></a>
+<a class="sourceLine" id="cb9-70" title="70"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-71" title="71"><span class="co">#&gt; filling zeros for amplicon missing 8 samples</span></a>
+<a class="sourceLine" id="cb9-72" title="72"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-73" title="73"><span class="co">#&gt; filling zeros for amplicon missing 4 samples</span></a>
+<a class="sourceLine" id="cb9-74" title="74"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-75" title="75"><span class="co">#&gt; filling zeros for amplicon missing 49 samples</span></a>
+<a class="sourceLine" id="cb9-76" title="76"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-77" title="77"><span class="co">#&gt; filling zeros for amplicon missing 74 samples</span></a>
+<a class="sourceLine" id="cb9-78" title="78"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-79" title="79"><span class="co">#&gt; filling zeros for amplicon missing 116 samples</span></a>
+<a class="sourceLine" id="cb9-80" title="80"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-81" title="81"><span class="co">#&gt; filling zeros for amplicon missing 89 samples</span></a>
+<a class="sourceLine" id="cb9-82" title="82"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-83" title="83"><span class="co">#&gt; filling zeros for amplicon missing 29 samples</span></a>
+<a class="sourceLine" id="cb9-84" title="84"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-85" title="85"><span class="co">#&gt; filling zeros for amplicon missing 17 samples</span></a>
+<a class="sourceLine" id="cb9-86" title="86"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-87" title="87"><span class="co">#&gt; filling zeros for amplicon missing 31 samples</span></a>
+<a class="sourceLine" id="cb9-88" title="88"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-89" title="89"><span class="co">#&gt; filling zeros for amplicon missing 28 samples</span></a>
+<a class="sourceLine" id="cb9-90" title="90"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-91" title="91"><span class="co">#&gt; filling zeros for amplicon missing 28 samples</span></a>
+<a class="sourceLine" id="cb9-92" title="92"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-93" title="93"><span class="co">#&gt; filling zeros for amplicon missing 5 samples</span></a>
+<a class="sourceLine" id="cb9-94" title="94"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-95" title="95"><span class="co">#&gt; filling zeros for amplicon missing 11 samples</span></a>
+<a class="sourceLine" id="cb9-96" title="96"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-97" title="97"><span class="co">#&gt; filling zeros for amplicon missing 9 samples</span></a>
+<a class="sourceLine" id="cb9-98" title="98"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-99" title="99"><span class="co">#&gt; filling zeros for amplicon missing 33 samples</span></a>
+<a class="sourceLine" id="cb9-100" title="100">PHlist &lt;-<span class="st"> </span><span class="kw">toPhyloseq</span>(MA, <span class="dt">samples=</span><span class="kw">colnames</span>(MA), <span class="dt">multi2Single=</span><span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb9-101" title="101"><span class="co">#&gt; No taxon table provided, so your phyloseq object will lack taxonomical annotations</span></a>
+<a class="sourceLine" id="cb9-102" title="102"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-103" title="103"><span class="co">#&gt; filling zeros for amplicon missing 17 samples</span></a>
+<a class="sourceLine" id="cb9-104" title="104"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-105" title="105"><span class="co">#&gt; filling zeros for amplicon missing 24 samples</span></a>
+<a class="sourceLine" id="cb9-106" title="106"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-107" title="107"><span class="co">#&gt; filling zeros for amplicon missing 28 samples</span></a>
+<a class="sourceLine" id="cb9-108" title="108"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-109" title="109"><span class="co">#&gt; filling zeros for amplicon missing 12 samples</span></a>
+<a class="sourceLine" id="cb9-110" title="110"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-111" title="111"><span class="co">#&gt; filling zeros for amplicon missing 21 samples</span></a>
+<a class="sourceLine" id="cb9-112" title="112"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-113" title="113"><span class="co">#&gt; filling zeros for amplicon missing 7 samples</span></a>
+<a class="sourceLine" id="cb9-114" title="114"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-115" title="115"><span class="co">#&gt; filling zeros for amplicon missing 26 samples</span></a>
+<a class="sourceLine" id="cb9-116" title="116"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-117" title="117"><span class="co">#&gt; filling zeros for amplicon missing 5 samples</span></a>
+<a class="sourceLine" id="cb9-118" title="118"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-119" title="119"><span class="co">#&gt; filling zeros for amplicon missing 11 samples</span></a>
+<a class="sourceLine" id="cb9-120" title="120"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-121" title="121"><span class="co">#&gt; filling zeros for amplicon missing 29 samples</span></a>
+<a class="sourceLine" id="cb9-122" title="122"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-123" title="123"><span class="co">#&gt; filling zeros for amplicon missing 57 samples</span></a>
+<a class="sourceLine" id="cb9-124" title="124"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-125" title="125"><span class="co">#&gt; filling zeros for amplicon missing 28 samples</span></a>
+<a class="sourceLine" id="cb9-126" title="126"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-127" title="127"><span class="co">#&gt; filling zeros for amplicon missing 12 samples</span></a>
+<a class="sourceLine" id="cb9-128" title="128"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-129" title="129"><span class="co">#&gt; filling zeros for amplicon missing 34 samples</span></a>
+<a class="sourceLine" id="cb9-130" title="130"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-131" title="131"><span class="co">#&gt; filling zeros for amplicon missing 15 samples</span></a>
+<a class="sourceLine" id="cb9-132" title="132"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-133" title="133"><span class="co">#&gt; filling zeros for amplicon missing 1 samples</span></a>
+<a class="sourceLine" id="cb9-134" title="134"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-135" title="135"><span class="co">#&gt; filling zeros for amplicon missing 7 samples</span></a>
+<a class="sourceLine" id="cb9-136" title="136"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-137" title="137"><span class="co">#&gt; filling zeros for amplicon missing 6 samples</span></a>
+<a class="sourceLine" id="cb9-138" title="138"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-139" title="139"><span class="co">#&gt; filling zeros for amplicon missing 49 samples</span></a>
+<a class="sourceLine" id="cb9-140" title="140"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-141" title="141"><span class="co">#&gt; filling zeros for amplicon missing 30 samples</span></a>
+<a class="sourceLine" id="cb9-142" title="142"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-143" title="143"><span class="co">#&gt; filling zeros for amplicon missing 27 samples</span></a>
+<a class="sourceLine" id="cb9-144" title="144"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-145" title="145"><span class="co">#&gt; filling zeros for amplicon missing 33 samples</span></a>
+<a class="sourceLine" id="cb9-146" title="146"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-147" title="147"><span class="co">#&gt; filling zeros for amplicon missing 27 samples</span></a>
+<a class="sourceLine" id="cb9-148" title="148"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-149" title="149"><span class="co">#&gt; filling zeros for amplicon missing 18 samples</span></a>
+<a class="sourceLine" id="cb9-150" title="150"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-151" title="151"><span class="co">#&gt; filling zeros for amplicon missing 21 samples</span></a>
+<a class="sourceLine" id="cb9-152" title="152"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-153" title="153"><span class="co">#&gt; filling zeros for amplicon missing 25 samples</span></a>
+<a class="sourceLine" id="cb9-154" title="154"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-155" title="155"><span class="co">#&gt; filling zeros for amplicon missing 17 samples</span></a>
+<a class="sourceLine" id="cb9-156" title="156"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-157" title="157"><span class="co">#&gt; filling zeros for amplicon missing 20 samples</span></a>
+<a class="sourceLine" id="cb9-158" title="158"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-159" title="159"><span class="co">#&gt; filling zeros for amplicon missing 23 samples</span></a>
+<a class="sourceLine" id="cb9-160" title="160"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-161" title="161"><span class="co">#&gt; filling zeros for amplicon missing 11 samples</span></a>
+<a class="sourceLine" id="cb9-162" title="162"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-163" title="163"><span class="co">#&gt; filling zeros for amplicon missing 55 samples</span></a>
+<a class="sourceLine" id="cb9-164" title="164"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-165" title="165"><span class="co">#&gt; filling zeros for amplicon missing 31 samples</span></a>
+<a class="sourceLine" id="cb9-166" title="166"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-167" title="167"><span class="co">#&gt; filling zeros for amplicon missing 49 samples</span></a>
+<a class="sourceLine" id="cb9-168" title="168"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-169" title="169"><span class="co">#&gt; filling zeros for amplicon missing 8 samples</span></a>
+<a class="sourceLine" id="cb9-170" title="170"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-171" title="171"><span class="co">#&gt; filling zeros for amplicon missing 4 samples</span></a>
+<a class="sourceLine" id="cb9-172" title="172"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-173" title="173"><span class="co">#&gt; filling zeros for amplicon missing 49 samples</span></a>
+<a class="sourceLine" id="cb9-174" title="174"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-175" title="175"><span class="co">#&gt; filling zeros for amplicon missing 74 samples</span></a>
+<a class="sourceLine" id="cb9-176" title="176"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-177" title="177"><span class="co">#&gt; filling zeros for amplicon missing 116 samples</span></a>
+<a class="sourceLine" id="cb9-178" title="178"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-179" title="179"><span class="co">#&gt; filling zeros for amplicon missing 89 samples</span></a>
+<a class="sourceLine" id="cb9-180" title="180"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-181" title="181"><span class="co">#&gt; filling zeros for amplicon missing 29 samples</span></a>
+<a class="sourceLine" id="cb9-182" title="182"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-183" title="183"><span class="co">#&gt; filling zeros for amplicon missing 17 samples</span></a>
+<a class="sourceLine" id="cb9-184" title="184"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-185" title="185"><span class="co">#&gt; filling zeros for amplicon missing 31 samples</span></a>
+<a class="sourceLine" id="cb9-186" title="186"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-187" title="187"><span class="co">#&gt; filling zeros for amplicon missing 28 samples</span></a>
+<a class="sourceLine" id="cb9-188" title="188"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-189" title="189"><span class="co">#&gt; filling zeros for amplicon missing 28 samples</span></a>
+<a class="sourceLine" id="cb9-190" title="190"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-191" title="191"><span class="co">#&gt; filling zeros for amplicon missing 5 samples</span></a>
+<a class="sourceLine" id="cb9-192" title="192"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-193" title="193"><span class="co">#&gt; filling zeros for amplicon missing 11 samples</span></a>
+<a class="sourceLine" id="cb9-194" title="194"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-195" title="195"><span class="co">#&gt; filling zeros for amplicon missing 9 samples</span></a>
+<a class="sourceLine" id="cb9-196" title="196"><span class="co">#&gt; extracting 192 requested samples</span></a>
+<a class="sourceLine" id="cb9-197" title="197"><span class="co">#&gt; filling zeros for amplicon missing 33 samples</span></a></code></pre></div>
+</div>
+<div id="comparing-sample-data" class="section level2">
+<h2>Comparing sample data</h2>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
