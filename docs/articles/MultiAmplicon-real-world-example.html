@@ -85,7 +85,7 @@
       <h1 data-toc-skip>MultiAmplicon - a real world example</h1>
                         <h4 class="author">Emanuel Heitlinger</h4>
             
-            <h4 class="date">2021-01-19</h4>
+            <h4 class="date">2021-01-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/derele/MultiAmplicon/blob/master/vignettes/MultiAmplicon-real-world-example.Rmd"><code>vignettes/MultiAmplicon-real-world-example.Rmd</code></a></small>
       <div class="hidden name"><code>MultiAmplicon-real-world-example.Rmd</code></div>
@@ -194,248 +194,8 @@
 <p>So we just found out that for this dataset only one amplicon could be merged retaining over 80% of the sequence. Lets run the merge again, concatenating all amplicons with less than 80% merged by setting <code>justConcatenate</code> to <code>TRUE</code> for those.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">MA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mergeMulti.html">mergeMulti</a></span><span class="op">(</span><span class="va">MA</span>, justConcatenate<span class="op">=</span><span class="va">propMerged</span><span class="op">&lt;</span><span class="fl">0.8</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 175 samples for amplicon ACM_008.ADM330_CR</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 168 samples for amplicon MarkN.Amann</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 164 samples for amplicon Medin.Amann</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 180 samples for amplicon MarkN.Euk360_CR</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 171 samples for amplicon proti1702.EukB_MH</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 185 samples for amplicon Nem_0425_6CR.EukB_MH</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 166 samples for amplicon Hadz_1200CR.EukB_MH</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 187 samples for amplicon Nem_0425_6CR.EukB_MV</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 181 samples for amplicon proti1702.EukB_MV</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 163 samples for amplicon Hadz_1200CR.EukB_MV</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 135 samples for amplicon Medin.Gen_600_CR</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 164 samples for amplicon Hadz_566.Hadz_1200</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 180 samples for amplicon Gen_600.Hadz_1200</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 158 samples for amplicon AmannCR.Hadz_1200</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 177 samples for amplicon Mach1.Hadz_1200</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 191 samples for amplicon ACM_008.Klin0341_CR</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 185 samples for amplicon ADM330.Klin0785_CR</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 186 samples for amplicon Klin0341.Klin0785_CR</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 143 samples for amplicon MarkN.Mach1CR</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 162 samples for amplicon Gen_600.Mach2Gen</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 165 samples for amplicon Hadz_566.Mach2Gen</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 159 samples for amplicon AmannCR.Mach2Gen</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 165 samples for amplicon Mach1.Mach2Gen</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 174 samples for amplicon MarkN.Mark</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 171 samples for amplicon Mach1.Nem_0425_2</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 167 samples for amplicon Hadz_566.Nem_0425_4R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 175 samples for amplicon Gen_600.Nem_0425_4R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 172 samples for amplicon Mach1.Nem_0425_4R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 169 samples for amplicon Nem_0425_4F.Nem_0425_4R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 181 samples for amplicon wang1141.Nem_0425_6</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=FALSE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 137 samples for amplicon proti440.proti1580_R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 161 samples for amplicon proti643.proti1580_R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 143 samples for amplicon proti482.proti1580_R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 184 samples for amplicon proti15.proti440_R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 188 samples for amplicon MarkN.proti440_R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 143 samples for amplicon proti15.proti482_R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 118 samples for amplicon MarkN.proti628_R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 76 samples for amplicon proti89.proti628_R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 103 samples for amplicon proti15.proti628_R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 163 samples for amplicon proti15.proti643_R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 175 samples for amplicon proti89.proti643_R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 161 samples for amplicon proti440.wang1141CR</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 164 samples for amplicon proti643.wang1141CR</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 164 samples for amplicon proti628.wang1141CR</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 187 samples for amplicon proti1580.wang1624CR6L</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 181 samples for amplicon Hadz_1200CR.wang1624CR6L</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 183 samples for amplicon proti1702.wang1624CR6L</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 159 samples for amplicon Hadz_1200CR.wang1624CR6S</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
 <span class="va">MA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/makeSequenceTableMulti.html">makeSequenceTableMulti</a></span><span class="op">(</span><span class="va">MA</span><span class="op">)</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="va">MA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/removeChimeraMulti.html">removeChimeraMulti</a></span><span class="op">(</span><span class="va">MA</span><span class="op">)</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></code></pre></div>
+<span class="va">MA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/removeChimeraMulti.html">removeChimeraMulti</a></span><span class="op">(</span><span class="va">MA</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="check-what-happend-within-the-pipeline" class="section level2">
 <h2 class="hasAnchor">
@@ -457,16 +217,19 @@
 <div id="hand-over-to-phyloseq" class="section level2">
 <h2 class="hasAnchor">
 <a href="#hand-over-to-phyloseq" class="anchor"></a>Hand over to phyloseq</h2>
-<p>We haven’t genereated a taxonomical annotation for this ASVs yet. oing so within MulitAmplicon is currently only supported on Unix systems (see <code>blastTaxAnnot</code>). You will need to generat a taxonomical annotation in one way or the other at some point, but here we can do an export to a phyloseq object first.</p>
+<p>We haven’t genereated a taxonomical annotation for this ASVs yet. oing so within MulitAmplicon is currently only supported on Unix systems (see <code>blastTaxAnnot</code>). You will need to generat a taxonomical annotation in one way or the other at some point, but here we demonstrate ho to do an export to a phyloseq object first.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://dx.plos.org/10.1371/journal.pone.0061217">phyloseq</a></span><span class="op">)</span>
-<span class="va">PH</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/toPhyloseq.html">toPhyloseq</a></span><span class="op">(</span><span class="va">MA</span>, samples<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">MA</span><span class="op">)</span><span class="op">)</span>
-<span class="va">PHlist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/toPhyloseq.html">toPhyloseq</a></span><span class="op">(</span><span class="va">MA</span>, samples<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">MA</span><span class="op">)</span>, multi2Single<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<span class="va">PH</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/toPhyloseq.html">toPhyloseq</a></span><span class="op">(</span><span class="va">MA</span>, samples<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">MA</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>We here produced a combined phyloseq object including ASVs from all different amplicons.</p>
 </div>
 <div id="comparing-sample-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#comparing-sample-data" class="anchor"></a>Comparing sample data</h2>
-<p>We now can use phyloseq for one of the many supported analyses. Here..</p>
+<p>We now can use phyloseq for one of the many supported analyses.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">phyloseq</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/plot_richness.html">plot_richness</a></span><span class="op">(</span><span class="va">PH</span>, measures<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Observed"</span>, <span class="st">"Chao1"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p><img src="MultiAmplicon-real-world-example_files/figure-html/phydiversity-1.png" width="700"></p>
 </div>
   </div>
 

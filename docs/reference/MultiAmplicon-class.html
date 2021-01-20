@@ -403,39 +403,44 @@ by <code><a href='removeChimeraMulti.html'>removeChimeraMulti</a></code>.</p></d
 
 <span class='va'>MA</span> <span class='op'>&lt;-</span> <span class='fu'>MultiAmplicon</span><span class='op'>(</span><span class='va'>PPS</span>, <span class='va'>PRF</span><span class='op'>)</span>
 
+<span class='co'>## sort into amplicons</span>
+<span class='va'>MA1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sortAmplicons.html'>sortAmplicons</a></span><span class='op'>(</span><span class='va'>MA</span>, filedir<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span>pattern <span class='op'>=</span> <span class='st'>"dir"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>creating directory /tmp/RtmpTPTbQy/dirfd1a1657d6ac</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 0 sequencing reads for S00_F_filt.fastq.gz in </span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S00_F_filt.fastq.gz and </span>
+#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S00_R_filt.fastq.gz </span>
+#&gt; <span class='message'> into 0  amplicons and written into /tmp/RtmpTPTbQy/dirfd1a1657d6ac</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 0 sequencing reads for S01_F_filt.fastq.gz in </span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S01_F_filt.fastq.gz and </span>
+#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S01_R_filt.fastq.gz </span>
+#&gt; <span class='message'> into 0  amplicons and written into /tmp/RtmpTPTbQy/dirfd1a1657d6ac</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 9348 sequencing reads for S02_F_filt.fastq.gz in </span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S02_F_filt.fastq.gz and </span>
+#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S02_R_filt.fastq.gz </span>
+#&gt; <span class='message'> into 4  amplicons and written into /tmp/RtmpTPTbQy/dirfd1a1657d6ac</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 5 sequencing reads for S03_F_filt.fastq.gz in </span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S03_F_filt.fastq.gz and </span>
+#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S03_R_filt.fastq.gz </span>
+#&gt; <span class='message'> into 1  amplicons and written into /tmp/RtmpTPTbQy/dirfd1a1657d6ac</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 14 sequencing reads for S04_F_filt.fastq.gz in </span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S04_F_filt.fastq.gz and </span>
+#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S04_R_filt.fastq.gz </span>
+#&gt; <span class='message'> into 3  amplicons and written into /tmp/RtmpTPTbQy/dirfd1a1657d6ac</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 51777 sequencing reads for S05_F_filt.fastq.gz in </span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S05_F_filt.fastq.gz and </span>
+#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S05_R_filt.fastq.gz </span>
+#&gt; <span class='message'> into 3  amplicons and written into /tmp/RtmpTPTbQy/dirfd1a1657d6ac</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 51777 sequencing reads for S05D_F_filt.fastq.gz in </span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S05D_F_filt.fastq.gz and </span>
+#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S05D_R_filt.fastq.gz </span>
+#&gt; <span class='message'> into 3  amplicons and written into /tmp/RtmpTPTbQy/dirfd1a1657d6ac</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 17358 sequencing reads for S06_F_filt.fastq.gz in </span>
+#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S06_F_filt.fastq.gz and </span>
+#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S06_R_filt.fastq.gz </span>
+#&gt; <span class='message'> into 4  amplicons and written into /tmp/RtmpTPTbQy/dirfd1a1657d6ac</span></div><div class='input'>
+<span class='co'>## Only after sorting the MultiAmplicon object is really poplated</span>
+<span class='co'>## with sensible data, now matrix-like access to different </span>
+<span class='co'>## amplicons (primer pairs) and different sequencing read files</span>
+<span class='co'>## (usually samples) is implemented</span>
+
 <span class='co'>## the number of amplicons (primer pairs)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>MA</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] 0</div><div class='input'>
 <span class='co'>## the number of samples (sequencing read file pairs)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>MA</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] 0</div><div class='input'>
-<span class='co'>## sort into amplicons</span>
-<span class='va'>MA1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sortAmplicons.html'>sortAmplicons</a></span><span class='op'>(</span><span class='va'>MA</span>, filedir<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span>pattern <span class='op'>=</span> <span class='st'>"dir"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>creating directory /tmp/RtmpWFGhCS/dirb2491543708e</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 0 sequencing reads for S00_F_filt.fastq.gz in </span>
-#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S00_F_filt.fastq.gz and </span>
-#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S00_R_filt.fastq.gz </span>
-#&gt; <span class='message'> into 0  amplicons and written into /tmp/RtmpWFGhCS/dirb2491543708e</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 0 sequencing reads for S01_F_filt.fastq.gz in </span>
-#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S01_F_filt.fastq.gz and </span>
-#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S01_R_filt.fastq.gz </span>
-#&gt; <span class='message'> into 0  amplicons and written into /tmp/RtmpWFGhCS/dirb2491543708e</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 9348 sequencing reads for S02_F_filt.fastq.gz in </span>
-#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S02_F_filt.fastq.gz and </span>
-#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S02_R_filt.fastq.gz </span>
-#&gt; <span class='message'> into 4  amplicons and written into /tmp/RtmpWFGhCS/dirb2491543708e</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 5 sequencing reads for S03_F_filt.fastq.gz in </span>
-#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S03_F_filt.fastq.gz and </span>
-#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S03_R_filt.fastq.gz </span>
-#&gt; <span class='message'> into 1  amplicons and written into /tmp/RtmpWFGhCS/dirb2491543708e</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 14 sequencing reads for S04_F_filt.fastq.gz in </span>
-#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S04_F_filt.fastq.gz and </span>
-#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S04_R_filt.fastq.gz </span>
-#&gt; <span class='message'> into 3  amplicons and written into /tmp/RtmpWFGhCS/dirb2491543708e</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 51777 sequencing reads for S05_F_filt.fastq.gz in </span>
-#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S05_F_filt.fastq.gz and </span>
-#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S05_R_filt.fastq.gz </span>
-#&gt; <span class='message'> into 3  amplicons and written into /tmp/RtmpWFGhCS/dirb2491543708e</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 51777 sequencing reads for S05D_F_filt.fastq.gz in </span>
-#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S05D_F_filt.fastq.gz and </span>
-#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S05D_R_filt.fastq.gz </span>
-#&gt; <span class='message'> into 3  amplicons and written into /tmp/RtmpWFGhCS/dirb2491543708e</span></div><div class='output co'>#&gt; <span class='message'>finished sorting 17358 sequencing reads for S06_F_filt.fastq.gz in </span>
-#&gt; <span class='message'> /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S06_F_filt.fastq.gz and </span>
-#&gt; <span class='message'>  /localstorage/ele/git_projects/MultiAmplicon/inst/extdata/fastq/S06_R_filt.fastq.gz </span>
-#&gt; <span class='message'> into 4  amplicons and written into /tmp/RtmpWFGhCS/dirb2491543708e</span></div><div class='input'>
 <span class='co'>## dereplication is currently not supported</span>
 <span class='co'>## MA2 &lt;- derepMulti(MA1)</span>
 

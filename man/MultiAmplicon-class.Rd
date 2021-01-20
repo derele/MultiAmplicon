@@ -238,14 +238,19 @@ PRF <- PairedReadFileSet(Ffastq.file, Rfastq.file)
 
 MA <- MultiAmplicon(PPS, PRF)
 
+## sort into amplicons
+MA1 <- sortAmplicons(MA, filedir=tempfile(pattern = "dir"))
+
+## Only after sorting the MultiAmplicon object is really poplated
+## with sensible data, now matrix-like access to different 
+## amplicons (primer pairs) and different sequencing read files
+## (usually samples) is implemented
+
 ## the number of amplicons (primer pairs)
 nrow(MA)
 
 ## the number of samples (sequencing read file pairs)
 ncol(MA)
-
-## sort into amplicons
-MA1 <- sortAmplicons(MA, filedir=tempfile(pattern = "dir"))
 
 ## dereplication is currently not supported
 ## MA2 <- derepMulti(MA1)

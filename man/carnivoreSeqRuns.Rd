@@ -14,11 +14,14 @@ An object of class \code{data.frame} with 192 rows and 5 columns.
 carnivoreSeqRuns
 }
 \description{
-A dataset containing SRA submission details of the SRA dataset for
+For use in the [real-world data
+vignette](https://derele.github.io/MultiAmplicon/articles/MultiAmplicon-real-world-example.html)),
+we download a dataset containing details of the SRA dataset for
 BioProject PRJNA386767
 "Intestinal biome sequencing of carnivores". We download the sample
-data from SRA, re-format it for our later analysis. And use the SRA run
-ids to download the raw sequencing files.
+data from SRA, re-format it for our later analysis. And use the SRA
+run ids to download the raw sequencing files for precessing in the
+vignette.
 }
 \examples{
 ## This data was generated in R using the following code:
@@ -28,6 +31,7 @@ library(SRAdb)
 sqlfile <- "SRAmetadb.sqlite"
 if(!file.exists(sqlfile)){
     sqlfile <- getSRAdbFile()
+}
 
 sra_con <- dbConnect(SQLite(),sqlfile)
 
@@ -63,7 +67,6 @@ if(!length(fastqFiles)){
                destDir=destDir)
     fastqFiles <- list.files(destDir, pattern=".fastq.gz", full.names=TRUE)
   }
-}
 }
 }
 \keyword{datasets}

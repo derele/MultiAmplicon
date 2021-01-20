@@ -19,6 +19,7 @@
 #' sqlfile <- "SRAmetadb.sqlite"
 #' if(!file.exists(sqlfile)){
 #'     sqlfile <- getSRAdbFile()
+#' }
 #'
 #' sra_con <- dbConnect(SQLite(),sqlfile)
 #'
@@ -54,6 +55,5 @@
 #'                destDir=destDir)
 #'     fastqFiles <- list.files(destDir, pattern=".fastq.gz", full.names=TRUE)
 #'   }
-#' }
 #' }
 "carnivoreSeqRuns"

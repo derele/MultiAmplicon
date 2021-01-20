@@ -40,11 +40,14 @@
 
 
 <meta property="og:title" content="Download sequencing run files for a carnivore biome dataset — carnivoreSeqRuns" />
-<meta property="og:description" content="A dataset containing SRA submission details of the SRA dataset for
+<meta property="og:description" content="For use in the [real-world data
+vignette](https://derele.github.io/MultiAmplicon/articles/MultiAmplicon-real-world-example.html)),
+we download a dataset containing details of the SRA dataset for
 BioProject PRJNA386767
 &quot;Intestinal biome sequencing of carnivores&quot;. We download the sample
-data from SRA, re-format it for our later analysis. And use the SRA run
-ids to download the raw sequencing files." />
+data from SRA, re-format it for our later analysis. And use the SRA
+run ids to download the raw sequencing files for precessing in the
+vignette." />
 
 
 
@@ -133,11 +136,14 @@ ids to download the raw sequencing files." />
     </div>
 
     <div class="ref-description">
-    <p>A dataset containing SRA submission details of the SRA dataset for
+    <p>For use in the [real-world data
+vignette](https://derele.github.io/MultiAmplicon/articles/MultiAmplicon-real-world-example.html)),
+we download a dataset containing details of the SRA dataset for
 BioProject PRJNA386767
 "Intestinal biome sequencing of carnivores". We download the sample
-data from SRA, re-format it for our later analysis. And use the SRA run
-ids to download the raw sequencing files.</p>
+data from SRA, re-format it for our later analysis. And use the SRA
+run ids to download the raw sequencing files for precessing in the
+vignette.</p>
     </div>
 
     <pre class="usage"><span class='va'>carnivoreSeqRuns</span></pre>
@@ -158,6 +164,7 @@ ids to download the raw sequencing files.</p>
 <span class='va'>sqlfile</span> <span class='op'>&lt;-</span> <span class='st'>"SRAmetadb.sqlite"</span>
 <span class='kw'>if</span><span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span><span class='op'>(</span><span class='va'>sqlfile</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span>
     <span class='va'>sqlfile</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/SRAdb/man/getSRAdbFile.html'>getSRAdbFile</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>}</span>
 
 <span class='va'>sra_con</span> <span class='op'>&lt;-</span> <span class='fu'>dbConnect</span><span class='op'>(</span><span class='fu'>SQLite</span><span class='op'>(</span><span class='op'>)</span>,<span class='va'>sqlfile</span><span class='op'>)</span>
 
@@ -193,7 +200,6 @@ ids to download the raw sequencing files.</p>
                destDir<span class='op'>=</span><span class='va'>destDir</span><span class='op'>)</span>
     <span class='va'>fastqFiles</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span><span class='op'>(</span><span class='va'>destDir</span>, pattern<span class='op'>=</span><span class='st'>".fastq.gz"</span>, full.names<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
   <span class='op'>}</span>
-<span class='op'>}</span>
 <span class='op'>}</span>
 </div></pre>
   </div>
