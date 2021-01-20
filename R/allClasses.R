@@ -48,23 +48,19 @@ PairedReadFileSet <- function(readsF=character(), readsR=character()){
     if(length(names(readsF)) == length(readsF)) {
         na <- as.character(names(readsF)) ## as.c to catch empty (NULL)
     } else {na <- basename(readsF)} ## otherwise use filenames
+    ## set all names the same!
+    names(readsF) <- na
+    names(readsR) <- na
     new("PairedReadFileSet",
         readsF = readsF,
         readsR = readsR,
         names = na)
 }
 
-## Methods
+## ## probably could implement this more cleverly using inheritance
 ##' @rdname PairedReadFileSet-class
 ##' @export
 setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
-
-## Methods
-##' @rdname PairedReadFileSet-class
-##' @export
-setMethod("names", "PairedReadFileSet", function(x) x@names)
-
-
 
 ##' A class representing sequences of forward and reverse primers.
 ##'
@@ -125,6 +121,9 @@ PrimerPairsSet <- function(primerF=character(), primerR=character()){
        length(names(primerF))== length(primerF)) {
         na <- paste0(names(primerF), ".", names(primerR))
     } else {na <- paste0(primerF, ".", primerR)} # otherwise use primer sequences
+    ## set all names the same!
+    names(primerF) <- na
+    names(primerR) <- na
     new("PrimerPairsSet",
         primerF = DNAStringSet(primerF),
         primerR = DNAStringSet(primerR),
@@ -230,24 +229,16 @@ setMethod("length", "PairedDada", function(x){
 ##' @slot PairedReadFileSet The (quality filtered) fastq files (one
 ##'     file pair for each sample) that store your sequencing data.
 ##'
-##' @slot rownames Names of the amplicons: derived from the names of
-##'     the primer pairs. Created with the object, should not be
-##'     supplied by the user.
-##'
-##' @slot colnames Names of the samples: these are names of the
-##'     origial fastq files. Created with the object, should not be
-##'     supplied by the user.
+##' @slot .Data A numeric matrix of sequencing read counts per
+##'    amplicon and sample. Created by the function
+##'    \code{\link{sortAmplicons}} in the MultiAmplicon pipeline.
 ##'
 ##' @slot sampleData A sample_data object from
 ##'     \code{\link[phyloseq]{phyloseq}}. The slot is created from
-##'     sample names (names of the \code{\link{PrimerPairsSet}} same
-##'     as \code{colnames(MA)}) and more data can be added by
-##'     \code{\link{addSampleData}}.
+##'     sample names (names of the \code{\link{PrimerPairsSet}}, which
+##'     have tto be the same as \code{colnames(MA)}). More data can be
+##'     added by \code{\link{addSampleData}}.
 ##' 
-##' @slot rawCounts A numeric matrix of sequencing read counts per
-##'     amplicon and sample. Created by the function
-##'     \code{\link{sortAmplicons}} in the MultiAmplicon pipeline.
-##'
 ##' @slot stratifiedFiles temporary files as a result of stratifying
 ##'     into amplicons and samples using the MultiAmplicon pipeline
 ##'     function \code{\link{sortAmplicons}}. Forward (sometimes
@@ -298,7 +289,7 @@ setMethod("length", "PairedDada", function(x){
 ##' @param PairedReadFileSet a set of paired end sequencing data files
 ##'     \code{\link{PairedReadFileSet-class}}
 ##'
-##' @param rawCounts Users should not supply this parameter, the slot
+##' @param .Data Users should not supply this parameter, the slot
 ##'     is created by \code{\link{sortAmplicons}}.
 ##'
 ##' @param sampleData Users should not supply this parameter. It's
@@ -348,15 +339,20 @@ setMethod("length", "PairedDada", function(x){
 ##'
 ##' MA <- MultiAmplicon(PPS, PRF)
 ##'
+##' ## sort into amplicons
+##' MA1 <- sortAmplicons(MA, filedir=tempfile(pattern = "dir"))
+##'
+##' ## Only after sorting the MultiAmplicon object is really poplated
+##' ## with sensible data, now matrix-like access to different 
+##' ## amplicons (primer pairs) and different sequencing read files
+##' ## (usually samples) is implemented.
+##' 
 ##' ## the number of amplicons (primer pairs)
 ##' nrow(MA)
 ##'
 ##' ## the number of samples (sequencing read file pairs)
 ##' ncol(MA)
-##'
-##' ## sort into amplicons
-##' MA1 <- sortAmplicons(MA, filedir=tempfile(pattern = "dir"))
-##'
+##' 
 ##' ## dereplication is currently not supported
 ##' ## MA2 <- derepMulti(MA1)
 ##'
@@ -372,15 +368,12 @@ setMethod("length", "PairedDada", function(x){
 ##' @seealso \code{\link[dada2]{derepFastq}},\code{\link[dada2]{dada}}
 ##' @importFrom dada2 derepFastq dada
 ##' @importClassesFrom phyloseq sample_data
-## ## ##' @importFrom phyloseq sample_names ### 
+## ##' @importFrom phyloseq sample_names ###  this doesn't work for some reasons for now
 ##' @author Emanuel Heitlinger
 ##' @exportClass MultiAmplicon
 setClass("MultiAmplicon",
          representation(PrimerPairsSet="PrimerPairsSet",
                         PairedReadFileSet="PairedReadFileSet",
-                        rownames = "character",
-                        colnames = "character",
-                        rawCounts="matrix",
                         stratifiedFiles="list",
                         sampleData="sample_data", 
                         derep="list",
@@ -389,6 +382,7 @@ setClass("MultiAmplicon",
                         sequenceTable="list",
                         sequenceTableNoChime="list",
                         taxonTable="list"),
+                        contains="matrix",
          validity=function(object) {
              ## constructors check for PairedReadFileSet,
              ## PrimerPairsSet, rawCounts and sampleData
@@ -424,7 +418,7 @@ setClass("MultiAmplicon",
 ##'     MultiAmplicon-class
 MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
                           PairedReadFileSet = PairedReadFileSet(),
-                          rawCounts = matrix(ncol=0, nrow=0),
+                          .Data = matrix(ncol=0, nrow=0),
                           stratifiedFiles = list(),
                           sampleData = new("sample_data",
                                            data.frame(row.names=names(PairedReadFileSet),
@@ -440,9 +434,7 @@ MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
     new("MultiAmplicon",
         PrimerPairsSet = PrimerPairsSet,
         PairedReadFileSet = PairedReadFileSet,
-        rownames = PrimerPairsSet@names,
-        colnames = PairedReadFileSet@names,        
-        rawCounts = rawCounts,
+        .Data = .Data,
         stratifiedFiles = stratifiedFiles,
         sampleData = sampleData,
         derep = derep,
@@ -453,28 +445,6 @@ MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
         taxonTable = taxonTable
         )
 }
-
-##' @rdname MultiAmplicon-class
-##' @export
-setMethod("colnames", "MultiAmplicon", function (x) x@colnames)
-
-##' @rdname MultiAmplicon-class
-##' @export
-setMethod("rownames", "MultiAmplicon", function (x) x@rownames)
-
-##' @rdname MultiAmplicon-class
-##' @export
-setMethod("ncol", "MultiAmplicon", function (x) length(x@PairedReadFileSet))
-
-##' @rdname MultiAmplicon-class
-##' @export
-setMethod("nrow", "MultiAmplicon", function (x) length(x@PrimerPairsSet))
-
-##' @rdname MultiAmplicon-class
-##' @export
-setMethod("dim", "MultiAmplicon", function (x) {
-    as.integer(c(length(x@PrimerPairsSet), length(x@PairedReadFileSet)))
-})
 
 
 ##' @rdname MultiAmplicon-class
@@ -492,7 +462,9 @@ getPairedReadFileSet <- function (MA) slot(MA, "PairedReadFileSet")
 ##' @rdname MultiAmplicon-class
 ##' @param MA MultiAmplicon-class object
 ##' @export
-getRawCounts <- function (MA) slot(MA, "rawCounts")
+getRawCounts <- function (MA) {
+    return(slot(MA, ".Data"))
+}
 
 ##' @rdname MultiAmplicon-class
 ##' @param simplify Should a list of objects be simplified to only one

@@ -22,3 +22,5 @@ docs/articles/*.R
 /SRAmetadb.sqlite
 /download_sra
 /filtered_sra
+doc
+Meta

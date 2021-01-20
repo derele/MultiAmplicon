@@ -5,7 +5,7 @@
 The MultiAmplicon-package allows the matching and removal of primer
 sequences from sequencing reads. Amplicons, here defined as the
 sequences amplified by particular combination of forward and reverse
-primer, can then be further processed. The package guiedes downstream
+primer, can then be further processed. The package guides downstream
 analysis of multiple amplicons in a bioconductor workflow wrapped
 around the package
 [dada2](https://benjjneb.github.io/dada2/index.html) and helps to

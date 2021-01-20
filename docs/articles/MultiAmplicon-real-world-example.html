@@ -39,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -65,7 +65,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/derele/MultiAmplicon/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -79,14 +79,13 @@
 
       
 
-      </header><link href="MultiAmplicon-real-world-example_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="MultiAmplicon-real-world-example_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>MultiAmplicon - a real world example</h1>
                         <h4 class="author">Emanuel Heitlinger</h4>
             
-            <h4 class="date">2021-01-15</h4>
+            <h4 class="date">2021-01-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/derele/MultiAmplicon/blob/master/vignettes/MultiAmplicon-real-world-example.Rmd"><code>vignettes/MultiAmplicon-real-world-example.Rmd</code></a></small>
       <div class="hidden name"><code>MultiAmplicon-real-world-example.Rmd</code></div>
@@ -98,8 +97,8 @@
 <div id="data-preparation-download-and-filtering" class="section level2">
 <h2 class="hasAnchor">
 <a href="#data-preparation-download-and-filtering" class="anchor"></a>Data preparation (download and filtering)</h2>
-<p>We first <a href="https://svalbard.biologie.hu-berlin.de:443/d/c291b870178f4abc8c59/">download the data</a> set from consisting of 192 fastq file-pairs from 18S and 16S amplicon sequencing of feces and intestinal contents of carnivores (hyenas and wolves). Use the botton on the upper right of the page to download a zipped folder and unzip it after downloading. The help file for the <a href="https://derele.github.io/MultiAmplicon/reference/carnivoreSeqRuns.html"><code>carnivoreSeqRuns</code></a> (containing sample data included in the package), shows how this data has been downloaded from <a href="https://www.ncbi.nlm.nih.gov/bioproject/PRJNA386767">NCBI-SRA</a>.</p>
-<p>Now we can run our standard workflow. But as usual with real data we have to filter the input files first. This particular sequencing was of quite low quality, so we have to trim and screen quite harshly.</p>
+<p>We first download the dataset consisting of 192 fastq file-pairs from 18S and 16S amplicon sequencing of feces and intestinal contents of carnivores (hyenas and wolves). The help files <a href="https://derele.github.io/MultiAmplicon/reference/carnivoreSeqRuns.html"><code>carnivoreSeqRuns</code></a> shows how this data has been downloaded from <a href="https://www.ncbi.nlm.nih.gov/bioproject/PRJNA386767">NCBI-SRA</a>.</p>
+<p>After download we can run our standard workflow. But as usual with real data we have to filter the input files first. This particular sequencing was of quite low quality, so we have to trim and screen quite harshly.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://derele.github.io/MultiAmplicon/">MultiAmplicon</a></span><span class="op">)</span>
 <span class="co">## And we'll also use some dada2 functions directly</span>
@@ -195,423 +194,42 @@
 <p>So we just found out that for this dataset only one amplicon could be merged retaining over 80% of the sequence. Lets run the merge again, concatenating all amplicons with less than 80% merged by setting <code>justConcatenate</code> to <code>TRUE</code> for those.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">MA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mergeMulti.html">mergeMulti</a></span><span class="op">(</span><span class="va">MA</span>, justConcatenate<span class="op">=</span><span class="va">propMerged</span><span class="op">&lt;</span><span class="fl">0.8</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 175 samples for amplicon ACM_008.ADM330_CR</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 168 samples for amplicon MarkN.Amann</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 164 samples for amplicon Medin.Amann</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 180 samples for amplicon MarkN.Euk360_CR</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 171 samples for amplicon proti1702.EukB_MH</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 185 samples for amplicon Nem_0425_6CR.EukB_MH</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 166 samples for amplicon Hadz_1200CR.EukB_MH</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 187 samples for amplicon Nem_0425_6CR.EukB_MV</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 181 samples for amplicon proti1702.EukB_MV</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 163 samples for amplicon Hadz_1200CR.EukB_MV</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 135 samples for amplicon Medin.Gen_600_CR</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 164 samples for amplicon Hadz_566.Hadz_1200</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 180 samples for amplicon Gen_600.Hadz_1200</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 158 samples for amplicon AmannCR.Hadz_1200</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 177 samples for amplicon Mach1.Hadz_1200</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 191 samples for amplicon ACM_008.Klin0341_CR</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 185 samples for amplicon ADM330.Klin0785_CR</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 186 samples for amplicon Klin0341.Klin0785_CR</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 143 samples for amplicon MarkN.Mach1CR</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 162 samples for amplicon Gen_600.Mach2Gen</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 165 samples for amplicon Hadz_566.Mach2Gen</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 159 samples for amplicon AmannCR.Mach2Gen</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 165 samples for amplicon Mach1.Mach2Gen</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 174 samples for amplicon MarkN.Mark</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 171 samples for amplicon Mach1.Nem_0425_2</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 167 samples for amplicon Hadz_566.Nem_0425_4R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 175 samples for amplicon Gen_600.Nem_0425_4R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 172 samples for amplicon Mach1.Nem_0425_4R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 169 samples for amplicon Nem_0425_4F.Nem_0425_4R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 181 samples for amplicon wang1141.Nem_0425_6</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=FALSE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 137 samples for amplicon proti440.proti1580_R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 161 samples for amplicon proti643.proti1580_R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 143 samples for amplicon proti482.proti1580_R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 184 samples for amplicon proti15.proti440_R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 188 samples for amplicon MarkN.proti440_R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 143 samples for amplicon proti15.proti482_R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 118 samples for amplicon MarkN.proti628_R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 76 samples for amplicon proti89.proti628_R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 103 samples for amplicon proti15.proti628_R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 163 samples for amplicon proti15.proti643_R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 175 samples for amplicon proti89.proti643_R</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 161 samples for amplicon proti440.wang1141CR</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 164 samples for amplicon proti643.wang1141CR</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 164 samples for amplicon proti628.wang1141CR</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 187 samples for amplicon proti1580.wang1624CR6L</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 181 samples for amplicon Hadz_1200CR.wang1624CR6L</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 183 samples for amplicon proti1702.wang1624CR6L</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; merging sequences from 159 samples for amplicon Hadz_1200CR.wang1624CR6S</span>
-<span class="co">#&gt; calling mergePairs with justConcatenate=TRUE parameters</span>
 <span class="va">MA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/makeSequenceTableMulti.html">makeSequenceTableMulti</a></span><span class="op">(</span><span class="va">MA</span><span class="op">)</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="co">#&gt; calling makeSequenceTable with default parameters</span>
-<span class="va">MA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/removeChimeraMulti.html">removeChimeraMulti</a></span><span class="op">(</span><span class="va">MA</span><span class="op">)</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span>
-<span class="co">#&gt; calling removeBimeraDenovo with default parameters</span></code></pre></div>
+<span class="va">MA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/removeChimeraMulti.html">removeChimeraMulti</a></span><span class="op">(</span><span class="va">MA</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="check-what-happend-within-the-pipeline" class="section level2">
 <h2 class="hasAnchor">
 <a href="#check-what-happend-within-the-pipeline" class="anchor"></a>Check what happend within the pipeline</h2>
+<p>When we are done with our processing, we usually want to know what happened to our raw data (sequencing reads) along the MultiAmplicon/dada2 pipeline.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tracking</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getPipelineSummary.html">getPipelineSummary</a></span><span class="op">(</span><span class="va">MA</span><span class="op">)</span>
 <span class="fu"><a href="../reference/plotPipelineSummary.html">plotPipelineSummary</a></span><span class="op">(</span><span class="va">tracking</span><span class="op">)</span></code></pre></div>
 <p><img src="MultiAmplicon-real-world-example_files/figure-html/tracking-1.png" width="700"></p>
-<p>The pipeline summary tells us how many samples, how many unique sequences and how many sequence read (pairs) in total were recovered through the pipeline for different amplicons.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
-<span class="fu"><a href="../reference/plotPipelineSummary.html">plotPipelineSummary</a></span><span class="op">(</span><span class="va">tracking</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_log10</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; Scale for 'y' is already present. Adding another scale for 'y', which will</span>
-<span class="co">#&gt; replace the existing scale.</span></code></pre></div>
-<p><img src="MultiAmplicon-real-world-example_files/figure-html/plottrack-1.png" width="700"></p>
+<p>The pipeline summary tells us how many samples, how many unique sequences and how many sequence read pairs were recovered at different steps through the pipeline. It gives this information for the different amplicons.</p>
 <p>The output of the pipeline summary can be modified with standard ggplot syntax.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+<span class="fu"><a href="../reference/plotPipelineSummary.html">plotPipelineSummary</a></span><span class="op">(</span><span class="va">tracking</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_log10</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p><img src="MultiAmplicon-real-world-example_files/figure-html/plottrack-1.png" width="700"></p>
 </div>
 <div id="hand-over-to-phyloseq" class="section level2">
 <h2 class="hasAnchor">
 <a href="#hand-over-to-phyloseq" class="anchor"></a>Hand over to phyloseq</h2>
+<p>We haven’t genereated a taxonomical annotation for this ASVs yet. oing so within MulitAmplicon is currently only supported on Unix systems (see <code>blastTaxAnnot</code>). You will need to generat a taxonomical annotation in one way or the other at some point, but here we demonstrate ho to do an export to a phyloseq object first.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://dx.plos.org/10.1371/journal.pone.0061217">phyloseq</a></span><span class="op">)</span>
-<span class="va">PH</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/toPhyloseq.html">toPhyloseq</a></span><span class="op">(</span><span class="va">MA</span>, samples<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">MA</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; No taxon table provided, so your phyloseq object will lack taxonomical annotations</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 17 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 24 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 28 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 12 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 21 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 7 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 26 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 5 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 11 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 29 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 57 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 28 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 12 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 34 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 15 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 1 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 7 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 6 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 49 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 30 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 27 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 33 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 27 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 18 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 21 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 25 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 17 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 20 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 23 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 11 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 55 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 31 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 49 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 8 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 4 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 49 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 74 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 116 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 89 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 29 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 17 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 31 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 28 samples </span>
-<span class="co">#&gt; filling zeros for amplicon missing 28 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 5 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 11 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 9 samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 33 samples</span>
-<span class="va">PHlist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/toPhyloseq.html">toPhyloseq</a></span><span class="op">(</span><span class="va">MA</span>, samples<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">MA</span><span class="op">)</span>, multi2Single<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">#&gt; No taxon table provided, so your phyloseq object will lack taxonomical annotations</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 17 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 24 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 28 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 12 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 21 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 7 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 26 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 5 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 11 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 29 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 57 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 28 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 12 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 34 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 15 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 1 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 7 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 6 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 49 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 30 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 27 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 33 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 27 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 18 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 21 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 25 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 17 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 20 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 23 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 11 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 55 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 31 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 49 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 8 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 4 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 49 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 74 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 116 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 89 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 29 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 17 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 31 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 28 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 28 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 5 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 11 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 9 samples</span>
-<span class="co">#&gt; extracting 192 requested samples</span>
-<span class="co">#&gt; filling zeros for amplicon missing 33 samples</span></code></pre></div>
+<span class="va">PH</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/toPhyloseq.html">toPhyloseq</a></span><span class="op">(</span><span class="va">MA</span>, samples<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">MA</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>We here produced a combined phyloseq object including ASVs from all different amplicons.</p>
 </div>
 <div id="comparing-sample-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#comparing-sample-data" class="anchor"></a>Comparing sample data</h2>
+<p>We now can use phyloseq for one of the many supported analyses.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">phyloseq</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/plot_richness.html">plot_richness</a></span><span class="op">(</span><span class="va">PH</span>, measures<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Observed"</span>, <span class="st">"Chao1"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p><img src="MultiAmplicon-real-world-example_files/figure-html/phydiversity-1.png" width="700"></p>
 </div>
   </div>
 

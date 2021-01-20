@@ -37,7 +37,7 @@ toPhyloseq <- function(MA, samples, multi2Single=TRUE, ...){
         allST <- as.matrix(Reduce(cbind, filledST))
         if (!all(dim(allST)>0)) {
             stop(paste("\nempty OTU table\n",
-                       "rownames",  unlist(lapply(STL, rownames)),
+                       "rownames",  unlist(lapply(STL, base::rownames)),
                        "don't match sample names:",  samples, "\n"))
                   }
         ## The same for taxon annotations
@@ -45,9 +45,9 @@ toPhyloseq <- function(MA, samples, multi2Single=TRUE, ...){
             all.tax <- as.matrix(Reduce(rbind, TTL))
             ## to avoid problems with duplicated rownames (same sequences
             ## recovered for different amplicons), this can happen after trimming
-            rownames(all.tax) <- make.unique(rownames(all.tax))
+            base::rownames(all.tax) <- make.unique(base::rownames(all.tax))
         }
-        colnames(allST) <- make.unique(colnames(allST))
+        base::colnames(allST) <- make.unique(base::colnames(allST))
         ## wrap it up into one Phyloseq object
         phyloseq(otu_table(allST, taxa_are_rows=FALSE),
                  sample_data(MA@sampleData),
@@ -67,7 +67,7 @@ toPhyloseq <- function(MA, samples, multi2Single=TRUE, ...){
                 allSampleTable <- .fillSampleTables(STL[[i]], samples=samples)
                 phyloseq(otu_table(allSampleTable, taxa_are_rows=FALSE),
                          if(TAX && taxExists) tax_table(TTL[[i]]),
-                         sample_data(MA@sampleData[rownames(allSampleTable),]),
+                         sample_data(MA@sampleData[base::rownames(allSampleTable),]),
                          ...)
             } else if(!isTRUE(seqExists) && !isTRUE(taxExists)){
                 NULL
@@ -98,7 +98,8 @@ toPhyloseq <- function(MA, samples, multi2Single=TRUE, ...){
 ##' @title addSampleData
 ##' @param MA A \code{\link{MultiAmplicon}} object
 ##' @param sampleData A data frame of providing data for samples in
-##'     the \code{\link{MultiAmplicon}} object. If set to \code{NULL}
+##'     the \code{\link{MultiAmplicon}} object. This has to have the same rownames
+##'     as the colnames of the MultiAmplicon object. If NULL, 
 ##'     (default) sampleData will be added based on names of the
 ##'     \code{link{PairedReadFileSet}} and the resulting sampleData
 ##'     will (only) give names of forward and reverse file names for
@@ -119,10 +120,10 @@ addSampleData <- function (MA, sampleData=NULL) {
     } else {
         ## now merge... discard samples that are not either in the
         ## sequences or in the samples 
-        missingSeq <- rownames(sampleData)[!rownames(sampleData)%in%
-                                           rownames(MA@sampleData)]
-        missingSamples <- rownames(MA@sampleData)[!rownames(MA@sampleData)%in%
-                                              rownames(sampleData)]
+        missingSeq <- base::rownames(sampleData)[!base::rownames(sampleData)%in%
+                                           base::rownames(MA@sampleData)]
+        missingSamples <- base::rownames(MA@sampleData)[!base::rownames(MA@sampleData)%in%
+                                              base::rownames(sampleData)]
         if (length(missingSamples)>0) {
             warning(paste(length(missingSamples), "samples are missing from your",
                           "sampleData but seem to have sequence data reported.",
@@ -141,10 +142,10 @@ addSampleData <- function (MA, sampleData=NULL) {
         ##     by.cols <- c(by.cols, "readsF", "readsR")
         ## }
         by.cols <- c("row.names", 
-                     intersect(colnames(sampleData),
-                               colnames(MA@sampleData)))
+                     intersect(base::colnames(sampleData),
+                               base::colnames(MA@sampleData)))
         mSampleData <- merge(MA@sampleData, sampleData, by=by.cols)
-        rownames(mSampleData) <- mSampleData$Row.names
+        base::rownames(mSampleData) <- mSampleData$Row.names
         mSampleData$Row.names <- NULL
         SData <- new("sample_data", mSampleData)
         initialize(MA, sampleData = SData)
@@ -173,10 +174,10 @@ addSampleData <- function (MA, sampleData=NULL) {
 ##' @author Emanuel Heitlinger
 .fillSampleTables <- function (ST, samples){
     message("extracting ", length(samples), " requested samples")
-    missing.samples <- samples[!samples%in%rownames(ST)]
+    missing.samples <- samples[!samples%in%base::rownames(ST)]
     if(length(missing.samples)>0){
         fill <- matrix(0, nrow=length(missing.samples), ncol=ncol(ST))
-        rownames(fill) <- missing.samples
+        base::rownames(fill) <- missing.samples
         message("filling zeros for amplicon missing ", nrow(fill),
                 " samples ")
         full <- rbind(ST, fill)

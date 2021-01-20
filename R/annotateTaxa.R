@@ -185,5 +185,17 @@ blastTaxAnnot <- function (MA, db="nt/nt",
             new("taxonomyTable", x)
         } else {NULL}
     })
-    initialize(MA, taxonTable = taxTab.l)
+    MultiAmplicon(
+        PrimerPairsSet = MA@PrimerPairsSet,
+        PairedReadFileSet = MA@PairedReadFileSet,
+        .Data=MA@.Data,
+        stratifiedFiles = MA@stratifiedFiles,
+        sampleData = MA@sampleData,
+        derep = MA@derep,
+        dada = MA@dada,
+        mergers = MA@mergers,
+        sequenceTable = MA@sequenceTable,
+        sequenceTableNoChime = MA@sequenceTableNoChime,
+        taxonTable = taxTab.l
+    )
 }

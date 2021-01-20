@@ -5,11 +5,6 @@
 \name{MultiAmplicon-class}
 \alias{MultiAmplicon-class}
 \alias{MultiAmplicon}
-\alias{colnames,MultiAmplicon-method}
-\alias{rownames,MultiAmplicon-method}
-\alias{ncol,MultiAmplicon-method}
-\alias{nrow,MultiAmplicon-method}
-\alias{dim,MultiAmplicon-method}
 \alias{getPrimerPairsSet}
 \alias{getPairedReadFileSet}
 \alias{getRawCounts}
@@ -29,13 +24,12 @@
 \alias{[,MultiAmplicon,index,index,ANY-method}
 \alias{[,MultiAmplicon,index,missing,ANY-method}
 \alias{[,MultiAmplicon,missing,index,ANY-method}
-\alias{[,MultiAmplicon,missing,missing,ANY-method}
 \title{The central data structure of the MultiAmplicon package}
 \usage{
 MultiAmplicon(
   PrimerPairsSet = PrimerPairsSet(),
   PairedReadFileSet = PairedReadFileSet(),
-  rawCounts = matrix(ncol = 0, nrow = 0),
+  .Data = matrix(ncol = 0, nrow = 0),
   stratifiedFiles = list(),
   sampleData = new("sample_data", data.frame(row.names = names(PairedReadFileSet),
     readsF = PairedReadFileSet@readsF, readsR = PairedReadFileSet@readsF)),
@@ -46,16 +40,6 @@ MultiAmplicon(
   sequenceTableNoChime = list(),
   taxonTable = list()
 )
-
-\S4method{colnames}{MultiAmplicon}(x)
-
-\S4method{rownames}{MultiAmplicon}(x)
-
-\S4method{ncol}{MultiAmplicon}(x)
-
-\S4method{nrow}{MultiAmplicon}(x)
-
-\S4method{dim}{MultiAmplicon}(x)
 
 getPrimerPairsSet(MA)
 
@@ -94,8 +78,6 @@ getSequencesFromTable(MA)
 \S4method{[}{MultiAmplicon,index,missing,ANY}(x, i, j, ..., drop = FALSE)
 
 \S4method{[}{MultiAmplicon,missing,index,ANY}(x, i, j, ..., drop = FALSE)
-
-\S4method{[}{MultiAmplicon,missing,missing,ANY}(x, i, j, ..., drop = FALSE)
 }
 \arguments{
 \item{PrimerPairsSet}{a set of primer pairs specifiying your
@@ -104,7 +86,7 @@ amplicons see \code{\link{PrimerPairsSet-class}}}
 \item{PairedReadFileSet}{a set of paired end sequencing data files
 \code{\link{PairedReadFileSet-class}}}
 
-\item{rawCounts}{Users should not supply this parameter, the slot
+\item{.Data}{Users should not supply this parameter, the slot
 is created by \code{\link{sortAmplicons}}.}
 
 \item{stratifiedFiles}{Users should not supply this parameter, the
@@ -136,14 +118,14 @@ is created by \code{\link{blastTaxAnnot}}. It's filled with a
 list of taxonomyTable objects from
 \code{\link[phyloseq]{phyloseq}}.}
 
-\item{x}{MultiAmplicon-class object}
-
 \item{MA}{MultiAmplicon-class object}
 
 \item{simplify}{Should a list of objects be simplified to only one
 object if it has length one?}
 
 \item{object}{A \code{MultiAmplicon-class} object.}
+
+\item{x}{MultiAmplicon-class object}
 
 \item{i}{numeric, logical or names vector for subsetting rows (==
 amplicons)}
@@ -183,23 +165,15 @@ specify amplicons stored in a
 \item{\code{PairedReadFileSet}}{The (quality filtered) fastq files (one
 file pair for each sample) that store your sequencing data.}
 
-\item{\code{rownames}}{Names of the amplicons: derived from the names of
-the primer pairs. Created with the object, should not be
-supplied by the user.}
-
-\item{\code{colnames}}{Names of the samples: these are names of the
-origial fastq files. Created with the object, should not be
-supplied by the user.}
+\item{\code{.Data}}{A numeric matrix of sequencing read counts per
+amplicon and sample. Created by the function
+\code{\link{sortAmplicons}} in the MultiAmplicon pipeline.}
 
 \item{\code{sampleData}}{A sample_data object from
 \code{\link[phyloseq]{phyloseq}}. The slot is created from
-sample names (names of the \code{\link{PrimerPairsSet}} same
-as \code{colnames(MA)}) and more data can be added by
-\code{\link{addSampleData}}.}
-
-\item{\code{rawCounts}}{A numeric matrix of sequencing read counts per
-amplicon and sample. Created by the function
-\code{\link{sortAmplicons}} in the MultiAmplicon pipeline.}
+sample names (names of the \code{\link{PrimerPairsSet}}, which
+have tto be the same as \code{colnames(MA)}). More data can be
+added by \code{\link{addSampleData}}.}
 
 \item{\code{stratifiedFiles}}{temporary files as a result of stratifying
 into amplicons and samples using the MultiAmplicon pipeline
@@ -264,14 +238,19 @@ PRF <- PairedReadFileSet(Ffastq.file, Rfastq.file)
 
 MA <- MultiAmplicon(PPS, PRF)
 
+## sort into amplicons
+MA1 <- sortAmplicons(MA, filedir=tempfile(pattern = "dir"))
+
+## Only after sorting the MultiAmplicon object is really poplated
+## with sensible data, now matrix-like access to different 
+## amplicons (primer pairs) and different sequencing read files
+## (usually samples) is implemented
+
 ## the number of amplicons (primer pairs)
 nrow(MA)
 
 ## the number of samples (sequencing read file pairs)
 ncol(MA)
-
-## sort into amplicons
-MA1 <- sortAmplicons(MA, filedir=tempfile(pattern = "dir"))
 
 ## dereplication is currently not supported
 ## MA2 <- derepMulti(MA1)

@@ -277,35 +277,22 @@ taxonomizr databases.
 The [phyloseq](https://github.com/sherrillmix/taxonomizr) package
 provides impressive tools for microbiome data handling and
 analysis. We can now convert our MultiAmpicon object into a phlyoseq
-object.
+object. The `multi2Single` option controls whether we'll get a single
+phyloseq object or a list of such objects. In case of a single
+phyloseq object (`multi2Single=TRUE`) we get ASVs from diffrent
+amplicons still as seperate sequences, but all within one object. In
+case of a a list of phyloseq object (`multi2Single=FALSE`) we can
+each of the many phyloseq objects contains only ASVs from one amplicon.   
+
 
 ```{r toPhloseq, cache=TRUE} 
 ## echo=TRUE for this?
 library(phyloseq)
 
-smpls<- MA7@colnames
+PHY <- toPhyloseq(MA7, samples=colnames(MA7), multi2Single=TRUE)
+PHY.list <- toPhyloseq(MA7, samples=colnames(MA7), multi2Single=FALSE)
+PHYgenus <- tax_glom(PHY, "genus")
 
-colnames(MA7)
-
-cat("\n vignette samples:", smpls, "\n")
-
-cat("\n vignette rownames:", colnames(MA7), "\n")
-
-## PHY <- toPhyloseq(MA7, samples=smpls, multi2Single=TRUE)
-## PHY.list <- toPhyloseq(MA7, samples=smpls, multi2Single=FALSE)
-## PHYgenus <- tax_glom(PHY, "genus")
-
-## knitr::kable(table(tax_table(PHYgenus)[, "superkingdom"]))
-## knitr::kable(table(tax_table(PHYgenus)[, "phylum"]))
-```
-The `multi2Single` option controls... 
-
-```{r toPhloseqWOtax, echo=TRUE, cache=TRUE}
-## PHYWO <- toPhyloseq(MA6, samples=colnames(MA6))
-## PHYWO.list <- toPhyloseq(MA6, samples=colnames(MA6), multi2Single=FALSE)
-
-cat("\n for some strange reason toPhyloseq fails in the vignette building,
-but works in iteractive sessions... have to investigate this later.")
-
-### reminder: I should really look into something like showMethods("sample_names")
+knitr::kable(table(tax_table(PHYgenus)[, "superkingdom"]))
+knitr::kable(table(tax_table(PHYgenus)[, "phylum"]))
 ```
