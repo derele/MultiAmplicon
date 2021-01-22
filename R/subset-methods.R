@@ -42,12 +42,6 @@ setMethod("[", c("PairedReadFileSet", "index", "missing", "ANY"),
 ##' @rdname PairedDerep-class
 setMethod("[", c("PairedDerep", "index", "missing", "ANY"),
           function(x, i, j, ..., drop=TRUE){
-              if(class(i)=="logical"){
-                  i <- logical.to.numeric(i, length(x))
-              }
-              if(class(i)=="character"){
-                  i <- name.to.numeric(i, names(x))
-              }
               newF <- slot(x, "derepF")[i]
               newR <- slot(x, "derepR")[i]
               new("PairedDerep",
@@ -90,7 +84,6 @@ setMethod("[", c("PairedDada", "index", "missing", "ANY"),
 ##'     (== read files, corresponding usually to samples)
 ##' @param ... not used
 ##' @param drop should not be used
-##' @importFrom assertthat not_empty
 ##' @rdname MultiAmplicon-class
 setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
           function(x, i, j, ..., drop=FALSE){
@@ -117,14 +110,6 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                       zero.i <- which(getRawCounts(x)[i[[ii]], ]>1) # >1 singl seq rm
                       which(zero.i%in%j)
                   })
-                  ### had a HUGE BUG here when using new.jz for
-                  ### statified files, I thought this would be
-                  ### required because of the freaking "skip one"
-                  ### option in derepMulti
-                  ## new.jz <- lapply(seq_along(i), function (ii) {
-                  ##     zero.i <- which(getRawCounts(x)[i[[ii]], ]>0) # >0 zero seq rm
-                  ##     which(zero.i%in%j)
-                  ## })
                   newSF <-  lapply(seq_along(i), function (ii) {
                       x@stratifiedFiles[[i[[ii]]]][new.j[[ii]]]
                   })
@@ -191,7 +176,7 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
 ##' @rdname MultiAmplicon-class
 setMethod("[", c("MultiAmplicon", "index", "missing", "ANY"),
           function(x, i, j, ..., drop=FALSE){
-          x[i, 1:length(x@PairedReadFileSet)]    
+          x[i, seq(length(x@PairedReadFileSet))]    
           }
 )
 
@@ -199,7 +184,7 @@ setMethod("[", c("MultiAmplicon", "index", "missing", "ANY"),
 ##' @rdname MultiAmplicon-class
 setMethod("[", c("MultiAmplicon", "missing", "index", "ANY"),
           function(x, i, j, ..., drop=FALSE){
-          x[1:length(x@PrimerPairsSet), j]    
+          x[seq(length(x@PrimerPairsSet)), j]    
           }
 )
 

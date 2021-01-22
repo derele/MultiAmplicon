@@ -244,7 +244,7 @@ MA1 <- sortAmplicons(MA, filedir=tempfile(pattern = "dir"))
 ## Only after sorting the MultiAmplicon object is really poplated
 ## with sensible data, now matrix-like access to different 
 ## amplicons (primer pairs) and different sequencing read files
-## (usually samples) is implemented
+## (usually samples) is implemented.
 
 ## the number of amplicons (primer pairs)
 nrow(MA)
