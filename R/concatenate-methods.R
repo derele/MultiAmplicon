@@ -13,7 +13,7 @@
     cf
 }
 .concatenateRawCounts <- function(x, y){
-    cbind(x@rawCounts, y@rawCounts)
+    cbind(getRawCounts(x), getRawCounts(y))
 }
 
 .concatenateSampleData <- function(x, y){

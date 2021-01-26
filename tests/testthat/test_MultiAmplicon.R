@@ -344,6 +344,12 @@ test_that("Resorting produces identical output over samples", {
     })
 })
 
+context("concatenating MA objects")
+
+## concatenate(MA6[, ]
+
+
+
 
 context("Handing over to Phyloseq")
 
@@ -366,3 +372,5 @@ test_that("pipeline Summary is a data.frame", {
     expect_s3_class(getPipelineSummary(MA6), "data.frame")
     expect_s3_class(getPipelineSummary(MA3), "data.frame")
 })
+
+
