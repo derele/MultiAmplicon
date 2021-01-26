@@ -368,7 +368,7 @@ test_that("toPhyloseq multi2Single TRUE/FALSE work and give same resultsw ", {
 })
 
 context("Get the pipeline summary")
-test_that("pipeline Summary is a data.frame", {
+test_that("pipelin  Summary is a data.frame", {
     expect_s3_class(getPipelineSummary(MA6), "data.frame")
     expect_s3_class(getPipelineSummary(MA3), "data.frame")
 })

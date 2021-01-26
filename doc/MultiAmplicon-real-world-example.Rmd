@@ -2,8 +2,7 @@
 title: "MultiAmplicon - a real world example"
 author: "Emanuel Heitlinger"
 date: "`r Sys.Date()`"
-## output: rmarkdown::html_vignette
-output: pdf_document
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{MultiAmplicon - a real world example}
   %\VignetteEngine{knitr::rmarkdown}
@@ -19,17 +18,21 @@ knitr::opts_chunk$set(
 
 ## Data preparation (download and filtering)
 
-We first download the dataset consisting of 192 fastq file-pairs from
-18S and 16S amplicon sequencing of feces and intestinal contents of
-carnivores (hyenas and wolves). The help files
+We first
+[download the data](https://svalbard.biologie.hu-berlin.de:443/d/c291b870178f4abc8c59/)
+set from consisting of 192 fastq file-pairs from 18S and 16S amplicon
+sequencing of feces and intestinal contents of carnivores (hyenas and
+wolves). Use the botton on the upper right of the page to download a
+zipped folder and unzip it after downloading. The help file
+for the
 [`carnivoreSeqRuns`](https://derele.github.io/MultiAmplicon/reference/carnivoreSeqRuns.html)
-shows how this data has been downloaded from
+(containing sample data included in the package), shows how this data
+has been downloaded from
 [NCBI-SRA](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA386767).
 
-After download we can run our standard workflow. But as usual with
-real data we have to filter the input files first. This particular
-sequencing was of quite low quality, so we have to trim and screen
-quite harshly.
+Now we can run our standard workflow. But as usual with real data we
+have to filter the input files first. This particular sequencing was
+of quite low quality, so we have to trim and screen quite harshly.
 
 ```{r filter, message=FALSE}
 library(MultiAmplicon)
@@ -66,6 +69,8 @@ if(redo){
     })
 }
 
+names(filtFs) <- names(filtRs) <- samples
+
 files <- PairedReadFileSet(filtFs, filtRs)
 ```
 
@@ -79,7 +84,7 @@ if you want to know more about this you can consult
 or
 [Lesniak et al. (2017)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5269671/).
 
-```{r prepPrimers, message=FALSE, cache=TRUE}
+```{r prepPrimers, message=FALSE}
 primer.file <- system.file("extdata", "real_world_primers.csv",
                            package = "MultiAmplicon")
 
@@ -102,7 +107,7 @@ We start by sorting our amplicons by primer sequences cutting off the
 latter from sequencing reads. The directory for sorted amplicons must
 be empty before that.
 
-```{r sortAmps, message=FALSE, cache=TRUE}
+```{r sortAmps, message=FALSE}
 filedir <- "stratified_files"
 if(dir.exists(filedir)) unlink(filedir, recursive=TRUE)
 MA <- sortAmplicons(MA, n=1e+05, filedir=filedir)
@@ -127,7 +132,7 @@ massively. Therefore we have to assume that most sequences won't have
 enough overlap to merge. Now we figure out for which amplicons this is
 the case.
 
-```{r merger, message=FALSE, cache=TRUE}
+```{r merger, message=FALSE}
 MA <- mergeMulti(MA)
 
 propMerged <- MultiAmplicon::calcPropMerged(MA)
@@ -142,7 +147,7 @@ concatenating all amplicons with less than 80% merged by setting
 `justConcatenate` to `TRUE` for those.
 
 
-```{r tabulator, message=FALSE, cache=TRUE}
+```{r tabulator, mesage=FALSE}
 MA <- mergeMulti(MA, justConcatenate=propMerged<0.8)
 MA <- makeSequenceTableMulti(MA)
 MA <- removeChimeraMulti(MA)
@@ -150,48 +155,31 @@ MA <- removeChimeraMulti(MA)
 
 ## Check what happend within the pipeline 
 
-When we are done with our processing, we usually want to know what
-happened to our raw data (sequencing reads) along the MultiAmplicon/dada2 pipeline.  
-
-```{r tracking, mesage=FALSE, fig.show='hold', cache=TRUE}
+```{r tracking, mesage=FALSE, fig.show='hold'}
 tracking <- getPipelineSummary(MA)
 plotPipelineSummary(tracking)
 ```
 
 The pipeline summary tells us how many samples, how many unique
-sequences and how many sequence read pairs were recovered at different
-steps through the pipeline. It gives this information for the
-different amplicons.
+sequences and how many sequence read (pairs) in total were recovered
+through the pipeline for different amplicons.
+
+
+```{r plottrack, mesage=FALSE, fig.show='hold'}
+library(ggplot2)
+plotPipelineSummary(tracking) + scale_y_log10()
+```
 
 The output of the pipeline summary can be modified with standard
 ggplot syntax.
 
-```{r plottrack, message=FALSE, fig.show='hold', cache=TRUE}
-library(ggplot2)
-plotPipelineSummary(tracking) +
-  scale_y_log10() +
-  geom_line()
-```
 
 ## Hand over to phyloseq
 
-We haven't genereated a taxonomical annotation for this ASVs yet. oing
-so within MulitAmplicon is currently only supported on Unix systems
-(see `blastTaxAnnot`). You will need to generat a taxonomical
-annotation in one way or the other at some point, but here we
-demonstrate ho to do an export to a phyloseq object first.
-
-```{r handover, message=FALSE, cache=TRUE}
+```{r handover, mesage=FALSE}
 library(phyloseq)
 PH <- toPhyloseq(MA, samples=colnames(MA))
+PHlist <- toPhyloseq(MA, samples=colnames(MA), multi2Single=FALSE)
 ```
-We here produced a combined phyloseq object including ASVs from all
-different amplicons.
 
 ## Comparing sample data 
-
-We now can use phyloseq for one of the many supported analyses. 
-
-```{r phydiversity, message=FALSE, fig.show='hold', cache=TRUE}
-phyloseq::plot_richness(PH, measures=c("Observed", "Chao1"))
-```

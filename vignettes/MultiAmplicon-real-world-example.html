@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Emanuel Heitlinger" />
+
+<meta name="date" content="2021-01-22" />
+
+<title>MultiAmplicon - a real world example</title>
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">MultiAmplicon - a real world example</h1>
+<h4 class="author">Emanuel Heitlinger</h4>
+<h4 class="date">2021-01-22</h4>
+
+
+<div id="TOC">
+true
+</div>
+
+<div id="data-preparation-download-and-filtering" class="section level2">
+<h2>Data preparation (download and filtering)</h2>
+<p>We first download the dataset consisting of 192 fastq file-pairs from 18S and 16S amplicon sequencing of feces and intestinal contents of carnivores (hyenas and wolves). The help files <a href="https://derele.github.io/MultiAmplicon/reference/carnivoreSeqRuns.html"><code>carnivoreSeqRuns</code></a> shows how this data has been downloaded from <a href="https://www.ncbi.nlm.nih.gov/bioproject/PRJNA386767">NCBI-SRA</a>.</p>
+<p>After download we can run our standard workflow. But as usual with real data we have to filter the input files first. This particular sequencing was of quite low quality, so we have to trim and screen quite harshly.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(MultiAmplicon)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="co">## And we'll also use some dada2 functions directly</span></a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="kw">library</span>(dada2)</a>
+<a class="sourceLine" id="cb1-4" title="4">path &lt;-<span class="st"> &quot;download_sra&quot;</span> <span class="co">## change according to where you downloaded</span></a>
+<a class="sourceLine" id="cb1-5" title="5"></a>
+<a class="sourceLine" id="cb1-6" title="6">fastqFiles &lt;-<span class="st"> </span><span class="kw">list.files</span>(path, <span class="dt">pattern=</span><span class="st">&quot;.fastq.gz$&quot;</span>, <span class="dt">full.names=</span><span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb1-7" title="7"></a>
+<a class="sourceLine" id="cb1-8" title="8">fastqF &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="st">&quot;_1.fastq.gz&quot;</span>, fastqFiles, <span class="dt">value =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb1-9" title="9">fastqR &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="st">&quot;_2.fastq.gz&quot;</span>, fastqFiles, <span class="dt">value =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb1-10" title="10"></a>
+<a class="sourceLine" id="cb1-11" title="11">samples &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;_1.fastq</span><span class="ch">\\</span><span class="st">.gz&quot;</span>, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">1&quot;</span>, <span class="kw">basename</span>(fastqF))</a>
+<a class="sourceLine" id="cb1-12" title="12"></a>
+<a class="sourceLine" id="cb1-13" title="13">filt_path &lt;-<span class="st"> &quot;filtered_sra&quot;</span></a>
+<a class="sourceLine" id="cb1-14" title="14"><span class="cf">if</span>(<span class="op">!</span><span class="kw">file_test</span>(<span class="st">&quot;-d&quot;</span>, filt_path)) <span class="kw">dir.create</span>(filt_path)</a>
+<a class="sourceLine" id="cb1-15" title="15"></a>
+<a class="sourceLine" id="cb1-16" title="16">filtFs &lt;-<span class="st"> </span><span class="kw">file.path</span>(filt_path, <span class="kw">paste0</span>(samples, <span class="st">&quot;_F_filt.fastq.gz&quot;</span>))</a>
+<a class="sourceLine" id="cb1-17" title="17"><span class="kw">names</span>(filtFs) &lt;-<span class="st"> </span>samples</a>
+<a class="sourceLine" id="cb1-18" title="18">filtRs &lt;-<span class="st"> </span><span class="kw">file.path</span>(filt_path, <span class="kw">paste0</span>(samples, <span class="st">&quot;_R_filt.fastq.gz&quot;</span>))</a>
+<a class="sourceLine" id="cb1-19" title="19"><span class="kw">names</span>(filtRs) &lt;-<span class="st"> </span>samples</a>
+<a class="sourceLine" id="cb1-20" title="20"></a>
+<a class="sourceLine" id="cb1-21" title="21"><span class="co">## some files will be filtered out completely, therefore allowing 50</span></a>
+<a class="sourceLine" id="cb1-22" title="22"><span class="co">## files less present and still don't redo filtering</span></a>
+<a class="sourceLine" id="cb1-23" title="23">redo &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">file.exists</span>(fastqF)) <span class="op">-</span></a>
+<a class="sourceLine" id="cb1-24" title="24"><span class="st">    </span><span class="kw">sum</span>(<span class="kw">file.exists</span>(filtFs)) <span class="op">&gt;</span><span class="st"> </span><span class="dv">50</span></a>
+<a class="sourceLine" id="cb1-25" title="25"></a>
+<a class="sourceLine" id="cb1-26" title="26"><span class="cf">if</span>(redo){</a>
+<a class="sourceLine" id="cb1-27" title="27">    <span class="kw">lapply</span>(<span class="kw">seq_along</span>(fastqF),  <span class="cf">function</span> (i) {</a>
+<a class="sourceLine" id="cb1-28" title="28">        <span class="kw">filterAndTrim</span>(fastqF[i], filtFs[i], fastqR[i], filtRs[i],</a>
+<a class="sourceLine" id="cb1-29" title="29">                      <span class="dt">truncLen=</span><span class="kw">c</span>(<span class="dv">170</span>,<span class="dv">170</span>), <span class="dt">minLen=</span><span class="kw">c</span>(<span class="dv">170</span>,<span class="dv">170</span>), </a>
+<a class="sourceLine" id="cb1-30" title="30">                      <span class="dt">maxN=</span><span class="dv">0</span>, <span class="dt">maxEE=</span><span class="dv">2</span>, <span class="dt">truncQ=</span><span class="dv">2</span>, </a>
+<a class="sourceLine" id="cb1-31" title="31">                      <span class="dt">compress=</span><span class="ot">TRUE</span>, <span class="dt">verbose=</span><span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb1-32" title="32">    })</a>
+<a class="sourceLine" id="cb1-33" title="33">}</a>
+<a class="sourceLine" id="cb1-34" title="34"><span class="co">#&gt; Warning in filterAndTrim(fastqF[i], filtFs[i], fastqR[i], filtRs[i], truncLen = c(170, : No</span></a>
+<a class="sourceLine" id="cb1-35" title="35"><span class="co">#&gt; reads passed the filter. Please revisit your filtering parameters.</span></a>
+<a class="sourceLine" id="cb1-36" title="36"><span class="co">#&gt; [[1]]</span></a>
+<a class="sourceLine" id="cb1-37" title="37"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-38" title="38"><span class="co">#&gt; SRR5568971_1.fastq.gz   101736     47822</span></a>
+<a class="sourceLine" id="cb1-39" title="39"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-40" title="40"><span class="co">#&gt; [[2]]</span></a>
+<a class="sourceLine" id="cb1-41" title="41"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-42" title="42"><span class="co">#&gt; SRR5568972_1.fastq.gz   113340     67142</span></a>
+<a class="sourceLine" id="cb1-43" title="43"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-44" title="44"><span class="co">#&gt; [[3]]</span></a>
+<a class="sourceLine" id="cb1-45" title="45"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-46" title="46"><span class="co">#&gt; SRR5568973_1.fastq.gz    88541     49625</span></a>
+<a class="sourceLine" id="cb1-47" title="47"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-48" title="48"><span class="co">#&gt; [[4]]</span></a>
+<a class="sourceLine" id="cb1-49" title="49"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-50" title="50"><span class="co">#&gt; SRR5568974_1.fastq.gz    73511     47267</span></a>
+<a class="sourceLine" id="cb1-51" title="51"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-52" title="52"><span class="co">#&gt; [[5]]</span></a>
+<a class="sourceLine" id="cb1-53" title="53"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-54" title="54"><span class="co">#&gt; SRR5568975_1.fastq.gz   116421     67500</span></a>
+<a class="sourceLine" id="cb1-55" title="55"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-56" title="56"><span class="co">#&gt; [[6]]</span></a>
+<a class="sourceLine" id="cb1-57" title="57"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-58" title="58"><span class="co">#&gt; SRR5568976_1.fastq.gz    99141     60284</span></a>
+<a class="sourceLine" id="cb1-59" title="59"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-60" title="60"><span class="co">#&gt; [[7]]</span></a>
+<a class="sourceLine" id="cb1-61" title="61"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-62" title="62"><span class="co">#&gt; SRR5568977_1.fastq.gz    95104     53126</span></a>
+<a class="sourceLine" id="cb1-63" title="63"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-64" title="64"><span class="co">#&gt; [[8]]</span></a>
+<a class="sourceLine" id="cb1-65" title="65"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-66" title="66"><span class="co">#&gt; SRR5568978_1.fastq.gz    89793     49343</span></a>
+<a class="sourceLine" id="cb1-67" title="67"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-68" title="68"><span class="co">#&gt; [[9]]</span></a>
+<a class="sourceLine" id="cb1-69" title="69"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-70" title="70"><span class="co">#&gt; SRR5568979_1.fastq.gz    62550     31487</span></a>
+<a class="sourceLine" id="cb1-71" title="71"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-72" title="72"><span class="co">#&gt; [[10]]</span></a>
+<a class="sourceLine" id="cb1-73" title="73"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-74" title="74"><span class="co">#&gt; SRR5568980_1.fastq.gz    32153     11668</span></a>
+<a class="sourceLine" id="cb1-75" title="75"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-76" title="76"><span class="co">#&gt; [[11]]</span></a>
+<a class="sourceLine" id="cb1-77" title="77"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-78" title="78"><span class="co">#&gt; SRR5568981_1.fastq.gz   107557     80713</span></a>
+<a class="sourceLine" id="cb1-79" title="79"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-80" title="80"><span class="co">#&gt; [[12]]</span></a>
+<a class="sourceLine" id="cb1-81" title="81"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-82" title="82"><span class="co">#&gt; SRR5568982_1.fastq.gz   100809     67824</span></a>
+<a class="sourceLine" id="cb1-83" title="83"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-84" title="84"><span class="co">#&gt; [[13]]</span></a>
+<a class="sourceLine" id="cb1-85" title="85"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-86" title="86"><span class="co">#&gt; SRR5568983_1.fastq.gz   109271     80633</span></a>
+<a class="sourceLine" id="cb1-87" title="87"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-88" title="88"><span class="co">#&gt; [[14]]</span></a>
+<a class="sourceLine" id="cb1-89" title="89"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-90" title="90"><span class="co">#&gt; SRR5568984_1.fastq.gz   122204     84947</span></a>
+<a class="sourceLine" id="cb1-91" title="91"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-92" title="92"><span class="co">#&gt; [[15]]</span></a>
+<a class="sourceLine" id="cb1-93" title="93"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-94" title="94"><span class="co">#&gt; SRR5568985_1.fastq.gz    23195      2018</span></a>
+<a class="sourceLine" id="cb1-95" title="95"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-96" title="96"><span class="co">#&gt; [[16]]</span></a>
+<a class="sourceLine" id="cb1-97" title="97"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-98" title="98"><span class="co">#&gt; SRR5568986_1.fastq.gz   110413     77232</span></a>
+<a class="sourceLine" id="cb1-99" title="99"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-100" title="100"><span class="co">#&gt; [[17]]</span></a>
+<a class="sourceLine" id="cb1-101" title="101"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-102" title="102"><span class="co">#&gt; SRR5568987_1.fastq.gz   202849    166526</span></a>
+<a class="sourceLine" id="cb1-103" title="103"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-104" title="104"><span class="co">#&gt; [[18]]</span></a>
+<a class="sourceLine" id="cb1-105" title="105"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-106" title="106"><span class="co">#&gt; SRR5568988_1.fastq.gz   124904     89672</span></a>
+<a class="sourceLine" id="cb1-107" title="107"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-108" title="108"><span class="co">#&gt; [[19]]</span></a>
+<a class="sourceLine" id="cb1-109" title="109"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-110" title="110"><span class="co">#&gt; SRR5568989_1.fastq.gz   122587     89150</span></a>
+<a class="sourceLine" id="cb1-111" title="111"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-112" title="112"><span class="co">#&gt; [[20]]</span></a>
+<a class="sourceLine" id="cb1-113" title="113"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-114" title="114"><span class="co">#&gt; SRR5568990_1.fastq.gz   110915     72841</span></a>
+<a class="sourceLine" id="cb1-115" title="115"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-116" title="116"><span class="co">#&gt; [[21]]</span></a>
+<a class="sourceLine" id="cb1-117" title="117"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-118" title="118"><span class="co">#&gt; SRR5568991_1.fastq.gz   101334     75841</span></a>
+<a class="sourceLine" id="cb1-119" title="119"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-120" title="120"><span class="co">#&gt; [[22]]</span></a>
+<a class="sourceLine" id="cb1-121" title="121"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-122" title="122"><span class="co">#&gt; SRR5568992_1.fastq.gz    95878     66505</span></a>
+<a class="sourceLine" id="cb1-123" title="123"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-124" title="124"><span class="co">#&gt; [[23]]</span></a>
+<a class="sourceLine" id="cb1-125" title="125"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-126" title="126"><span class="co">#&gt; SRR5568993_1.fastq.gz   128770     79041</span></a>
+<a class="sourceLine" id="cb1-127" title="127"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-128" title="128"><span class="co">#&gt; [[24]]</span></a>
+<a class="sourceLine" id="cb1-129" title="129"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-130" title="130"><span class="co">#&gt; SRR5568994_1.fastq.gz   123157     41454</span></a>
+<a class="sourceLine" id="cb1-131" title="131"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-132" title="132"><span class="co">#&gt; [[25]]</span></a>
+<a class="sourceLine" id="cb1-133" title="133"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-134" title="134"><span class="co">#&gt; SRR5568995_1.fastq.gz   131166     82421</span></a>
+<a class="sourceLine" id="cb1-135" title="135"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-136" title="136"><span class="co">#&gt; [[26]]</span></a>
+<a class="sourceLine" id="cb1-137" title="137"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-138" title="138"><span class="co">#&gt; SRR5568996_1.fastq.gz   147484    104098</span></a>
+<a class="sourceLine" id="cb1-139" title="139"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-140" title="140"><span class="co">#&gt; [[27]]</span></a>
+<a class="sourceLine" id="cb1-141" title="141"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-142" title="142"><span class="co">#&gt; SRR5568997_1.fastq.gz   142541     98873</span></a>
+<a class="sourceLine" id="cb1-143" title="143"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-144" title="144"><span class="co">#&gt; [[28]]</span></a>
+<a class="sourceLine" id="cb1-145" title="145"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-146" title="146"><span class="co">#&gt; SRR5568998_1.fastq.gz      198        96</span></a>
+<a class="sourceLine" id="cb1-147" title="147"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-148" title="148"><span class="co">#&gt; [[29]]</span></a>
+<a class="sourceLine" id="cb1-149" title="149"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-150" title="150"><span class="co">#&gt; SRR5568999_1.fastq.gz   125528     85763</span></a>
+<a class="sourceLine" id="cb1-151" title="151"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-152" title="152"><span class="co">#&gt; [[30]]</span></a>
+<a class="sourceLine" id="cb1-153" title="153"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-154" title="154"><span class="co">#&gt; SRR5569000_1.fastq.gz   153135     95708</span></a>
+<a class="sourceLine" id="cb1-155" title="155"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-156" title="156"><span class="co">#&gt; [[31]]</span></a>
+<a class="sourceLine" id="cb1-157" title="157"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-158" title="158"><span class="co">#&gt; SRR5569001_1.fastq.gz   130988     60633</span></a>
+<a class="sourceLine" id="cb1-159" title="159"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-160" title="160"><span class="co">#&gt; [[32]]</span></a>
+<a class="sourceLine" id="cb1-161" title="161"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-162" title="162"><span class="co">#&gt; SRR5569002_1.fastq.gz   160787    112846</span></a>
+<a class="sourceLine" id="cb1-163" title="163"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-164" title="164"><span class="co">#&gt; [[33]]</span></a>
+<a class="sourceLine" id="cb1-165" title="165"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-166" title="166"><span class="co">#&gt; SRR5569003_1.fastq.gz   127253     91717</span></a>
+<a class="sourceLine" id="cb1-167" title="167"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-168" title="168"><span class="co">#&gt; [[34]]</span></a>
+<a class="sourceLine" id="cb1-169" title="169"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-170" title="170"><span class="co">#&gt; SRR5569004_1.fastq.gz   140852     95597</span></a>
+<a class="sourceLine" id="cb1-171" title="171"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-172" title="172"><span class="co">#&gt; [[35]]</span></a>
+<a class="sourceLine" id="cb1-173" title="173"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-174" title="174"><span class="co">#&gt; SRR5569005_1.fastq.gz   200748    161129</span></a>
+<a class="sourceLine" id="cb1-175" title="175"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-176" title="176"><span class="co">#&gt; [[36]]</span></a>
+<a class="sourceLine" id="cb1-177" title="177"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-178" title="178"><span class="co">#&gt; SRR5569006_1.fastq.gz    56215     43705</span></a>
+<a class="sourceLine" id="cb1-179" title="179"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-180" title="180"><span class="co">#&gt; [[37]]</span></a>
+<a class="sourceLine" id="cb1-181" title="181"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-182" title="182"><span class="co">#&gt; SRR5569007_1.fastq.gz   144865     57703</span></a>
+<a class="sourceLine" id="cb1-183" title="183"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-184" title="184"><span class="co">#&gt; [[38]]</span></a>
+<a class="sourceLine" id="cb1-185" title="185"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-186" title="186"><span class="co">#&gt; SRR5569008_1.fastq.gz   116911     80510</span></a>
+<a class="sourceLine" id="cb1-187" title="187"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-188" title="188"><span class="co">#&gt; [[39]]</span></a>
+<a class="sourceLine" id="cb1-189" title="189"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-190" title="190"><span class="co">#&gt; SRR5569009_1.fastq.gz   209824    145273</span></a>
+<a class="sourceLine" id="cb1-191" title="191"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-192" title="192"><span class="co">#&gt; [[40]]</span></a>
+<a class="sourceLine" id="cb1-193" title="193"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-194" title="194"><span class="co">#&gt; SRR5569010_1.fastq.gz   222144    165628</span></a>
+<a class="sourceLine" id="cb1-195" title="195"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-196" title="196"><span class="co">#&gt; [[41]]</span></a>
+<a class="sourceLine" id="cb1-197" title="197"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-198" title="198"><span class="co">#&gt; SRR5569011_1.fastq.gz   125527     89590</span></a>
+<a class="sourceLine" id="cb1-199" title="199"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-200" title="200"><span class="co">#&gt; [[42]]</span></a>
+<a class="sourceLine" id="cb1-201" title="201"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-202" title="202"><span class="co">#&gt; SRR5569012_1.fastq.gz   105938     76068</span></a>
+<a class="sourceLine" id="cb1-203" title="203"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-204" title="204"><span class="co">#&gt; [[43]]</span></a>
+<a class="sourceLine" id="cb1-205" title="205"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-206" title="206"><span class="co">#&gt; SRR5569013_1.fastq.gz   123155     85778</span></a>
+<a class="sourceLine" id="cb1-207" title="207"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-208" title="208"><span class="co">#&gt; [[44]]</span></a>
+<a class="sourceLine" id="cb1-209" title="209"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-210" title="210"><span class="co">#&gt; SRR5569014_1.fastq.gz   160187    114891</span></a>
+<a class="sourceLine" id="cb1-211" title="211"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-212" title="212"><span class="co">#&gt; [[45]]</span></a>
+<a class="sourceLine" id="cb1-213" title="213"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-214" title="214"><span class="co">#&gt; SRR5569015_1.fastq.gz       56        10</span></a>
+<a class="sourceLine" id="cb1-215" title="215"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-216" title="216"><span class="co">#&gt; [[46]]</span></a>
+<a class="sourceLine" id="cb1-217" title="217"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-218" title="218"><span class="co">#&gt; SRR5569016_1.fastq.gz   121833     85272</span></a>
+<a class="sourceLine" id="cb1-219" title="219"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-220" title="220"><span class="co">#&gt; [[47]]</span></a>
+<a class="sourceLine" id="cb1-221" title="221"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-222" title="222"><span class="co">#&gt; SRR5569017_1.fastq.gz   120296     81639</span></a>
+<a class="sourceLine" id="cb1-223" title="223"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-224" title="224"><span class="co">#&gt; [[48]]</span></a>
+<a class="sourceLine" id="cb1-225" title="225"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-226" title="226"><span class="co">#&gt; SRR5569018_1.fastq.gz    95111     65920</span></a>
+<a class="sourceLine" id="cb1-227" title="227"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-228" title="228"><span class="co">#&gt; [[49]]</span></a>
+<a class="sourceLine" id="cb1-229" title="229"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-230" title="230"><span class="co">#&gt; SRR5569019_1.fastq.gz   229331    169932</span></a>
+<a class="sourceLine" id="cb1-231" title="231"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-232" title="232"><span class="co">#&gt; [[50]]</span></a>
+<a class="sourceLine" id="cb1-233" title="233"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-234" title="234"><span class="co">#&gt; SRR5569020_1.fastq.gz    66918     39028</span></a>
+<a class="sourceLine" id="cb1-235" title="235"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-236" title="236"><span class="co">#&gt; [[51]]</span></a>
+<a class="sourceLine" id="cb1-237" title="237"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-238" title="238"><span class="co">#&gt; SRR5569021_1.fastq.gz   110605     71932</span></a>
+<a class="sourceLine" id="cb1-239" title="239"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-240" title="240"><span class="co">#&gt; [[52]]</span></a>
+<a class="sourceLine" id="cb1-241" title="241"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-242" title="242"><span class="co">#&gt; SRR5569022_1.fastq.gz   114342     81855</span></a>
+<a class="sourceLine" id="cb1-243" title="243"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-244" title="244"><span class="co">#&gt; [[53]]</span></a>
+<a class="sourceLine" id="cb1-245" title="245"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-246" title="246"><span class="co">#&gt; SRR5569023_1.fastq.gz    95780     64788</span></a>
+<a class="sourceLine" id="cb1-247" title="247"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-248" title="248"><span class="co">#&gt; [[54]]</span></a>
+<a class="sourceLine" id="cb1-249" title="249"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-250" title="250"><span class="co">#&gt; SRR5569024_1.fastq.gz   106329     72513</span></a>
+<a class="sourceLine" id="cb1-251" title="251"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-252" title="252"><span class="co">#&gt; [[55]]</span></a>
+<a class="sourceLine" id="cb1-253" title="253"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-254" title="254"><span class="co">#&gt; SRR5569025_1.fastq.gz    52175     31991</span></a>
+<a class="sourceLine" id="cb1-255" title="255"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-256" title="256"><span class="co">#&gt; [[56]]</span></a>
+<a class="sourceLine" id="cb1-257" title="257"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-258" title="258"><span class="co">#&gt; SRR5569026_1.fastq.gz    48764     26441</span></a>
+<a class="sourceLine" id="cb1-259" title="259"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-260" title="260"><span class="co">#&gt; [[57]]</span></a>
+<a class="sourceLine" id="cb1-261" title="261"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-262" title="262"><span class="co">#&gt; SRR5569027_1.fastq.gz    51943     22300</span></a>
+<a class="sourceLine" id="cb1-263" title="263"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-264" title="264"><span class="co">#&gt; [[58]]</span></a>
+<a class="sourceLine" id="cb1-265" title="265"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-266" title="266"><span class="co">#&gt; SRR5569028_1.fastq.gz   143904     85490</span></a>
+<a class="sourceLine" id="cb1-267" title="267"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-268" title="268"><span class="co">#&gt; [[59]]</span></a>
+<a class="sourceLine" id="cb1-269" title="269"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-270" title="270"><span class="co">#&gt; SRR5569029_1.fastq.gz    86964     59294</span></a>
+<a class="sourceLine" id="cb1-271" title="271"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-272" title="272"><span class="co">#&gt; [[60]]</span></a>
+<a class="sourceLine" id="cb1-273" title="273"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-274" title="274"><span class="co">#&gt; SRR5569030_1.fastq.gz   115261     86470</span></a>
+<a class="sourceLine" id="cb1-275" title="275"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-276" title="276"><span class="co">#&gt; [[61]]</span></a>
+<a class="sourceLine" id="cb1-277" title="277"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-278" title="278"><span class="co">#&gt; SRR5569031_1.fastq.gz    98717     72132</span></a>
+<a class="sourceLine" id="cb1-279" title="279"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-280" title="280"><span class="co">#&gt; [[62]]</span></a>
+<a class="sourceLine" id="cb1-281" title="281"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-282" title="282"><span class="co">#&gt; SRR5569032_1.fastq.gz    32799     10659</span></a>
+<a class="sourceLine" id="cb1-283" title="283"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-284" title="284"><span class="co">#&gt; [[63]]</span></a>
+<a class="sourceLine" id="cb1-285" title="285"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-286" title="286"><span class="co">#&gt; SRR5569033_1.fastq.gz    87432     53866</span></a>
+<a class="sourceLine" id="cb1-287" title="287"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-288" title="288"><span class="co">#&gt; [[64]]</span></a>
+<a class="sourceLine" id="cb1-289" title="289"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-290" title="290"><span class="co">#&gt; SRR5569034_1.fastq.gz    50564     28787</span></a>
+<a class="sourceLine" id="cb1-291" title="291"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-292" title="292"><span class="co">#&gt; [[65]]</span></a>
+<a class="sourceLine" id="cb1-293" title="293"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-294" title="294"><span class="co">#&gt; SRR5569035_1.fastq.gz   130312     81518</span></a>
+<a class="sourceLine" id="cb1-295" title="295"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-296" title="296"><span class="co">#&gt; [[66]]</span></a>
+<a class="sourceLine" id="cb1-297" title="297"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-298" title="298"><span class="co">#&gt; SRR5569036_1.fastq.gz    84913     55362</span></a>
+<a class="sourceLine" id="cb1-299" title="299"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-300" title="300"><span class="co">#&gt; [[67]]</span></a>
+<a class="sourceLine" id="cb1-301" title="301"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-302" title="302"><span class="co">#&gt; SRR5569037_1.fastq.gz    76519     47047</span></a>
+<a class="sourceLine" id="cb1-303" title="303"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-304" title="304"><span class="co">#&gt; [[68]]</span></a>
+<a class="sourceLine" id="cb1-305" title="305"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-306" title="306"><span class="co">#&gt; SRR5569038_1.fastq.gz    81189     51909</span></a>
+<a class="sourceLine" id="cb1-307" title="307"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-308" title="308"><span class="co">#&gt; [[69]]</span></a>
+<a class="sourceLine" id="cb1-309" title="309"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-310" title="310"><span class="co">#&gt; SRR5569039_1.fastq.gz    72073     43624</span></a>
+<a class="sourceLine" id="cb1-311" title="311"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-312" title="312"><span class="co">#&gt; [[70]]</span></a>
+<a class="sourceLine" id="cb1-313" title="313"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-314" title="314"><span class="co">#&gt; SRR5569040_1.fastq.gz    74435     47831</span></a>
+<a class="sourceLine" id="cb1-315" title="315"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-316" title="316"><span class="co">#&gt; [[71]]</span></a>
+<a class="sourceLine" id="cb1-317" title="317"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-318" title="318"><span class="co">#&gt; SRR5569041_1.fastq.gz    81900     48368</span></a>
+<a class="sourceLine" id="cb1-319" title="319"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-320" title="320"><span class="co">#&gt; [[72]]</span></a>
+<a class="sourceLine" id="cb1-321" title="321"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-322" title="322"><span class="co">#&gt; SRR5569042_1.fastq.gz    71194     36592</span></a>
+<a class="sourceLine" id="cb1-323" title="323"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-324" title="324"><span class="co">#&gt; [[73]]</span></a>
+<a class="sourceLine" id="cb1-325" title="325"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-326" title="326"><span class="co">#&gt; SRR5569043_1.fastq.gz   129092     87468</span></a>
+<a class="sourceLine" id="cb1-327" title="327"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-328" title="328"><span class="co">#&gt; [[74]]</span></a>
+<a class="sourceLine" id="cb1-329" title="329"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-330" title="330"><span class="co">#&gt; SRR5569044_1.fastq.gz    85458     58630</span></a>
+<a class="sourceLine" id="cb1-331" title="331"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-332" title="332"><span class="co">#&gt; [[75]]</span></a>
+<a class="sourceLine" id="cb1-333" title="333"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-334" title="334"><span class="co">#&gt; SRR5569045_1.fastq.gz   116056     81225</span></a>
+<a class="sourceLine" id="cb1-335" title="335"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-336" title="336"><span class="co">#&gt; [[76]]</span></a>
+<a class="sourceLine" id="cb1-337" title="337"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-338" title="338"><span class="co">#&gt; SRR5569046_1.fastq.gz   210190    156217</span></a>
+<a class="sourceLine" id="cb1-339" title="339"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-340" title="340"><span class="co">#&gt; [[77]]</span></a>
+<a class="sourceLine" id="cb1-341" title="341"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-342" title="342"><span class="co">#&gt; SRR5569047_1.fastq.gz    77126     47707</span></a>
+<a class="sourceLine" id="cb1-343" title="343"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-344" title="344"><span class="co">#&gt; [[78]]</span></a>
+<a class="sourceLine" id="cb1-345" title="345"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-346" title="346"><span class="co">#&gt; SRR5569048_1.fastq.gz   137519     95046</span></a>
+<a class="sourceLine" id="cb1-347" title="347"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-348" title="348"><span class="co">#&gt; [[79]]</span></a>
+<a class="sourceLine" id="cb1-349" title="349"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-350" title="350"><span class="co">#&gt; SRR5569049_1.fastq.gz    61285       207</span></a>
+<a class="sourceLine" id="cb1-351" title="351"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-352" title="352"><span class="co">#&gt; [[80]]</span></a>
+<a class="sourceLine" id="cb1-353" title="353"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-354" title="354"><span class="co">#&gt; SRR5569050_1.fastq.gz    42059       230</span></a>
+<a class="sourceLine" id="cb1-355" title="355"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-356" title="356"><span class="co">#&gt; [[81]]</span></a>
+<a class="sourceLine" id="cb1-357" title="357"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-358" title="358"><span class="co">#&gt; SRR5569051_1.fastq.gz   111781     79344</span></a>
+<a class="sourceLine" id="cb1-359" title="359"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-360" title="360"><span class="co">#&gt; [[82]]</span></a>
+<a class="sourceLine" id="cb1-361" title="361"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-362" title="362"><span class="co">#&gt; SRR5569052_1.fastq.gz   138245     95298</span></a>
+<a class="sourceLine" id="cb1-363" title="363"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-364" title="364"><span class="co">#&gt; [[83]]</span></a>
+<a class="sourceLine" id="cb1-365" title="365"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-366" title="366"><span class="co">#&gt; SRR5569053_1.fastq.gz   127574     89000</span></a>
+<a class="sourceLine" id="cb1-367" title="367"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-368" title="368"><span class="co">#&gt; [[84]]</span></a>
+<a class="sourceLine" id="cb1-369" title="369"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-370" title="370"><span class="co">#&gt; SRR5569054_1.fastq.gz    47035     17140</span></a>
+<a class="sourceLine" id="cb1-371" title="371"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-372" title="372"><span class="co">#&gt; [[85]]</span></a>
+<a class="sourceLine" id="cb1-373" title="373"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-374" title="374"><span class="co">#&gt; SRR5569055_1.fastq.gz    26135       687</span></a>
+<a class="sourceLine" id="cb1-375" title="375"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-376" title="376"><span class="co">#&gt; [[86]]</span></a>
+<a class="sourceLine" id="cb1-377" title="377"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-378" title="378"><span class="co">#&gt; SRR5569056_1.fastq.gz   147448    112561</span></a>
+<a class="sourceLine" id="cb1-379" title="379"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-380" title="380"><span class="co">#&gt; [[87]]</span></a>
+<a class="sourceLine" id="cb1-381" title="381"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-382" title="382"><span class="co">#&gt; SRR5569057_1.fastq.gz    45482     28580</span></a>
+<a class="sourceLine" id="cb1-383" title="383"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-384" title="384"><span class="co">#&gt; [[88]]</span></a>
+<a class="sourceLine" id="cb1-385" title="385"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-386" title="386"><span class="co">#&gt; SRR5569058_1.fastq.gz    83007     53244</span></a>
+<a class="sourceLine" id="cb1-387" title="387"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-388" title="388"><span class="co">#&gt; [[89]]</span></a>
+<a class="sourceLine" id="cb1-389" title="389"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-390" title="390"><span class="co">#&gt; SRR5569059_1.fastq.gz    49233       208</span></a>
+<a class="sourceLine" id="cb1-391" title="391"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-392" title="392"><span class="co">#&gt; [[90]]</span></a>
+<a class="sourceLine" id="cb1-393" title="393"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-394" title="394"><span class="co">#&gt; SRR5569060_1.fastq.gz   103043     54379</span></a>
+<a class="sourceLine" id="cb1-395" title="395"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-396" title="396"><span class="co">#&gt; [[91]]</span></a>
+<a class="sourceLine" id="cb1-397" title="397"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-398" title="398"><span class="co">#&gt; SRR5569061_1.fastq.gz   179438    107458</span></a>
+<a class="sourceLine" id="cb1-399" title="399"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-400" title="400"><span class="co">#&gt; [[92]]</span></a>
+<a class="sourceLine" id="cb1-401" title="401"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-402" title="402"><span class="co">#&gt; SRR5569062_1.fastq.gz   130427     73160</span></a>
+<a class="sourceLine" id="cb1-403" title="403"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-404" title="404"><span class="co">#&gt; [[93]]</span></a>
+<a class="sourceLine" id="cb1-405" title="405"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-406" title="406"><span class="co">#&gt; SRR5569063_1.fastq.gz    70730     39296</span></a>
+<a class="sourceLine" id="cb1-407" title="407"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-408" title="408"><span class="co">#&gt; [[94]]</span></a>
+<a class="sourceLine" id="cb1-409" title="409"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-410" title="410"><span class="co">#&gt; SRR5569064_1.fastq.gz   116888     78974</span></a>
+<a class="sourceLine" id="cb1-411" title="411"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-412" title="412"><span class="co">#&gt; [[95]]</span></a>
+<a class="sourceLine" id="cb1-413" title="413"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-414" title="414"><span class="co">#&gt; SRR5569065_1.fastq.gz   105477     73565</span></a>
+<a class="sourceLine" id="cb1-415" title="415"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-416" title="416"><span class="co">#&gt; [[96]]</span></a>
+<a class="sourceLine" id="cb1-417" title="417"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-418" title="418"><span class="co">#&gt; SRR5569066_1.fastq.gz    99856     72343</span></a>
+<a class="sourceLine" id="cb1-419" title="419"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-420" title="420"><span class="co">#&gt; [[97]]</span></a>
+<a class="sourceLine" id="cb1-421" title="421"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-422" title="422"><span class="co">#&gt; SRR5569067_1.fastq.gz   111871     77198</span></a>
+<a class="sourceLine" id="cb1-423" title="423"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-424" title="424"><span class="co">#&gt; [[98]]</span></a>
+<a class="sourceLine" id="cb1-425" title="425"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-426" title="426"><span class="co">#&gt; SRR5569068_1.fastq.gz   129686     96297</span></a>
+<a class="sourceLine" id="cb1-427" title="427"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-428" title="428"><span class="co">#&gt; [[99]]</span></a>
+<a class="sourceLine" id="cb1-429" title="429"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-430" title="430"><span class="co">#&gt; SRR5569069_1.fastq.gz   117877     88112</span></a>
+<a class="sourceLine" id="cb1-431" title="431"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-432" title="432"><span class="co">#&gt; [[100]]</span></a>
+<a class="sourceLine" id="cb1-433" title="433"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-434" title="434"><span class="co">#&gt; SRR5569070_1.fastq.gz   120127     81125</span></a>
+<a class="sourceLine" id="cb1-435" title="435"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-436" title="436"><span class="co">#&gt; [[101]]</span></a>
+<a class="sourceLine" id="cb1-437" title="437"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-438" title="438"><span class="co">#&gt; SRR5569071_1.fastq.gz   115661     84829</span></a>
+<a class="sourceLine" id="cb1-439" title="439"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-440" title="440"><span class="co">#&gt; [[102]]</span></a>
+<a class="sourceLine" id="cb1-441" title="441"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-442" title="442"><span class="co">#&gt; SRR5569072_1.fastq.gz    97981     69048</span></a>
+<a class="sourceLine" id="cb1-443" title="443"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-444" title="444"><span class="co">#&gt; [[103]]</span></a>
+<a class="sourceLine" id="cb1-445" title="445"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-446" title="446"><span class="co">#&gt; SRR5569073_1.fastq.gz    80910     44430</span></a>
+<a class="sourceLine" id="cb1-447" title="447"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-448" title="448"><span class="co">#&gt; [[104]]</span></a>
+<a class="sourceLine" id="cb1-449" title="449"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-450" title="450"><span class="co">#&gt; SRR5569074_1.fastq.gz   104251     75388</span></a>
+<a class="sourceLine" id="cb1-451" title="451"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-452" title="452"><span class="co">#&gt; [[105]]</span></a>
+<a class="sourceLine" id="cb1-453" title="453"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-454" title="454"><span class="co">#&gt; SRR5569075_1.fastq.gz   117732     90416</span></a>
+<a class="sourceLine" id="cb1-455" title="455"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-456" title="456"><span class="co">#&gt; [[106]]</span></a>
+<a class="sourceLine" id="cb1-457" title="457"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-458" title="458"><span class="co">#&gt; SRR5569076_1.fastq.gz   111935     81010</span></a>
+<a class="sourceLine" id="cb1-459" title="459"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-460" title="460"><span class="co">#&gt; [[107]]</span></a>
+<a class="sourceLine" id="cb1-461" title="461"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-462" title="462"><span class="co">#&gt; SRR5569077_1.fastq.gz   137369     80628</span></a>
+<a class="sourceLine" id="cb1-463" title="463"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-464" title="464"><span class="co">#&gt; [[108]]</span></a>
+<a class="sourceLine" id="cb1-465" title="465"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-466" title="466"><span class="co">#&gt; SRR5569078_1.fastq.gz   100247     64504</span></a>
+<a class="sourceLine" id="cb1-467" title="467"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-468" title="468"><span class="co">#&gt; [[109]]</span></a>
+<a class="sourceLine" id="cb1-469" title="469"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-470" title="470"><span class="co">#&gt; SRR5569079_1.fastq.gz   100948     68398</span></a>
+<a class="sourceLine" id="cb1-471" title="471"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-472" title="472"><span class="co">#&gt; [[110]]</span></a>
+<a class="sourceLine" id="cb1-473" title="473"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-474" title="474"><span class="co">#&gt; SRR5569080_1.fastq.gz    77979     46152</span></a>
+<a class="sourceLine" id="cb1-475" title="475"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-476" title="476"><span class="co">#&gt; [[111]]</span></a>
+<a class="sourceLine" id="cb1-477" title="477"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-478" title="478"><span class="co">#&gt; SRR5569081_1.fastq.gz   119121     87273</span></a>
+<a class="sourceLine" id="cb1-479" title="479"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-480" title="480"><span class="co">#&gt; [[112]]</span></a>
+<a class="sourceLine" id="cb1-481" title="481"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-482" title="482"><span class="co">#&gt; SRR5569082_1.fastq.gz    23420      5189</span></a>
+<a class="sourceLine" id="cb1-483" title="483"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-484" title="484"><span class="co">#&gt; [[113]]</span></a>
+<a class="sourceLine" id="cb1-485" title="485"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-486" title="486"><span class="co">#&gt; SRR5569083_1.fastq.gz   102118     69199</span></a>
+<a class="sourceLine" id="cb1-487" title="487"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-488" title="488"><span class="co">#&gt; [[114]]</span></a>
+<a class="sourceLine" id="cb1-489" title="489"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-490" title="490"><span class="co">#&gt; SRR5569084_1.fastq.gz   150289     57895</span></a>
+<a class="sourceLine" id="cb1-491" title="491"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-492" title="492"><span class="co">#&gt; [[115]]</span></a>
+<a class="sourceLine" id="cb1-493" title="493"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-494" title="494"><span class="co">#&gt; SRR5569085_1.fastq.gz   102999     57531</span></a>
+<a class="sourceLine" id="cb1-495" title="495"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-496" title="496"><span class="co">#&gt; [[116]]</span></a>
+<a class="sourceLine" id="cb1-497" title="497"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-498" title="498"><span class="co">#&gt; SRR5569086_1.fastq.gz   160132     60304</span></a>
+<a class="sourceLine" id="cb1-499" title="499"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-500" title="500"><span class="co">#&gt; [[117]]</span></a>
+<a class="sourceLine" id="cb1-501" title="501"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-502" title="502"><span class="co">#&gt; SRR5569087_1.fastq.gz   111164     82698</span></a>
+<a class="sourceLine" id="cb1-503" title="503"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-504" title="504"><span class="co">#&gt; [[118]]</span></a>
+<a class="sourceLine" id="cb1-505" title="505"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-506" title="506"><span class="co">#&gt; SRR5569088_1.fastq.gz   120992     86896</span></a>
+<a class="sourceLine" id="cb1-507" title="507"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-508" title="508"><span class="co">#&gt; [[119]]</span></a>
+<a class="sourceLine" id="cb1-509" title="509"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-510" title="510"><span class="co">#&gt; SRR5569089_1.fastq.gz   123091     86706</span></a>
+<a class="sourceLine" id="cb1-511" title="511"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-512" title="512"><span class="co">#&gt; [[120]]</span></a>
+<a class="sourceLine" id="cb1-513" title="513"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-514" title="514"><span class="co">#&gt; SRR5569090_1.fastq.gz   119693     80969</span></a>
+<a class="sourceLine" id="cb1-515" title="515"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-516" title="516"><span class="co">#&gt; [[121]]</span></a>
+<a class="sourceLine" id="cb1-517" title="517"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-518" title="518"><span class="co">#&gt; SRR5569091_1.fastq.gz   100839     69545</span></a>
+<a class="sourceLine" id="cb1-519" title="519"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-520" title="520"><span class="co">#&gt; [[122]]</span></a>
+<a class="sourceLine" id="cb1-521" title="521"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-522" title="522"><span class="co">#&gt; SRR5569092_1.fastq.gz    92210     63642</span></a>
+<a class="sourceLine" id="cb1-523" title="523"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-524" title="524"><span class="co">#&gt; [[123]]</span></a>
+<a class="sourceLine" id="cb1-525" title="525"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-526" title="526"><span class="co">#&gt; SRR5569093_1.fastq.gz    55233     30583</span></a>
+<a class="sourceLine" id="cb1-527" title="527"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-528" title="528"><span class="co">#&gt; [[124]]</span></a>
+<a class="sourceLine" id="cb1-529" title="529"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-530" title="530"><span class="co">#&gt; SRR5569094_1.fastq.gz   115445     82091</span></a>
+<a class="sourceLine" id="cb1-531" title="531"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-532" title="532"><span class="co">#&gt; [[125]]</span></a>
+<a class="sourceLine" id="cb1-533" title="533"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-534" title="534"><span class="co">#&gt; SRR5569095_1.fastq.gz    91359     66402</span></a>
+<a class="sourceLine" id="cb1-535" title="535"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-536" title="536"><span class="co">#&gt; [[126]]</span></a>
+<a class="sourceLine" id="cb1-537" title="537"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-538" title="538"><span class="co">#&gt; SRR5569096_1.fastq.gz    54802     32419</span></a>
+<a class="sourceLine" id="cb1-539" title="539"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-540" title="540"><span class="co">#&gt; [[127]]</span></a>
+<a class="sourceLine" id="cb1-541" title="541"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-542" title="542"><span class="co">#&gt; SRR5569097_1.fastq.gz   107058     72810</span></a>
+<a class="sourceLine" id="cb1-543" title="543"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-544" title="544"><span class="co">#&gt; [[128]]</span></a>
+<a class="sourceLine" id="cb1-545" title="545"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-546" title="546"><span class="co">#&gt; SRR5569098_1.fastq.gz   132261     90152</span></a>
+<a class="sourceLine" id="cb1-547" title="547"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-548" title="548"><span class="co">#&gt; [[129]]</span></a>
+<a class="sourceLine" id="cb1-549" title="549"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-550" title="550"><span class="co">#&gt; SRR5569099_1.fastq.gz   105888     74080</span></a>
+<a class="sourceLine" id="cb1-551" title="551"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-552" title="552"><span class="co">#&gt; [[130]]</span></a>
+<a class="sourceLine" id="cb1-553" title="553"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-554" title="554"><span class="co">#&gt; SRR5569100_1.fastq.gz   108817     81504</span></a>
+<a class="sourceLine" id="cb1-555" title="555"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-556" title="556"><span class="co">#&gt; [[131]]</span></a>
+<a class="sourceLine" id="cb1-557" title="557"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-558" title="558"><span class="co">#&gt; SRR5569101_1.fastq.gz   159541    100442</span></a>
+<a class="sourceLine" id="cb1-559" title="559"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-560" title="560"><span class="co">#&gt; [[132]]</span></a>
+<a class="sourceLine" id="cb1-561" title="561"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-562" title="562"><span class="co">#&gt; SRR5569102_1.fastq.gz   106858     74806</span></a>
+<a class="sourceLine" id="cb1-563" title="563"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-564" title="564"><span class="co">#&gt; [[133]]</span></a>
+<a class="sourceLine" id="cb1-565" title="565"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-566" title="566"><span class="co">#&gt; SRR5569103_1.fastq.gz    90458     67868</span></a>
+<a class="sourceLine" id="cb1-567" title="567"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-568" title="568"><span class="co">#&gt; [[134]]</span></a>
+<a class="sourceLine" id="cb1-569" title="569"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-570" title="570"><span class="co">#&gt; SRR5569104_1.fastq.gz    97093     70293</span></a>
+<a class="sourceLine" id="cb1-571" title="571"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-572" title="572"><span class="co">#&gt; [[135]]</span></a>
+<a class="sourceLine" id="cb1-573" title="573"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-574" title="574"><span class="co">#&gt; SRR5569105_1.fastq.gz   100670     68679</span></a>
+<a class="sourceLine" id="cb1-575" title="575"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-576" title="576"><span class="co">#&gt; [[136]]</span></a>
+<a class="sourceLine" id="cb1-577" title="577"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-578" title="578"><span class="co">#&gt; SRR5569106_1.fastq.gz   101910     65625</span></a>
+<a class="sourceLine" id="cb1-579" title="579"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-580" title="580"><span class="co">#&gt; [[137]]</span></a>
+<a class="sourceLine" id="cb1-581" title="581"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-582" title="582"><span class="co">#&gt; SRR5569107_1.fastq.gz    86866     62236</span></a>
+<a class="sourceLine" id="cb1-583" title="583"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-584" title="584"><span class="co">#&gt; [[138]]</span></a>
+<a class="sourceLine" id="cb1-585" title="585"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-586" title="586"><span class="co">#&gt; SRR5569108_1.fastq.gz   107288     77959</span></a>
+<a class="sourceLine" id="cb1-587" title="587"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-588" title="588"><span class="co">#&gt; [[139]]</span></a>
+<a class="sourceLine" id="cb1-589" title="589"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-590" title="590"><span class="co">#&gt; SRR5569109_1.fastq.gz    87253     65608</span></a>
+<a class="sourceLine" id="cb1-591" title="591"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-592" title="592"><span class="co">#&gt; [[140]]</span></a>
+<a class="sourceLine" id="cb1-593" title="593"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-594" title="594"><span class="co">#&gt; SRR5569110_1.fastq.gz    99185     74781</span></a>
+<a class="sourceLine" id="cb1-595" title="595"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-596" title="596"><span class="co">#&gt; [[141]]</span></a>
+<a class="sourceLine" id="cb1-597" title="597"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-598" title="598"><span class="co">#&gt; SRR5569111_1.fastq.gz    93080     65506</span></a>
+<a class="sourceLine" id="cb1-599" title="599"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-600" title="600"><span class="co">#&gt; [[142]]</span></a>
+<a class="sourceLine" id="cb1-601" title="601"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-602" title="602"><span class="co">#&gt; SRR5569112_1.fastq.gz    84167     60057</span></a>
+<a class="sourceLine" id="cb1-603" title="603"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-604" title="604"><span class="co">#&gt; [[143]]</span></a>
+<a class="sourceLine" id="cb1-605" title="605"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-606" title="606"><span class="co">#&gt; SRR5569113_1.fastq.gz    90029     55022</span></a>
+<a class="sourceLine" id="cb1-607" title="607"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-608" title="608"><span class="co">#&gt; [[144]]</span></a>
+<a class="sourceLine" id="cb1-609" title="609"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-610" title="610"><span class="co">#&gt; SRR5569114_1.fastq.gz    97581     61158</span></a>
+<a class="sourceLine" id="cb1-611" title="611"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-612" title="612"><span class="co">#&gt; [[145]]</span></a>
+<a class="sourceLine" id="cb1-613" title="613"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-614" title="614"><span class="co">#&gt; SRR5569115_1.fastq.gz    38950     16895</span></a>
+<a class="sourceLine" id="cb1-615" title="615"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-616" title="616"><span class="co">#&gt; [[146]]</span></a>
+<a class="sourceLine" id="cb1-617" title="617"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-618" title="618"><span class="co">#&gt; SRR5569116_1.fastq.gz    65887       219</span></a>
+<a class="sourceLine" id="cb1-619" title="619"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-620" title="620"><span class="co">#&gt; [[147]]</span></a>
+<a class="sourceLine" id="cb1-621" title="621"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-622" title="622"><span class="co">#&gt; SRR5569117_1.fastq.gz   137421     78701</span></a>
+<a class="sourceLine" id="cb1-623" title="623"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-624" title="624"><span class="co">#&gt; [[148]]</span></a>
+<a class="sourceLine" id="cb1-625" title="625"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-626" title="626"><span class="co">#&gt; SRR5569118_1.fastq.gz   134141     80220</span></a>
+<a class="sourceLine" id="cb1-627" title="627"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-628" title="628"><span class="co">#&gt; [[149]]</span></a>
+<a class="sourceLine" id="cb1-629" title="629"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-630" title="630"><span class="co">#&gt; SRR5569119_1.fastq.gz       45         9</span></a>
+<a class="sourceLine" id="cb1-631" title="631"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-632" title="632"><span class="co">#&gt; [[150]]</span></a>
+<a class="sourceLine" id="cb1-633" title="633"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-634" title="634"><span class="co">#&gt; SRR5569120_1.fastq.gz   115344     69057</span></a>
+<a class="sourceLine" id="cb1-635" title="635"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-636" title="636"><span class="co">#&gt; [[151]]</span></a>
+<a class="sourceLine" id="cb1-637" title="637"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-638" title="638"><span class="co">#&gt; SRR5569121_1.fastq.gz   166525    120203</span></a>
+<a class="sourceLine" id="cb1-639" title="639"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-640" title="640"><span class="co">#&gt; [[152]]</span></a>
+<a class="sourceLine" id="cb1-641" title="641"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-642" title="642"><span class="co">#&gt; SRR5569122_1.fastq.gz   255078    150074</span></a>
+<a class="sourceLine" id="cb1-643" title="643"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-644" title="644"><span class="co">#&gt; [[153]]</span></a>
+<a class="sourceLine" id="cb1-645" title="645"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-646" title="646"><span class="co">#&gt; SRR5569123_1.fastq.gz   237982    129987</span></a>
+<a class="sourceLine" id="cb1-647" title="647"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-648" title="648"><span class="co">#&gt; [[154]]</span></a>
+<a class="sourceLine" id="cb1-649" title="649"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-650" title="650"><span class="co">#&gt; SRR5569124_1.fastq.gz   306525    155332</span></a>
+<a class="sourceLine" id="cb1-651" title="651"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-652" title="652"><span class="co">#&gt; [[155]]</span></a>
+<a class="sourceLine" id="cb1-653" title="653"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-654" title="654"><span class="co">#&gt; SRR5569125_1.fastq.gz   283027    183335</span></a>
+<a class="sourceLine" id="cb1-655" title="655"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-656" title="656"><span class="co">#&gt; [[156]]</span></a>
+<a class="sourceLine" id="cb1-657" title="657"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-658" title="658"><span class="co">#&gt; SRR5569126_1.fastq.gz   140873     91095</span></a>
+<a class="sourceLine" id="cb1-659" title="659"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-660" title="660"><span class="co">#&gt; [[157]]</span></a>
+<a class="sourceLine" id="cb1-661" title="661"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-662" title="662"><span class="co">#&gt; SRR5569127_1.fastq.gz       20         0</span></a>
+<a class="sourceLine" id="cb1-663" title="663"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-664" title="664"><span class="co">#&gt; [[158]]</span></a>
+<a class="sourceLine" id="cb1-665" title="665"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-666" title="666"><span class="co">#&gt; SRR5569128_1.fastq.gz    97941     56220</span></a>
+<a class="sourceLine" id="cb1-667" title="667"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-668" title="668"><span class="co">#&gt; [[159]]</span></a>
+<a class="sourceLine" id="cb1-669" title="669"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-670" title="670"><span class="co">#&gt; SRR5569129_1.fastq.gz    94652     59788</span></a>
+<a class="sourceLine" id="cb1-671" title="671"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-672" title="672"><span class="co">#&gt; [[160]]</span></a>
+<a class="sourceLine" id="cb1-673" title="673"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-674" title="674"><span class="co">#&gt; SRR5569130_1.fastq.gz   208311    132820</span></a>
+<a class="sourceLine" id="cb1-675" title="675"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-676" title="676"><span class="co">#&gt; [[161]]</span></a>
+<a class="sourceLine" id="cb1-677" title="677"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-678" title="678"><span class="co">#&gt; SRR5569131_1.fastq.gz   118145     54720</span></a>
+<a class="sourceLine" id="cb1-679" title="679"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-680" title="680"><span class="co">#&gt; [[162]]</span></a>
+<a class="sourceLine" id="cb1-681" title="681"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-682" title="682"><span class="co">#&gt; SRR5569132_1.fastq.gz   170762    102788</span></a>
+<a class="sourceLine" id="cb1-683" title="683"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-684" title="684"><span class="co">#&gt; [[163]]</span></a>
+<a class="sourceLine" id="cb1-685" title="685"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-686" title="686"><span class="co">#&gt; SRR5569133_1.fastq.gz   109638     71178</span></a>
+<a class="sourceLine" id="cb1-687" title="687"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-688" title="688"><span class="co">#&gt; [[164]]</span></a>
+<a class="sourceLine" id="cb1-689" title="689"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-690" title="690"><span class="co">#&gt; SRR5569134_1.fastq.gz   117705     84279</span></a>
+<a class="sourceLine" id="cb1-691" title="691"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-692" title="692"><span class="co">#&gt; [[165]]</span></a>
+<a class="sourceLine" id="cb1-693" title="693"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-694" title="694"><span class="co">#&gt; SRR5569135_1.fastq.gz   133511     70898</span></a>
+<a class="sourceLine" id="cb1-695" title="695"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-696" title="696"><span class="co">#&gt; [[166]]</span></a>
+<a class="sourceLine" id="cb1-697" title="697"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-698" title="698"><span class="co">#&gt; SRR5569136_1.fastq.gz   133488     97709</span></a>
+<a class="sourceLine" id="cb1-699" title="699"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-700" title="700"><span class="co">#&gt; [[167]]</span></a>
+<a class="sourceLine" id="cb1-701" title="701"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-702" title="702"><span class="co">#&gt; SRR5569137_1.fastq.gz   141771    105703</span></a>
+<a class="sourceLine" id="cb1-703" title="703"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-704" title="704"><span class="co">#&gt; [[168]]</span></a>
+<a class="sourceLine" id="cb1-705" title="705"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-706" title="706"><span class="co">#&gt; SRR5569138_1.fastq.gz   141641     98467</span></a>
+<a class="sourceLine" id="cb1-707" title="707"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-708" title="708"><span class="co">#&gt; [[169]]</span></a>
+<a class="sourceLine" id="cb1-709" title="709"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-710" title="710"><span class="co">#&gt; SRR5569139_1.fastq.gz   126247     95720</span></a>
+<a class="sourceLine" id="cb1-711" title="711"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-712" title="712"><span class="co">#&gt; [[170]]</span></a>
+<a class="sourceLine" id="cb1-713" title="713"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-714" title="714"><span class="co">#&gt; SRR5569140_1.fastq.gz   133093     98378</span></a>
+<a class="sourceLine" id="cb1-715" title="715"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-716" title="716"><span class="co">#&gt; [[171]]</span></a>
+<a class="sourceLine" id="cb1-717" title="717"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-718" title="718"><span class="co">#&gt; SRR5569141_1.fastq.gz    95893     68966</span></a>
+<a class="sourceLine" id="cb1-719" title="719"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-720" title="720"><span class="co">#&gt; [[172]]</span></a>
+<a class="sourceLine" id="cb1-721" title="721"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-722" title="722"><span class="co">#&gt; SRR5569142_1.fastq.gz   131039     91191</span></a>
+<a class="sourceLine" id="cb1-723" title="723"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-724" title="724"><span class="co">#&gt; [[173]]</span></a>
+<a class="sourceLine" id="cb1-725" title="725"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-726" title="726"><span class="co">#&gt; SRR5569143_1.fastq.gz   151658     82308</span></a>
+<a class="sourceLine" id="cb1-727" title="727"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-728" title="728"><span class="co">#&gt; [[174]]</span></a>
+<a class="sourceLine" id="cb1-729" title="729"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-730" title="730"><span class="co">#&gt; SRR5569144_1.fastq.gz   130086     82507</span></a>
+<a class="sourceLine" id="cb1-731" title="731"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-732" title="732"><span class="co">#&gt; [[175]]</span></a>
+<a class="sourceLine" id="cb1-733" title="733"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-734" title="734"><span class="co">#&gt; SRR5569145_1.fastq.gz   110795     55471</span></a>
+<a class="sourceLine" id="cb1-735" title="735"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-736" title="736"><span class="co">#&gt; [[176]]</span></a>
+<a class="sourceLine" id="cb1-737" title="737"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-738" title="738"><span class="co">#&gt; SRR5569146_1.fastq.gz   107086     62589</span></a>
+<a class="sourceLine" id="cb1-739" title="739"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-740" title="740"><span class="co">#&gt; [[177]]</span></a>
+<a class="sourceLine" id="cb1-741" title="741"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-742" title="742"><span class="co">#&gt; SRR5569147_1.fastq.gz    78974     39520</span></a>
+<a class="sourceLine" id="cb1-743" title="743"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-744" title="744"><span class="co">#&gt; [[178]]</span></a>
+<a class="sourceLine" id="cb1-745" title="745"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-746" title="746"><span class="co">#&gt; SRR5569148_1.fastq.gz    93141     54213</span></a>
+<a class="sourceLine" id="cb1-747" title="747"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-748" title="748"><span class="co">#&gt; [[179]]</span></a>
+<a class="sourceLine" id="cb1-749" title="749"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-750" title="750"><span class="co">#&gt; SRR5569149_1.fastq.gz    87377     55080</span></a>
+<a class="sourceLine" id="cb1-751" title="751"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-752" title="752"><span class="co">#&gt; [[180]]</span></a>
+<a class="sourceLine" id="cb1-753" title="753"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-754" title="754"><span class="co">#&gt; SRR5569150_1.fastq.gz    74449     47590</span></a>
+<a class="sourceLine" id="cb1-755" title="755"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-756" title="756"><span class="co">#&gt; [[181]]</span></a>
+<a class="sourceLine" id="cb1-757" title="757"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-758" title="758"><span class="co">#&gt; SRR5569151_1.fastq.gz   387122    263474</span></a>
+<a class="sourceLine" id="cb1-759" title="759"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-760" title="760"><span class="co">#&gt; [[182]]</span></a>
+<a class="sourceLine" id="cb1-761" title="761"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-762" title="762"><span class="co">#&gt; SRR5569152_1.fastq.gz   118202     73754</span></a>
+<a class="sourceLine" id="cb1-763" title="763"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-764" title="764"><span class="co">#&gt; [[183]]</span></a>
+<a class="sourceLine" id="cb1-765" title="765"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-766" title="766"><span class="co">#&gt; SRR5569153_1.fastq.gz   116138     81959</span></a>
+<a class="sourceLine" id="cb1-767" title="767"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-768" title="768"><span class="co">#&gt; [[184]]</span></a>
+<a class="sourceLine" id="cb1-769" title="769"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-770" title="770"><span class="co">#&gt; SRR5569154_1.fastq.gz   140334     96800</span></a>
+<a class="sourceLine" id="cb1-771" title="771"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-772" title="772"><span class="co">#&gt; [[185]]</span></a>
+<a class="sourceLine" id="cb1-773" title="773"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-774" title="774"><span class="co">#&gt; SRR5569155_1.fastq.gz   125683     85387</span></a>
+<a class="sourceLine" id="cb1-775" title="775"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-776" title="776"><span class="co">#&gt; [[186]]</span></a>
+<a class="sourceLine" id="cb1-777" title="777"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-778" title="778"><span class="co">#&gt; SRR5569156_1.fastq.gz   151490    114504</span></a>
+<a class="sourceLine" id="cb1-779" title="779"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-780" title="780"><span class="co">#&gt; [[187]]</span></a>
+<a class="sourceLine" id="cb1-781" title="781"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-782" title="782"><span class="co">#&gt; SRR5569157_1.fastq.gz   120933     83969</span></a>
+<a class="sourceLine" id="cb1-783" title="783"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-784" title="784"><span class="co">#&gt; [[188]]</span></a>
+<a class="sourceLine" id="cb1-785" title="785"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-786" title="786"><span class="co">#&gt; SRR5569158_1.fastq.gz   118473     82518</span></a>
+<a class="sourceLine" id="cb1-787" title="787"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-788" title="788"><span class="co">#&gt; [[189]]</span></a>
+<a class="sourceLine" id="cb1-789" title="789"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-790" title="790"><span class="co">#&gt; SRR5569159_1.fastq.gz   119939     86858</span></a>
+<a class="sourceLine" id="cb1-791" title="791"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-792" title="792"><span class="co">#&gt; [[190]]</span></a>
+<a class="sourceLine" id="cb1-793" title="793"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-794" title="794"><span class="co">#&gt; SRR5569160_1.fastq.gz   117070     78504</span></a>
+<a class="sourceLine" id="cb1-795" title="795"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-796" title="796"><span class="co">#&gt; [[191]]</span></a>
+<a class="sourceLine" id="cb1-797" title="797"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-798" title="798"><span class="co">#&gt; SRR5569161_1.fastq.gz   149571     92705</span></a>
+<a class="sourceLine" id="cb1-799" title="799"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-800" title="800"><span class="co">#&gt; [[192]]</span></a>
+<a class="sourceLine" id="cb1-801" title="801"><span class="co">#&gt;                       reads.in reads.out</span></a>
+<a class="sourceLine" id="cb1-802" title="802"><span class="co">#&gt; SRR5569162_1.fastq.gz   138043     98376</span></a>
+<a class="sourceLine" id="cb1-803" title="803"></a>
+<a class="sourceLine" id="cb1-804" title="804">files &lt;-<span class="st"> </span><span class="kw">PairedReadFileSet</span>(filtFs, filtRs)</a>
+<a class="sourceLine" id="cb1-805" title="805"><span class="co">#&gt; Warning in validityMethod(object): </span></a>
+<a class="sourceLine" id="cb1-806" title="806"><span class="co">#&gt; file filtered_sra/SRR5569127_F_filt.fastq.gz does not exist on your system</span></a>
+<a class="sourceLine" id="cb1-807" title="807"><span class="co">#&gt; file filtered_sra/SRR5569127_R_filt.fastq.gz does not exist on your system</span></a></code></pre></div>
+</div>
+<div id="data-preparation-primer-set" class="section level2">
+<h2>Data preparation (primer set)</h2>
+<p>Now we have our sequencing read input data, only the primers are still missing. The primer set for the above is included in the MultiAmplicon package. The data has been generated using a microfluidics PCR system, if you want to know more about this you can consult <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5472691/">Heitlinger et al. (2017)</a> or <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5269671/">Lesniak et al. (2017)</a>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">primer.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;real_world_primers.csv&quot;</span>,</a>
+<a class="sourceLine" id="cb2-2" title="2">                           <span class="dt">package =</span> <span class="st">&quot;MultiAmplicon&quot;</span>)</a>
+<a class="sourceLine" id="cb2-3" title="3"></a>
+<a class="sourceLine" id="cb2-4" title="4">ptable &lt;-<span class="st"> </span><span class="kw">read.csv</span>(primer.file, <span class="dt">sep=</span><span class="st">&quot;,&quot;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>, <span class="dt">stringsAsFactors=</span><span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb2-5" title="5"></a>
+<a class="sourceLine" id="cb2-6" title="6">primerF &lt;-<span class="st"> </span>ptable[, <span class="st">&quot;TS.SequenceF&quot;</span>]</a>
+<a class="sourceLine" id="cb2-7" title="7">primerR &lt;-<span class="st"> </span>ptable[, <span class="st">&quot;TS.SequenceR&quot;</span>]</a>
+<a class="sourceLine" id="cb2-8" title="8"></a>
+<a class="sourceLine" id="cb2-9" title="9"><span class="kw">names</span>(primerF) &lt;-<span class="st"> </span><span class="kw">as.character</span>(ptable[, <span class="st">&quot;corrected.NameF&quot;</span>])</a>
+<a class="sourceLine" id="cb2-10" title="10"><span class="kw">names</span>(primerR) &lt;-<span class="st"> </span><span class="kw">as.character</span>(ptable[, <span class="st">&quot;corrected.NameR&quot;</span>])</a>
+<a class="sourceLine" id="cb2-11" title="11"></a>
+<a class="sourceLine" id="cb2-12" title="12">primers &lt;-<span class="st"> </span><span class="kw">PrimerPairsSet</span>(primerF, primerR)</a>
+<a class="sourceLine" id="cb2-13" title="13"></a>
+<a class="sourceLine" id="cb2-14" title="14">MA &lt;-<span class="st"> </span><span class="kw">MultiAmplicon</span>(primers, files)</a></code></pre></div>
+</div>
+<div id="running-the-multiamplicon-pipeline" class="section level2">
+<h2>Running the MultiAmplicon pipeline</h2>
+<p>We start by sorting our amplicons by primer sequences cutting off the latter from sequencing reads. The directory for sorted amplicons must be empty before that.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">filedir &lt;-<span class="st"> &quot;stratified_files&quot;</span></a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="cf">if</span>(<span class="kw">dir.exists</span>(filedir)) <span class="kw">unlink</span>(filedir, <span class="dt">recursive=</span><span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb3-3" title="3">MA &lt;-<span class="st"> </span><span class="kw">sortAmplicons</span>(MA, <span class="dt">n=</span><span class="fl">1e+05</span>, <span class="dt">filedir=</span>filedir)</a></code></pre></div>
+<p>The function is “streaming” fastq files, so that potentially large files can be handled on machines with modest memory. The parameter “n” controls how big the streamed chunks are. Increasing this value leads to faster processing and higher memory usage.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">errF &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw">getStratifiedFilesF</span>(MA)), <span class="dt">nbase=</span><span class="fl">1e8</span>,</a>
+<a class="sourceLine" id="cb4-2" title="2">                    <span class="dt">verbose=</span><span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb4-3" title="3">errR &lt;-<span class="st"> </span><span class="kw">learnErrors</span>(<span class="kw">unlist</span>(<span class="kw">getStratifiedFilesR</span>(MA)), <span class="dt">nbase=</span><span class="fl">1e8</span>,</a>
+<a class="sourceLine" id="cb4-4" title="4">                    <span class="dt">verbose=</span><span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb4-5" title="5"></a>
+<a class="sourceLine" id="cb4-6" title="6">MA &lt;-<span class="st"> </span><span class="kw">dadaMulti</span>(MA, <span class="dt">Ferr=</span>errF, <span class="dt">Rerr=</span>errR,  <span class="dt">pool=</span><span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb4-7" title="7">                <span class="dt">verbose=</span><span class="dv">0</span>)</a></code></pre></div>
+<p>The sequences were quite low quality and we shortened them massively. Therefore we have to assume that most sequences won’t have enough overlap to merge. Now we figure out for which amplicons this is the case.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">MA &lt;-<span class="st"> </span><span class="kw">mergeMulti</span>(MA)</a>
+<a class="sourceLine" id="cb5-2" title="2"></a>
+<a class="sourceLine" id="cb5-3" title="3">propMerged &lt;-<span class="st"> </span>MultiAmplicon<span class="op">::</span><span class="kw">calcPropMerged</span>(MA)</a>
+<a class="sourceLine" id="cb5-4" title="4"></a>
+<a class="sourceLine" id="cb5-5" title="5"><span class="kw">summary</span>(propMerged)</a>
+<a class="sourceLine" id="cb5-6" title="6"><span class="co">#&gt;      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. </span></a>
+<a class="sourceLine" id="cb5-7" title="7"><span class="co">#&gt; 0.0000000 0.0002201 0.0013316 0.0416265 0.0063945 0.8817513</span></a>
+<a class="sourceLine" id="cb5-8" title="8"><span class="kw">table</span>(propMerged<span class="op">&lt;</span><span class="fl">0.8</span>)</a>
+<a class="sourceLine" id="cb5-9" title="9"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb5-10" title="10"><span class="co">#&gt; FALSE  TRUE </span></a>
+<a class="sourceLine" id="cb5-11" title="11"><span class="co">#&gt;     1    47</span></a></code></pre></div>
+<p>So we just found out that for this dataset only one amplicon could be merged retaining over 80% of the sequence. Lets run the merge again, concatenating all amplicons with less than 80% merged by setting <code>justConcatenate</code> to <code>TRUE</code> for those.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">MA &lt;-<span class="st"> </span><span class="kw">mergeMulti</span>(MA, <span class="dt">justConcatenate=</span>propMerged<span class="op">&lt;</span><span class="fl">0.8</span>)</a>
+<a class="sourceLine" id="cb6-2" title="2">MA &lt;-<span class="st"> </span><span class="kw">makeSequenceTableMulti</span>(MA)</a>
+<a class="sourceLine" id="cb6-3" title="3">MA &lt;-<span class="st"> </span><span class="kw">removeChimeraMulti</span>(MA)</a></code></pre></div>
+</div>
+<div id="check-what-happend-within-the-pipeline" class="section level2">
+<h2>Check what happend within the pipeline</h2>
+<p>When we are done with our processing, we usually want to know what happened to our raw data (sequencing reads) along the MultiAmplicon/dada2 pipeline.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">tracking &lt;-<span class="st"> </span><span class="kw">getPipelineSummary</span>(MA)</a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="kw">plotPipelineSummary</span>(tracking)</a></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>The pipeline summary tells us how many samples, how many unique sequences and how many sequence read pairs were recovered at different steps through the pipeline. It gives this information for the different amplicons.</p>
+<p>The output of the pipeline summary can be modified with standard ggplot syntax.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw">library</span>(ggplot2)</a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="kw">plotPipelineSummary</span>(tracking) <span class="op">+</span></a>
+<a class="sourceLine" id="cb8-3" title="3"><span class="st">  </span><span class="kw">scale_y_log10</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb8-4" title="4"><span class="st">  </span><span class="kw">geom_line</span>()</a></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="hand-over-to-phyloseq" class="section level2">
+<h2>Hand over to phyloseq</h2>
+<p>We haven’t genereated a taxonomical annotation for this ASVs yet. oing so within MulitAmplicon is currently only supported on Unix systems (see <code>blastTaxAnnot</code>). You will need to generat a taxonomical annotation in one way or the other at some point, but here we demonstrate ho to do an export to a phyloseq object first.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">library</span>(phyloseq)</a>
+<a class="sourceLine" id="cb9-2" title="2">PH &lt;-<span class="st"> </span><span class="kw">toPhyloseq</span>(MA, <span class="dt">samples=</span><span class="kw">colnames</span>(MA))</a></code></pre></div>
+<p>We here produced a combined phyloseq object including ASVs from all different amplicons.</p>
+</div>
+<div id="comparing-sample-data" class="section level2">
+<h2>Comparing sample data</h2>
+<p>We now can use phyloseq for one of the many supported analyses.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">phyloseq<span class="op">::</span><span class="kw">plot_richness</span>(PH, <span class="dt">measures=</span><span class="kw">c</span>(<span class="st">&quot;Observed&quot;</span>, <span class="st">&quot;Chao1&quot;</span>))</a></code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAADAFBMVEUAAAABAQECAgIDAwMEBAQFBQUGBgYHBwcICAgJCQkKCgoLCwsMDAwNDQ0ODg4PDw8QEBARERESEhITExMUFBQVFRUWFhYXFxcYGBgZGRkaGhobGxscHBwdHR0eHh4fHx8gICAhISEiIiIjIyMkJCQlJSUmJiYnJycoKCgpKSkqKiorKyssLCwtLS0uLi4vLy8wMDAxMTEyMjIzMzM0NDQ1NTU2NjY3Nzc4ODg5OTk6Ojo7Ozs8PDw9PT0+Pj4/Pz9AQEBBQUFCQkJDQ0NERERFRUVGRkZHR0dISEhJSUlKSkpLS0tMTExNTU1OTk5PT09QUFBRUVFSUlJTU1NUVFRVVVVWVlZXV1dYWFhZWVlaWlpbW1tcXFxdXV1eXl5fX19gYGBhYWFiYmJjY2NkZGRlZWVmZmZnZ2doaGhpaWlqampra2tsbGxtbW1ubm5vb29wcHBxcXFycnJzc3N0dHR1dXV2dnZ3d3d4eHh5eXl6enp7e3t8fHx9fX1+fn5/f3+AgICBgYGCgoKDg4OEhISFhYWGhoaHh4eIiIiJiYmKioqLi4uMjIyNjY2Ojo6Pj4+QkJCRkZGSkpKTk5OUlJSVlZWWlpaXl5eYmJiZmZmampqbm5ucnJydnZ2enp6fn5+goKChoaGioqKjo6OkpKSlpaWmpqanp6eoqKipqamqqqqrq6usrKytra2urq6vr6+wsLCxsbGysrKzs7O0tLS1tbW2tra3t7e4uLi5ubm6urq7u7u8vLy9vb2+vr6/v7/AwMDBwcHCwsLDw8PExMTFxcXGxsbHx8fIyMjJycnKysrLy8vMzMzNzc3Ozs7Pz8/Q0NDR0dHS0tLT09PU1NTV1dXW1tbX19fY2NjZ2dna2trb29vc3Nzd3d3e3t7f39/g4ODh4eHi4uLj4+Pk5OTl5eXm5ubn5+fo6Ojp6enq6urr6+vs7Ozt7e3u7u7v7+/w8PDx8fHy8vLz8/P09PT19fX29vb39/f4+Pj5+fn6+vr7+/v8/Pz9/f3+/v7////isF19AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAgAElEQVR4nO1dB1gUR/vffNFUkxjFjoiixoYl9o4tRgSOooKAYI1g1KhRUYO91yh2/WyJJfYWRY0Yxa7YFT2VaBR7AxWROv9pW2/vdvdg4b7/c+/zwO7OzM787rezM++8884sA+xiUZj8BmDrYidIQewEKYidIAWxE6QgdoIUJGcEPdRJXuY/hBe5QpBRJ3lgOxDsBClAsBOkAMFOkAIEO0EKEOwEKUCwE6QAIfcJmtumUoux141RYSqR7GtlHl0OCZrdumLTxca9bVUikYWQ6wQNb7rtanSHIHMEnTQJ0Y+g0a32xW+quskMQfH1zlu4VzeC/q54FP6/VGNTVKBPVfdYY3yvajWmGI1rm9bpdc6416dT+44LjcaBw2mAcaxr/Qi9CIqrHAv/Tx68t1X/ug3/NBon1KjcAT6f+fVr9LhoNM5qVzpfCJrTCR8GDo8quyl+gLdxUbtL+8teOll5X/wPvYx7y027NCXEaKwXTQPW1ok930Yvgn5rR457S6+4Ed7dGFsx9mrXsca/qh+MDxpmNG5aWTZfCBo+AB+mBEV5GI3ny8YvaLQH0RZgNB6vb9xbx2iMrRK/rwEbED7eaFymF0GzAihBsNTfuhivnjSeDx1qHN/faNzTGIU75wtBM7viw9CfonrBQ5WT8aOr1ZtpHFWjRYsWbYx7W8Ow5tvGRLABXZcYjbv0ImhlB/T/7Jq9beAr3sUYH9GidZuhxkHwmZytnH8E7at8Gv6/Vn8VrkHO10+cif+j1u6Z4TDsMOlPRkS03WekAT9OgL9DL4KOVToB/08zoFIhQQtbnzSOH2qcAKt4dMP8I8jYr82e+EN+PkbcBgUbR3teO99ww5Eah+J/6k4I2l23sdFIAzbUPX6pg2692MB2B67vrLGCEjQxwHjUbYDxQI2/40MG5yNBN6a5VWr6S7xx5Qj36j6njHGGb2oMuWFc3rB6p7NUI6kdAf+RAOOYmvXnBOlF0I0JzSo2mWukBJ3+rk6HhU13G+fXcw29kI8E5Yr8v9akcxOdDUCwE6QAwU6QAgQ7QQoQhAS92jUHXMuwEySCICDoZklHBhi+uWMnSAhBQFDHrlkFwLPvfTQQpJdk5zcAHoKAoC9OgwIAHPk6X/CIxTYJcjyCCIopmy94xGKbBP3g9qoAuOLaL1/wsPLiRjoQEHSwT9DYxwAM8fT0XALAhX4hizK5g74iQ1CSW0Hma8Y3Re+iLUhmb4YpF82je+D3MG3FKAACX6enZ4J3gTfTxu5kD/oJZkCGIABOrdp2U8eCleVXBkrZZxy6c4sAuB8C3gbjq6PjADg/nD0AkHb69Ol/cx3D1GJMrVNyBCV43M31wrSKOyKI+VPYBmXMXApuBQ8MGPMIbF8M61RP9gDAs7p1687JbQhrEYJyvHsJT1Caw8rcLkyzdMEEHREQdDxsdRa4u/ZNym/DwXbYDCX2YA8AZCUmJiblNoROGMJuuVdsV+VZB45Bye0iNcguBK5qKocuO2okUtjSYMP9shOInQDAxWHsQSfpLKnEAoIKUNGraDXye60Sfgl8A3B6SEZWVhY49FNy6sZxICU4MXvaDvagk6xH/Di/km+kbUZYdKtg9+4ZBLLXBAdPg83Cuf59F2ZyB51kRgmm7mn5bp7IG92KVi/5qyimCiEICGKINMoHSFKxTU36BpQLy2tfyxc8YrFNgojsb53HSOTElgm6+kUeI5ET2yToKpKj7lXzBY9YbJMg0kYX358veMRimwS9xZIvaKRimwSBEwlgj8/49PyAIxHbJGgOs+Wdg2f54fmCRyy2SZDTNLDaJXt7ufyAIxHbJOjTsyCoH7j4Sb7gEYttElQ74m6hY2BehXzBIxbbJGjXRx80BDM/mMkFUIu52FSepxbzfBS5Xuzewbfg8AHuklrMxaZy3S3mInT5KGaHGpc82DNqMRebyjmLeXp8fPwTvdHlo8gQdLGBA5SPvQWpkMVcbCrnLOaP6tatG5WHgPNaZAhq0WJt8ZXLy9zmQ7DFXGwq5yzmaM7lnt7o8lFkCCr0N+i+CyzrxCUhFnOxqVxfi7kUXT6KDEFfxoCoYeC2A3tNLeZiU7m+FnMpunwUGYLatUo4UvH97yXYa2oxl5jK9bWYS9DZgKYhNLl+Oz298efMWL2LViGSufk80DQSw5t2i5eDwIgDU/48ksslq5IHf4unvSVz82Y0jTeTJ0/+K3cAJFVCTgH/yEDImY9iLslEiK6/MEAyN29G03gVHBy8LncQrMPGwnEyEHLmo5g7cgKj2yIIkczNm9E0clHmYAhhMhBswUdxBkY3UBAimZvXX9Mgz+h3GQi24KO4AqObKAiRzM3ngaYRCREEZ8lAsAUfxWfOiKAEQYhkbj4vNI2EXVdF1zblo3gzyNX3vDDANhVFG/BRZMU2CbIBH0VWbJCgG7zkFySB5C9Bb+4DU4IYXvIJllB0JuiKwaX9CXORGb0ZpvJxE4LK/Kf53Ot3segLTpXoS9DjcqgeXDcTOxW7ub6VEpR9cmj5QgFbbKGFBnoT9F/8oow1E9sSxx6Va6TP/1LlM78Nr3UFp06sIEjDGHIWpuAnM7HtcWycGaP9tQmO/4sTh5kRDsx3CcrpiJzFFJgzmKxCka7p8gQlTK//YSuN4LTKZUNl9zPmIrOnlv7aPUEzQbjdqJmlnJAIWvEQYTZ2nksRwz9yetCtqXULtFv6VCM2rfIAt5C3zMQuRJE10rUSVI+x1OyayqvTij9TSpBxcp2C3//3uUZgNK/rZ96pTrwY/5ZJZmLdcOwFrQTVwbddVU6oXkz0oA+azfgvEa1ZvWzOMM6xalPjt4EZaia2CY49rZWgsXgJQ64OYKUEleRFa1Z9sOIg24s87N8sWPJcT2IK9prJazKKdHmvlaD0HxmmCTYpZ6/1D8kVM6yqpQiZfZBepLTcrzJfv6/OWvRQEPOmikx7g8xjv5grMSMMNkFxVnTzGdR3cJTU8HXOrbDrFtlbLIsagqKHeSKClJb7NcQEIWJWoxNBD7UJx4ySZPvipKUW8v0TkANFMR2XWJ0PeIr7hKPac1JD0OVT3pAgM8v9eFmOIHSEJ5kYXQs+JgoH9LQenWZJxCUW4QM24ID+5u9QgmB5aOoHCTKz3O9Jq1atlpJUKxq5DkEL2/7BYBz428/gAM2tfg4kuywqUbBYgAwrelmREz0qE2Rmud/rqKio4+LUaRhMA0HIOHjd2YrOxfqx2B5YotMV7vJFDYzJikZIhqBqk+9IUyGCNCz3m4bA7BOGJOy4qB2bkCB1/YRAHqzbnMxf/Yj5GZEDCAKCJtX4oOkisaqICNKy3G//wOGXhde349RrkHLo1PYTZoWo2IfJxdluHSbQzi5lTD23NabJzy3dxaorsq/Y1ciKBT3/EPwmRJD1y/3ewIFxOauUEo4glf2EWfHABBE78ml02ooM2ALQ+WJpaqQj1HkthiBpg5KHfsh80fuZlh9jXoYgFGUp38f924xlFzOmnr1uuZURxFroJ1QsCz+Ae1iSXTAm6yw6fYVPa0sSx+PQMeJAIUFPV3T8uHjfv3a1cFI9LrYo3+ICT+HzWNy7kHyPOjNMM5Nh39X2RWv+Qc8lBJnpJ1K3bt16SQHD4c5tJlErYGsMB7+bt/GpoyQtXs/LeIghCAhq+WHp/ofRT0hmcmduoxUu0IjPyYr4C+g0s7ycdpRUAYUeFKMDmvsJCzICQ0hEp0cKoNNASYJjQp1JhqDBx2lg5qncqUF4E4MWJNPm/BDsOj6V+qvvEiosEoKU+gl11sTXSOVfgE/x6OhDpsIKUYKs1nyDJUfQ9/j/Kz9VpamS3xpV+ZG+SsPw73+MTh/j07qStETl7SpGB9T0E5tdmKp7xJm9l4WTdXgTmZF4wbDypyhB6mz/Qaxd0oSgWbOYWUjCi1r+0VK5stOc8UskrxvxOrUngvZ1YzG4+xjwGjE6NRKHbxTO5h1xZUovsnRLJkdQiExs/HdfV1xuSlCzZkwzJC007eCRHcpIrJcJgdU6yO1ukXV0B90W7N+WqHpDESfbDkcJQ7PBmflb0jQRNAb/0tl8wCMnFLDH/B1sc8TXWKG8rYR1b5lXrJ4GVKysFypiSJJcUIDFvqUFiy5cHJ5x6w2B7vpKC0G/4Lz4FSYUU29L92Qtd/8ep5JxUDuIIzqZELTk1DEqGsCBgTi3qXwAsXD8bOGWV1z9DjKNJKrISC0EEd8ngVlurbC5Ny8HKsjPjf2Jb/c0IYgZYc3mJtgCyKziA5bgAEsOcq85glabRpKmuoOmwerq0ozTJsH1A5zHbtm0NwJqduKq90PZ1afP8Ru62ISgu6+0gGLlHsqtouDWqxjdb5buwZX7c4YZKEMDMcj20zial3xt61AVpoT8MhI86eykMLkeA/W0wdm5tajX2L1Z+H1hwAIIoa/FH/ikC+PQ78Vl2RmU7A6IoFuazR0pF0V7U5pbu02mVKYpZJZ9P1XPRb0vjppd4/LmGhmNWdBD0xYEDb+r2R60A/aAgSqe7CRMkCotPDcX9cbOXKPK6QFNaM5SlaNGgp7i3z1dOeERC82TGQi5sKgXDdq/UWEAOCJVCZTRqZQ9OOfvVKQcq9DFmkLI+aLeeKWOnYwK0olxj4nEVzdHDbRk8tJI0FGccxc1SR/8rXKRm5pFvepkk+XHd7cDU2w4HE1OoH07fhFOoTMLjZ1Ggt67ovzMTUby+b1fu+4xF7b9u0ajLLj6qFjUq1LI1EWFdSjH5HnDNopb4GxsFJoAQH1KEF7QiPsq5oVcdiJ0KiX1ZHCFmr4RJ8Gbc3IbLd/zYooNhU34to8EuvNmBYXLlCArN5qcUZz+8skAPEPjDF9RoWQqqBYAjvikPtHTyWSsyAlme8tqfblFwtoIGs8wjkNRhj/AQkL/mBUjjn5TCsWNAcmFcKm01rTBF/+Y5iaBkNONJndwenGJbOzPzzAiPwYjDqoB7uKjA61ePvjKhXHj5jywgl9fajFXJdsYqYgVeW8cVg0cIpHoEb1bNIg8sNDgualcwj1tqrYYz04ZybVB1mw02ZuHdWUbeSrLhfFkKPkLtYfhObOrXet7l6L3OLOvGaHsrASdKulrQpBoqvkdCfqGGO1xpXlXm6ZDRoUWrGnpLxK2LEMEIacbTfLo2N8ssmKQucQiaeAyPukOg/5FoxOnmdMMOGQbTehG4unj1ETQT6YEfctXi/N9SNAwkIZNvchmsYwm+wL/Z1vdAPbuWrFAvpE2ETJrZ3HBKJ42KFWGYUpy6Abw0dl/E4IArSJozI1nF5mlIAgfWTP9WHJvkeIdrmol6Di6EbeEZTgMkWwkrRaMcyoyRH3yuQ/6RbjBYnrF+JEqQ5O24+52eqhuxSGZtVNYMLrKmal/ImnHdjKM/wD94xSFZ8QfCs+VZywN/hn3YHgyiJlEF/lBKNt+Gn8fpHqx6Mq/1NpIb63JuMXdnjHt2t3Aio2+xplwm0GSmsk0fSS8gay/Wg+m4CPbV0zka+Dv6lYcklk7MwtGX0VERBDNg2S1n8/ejc0glD4Q0WzrVhwGFerRDFNuL50dhtWG7Q2ZrTmYm3/iSfLg1DJnfLlPnOH7xjCsRQZ4i3QQtLppz9ApieA994yQ5VfdikNkMTezYPR5cHDwH4Kk77/lsi83n3Zk2DeHmSsxpHRlqAdVWiJE8S9OE8Buw8tgW4l0bt7ysvCUwyfTbwW5GuIAYH/jOrZMEiA14v/ZsvYw9KpkbJ2LHDDwK3clHtJWixga76tdcYgJsrxgNOPGnWw8nHj5M1+HmK44f9JZSOwaW2ktoRKD09QFZyId6b13TebmLb/lp2AtccFuLzeI/xR8zwsyZTfgyBuoS5DqL0tRql+5SzLN4lcV/R8/rwRTGTXb6lYcIoIsLxi9DLNt4luIcdrI+qgTwSNm7EBFauS71VOp/ob7kvJcBsT+FzId/iu5bhBU+TYL0Fl+y+nMahWu0NEZAgQM0bFerVlIZzxiPWr3wdOGpGbzvphkKEeU12/hcAAHqltxiAiyvGC0JofnFHhQlbbSDB5cwEIW168xFGuuL9CvwIuKU0k87yGBZiWcztMX7bUxXYgOWHzLydz8U56SfsBfQJDAUo4ETw9VQy8spZEbiD3Bl2S7+Prw+nGq4DbLKw4ROosLRh/zeEayqiqWxXdF7SL2rWTwsktnXIPeR1Z0GUaKOjpx8UvcVUOFO2tt31F3TAmSf8uzkpOT31NVC8tG8LLzpx99Rq/Cdov2NyLWBDwbVAvXGD4KPSPH666E1TPVGCY8Q64GpVux4vANj2447cCxfMkwVeME6UhbiU3VePTf/hv0H1WD9Lkd/Q+CRzjeG3RHhytSgiy/5aFsofAnv3BhhCL0LCOVC89M4ndq5h8XN66jvf/hsXOfgstVmC+HZ6ZiH4EpcgQ5DDynjR0k33FgjtLp5UJh/Ts3RScuApVqMI46ic8vjuHGJ7Auh6DjdoD16nPE6yJQSpDltzyNJaUPALPxSZFCH6NHBEVgnF6AA8g08OPVC2nbgAmLmxL1ELyojIvGlhimqRxBC1v+p/oMDd9lwvKcAGE+XsLOUCH5iiE1gZP7qDMxsIVyLUXLzGf42Jy0kzWJttlQSpDCsvCn3Ytjb40Ydp6Ol1N8qkw0lOB8poayKaq0moC2XXA8T0baHYnq3Vp+qPFoQYuC7TXuhvE37BK+XbIX57fhMzG8evyg8cnEfiNnbkwjF425FDsv4YMLrVPlaU3QqChmLPm+DFMd9esrJAQxTQSOpje3htZuSaekW0oTfkfGHUwD7Pa51NxYLGOtg9Y1qyk7f41hn6e/pFQnwYwQaiTLvQBpkeUda3AJXOfhQyBFx4TDv6IxWgnCwzo8Rk5vI/3hTvy3W1LxaxUCwL05UztI05UZSU/2uTNlZ2TLEvRuZ/cin3XW6jK7EmZah1otornyKpDKxPtIn8PXjqnYb+ALHhhyHKqSyBoFrq8vDP8v00bQXXyrFz7P4hpFB1+iyPOeiEQnZTYdl5KDxO0JbcpOgRNNHZzHsp25gCC/zz/x/UPzolXia8O6sm9wLYthdaatwUIu3SpS/DyCem0lDlnclgNp0+l5nSzidanNN5Y0YNTj8Cyb7xraq/I+GX+QiD64CykiqUN/DS73KTqWe7cPXw8wJciwzprlqsSgUYKoyTHw5zf1hvy8AKQYblNGcJjg6F0CH56nLevXtRg+ha9GFh6oFmA87tDhm0XfFRMhz6hQGBl/raxZceCRkSNOg1e/kiK5VugOuSY9KnMHaT+foIq+fv+QSCNVFsofpp6D3Dox9m7rvDtA9jX6BJCDThqe9w9PTwfpy8Mr4uDW1X2Iyp9FBmZT0VCVeuP3wCFQsyctNYNeLDd8pmoGh5XMtEXkfk90hVhxRP4JK9m60bB2Z+qvQHYJOkPmDzLAbdw1TMQTHWQUV/waVOQryhNklXfH295FOEsi1Hou4pOqwpaA4ZwFUlAX5fL8WVv4JmHHzr09isCQFazHArHh/C1CpwZCT1hPjxJz3UtYCj5xZ2cLWAjIOJ91+8GR+kUb7iVGvjnskIM8rOf43AH1NqSnYffbzJl3B25bvyEgYG9xD580A6JBB8PMgCl39xt+bl6PSagxf0QIw/ap4Qg5bhMYx1PXxkXGgZIaCUL9HtOKWALus5XRmXWjYmUyHPfCIcR3xA/k6qifDwG2ccdl3SE/Ajf0d9FrXuyklCCrhNQevGCsFJqwwOP5NXSFFCcR1E9ONB3zntSaTeM30LHj+d3o/2oyf6MeAjGzBqJ/NWClIG/8d3yHSnSuQQBUR8fuwluJq2Jh1PISA3nTB682b3gEUjZP2PbOtJs3RnZ1CxytbSxGWlzcff4GMlYPnj6gZlO03I/q1CWJdrqXVvzmwltv4aCC8K8JWZKbgX9BqffDShfvqWFxMSHon3YMU/0K2Eit0lCBTqlKTonpext1EhX7jhPFPWjbJVpvEy6iRpSsxjEhaPCH5b16e5X/cIgWgrqjbNuCxKgZ10Am0miq0g+ikfaXWY1s8U13ZRPX6NLCWwWmGzwtMSubXDwTolMhYeim1nB8fzuLku41Btu+7zXCV7+OY7AW8hJffSO69yqLoBt+OMxb7D75OSzd9PNZiwusQ+9I9vqCSzQQlNSFYb6nwzeyvHAGjSGe9SPBDWd4CCAmie9F987nCHIpWrSsS+s9uAtkNoF/9yVoIOgtfBYdKQRSYfvSmKeo6HKPQOL0BuW848m6lsnCW+PdGJE0IO6JzNLtzkwpdi0QS1CjkfTkl8bqwUF5z2mWxCKHVxic2mQknezvdKrgCGqUHEW+r0lhjESIJlvvB0a8oaGiZKSxZ9iiw/u33unTrNdtaikr//xVmFPlqcIx7oNiUgTMR/g/+SU0FXv8JJqeHPhUCziBFMbZtoUqRUdUaRDY4i6NSA+1GFyZveQpANt696eTLK8rmqATinUQSJ+BVOcXU35YyFrqiUK93iQ1qcIfKEDgjqxhIM4acM+6FnEgDXbhpgyZmWJqDCvHFXaIJMOzg8TcvkQGUpGcEkSH6I9PnUe18QOnaPBuqnuwF31GWJIHVqgyhRiqRslA+FIngjzkHkFH/P9z+OdO2hTSs5NFGkNkbqjNn2qHkPXfeq4h5ObSXDan+AEX3dgDt41j8WkMXxx3x6SvzBLUNoDId1aAeyvHD+7CYcsya+BvN6aMQW+WcFX0KkFC8uYzrnyIFRuRYivBJ7KUo4Hx/HXL73JI6ZwKP1HINCMHZzoV/CVTYbOEIA9e1IM6tvjwCdRIP5QliMp2MnxYwipmZM12prCFxL+rIFVcyvjWDbhsuVyB3Bnc2ButiskqxGZWVZBxAULT8wunURe5mXX3ZLfM3tOKTVgKL9f6D/nIKlNuZL16rI+KivpifskxsnY5xbLux1BqnMd9tYOQoGCyNUPRDDrOwm1Qar+v+RQFhclr/htcpIj6XgzPhEayUzdQuh0xfUbxxHReKhMkfYxO/Mm9yY+7cklWOfA4vsJToOoJMr/kGDeKzlmAm1P1BH/DPnLsASG6rnSHvToPSLJPGOeNsk0QlWYCdMrPyA3f85p/ZZu8x3bDSNRDsBbgvnTifzmYi4+jlkVngdd+rO0cCnpcXJ8yqJQmgswsOU7ZunUr0Vxu8pYFtPriOewj/vJs0o8N2wAakBPDcI6E2PI8IeV/kGFJ9TMiysUlfoFTKHjQo4obfOvOzeDGq9+DuuRk8QA2qPE7DqCJlBNCUCbIzJJj9F0NYlt+AdLRG1yYKSl05c4mPUOxydzY3oE3dfZ34uF4X1YkyMKycGKZfEf2VUEiWFn3gA37hXXTc17GlTBd8Iza/iou/WtNBJlZcowEW+F84Unm5ok7ssQrR7E1voIROyWSRYFluR/B9OnPo5kJkMHVd4MjbayLmxJk5hklh4eHYwfERQCkoZFX5fBxwnUjt2mnVicZUAMnc7cwW6y/oDGvTWhuzl5/VR01nWYIuiTtxSwsOUbmoPbyC0eysd5YCZ/vJKhG8w5g299ClaU1tkQ0erZozO+74Cgk6ejNLYjGWAMaw6l5RskRERH+DFMND2HSV49ck/7UKHxK+Ad/NXs3CnuLLUaNOnIQho9D/x0ZXpzunZtLnmH1jHNx7PhFQJDMp2uQWFhynMUIdtt7NHucwL+VrptFFWgLOXXnl9KORz8oBbyObNxsfjDqitm90u8uR449qamSwaqFZ4RUB/bTuamdodrFT8URGwuydIL3RIUse5KD8PndjMgyxYKeoI6dqM8BeMQbgU7RQFVm2sf00zVYLC05Zvj9pa6ihzERkrakeYMpcBiEW5lvUQxVwn4EZdkaLcidWKqEk7AAmJg7LDwj9JPZiSo8dijHuWYQg0oJlBed85rP21g4f/mYSQvxbDxDNMOsVX5do4UQBARJP12jLCcE+1kSP94XZIP6PvC9Qkdcpeh80zKwkYL7hHcvYZcfbrRIkMIzYtklxvjTEFd4L+Q9i23yg1EMHcT0pdtTMEwhQQnUu1W4t5g8QdJP16ggqPeAHexLT9yYTlI6YBVKWLiEuCsRm17zNJAcFUB0sYFZ7A42rH4n2URHvT3ovMCMSvTiHg+xDxvs6t5FuFQag8f0VNGYCJJ7FiWnp7hFa8Rh6cPtkoxlCJJ+ukZZkHbG7pZCBjYtTxItGnvmrK/nFHgPDkSqwYCRWeAC1C8+JvAcmGq0vSLm1m/IzOxLFpV6go57d17Ask0n5suTQR1uZeeWYZpfYp0+nBJfB7Hao7Mj04BYXoip8bNd6PzdnG6jH5slSPuna3DWpcinfS/QuoC3d6iGQvBL5gqfYHrMTrStW1NGKMWJd9MNUvsbdnUoG+DMlFyolSBkNinH+vguIrrX5/g/mpPHa4QrvAZZE0t9WiLkH+G6AHQfMX2TPYaYfqlnLiBdwfmROYK0f7qGFoSXZKevwX5bzCioPZY/ixZmEVMDO695YhIjlor0wbcWhR7QSBBhhHUBGIcvcWdQBr1CfoI8kZQSlUW92K9TMwLbh4wxS1Ca1g23aY7oixgvWGfF0RmnR3T02z6ZBUF37OKueaEbZzUSBRaB6e8eStQKAU8HJy8hzd0U9FPLTHw+wZc0iHQhWcrY5h+LEZQir1NWHVHoZxtg0EO2FxAQtOlTkkA9QeSTKtjpeRCb/ZG09qLiSOvyXBDSYzw5tiGZDGfEkjBQCwYB2Yl08OCbdRAPQlnP9MIReI3MiyqCQqi9gfpc9JRAuLK8JPLclhJUPuSfx0jUE5Q6kH18RtahZXqaqEaUGbAIbaeSRTRY0ofNo6N/2vu8bQcVWsHYLEzTQ1pIboqEZZBObMpRkFiWkcgy+IiEr9ewFKI50pm6O+XEyQcIIAi7+WsmxStIFFOoEHFxoS/Y1iS6dwKRob+j/9sAO5QkNqAOYAum8wKbTfyx19dgW92SPNY2mgh6TBbzxHGLfrbzi3mQ9M8IC7kAAA4DSURBVMCdQImsbPoakVHPL9eIchhKc3kxb8xBrA4RVaqDPEHu24BGQQbMKcixmawnYCpk4+V/SPDregvrH44gm/cGglKZVCfJfq6PkuiyaKG1Sll+Q0VV2sINLNC4Y46gMOr4cV+86q4On5j/MaNqN1pChtVDZAg6duzYFsepf2l0f4H5tEdHalioBdg1vl9sD67W8RxtIe6JrQl0wqelaXbLSzEVdt/RRBAqAmvzCSRXNLdMnEycu8F/Lm+wJajEspoiCNScWck0ux1VmToxV2QIKsCLenAIXaHq46FKRgxSeNkT6bZLwxFYy/u4XfxK0iTQ7XGayGWItM7LXSr20QShiN+GbJBFjNx4bhmvxWBwQDje7eZbMQL2Gfmby/TP6gw74sqRdwd1I4fDnfu4/ViLAjN/43C03chIpV7bzdT4N0U+zzuhNYprrEEM3o6DrD8jK0Pe8i1y+s1Jo1lErNG5FnkJS0rH5VTeR4U0kDWYJS/oFxaVLHeLGZnP/AcVVBw2Pc/Dv2lIp7M5lwCGeXeif99weo5NL2jin3iL95bfmS2ZNFeqIVBzJFqZgobsjqRVucVDeAXzdMZnRYdgX/KA/ScyM5GVw8OMR1RmSyEEAZRrRSt0NhQrGi97l7xQE494W5EkHl0a2yAwJQYmJs6ZTFz5r/ds8yNxN8j+c9LaNNHN1HikGsE+N/oo4Pmx8b8+lkKoDX8wXWs5CIDtHq1mkBnpC9tYO83DgxKXn79EEARQ3EZB7fydR2ugQbCtx3WBeB6Lm3ZHGxX2IqeybpnZaBFdHZFJcqlGguhw11WyQoDVqypeBAl0Bq6U/PYi6G0TfZqO1RLolQBKEWymOfGlBnDP+3xBRuizhaHEv6xg8R+QsxBZwvcJE0hU6sSLAhdfsl2YQdhvXtVM0DLYJRXC3ysSCGl1XM+85xdsFW69Fo+vbg70n8OvQMQdFjNRWI1PmSOoIR6F7ailHlsK8jsi5gPhyqMUbI/+Khy/45FsdUL7M6YHwjEhvw5lHo0Sfp1ynkaC0KQR7iGc3whCs8i4osVt4WopbOrFe7G046oMrS6l1wpuDjND0LEm+18+2+K0NzNT7RbZW/iyRf6Hh5xxGHaJfMOZ6tPYwRtH5p9slPBbVk/KaCFI4DV/WBj+KATPRX8LsgvxKYplsQv9WRdNftsGo+Dm2EqyBDnwY12V6KL4ssUf1kkjgxtchZoICCIWEG6Do0x2x0DhxsWPNdWghTyE2N+mHhTEkMHEfdFI9BULgTPxvmaHYUsFt76Rr0FxvKhEx08SdANX9guXphPLVSIcxYawTxDNlhDzLz/xkDaPGCSEu5inaSJoDwehLDJcCnZPJPrCI/A+/EM2CdIiiVcQ33Gxu9II37EUGYJUsyNakx3BFn0eWVzR9qDxg7uvyaLL5FyFe598j4yK2DfXlW8irxELRcU5wm5wkBJBQggZXAUlvcEZ2PO7N45IojMZzVAadurWERkDk9HodTyfGY1zmCR0EPQyJUhQDy2Ck6zJjl9PvqrRDf9PIJsJ9YQKUlvslgt4JxfydY2tjSt0E0x+uuGoDym57G9e2M6id4cYwrs5wW1xLuTdWUEeQqsskDa4GOODe/9MbFRtsZlYWDN2LRc+Dn6QJthZ8HlgEak9KJMXiwRxE+OZiYmJSOsma2XJAGw9nfxB5uD7t7L4ITYju2sqyBY8FtEyI4smVw5CFoSANIkM5Da2mhjeYunsAZ4KYvuqh0ElKy00k9tWHoJwECG7jyKWZ5bdgEXOC4hzvJlLMLHKHKSTFLxdm/dok92jTrAE97xcvGUI/Jbtt4+8JN/lcs+mJtwYy3kIpAcH4bRctJigV6vaF7D8inET42mnT5/G+6U9nTZoUzZ+tWq9pyuQeUd53M+hMWJd2Sl8QR8kGhhZrEEiCPx6QvB0UtgKOMAj5sqXZm+XCt/TiFRtmRr0Zr3XR4zLWDNDXCrm9ks/ZmjQHw6E7qHO9VdBeHSLWiPSD8/ZambT8I3srjriLC0SpLBl+2ukO2w0G20qq8uQvX0GyUJgCUrd2vlTxiVEsX9V+lT3m7Xz1TsYIolddfbasL4SY6ZFgpQgZJ87YH77OFlJAteH990iLlRK0BdMvYlXwG1lBUSXT3VLxfK8WJ5CYBn5oFDPfRlqCMoTsXr/oNyHwDLy7/TaTJHey+wESSEIGLk+Bmrn3Q5pADfZvWNHDw8Pd3jo6IFO4dGdHN09PDzpBYz3QGHuwniaCh/g/R5cfEd08aO5/Y5NZCrNowNG0JHND1250ysc08GdxHugCFQSX6w7G09+Aon36JdsQhCUuJ8dBVv7KErLunrJE+XCibTSDcIDOYJgzToSZgLCTpC1YidIQW7tw7I3Gv6L3hdNLtA5FHQevRcHRZuL3yeI3yeMv6i6F0/A9+EM99P8ogX5RXNB0Vx5pvH7ZeJZCDbSbdmu2AlSEOsJerl19uwpg0dHRkZEjugfCQ/kv+hCJkg5/qe1ly/FPlSjbSAIs8YOyGF5MvECCFYTdL2Lp64S+K9tQLCaoJGdfHy8dMNm8PYeowqCQW8IVhMUoB87SLw8Zb78kx8QrCYo0EtPeAaDZ6htQLCaoMjOvvrB8zJ4+cy2DQhWE3TTXzdsCJwhIsk2IFjfzaec3rJp3aI/NkEhB5kLq+KXXVD3UUcCIeflycQLINgVRQWxmqAg/ao3EeVeLE8gWE3Qv7sXjPHWE52PbUDI0SvWWTdosANX971X3SHkiKBOuqGD4msbEHJCUIKO2Lw8A5QB5AUEqwna2cdHR3AQnvK37PIEgtUE/azfUNXL29sQIHEPzjcIdj1IQex6kAIEux6kAMGuBylAsOtBChDsepACBLsepADBrgcpQLCaoOyYqIlDu4f17tU3PDwUH0JNL2SClOMjpkYdV/XtAQzhxxyXJxMvgGA1QWt0bR49PVV8kTlPIFhNULCXrnMKnp42AsFOkAIEqwmaFuDr7eWpI0CVEPSkKEcEvRyuHzCfH8IDVWyMnicQ7KN5BbF38/ZuPmcQ7L2YAgQ7QQoQ7N28AgR7N68Awd7NK4j1BL3a1L+LjwGKt7c3OchcWBXv7R9xXtWSGgwh5+XJxPMQrCboZBddX/9gFVsp5gkEqwkKg2zrhs3L2zDCRiDkxInTS79u1ssr0EYgWE3Q+E7eOnpQenn9YiMQrCbo2WDdsHkaAjuNVrHwPU8g2Lt5BbGeoBPDggP8vH39fH39fAy+XQaM79UZnfj5+qGD8L+f2QvZ+M7+fp0GXVQGQCD443t8zUKwCo8AgtUEbemi6zjId7eNQLCaoB4GHZUQL4NXLxuBkKNuXjd0UL8JsREIVhM0Tt8+1nuujUCwmqAnA/VsALwXp9oIBHs3ryDWE3Q7Zv+i7oJuFTYI6kfPvl2H7VdRR1RA6OPHd9CyEMzhUQnBaoK25di1whDaYxCUvvg/PbAXYdHKCHIPgqhwCYSc2KRzAMzg6W2A7aAPFG/8nx64i59VbC2QaxBEhUsgWE1QH29d/Sc9VXxRPU8gWE3Qpq4G69UQ3FZ0GTBnThQS+p8eFq38Y9ehuFsqpg5zA4KocDkI1jfSR3rkrAXoujXH22zlBQR7N68gOSPoxNBOsKL6/fxzkB+q7d6dwkYHBIaGzugT0LnTD8G+3j5ePUb3D5/cy8/b4B0y+cJKf4PByzB4eihqA728fHsO7BMaGtpvcGCnrkFhsJv29h8y9MfBPwT3nnBB/T5Yk9DMga95CN7+A3ICwfpVzzExMdO1Dae1JPZRYbRHEGLCNL1U2iFYTVC4aVnw+Qm6FUV7upfQ5G5ifldhtM8TCDmYF/tdx2Xrnp4qjPYIgp6jsZwZ7ZEMEsNDHaeG8mFjYCFWhdEeyQm9IeSIoCf9TTL18jSnmngFBspEyKb26enTW+1utUdM7s9dCDnt5pPuQTEfFW8SFG8mNUBRyttRaIcgyVQrBOsJWrl6wfgg/+5+gYZePQO6+IR062wI7u0X6B3cM6SLd7cQX6+Qfp38fYKDAoN8uvn5G9gr78Defv5ePc3eEujda+yUMaMfKgMgEIKDlPIjV+YgBBq6oN9gFoL1BHka9FxK4qdmx2wIQcdGmkDIAUFBuoHzg22Ami9o5QUEqwny89TX/015yWreQLCaoBRPHz2NDQHKW5jlDQTrX7HAiX46IUPVYpiaj3XmBYQcdfNJ+C+J/Zdk9kpVIv6K5GwbEOzmDgWxE6QgdoIUxE6QgvwvEpTJqP2+Vy6InSAFsROkILZH0O46nzrPBeBG+8JftLwEwCfRHUq0SvypSvEFIM7hWKOireIxQUl9nb70vMWl1k9sjqB7Hw0/M405Ceq6HTzUogEkqE3Sy2qf7cyeVeBt3MdN7r4b4fAaEeTW8vDpgFKv2NT6ic0R9NcHdwHYkpA9PQGAtQ6QoE0A/AyJesTcjkPfQsyqsAASdKrgS/iqOe6iqXXEY3MEvWlQKHjNOwDSY+d3L44IOgxApAf6OjEkCH31qXM/SNAqBn3XnJnDptZPbI4gAI6GuzjsTWlccejOFVKC0CfSvMMgQduKiFLriMbmCDo8E4BsT58/P38PwHIpQVsBeFd8HiTIiD5i+MxwjabWEY/NEXTgP1GXdlQYd4RZl7Dc8eNLYoKcdp70LJqMGmnfmodiv6+cQVPriMfmCAIzyn9cdmg6GFuiaKfb3h48QZ/+E8fsqfmF2zXczaeEO35l+IdLrZ/YHkHmJY7R/bt0pmInSEHsBCnI/xJB+SJ2ghTETpCC2AlSEDtBCmInSEHsBCmInSAF+T+w8P8YuBvl6QAAAABJRU5ErkJggg==" /><!-- --></p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
