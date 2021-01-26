@@ -344,11 +344,45 @@ test_that("Resorting produces identical output over samples", {
     })
 })
 
-context("concatenating MA objects")
+## context("concatenating MA objects")
 
-## concatenate(MA6[, ]
+## ## this doesn't work because of this
+## ##  .concatenateStratifiedFiles(MA[, 1:4]@stratifiedFiles, MA[,
+## ##  5:8]@stratifiedFiles) Error in x[[i]] (from allClasses.R#48) :
+## ##  subscript out of bounds
 
+## ## a solution would be a final push to make statified files a
+## ## matrix probably!!!?
 
+## test_that("Concatenating over samples works", {
+##     expect_equal(concatenateMultiAmplicon(MA[, 1:4], MA[, 5:8]), 
+##    MA)
+## })
+
+context("adding sample information to MA objects")
+
+additionalSD <- data.frame(whatever=letters[seq(ncol(MA6))],
+                           row.names=rownames(MA6@sampleData))
+
+test_that("sample data with exact matches of rowname works", {
+    expect_s4_class(addSampleData(MA, additionalSD), "MultiAmplicon")
+})
+
+additionalSD <- data.frame(whatever=letters[seq(ncol(MA6)+2)],
+                           row.names=c(rownames(MA6@sampleData), "foo", "bar"))
+
+test_that("sample data warning when more samples than sequence data", {
+    expect_warning(addSampleData(MA, additionalSD),
+                   "sampleData but have no sequence data reported\\. They will be omitted")
+})
+
+additionalSD <- data.frame(whatever=letters[1:4],
+                           row.names=rownames(MA6@sampleData)[1:4])
+
+test_that("sample data warning when more sequence data than sample data", {
+    expect_warning(addSampleData(MA, additionalSD),
+                   "missing from your sampleData but seem to have sequence data reported")
+})
 
 
 context("Handing over to Phyloseq")
