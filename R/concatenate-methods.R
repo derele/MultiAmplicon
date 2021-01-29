@@ -96,7 +96,7 @@ concatenateMultiAmplicon <- function (MA1, MA2, what="samples") {
     MultiAmplicon(MA1@PrimerPairsSet,
                   .concatenatePairedReadFileSets(MA1@PairedReadFileSet,
                                                  MA2@PairedReadFileSet),
-                  .concatenateRawCounts(MA1, MA2),
+                  .Data = .concatenateRawCounts(MA1, MA2),
                   .concatenateStratifiedFiles(MA1@stratifiedFiles,
                                               MA2@stratifiedFiles),
                   .concatenateSampleData(MA1, MA2),

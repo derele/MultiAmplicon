@@ -70,20 +70,33 @@ setGeneric(name="sortAmplicons",
 setMethod("sortAmplicons", "MultiAmplicon",
           function(MA, filedir="stratified_files",
                    n = 1e6, countOnly = FALSE, rmPrimer = TRUE, ...){
-##    .complainWhenAbsent(MA, "PrimerPairsSet")
-##    .complainWhenAbsent(MA, "PairedReadFileSet")          
     ## the data matrix of amplicons x samples stratified counts 
-    NR <- length(MA@PrimerPairsSet@primerF)
-    NC <- length(MA@PairedReadFileSet@readsF)
+    PPS <- getPrimerPairsSet(MA)
+    PRS <- getPairedReadFileSet(MA)
+    NR <- length(PPS)
+    NC <- length(PRS)
     data <- matrix(0, nrow=NR, ncol=NC)
     ## colnames are sample names taken from file names
-    base::colnames(data) <- names(MA@PairedReadFileSet)
+    colnames(data) <- names(PRS)
     ## rownames have to come from (matched) primers
-    base::rownames(data) <- names(MA@PrimerPairsSet)
-    filepathF <- matrix("", nrow=NR, ncol=NC)
-    filepathR <- matrix("", nrow=NR, ncol=NC)
-    readsF <- MA@PairedReadFileSet@readsF
-    readsR <- MA@PairedReadFileSet@readsR
+    rownames(data) <- names(PPS)
+    
+    namesGrid <- expand.grid(names(PPS), names(PRS))
+    basenames <- apply(namesGrid, 1, paste, collapse="_")          
+    
+    filebaseF <- paste0(filedir, "/", basenames, "_F.fastq.gz")
+    filebaseR <- paste0(filedir, "/", basenames, "_R.fastq.gz")
+
+    filepathF <- matrix(filebaseF,
+                        nrow=NR, ncol=NC,
+                        dimnames=list(names(PPS), names(PRS)))
+    filepathR <- matrix(filebaseR,
+                        nrow=NR, ncol=NC,
+                        dimnames=list(names(PPS), names(PRS)))
+
+    readsF <- slot(PRS, "readsF")
+    readsR <- slot(PRS, "readsR")
+
     ## test whether filedir exists
     if(!dir.exists(filedir)) {
         message("creating directory ", filedir)
@@ -97,14 +110,8 @@ setMethod("sortAmplicons", "MultiAmplicon",
     }
     ## add sample data and metadata in columns
     for(x in seq_along(readsF)) {
-        filebaseF <- paste0(filedir, "/", basename(readsF[[x]]))
-        filebaseR <- paste0(filedir, "/", basename(readsR[[x]]))
         if(!file.exists(readsF[[x]]) | !file.exists(readsR[[x]])){
             data[, base::colnames(data)[[x]]] <- 0
-            filepathF[,x] <- paste0(filebaseF, names(MA@PrimerPairsSet),
-                                   ".fastq.gz")
-            filepathR[,x] <- paste0(filebaseR, names(MA@PrimerPairsSet),
-                                   ".fastq.gz")
             next()
         }
         f <- ShortRead::FastqStreamer(readsF[[x]], n = n)
@@ -132,14 +139,6 @@ setMethod("sortAmplicons", "MultiAmplicon",
                        # is reverse and forward matched
                        select <- fM[[map.primerF]] & rM[[map.primerR]] 
                        if(!countOnly){ # file operations only if requested
-                           filepathF[y, x] <-
-                               paste0(filebaseF,
-                                      names(MA@PrimerPairsSet)[[y]],
-                                      ".fastq.gz")
-                           filepathR[y, x] <-
-                               paste0(filebaseR,
-                                      names(MA@PrimerPairsSet)[[y]],
-                                      ".fastq.gz")
                            lengthF <- length(MA@PrimerPairsSet@primerF[[y]])
                            lengthR <- length(MA@PrimerPairsSet@primerR[[y]])
                            F <- Ffq[select]
@@ -179,16 +178,11 @@ setMethod("sortAmplicons", "MultiAmplicon",
     ## files. This means don't run on files corresponding to zeros
     ## read counts repored 
     if(!countOnly){
-        stratifiedFiles <- lapply(seq_along(MA@PrimerPairsSet),
-                                  function(i){
-                                      existing <- which(data[i, ]>0)
-                                      PairedReadFileSet(filepathF[i, existing],
-                                                        filepathR[i, existing])
-                                  })
-        names(stratifiedFiles) <- names(MA@PrimerPairsSet)        
-        new.MA <- initialize(MA, data,
-                             stratifiedFiles = stratifiedFiles)
-        new.MA
+        stratifiedFiles <- stratifiedFilesMatrix(filepathF, filepathR)
+        MultiAmplicon(PrimerPairsSet = MA@PrimerPairsSet, 
+                      PairedReadFileSet = MA@PairedReadFileSet,
+                      .Data = data,
+                      stratifiedFiles = stratifiedFiles)
     }else{
         data
     }

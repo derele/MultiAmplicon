@@ -36,8 +36,8 @@ test_that("no reads were sorted into different samples" , {
         snames <- colnames(MA)
         names(readsFL) <- snames
         sort_track <- lapply(snames, function (sampl) { 
-            strat <- lapply(MA@stratifiedFiles, function(x) {
-                grep(sampl, x@readsF, value=TRUE)
+            strat <- lapply(getStratifiedFilesF(MA), function(x) {
+                grep(sampl, x, value=TRUE)
             })
             readsF_stratified <- ShortRead::readFastq(unlist(strat))
             IDsStrat <- ShortRead::id(readsF_stratified)
@@ -91,38 +91,35 @@ test_that("rowCounts is zero for nonsensical primer", {
 ## get only non empty samples raw counts
 test_that("number of files written equals non-zero samples in rawCounts", {
     ## For multi amplicon objects
-    F.files <- unlist(lapply(MA1@stratifiedFiles, function (x) x@readsF))
-    R.files <- unlist(lapply(MA1@stratifiedFiles, function (x) x@readsF))
+    F.files <- unlist(getStratifiedFilesF(MA1))
+    R.files <- unlist(getStratifiedFilesR(MA1))
     expect_equal(sum(getRawCounts(MA1)>0), length(F.files))
     expect_equal(sum(getRawCounts(MA1)>0), length(R.files))
     ## For single amplicon objects
-    F.files <- unlist(lapply(SA1@stratifiedFiles, function (x) x@readsF))
-    R.files <- unlist(lapply(SA1@stratifiedFiles, function (x) x@readsF))
+    F.files <- unlist(getStratifiedFilesF(SA1))
+    R.files <- unlist(getStratifiedFilesR(SA1))
     expect_equal(sum(getRawCounts(SA1)>0), length(F.files))
     expect_equal(sum(getRawCounts(SA1)>0), length(R.files))
-})
-
-test_that("N statified files is N of non-zero samples x amplicons",{
-    ## For multi amplicon objects
-    expect_equal(rowSums(getRawCounts(MA1)>0), 
-                 unlist(lapply(MA1@stratifiedFiles, length)))
-    ## For single amplicon objects
-    expect_equal(rowSums(getRawCounts(SA1)>0), 
-                 unlist(lapply(SA1@stratifiedFiles, length)))
 })
 
 test_that("files for each amplicon contain the number of reads reported", {
     ## For multi amplicon objects
     expect_equivalent(
-        unlist(lapply(MA1@stratifiedFiles,
-                      function (x) length(ShortRead::readFastq(x@readsR)))),
+        lapply(seq(nrow(MA1)), function (i){
+            length(ShortRead::readFastq(getStratifiedFilesF(MA1[i, ])))
+        }), 
         rowSums(getRawCounts(MA1)))
-    ## For single amplicon objects
-    expect_equivalent(
-        unlist(lapply(SA1@stratifiedFiles,
-                      function (x) length(ShortRead::readFastq(x@readsR)))),
-        rowSums(getRawCounts(SA1)))
 })
+
+test_that("files for each sample contain the number of reads reported", {
+    ## For multi amplicon objects
+    expect_equivalent(
+        lapply(seq(ncol(MA1)), function (i){
+            length(ShortRead::readFastq(getStratifiedFilesF(MA1[, i])))
+        }), 
+        colSums(getRawCounts(MA1)))
+})
+
 
 context("SortAmplcion can be made less stringent?")
 test_that("less stringent sorting results in more reads accepted", {
@@ -135,33 +132,6 @@ test_that("less stringent sorting results in more reads accepted", {
 })
 
 
-## MA2 <- derepMulti(MA1, mc.cores=1)
-
-## context("Dereplication works?")
-## test_that("dereplication produces a list of derep objects ", {
-##     expect_equal(length(MA2@derep), nrow(MA2))
-##     expect_equal(length(MA2@derep), nrow(getRawCounts(MA2)))
-##     expect_equal(unlist(lapply(MA2@derep, length)),
-##                  rowSums(getRawCounts(MA2)>1)) # >1 singl seq rm
-## })
-
-## up1.counts <- t(getRawCounts(MA2))[t(getRawCounts(MA2))>1] # >1 singl seq rm
-
-## up1.dereps <- unname(unlist(lapply(MA2@derep, function (x){
-##     lapply(x, function (y) sum(slot(y, "derepF")$uniques))
-## })))
-
-## test_that("all sequences are dereplicated ", {
-## expect_equal(up1.counts, up1.dereps)
-## })
-
-## # At certain versions of dada2 setting OMEGA_C to avoid removing
-## # sequences was needed to avoid bugs resulting from empty amplicons
-## # this shouldn't be the case anymore.
-
-## MA3 <- dadaMulti(MA1, selfConsist=TRUE, pool=FALSE,
-## OMEGA_C=0, multithread=TRUE)
-
 MA3 <- dadaMulti(MA1, selfConsist=TRUE, pool=FALSE, 
                  multithread=TRUE)
 
@@ -171,7 +141,7 @@ test_that("dada2 denoising produces a list of dada objects ", {
     expect_equal(length(MA3@dada), nrow(MA3))
     expect_equal(length(MA3@dada), nrow(getRawCounts(MA3)))
     expect_equal(unlist(lapply(MA3@dada, length)),
-                 rowSums(getRawCounts(MA3)>1)) # >1 singl seq rm
+                 rowSums(getRawCounts(MA3)>0)) # >1 singl seq rm
 })
 
 
@@ -200,7 +170,7 @@ test_that("merging produces a list of derep objects ", {
     expect_equal(length(MA4@mergers), nrow(MA3))
     expect_equal(length(MA4@mergers), nrow(getRawCounts(MA3)))
     expect_equal(unlist(lapply(MA4@mergers, length)),
-                 rowSums(getRawCounts(MA3)>1)) # >1 singl seq rm
+                 rowSums(getRawCounts(MA3)>0)) # >1 singl seq rm
 })
 
 ## for some weird reason this fails (only on TravisCI) NO IDEA WHY
@@ -218,16 +188,6 @@ up1.merge <- unname(unlist(lapply(MA4@mergers, function (x)
 
 
 MA5 <- makeSequenceTableMulti(MA4)
-
-context("Sequence table is correct")
-test_that("stratified files result in the number of columns of sequence tables ",
-{
-    expect_true(all(unlist(lapply(MA5@stratifiedFiles, length)) ==
-                    unlist(lapply(MA5@sequenceTable, nrow)) |
-                    unlist(lapply(MA5@stratifiedFiles, length)) ==
-                    unlist(lapply(MA5@sequenceTable, nrow))+1))
-    ## last case for if a single sequence was dropped derep object
-})
 
 test_that("Identical files produce identical sequence tables ", {
     lapply(MA5@sequenceTable, function(x) {
@@ -260,8 +220,8 @@ test_that("Reads in sequence tables map to stratified files", {
     mapReadsStratTab <- function(MA) {
         getReadsBySample <- function(MA){
             sreads <- lapply(colnames(MA), function (sampl) { 
-                strat <- lapply(MA@stratifiedFiles, function(x) {
-                    grep(sampl, x@readsF, value=TRUE)
+                strat <- lapply(getStratifiedFilesF(MA), function(x) {
+                    grep(sampl, x, value=TRUE)
                 })
                 ShortRead::readFastq(unlist(strat))
             })
@@ -383,6 +343,8 @@ test_that("sample data warning when more sequence data than sample data", {
     expect_warning(addSampleData(MA, additionalSD),
                    "missing from your sampleData but seem to have sequence data reported")
 })
+
+
 
 
 context("Handing over to Phyloseq")

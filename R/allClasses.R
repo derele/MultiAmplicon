@@ -28,15 +28,16 @@ setClass("PairedReadFileSet",
          contains = c(readsF="character", readsR="character", names="character"),
          validity=function(object) {
              all.files <- c(object@readsF, object@readsR)
-             missing.file <- !file.exists(all.files)
-             if (any(missing.file)){
-                 warning(paste0("\nfile ", all.files[missing.file], " does not exist on your system"))
-             }
+             ## missing.file <- !file.exists(all.files)
+             ## if (any(missing.file)){
+             ##     warning(paste0("\nfile ", all.files[missing.file], " does not exist on your system"))
+             ## }
              if (length(object@readsF) != length(object@readsR)){
                  "Same number of forward and reverse reads files needed to constitute files of paired end reads"}
              else{TRUE}
          })
 
+    
 
 ##' @param readsF The path and filenames containing forward (R1) reads
 ##' @param readsR The path and filenames containing reverse (R2) reads
@@ -61,6 +62,21 @@ PairedReadFileSet <- function(readsF=character(), readsR=character()){
 ##' @rdname PairedReadFileSet-class
 ##' @export
 setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
+
+
+
+setClass("stratifiedFilesMatrix",
+         slots = c(readsF="matrix", readsR="matrix"),
+         )
+
+
+stratifiedFilesMatrix <- function(readsF=matrix(), readsR=matrix()) {
+    new("stratifiedFilesMatrix",
+        readsF = readsF,
+        readsR = readsR)
+}
+
+
 
 ##' A class representing sequences of forward and reverse primers.
 ##'
@@ -374,7 +390,7 @@ setMethod("length", "PairedDada", function(x){
 setClass("MultiAmplicon",
          representation(PrimerPairsSet="PrimerPairsSet",
                         PairedReadFileSet="PairedReadFileSet",
-                        stratifiedFiles="list",
+                        stratifiedFiles="stratifiedFilesMatrix",
                         sampleData="sample_data", 
                         derep="list",
                         dada="list",
@@ -419,7 +435,7 @@ setClass("MultiAmplicon",
 MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
                           PairedReadFileSet = PairedReadFileSet(),
                           .Data = matrix(ncol=0, nrow=0),
-                          stratifiedFiles = list(),
+                          stratifiedFiles = stratifiedFilesMatrix(),
                           sampleData = new("sample_data",
                                            data.frame(row.names=names(PairedReadFileSet),
                                                       readsF=PairedReadFileSet@readsF,
@@ -466,19 +482,38 @@ getRawCounts <- function (MA) {
     return(slot(MA, ".Data"))
 }
 
-##' @rdname MultiAmplicon-class
-##' @param simplify Should a list of objects be simplified to only one
-##'     object if it has length one?
-##' @export
-getStratifiedFilesF <- function(MA, simplify=TRUE) {
-    .simpfy(lapply(MA@stratifiedFiles, slot, "readsF"), simplify)
- }
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-getStratifiedFilesR <- function(MA, simplify=TRUE) {
-    .simpfy(lapply(MA@stratifiedFiles, slot, "readsR"), simplify)
+getStratifiedFiles <- function(MA) {
+    slot(MA, "stratifiedFiles")
 }
+
+##' @rdname MultiAmplicon-class
+##' @param dropEmpty Should empty files be returned
+##' @export
+getStratifiedFilesF <- function(MA, dropEmpty=TRUE) {
+    SF <- getStratifiedFiles(MA)
+    F <- slot(SF,  "readsF")
+    if (dropEmpty) {
+        exists <- getRawCounts(MA) > 0
+        return(F[exists])
+    } else {return(F)}
+}
+
+##' @rdname MultiAmplicon-class
+##' @param dropEmpty Should empty files be returned
+##' @export
+getStratifiedFilesR <- function(MA, dropEmpty=TRUE) {
+    SR <- getStratifiedFiles(MA)
+    R <- slot(SR,  "readsF")
+    if (dropEmpty) {
+        exists <- getRawCounts(MA) > 0
+        return(R[exists])
+    } else {return(R)}
+}
+
+
     
 ##' @rdname MultiAmplicon-class
 ##' @export

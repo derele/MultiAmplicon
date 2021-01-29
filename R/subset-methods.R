@@ -7,7 +7,6 @@
 ##' @param j not used
 ##' @param ... not used
 ##' @param drop not used
-## ##' @importClassesFrom Matrix index 
 ##' @rdname PrimerPairsSet-class
 setMethod("[", c("PrimerPairsSet", "index", "missing", "ANY"),
           function(x, i, j, ..., drop=NA){
@@ -34,7 +33,7 @@ setMethod("[", c("PairedReadFileSet", "index", "missing", "ANY"),
           })
 
 ##' @param x PairedDerep-class
-##' @param i index or logical indicating which sequencing read file
+##' @param i index, name or logical indicating which sequencing read file
 ##'     pair to select or character string giving its name
 ##' @param j not used
 ##' @param ... not used
@@ -46,6 +45,38 @@ setMethod("[", c("PairedDerep", "index", "missing", "ANY"),
               newR <- slot(x, "derepR")[i]
               new("PairedDerep",
                   derepF=newF, derepR=newR)
+          })
+
+##' @param x stratifiedFilesMatrix-class
+##' @param i index, name or logical indicating which sequencing read file
+##'     pair to select or character string giving its name
+##' @param j index, name or logical indicating which sequencing read file
+##'     pair to select or character string giving its name
+##' @param ... not used
+##' @param drop not used
+##' @rdname stratifiedFilesMatrix-class
+setMethod("[", c("stratifiedFilesMatrix", "index", "index", "ANY"),
+          function(x, i, j, ..., drop=FALSE){
+              newF <- slot(x, "readsF")[i, j, drop=drop]
+              newR <- slot(x, "readsR")[i, j, drop=drop]
+              new("stratifiedFilesMatrix",
+                  readsF=newF, readsR=newR)
+          })
+
+setMethod("[", c("stratifiedFilesMatrix", "index", "missing", "ANY"),
+          function(x, i, j, ..., drop=FALSE){
+              newF <- slot(x, "readsF")[i, ,drop=drop]
+              newR <- slot(x, "readsR")[i, ,drop=drop]              
+              new("stratifiedFilesMatrix",
+                  readsF=newF, readsR=newR)
+          })
+
+setMethod("[", c("stratifiedFilesMatrix", "missing", "index", "ANY"),
+          function(x, i, j, ..., drop=FALSE){
+              newF <- slot(x, "readsF")[, j, drop=drop]
+              newR <- slot(x, "readsR")[, j, drop=drop]              
+              new("stratifiedFilesMatrix",
+                  readsF=newF, readsR=newR)
           })
 
 ##' @param x PairedDada-class object
@@ -93,7 +124,7 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
               )
               newSampleData <- x@sampleData[j,]
               newRC <- matrix(ncol=0, nrow=0)
-              newSF <- list()
+              newSF <- stratifiedFilesMatrix()
               newderep <- list()
               newdada <- list()
               newmergers <- list()
@@ -102,18 +133,15 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
               newTT <- list()
               if(all(dim(getRawCounts(x)>0))){
                   newRC <- as.matrix(getRawCounts(x)[i, j, drop=FALSE])
+                  newSF <- getStratifiedFiles(x)[i, j, drop=FALSE]
                   ## we drop empty files from statified files
                   ## therefore we have to find new indices j. These
                   ## later have to be used also for the columns of
-                  ## sequence tables.
+                  ## sequence tables.                  
                   new.j <- lapply(seq_along(i), function (ii) {
-                      zero.i <- which(getRawCounts(x)[i[[ii]], ]>1) # >1 singl seq rm
+                      zero.i <- which(getRawCounts(x)[i[[ii]], ]>0) # >1 singl seq rm
                       which(zero.i%in%j)
                   })
-                  newSF <-  lapply(seq_along(i), function (ii) {
-                      x@stratifiedFiles[[i[[ii]]]][new.j[[ii]]]
-                  })
-                  names(newSF) <- names(x@stratifiedFiles[i])
               }
               if(length(x@derep)>0){
                   newderep <- lapply(seq_along(i), function (ii){

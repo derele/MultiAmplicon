@@ -50,7 +50,7 @@ derepMulti <- function(MA, mc.cores = getOption("mc.cores", 1L),
         derepF <- do.call(derepFastq,
                           c(list(getStratifiedFilesF(MA[i, ])), args.here))
         derepR <- do.call(derepFastq,
-                          c(list(getStratifiedFilesR(MA[i,])), args.here))
+                          c(list(getStratifiedFilesR(MA[i, ])), args.here))
         ## make it a list even if only one sample was dereplicated
         if (class(derepF)%in%"derep") {
             ## the same must be true for the revers then to keep them
