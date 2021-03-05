@@ -42,11 +42,10 @@ setMethod("show", "MultiAmplicon", function(object){
     cat("\nContaining slot PrimerPairsSet: \n")
     show(object@PrimerPairsSet)
     cat("\nContaining slot PairedReadFileSet: \n")
-    show(object@PairedReadFileSet)
+    show(object@PairedReadFileSet) 
     cat("\nContaining slot stratifiedFiles of dimensions:",
-        length(object@stratifiedFiles), "amplicons x ",
-        paste(.replace_inf_range(lapply(object@stratifiedFiles, length)), collapse=" to "),
-        " samples \n")
+        dim(object@stratifiedFiles@readsF), "forward and",
+        dim(object@stratifiedFiles@readsR), "reverse reads\n")
     cat("\nContaining slot sampleData:")
     show(object@sampleData)        
     cat("\nContaining slot derep of dimensions:",
