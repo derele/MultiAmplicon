@@ -14,7 +14,7 @@
 \arguments{
 \item{x}{PairedDerep-class}
 
-\item{i}{index or logical indicating which sequencing read file
+\item{i}{index, name or logical indicating which sequencing read file
 pair to select or character string giving its name}
 
 \item{j}{not used}

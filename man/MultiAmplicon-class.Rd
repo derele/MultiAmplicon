@@ -8,6 +8,7 @@
 \alias{getPrimerPairsSet}
 \alias{getPairedReadFileSet}
 \alias{getRawCounts}
+\alias{getStratifiedFiles}
 \alias{getStratifiedFilesF}
 \alias{getStratifiedFilesR}
 \alias{getDerepF}
@@ -29,8 +30,7 @@
 MultiAmplicon(
   PrimerPairsSet = PrimerPairsSet(),
   PairedReadFileSet = PairedReadFileSet(),
-  .Data = matrix(ncol = 0, nrow = 0),
-  stratifiedFiles = list(),
+  stratifiedFiles = stratifiedFilesMatrix(),
   sampleData = new("sample_data", data.frame(row.names = names(PairedReadFileSet),
     readsF = PairedReadFileSet@readsF, readsR = PairedReadFileSet@readsF)),
   derep = list(),
@@ -47,9 +47,11 @@ getPairedReadFileSet(MA)
 
 getRawCounts(MA)
 
-getStratifiedFilesF(MA, simplify = TRUE)
+getStratifiedFiles(MA)
 
-getStratifiedFilesR(MA, simplify = TRUE)
+getStratifiedFilesF(MA, dropEmpty = TRUE)
+
+getStratifiedFilesR(MA, dropEmpty = TRUE)
 
 getDerepF(MA, simplify = TRUE)
 
@@ -86,9 +88,6 @@ amplicons see \code{\link{PrimerPairsSet-class}}}
 \item{PairedReadFileSet}{a set of paired end sequencing data files
 \code{\link{PairedReadFileSet-class}}}
 
-\item{.Data}{Users should not supply this parameter, the slot
-is created by \code{\link{sortAmplicons}}.}
-
 \item{stratifiedFiles}{Users should not supply this parameter, the
 slot is created by \code{\link{sortAmplicons}}.}
 
@@ -120,8 +119,7 @@ list of taxonomyTable objects from
 
 \item{MA}{MultiAmplicon-class object}
 
-\item{simplify}{Should a list of objects be simplified to only one
-object if it has length one?}
+\item{dropEmpty}{Should empty files be returned}
 
 \item{object}{A \code{MultiAmplicon-class} object.}
 
@@ -136,6 +134,9 @@ amplicons)}
 \item{...}{not used}
 
 \item{drop}{should not be used}
+
+\item{.Data}{Users should not supply this parameter, the slot
+is created by \code{\link{sortAmplicons}}.}
 }
 \description{
 The MultiAmplicon class is a container that stores at least primer

@@ -125,8 +125,8 @@ dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
         ## dF <- getDerepF(MA[i, ])
         ## dR <- getDerepR(MA[i, ])
         ## ## Or directly from stratified files
-        dF <- getStratifiedFilesF(MA[i, ])
-        dR <- getStratifiedFilesR(MA[i, ])
+        dF <- getStratifiedFilesF(MA[i, ], dropEmpty=TRUE)
+        dR <- getStratifiedFilesR(MA[i, ], dropEmpty=TRUE)
         message("\n\namplicon ", rownames(MA)[i],
            ": dada estimation of sequence variants from ",
             length(dF), " of ",

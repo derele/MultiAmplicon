@@ -263,24 +263,45 @@ test_that("Reads in sequence tables map to stratified files", {
 
 context("Subsetting MultiAmplicon objects")
 
-test_that("subsetting leaves rawCounts intact", {
-    expect_equal(getRawCounts(MA6[2, 6]), getRawCounts(MA6)[2, 6, drop=FALSE])
-    expect_equal(getRawCounts(MA6[3:4, 2:5]), getRawCounts(MA6)[3:4, 2:5, drop=FALSE])
-    })
+subRows <- 3:4
+subRnames <- rownames(MA6)[subRows]
+
+subCols <- 2:5
+subCnames <- colnames(MA6)[subCols]
 
 
+test_that("subsetting leaves stuff intact", {
+    expect_equal(getRawCounts(MA6[subRows, subCols]),
+                 getRawCounts(MA6)[subRnames, subCnames, drop=FALSE])
+    expect_equal(getStratifiedFiles(MA6[subRows, subCols]),
+                 getStratifiedFiles(MA6[subRnames, subCnames, drop=FALSE]))
 
+    ## need to reimplement the pairedDada stuff!!
+    ##     expect_equal(getDadaF(MA6[subRows, subCnames]),
+    ##                 getDadaF(MA6[subRnames, subCols]))
+
+    expect_equal(getSequenceTable(MA6[2, 6]), getSequenceTable(MA6[2, 6, drop=FALSE]))
+    expect_equal(getSequenceTableNoChime(MA6[2, 6]),
+                 getSequenceTableNoChime(MA6[2, 6, drop=FALSE]))
+})
+
+
+## DISCREPANCY!
+## MA6[1, 5]@dada
+## MA6[1, colnames(MA6)%in%"S04_F_filt.fastq.gz"]@dada
+## MA6[1, "S04_F_filt.fastq.gz"]@dada
 
 ### THIS analyses SAMPLE CONFUSION caused by resorting before dada
-resortedMA3 <- dadaMulti(MA1[, c(6:4,1L,3L,2L, 8L, 7L)],
-                  selfConsist=TRUE, pool=FALSE, multithread=TRUE)
+MA1res <- MA1[, c(1, 2, 3, 5)]
+
+resortedMA3 <- dadaMulti(MA1res,
+                         selfConsist=TRUE, pool=FALSE, multithread=TRUE)
 
 ## in all other steps resorting does not produce an error
 resortedMA4 <- mergeMulti(resortedMA3, justConcatenate=TRUE)
 resortedMA5 <- makeSequenceTableMulti(resortedMA4)
 resortedMA6 <- removeChimeraMulti(resortedMA5)
 
-## trackReadSorting(resortedMA6)
 
 ################# EVALUATE sorting #############
 
@@ -304,12 +325,11 @@ test_that("Resorting produces identical output over samples", {
     })
 })
 
-## context("concatenating MA objects")
+context("concatenating MA objects")
 
 ## ## this doesn't work because of this
-## ##  .concatenateStratifiedFiles(MA[, 1:4]@stratifiedFiles, MA[,
-## ##  5:8]@stratifiedFiles) Error in x[[i]] (from allClasses.R#48) :
-## ##  subscript out of bounds
+.concatenateStratifiedFiles(MA[, 1:4]@stratifiedFiles,
+                            MA[, 5:8]@stratifiedFiles) 
 
 ## ## a solution would be a final push to make statified files a
 ## ## matrix probably!!!?

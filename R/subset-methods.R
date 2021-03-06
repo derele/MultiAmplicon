@@ -7,6 +7,7 @@
 ##' @param j not used
 ##' @param ... not used
 ##' @param drop not used
+##' @importClassesFrom Matrix index
 ##' @rdname PrimerPairsSet-class
 setMethod("[", c("PrimerPairsSet", "index", "missing", "ANY"),
           function(x, i, j, ..., drop=NA){
@@ -55,29 +56,13 @@ setMethod("[", c("PairedDerep", "index", "missing", "ANY"),
 ##' @param ... not used
 ##' @param drop not used
 ##' @rdname stratifiedFilesMatrix-class
-setMethod("[", c("stratifiedFilesMatrix", "index", "index", "ANY"),
-          function(x, i, j, ..., drop=FALSE){
-              newF <- slot(x, "readsF")[i, j, drop=drop]
-              newR <- slot(x, "readsR")[i, j, drop=drop]
-              new("stratifiedFilesMatrix",
-                  readsF=newF, readsR=newR)
-          })
+##' @export
+setMethod("[", "stratifiedFilesMatrix", function(x, i, j, ..., drop=TRUE) {
+    m <- callNextMethod()
+    stratifiedFilesMatrix(readsF=x@readsF[m], readsR=x@readsR[m],
+                          ncol=ncol(m), nrow=nrow(m))
+})
 
-setMethod("[", c("stratifiedFilesMatrix", "index", "missing", "ANY"),
-          function(x, i, j, ..., drop=FALSE){
-              newF <- slot(x, "readsF")[i, ,drop=drop]
-              newR <- slot(x, "readsR")[i, ,drop=drop]              
-              new("stratifiedFilesMatrix",
-                  readsF=newF, readsR=newR)
-          })
-
-setMethod("[", c("stratifiedFilesMatrix", "missing", "index", "ANY"),
-          function(x, i, j, ..., drop=FALSE){
-              newF <- slot(x, "readsF")[, j, drop=drop]
-              newR <- slot(x, "readsR")[, j, drop=drop]              
-              new("stratifiedFilesMatrix",
-                  readsF=newF, readsR=newR)
-          })
 
 ##' @param x PairedDada-class object
 ##' @param i numeric to select

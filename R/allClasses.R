@@ -63,20 +63,19 @@ PairedReadFileSet <- function(readsF=character(), readsR=character()){
 ##' @export
 setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
 
-
-
 setClass("stratifiedFilesMatrix",
-         slots = c(readsF="matrix", readsR="matrix"),
-         )
+         representation("matrix", readsF="character", readsR="character"),
+         validity = function(object) {
+             msg <- NULL
+             if (length(object@readsF) != length(object@readsR))
+                 msg <- c(msg, "'readsF' and 'readsR' must be the same length")
+             if (is.null(msg)) TRUE else msg
+         })
 
-
-stratifiedFilesMatrix <- function(readsF=matrix(), readsR=matrix()) {
-    new("stratifiedFilesMatrix",
-        readsF = readsF,
-        readsR = readsR)
+stratifiedFilesMatrix <- function(readsF=character(), readsR=character(), ...) {
+    new("stratifiedFilesMatrix", matrix(seq_along(readsF), ...),
+        readsF=readsF, readsR=readsR)
 }
-
-
 
 ##' A class representing sequences of forward and reverse primers.
 ##'
@@ -389,7 +388,7 @@ setMethod("length", "PairedDada", function(x){
 ##' @exportClass MultiAmplicon
 setClass("MultiAmplicon",
          representation(PrimerPairsSet="PrimerPairsSet",
-                        PairedReadFileSet="PairedReadFileSet",
+                        PairedReadFileSet="PairedReadFileSet",                        
                         stratifiedFiles="stratifiedFilesMatrix",
                         sampleData="sample_data", 
                         derep="list",
@@ -496,7 +495,7 @@ getStratifiedFilesF <- function(MA, dropEmpty=TRUE) {
     SF <- getStratifiedFiles(MA)
     F <- slot(SF,  "readsF")
     if (dropEmpty) {
-        exists <- getRawCounts(MA) > 0
+        exists <- which(getRawCounts(MA) > 0)
         return(F[exists])
     } else {return(F)}
 }
@@ -508,7 +507,7 @@ getStratifiedFilesR <- function(MA, dropEmpty=TRUE) {
     SR <- getStratifiedFiles(MA)
     R <- slot(SR,  "readsF")
     if (dropEmpty) {
-        exists <- getRawCounts(MA) > 0
+        exists <- which(getRawCounts(MA) > 0)
         return(R[exists])
     } else {return(R)}
 }
