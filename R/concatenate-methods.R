@@ -4,14 +4,15 @@
 }
 
 .concatenateStratifiedFiles <- function(x, y){
-    ## to avoid but when one of the MA is missing a sample
-    along <- 1:max(length(x), length(y)) 
-    cf <- lapply(along, function (i){
-        .concatenatePairedReadFileSets(x[[i]], y[[i]])
-    })
-    names(cf) <- names(x)
-    cf
+    if(nrow(x) != nrow(y)){
+        stop("Do you try to concatenate samples from MultiAmplicon objects with diffrent numbers of amplicons? This will not work!")
+    }
+    stratifiedFilesMatrix(readsF=c(x@readsF, y@readsF),
+                          readsR=c(x@readsR, y@readsR),
+                          ncol=ncol(x)+ncol(y), nrow=nrow(x))
 }
+
+
 .concatenateRawCounts <- function(x, y){
     cbind(getRawCounts(x), getRawCounts(y))
 }

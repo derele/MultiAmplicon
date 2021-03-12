@@ -328,8 +328,12 @@ test_that("Resorting produces identical output over samples", {
 context("concatenating MA objects")
 
 ## ## this doesn't work because of this
-.concatenateStratifiedFiles(MA[, 1:4]@stratifiedFiles,
-                            MA[, 5:8]@stratifiedFiles) 
+.concatenateStratifiedFiles(MA6[, 1:4]@stratifiedFiles,
+                            MA6[, 5:8]@stratifiedFiles) 
+
+concatenateMultiAmplicon(MA6[, 1:4],
+                         MA6[, 5:8]) 
+
 
 ## ## a solution would be a final push to make statified files a
 ## ## matrix probably!!!?
