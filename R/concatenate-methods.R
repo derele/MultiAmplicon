@@ -9,7 +9,9 @@
     }
     stratifiedFilesMatrix(readsF=c(x@readsF, y@readsF),
                           readsR=c(x@readsR, y@readsR),
-                          ncol=ncol(x)+ncol(y), nrow=nrow(x))
+                          ncol=ncol(x)+ncol(y), nrow=nrow(x),
+                          dimnames=list(rownames(x),
+                                        c(colnames(x), colnames(y))))
 }
 
 
@@ -54,7 +56,12 @@
 
 .concatenateSequenceTable <- function(x, y){
     st <- lapply(seq_along(x), function (i){
-        rbind(x[[i]], y[[i]])
+        bound <- rbind(x[[i]], y[[i]])
+        ## ugly hack to remove dimnames in empty IMPROVE??
+        if(all(dim(bound)==0)) {
+            attr(bound, "dimnames") <- NULL
+        }
+        bound
     })
     names(st) <- names(x)
     st

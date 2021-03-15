@@ -130,12 +130,19 @@ setClass("PrimerPairsSet", contains = "DNAStringSet",
 ##'     length. Can be named or unnamed.
 ##' @export PrimerPairsSet
 ##' @rdname PrimerPairsSet-class
-PrimerPairsSet <- function(primerF=character(), primerR=character()){
+PrimerPairsSet <- function(primerF=character(), primerR=character(), names=character()){
     ## if names exist construct primer names
-    if(length(names(primerR)) == length(primerR) &&
-       length(names(primerF))== length(primerF)) {
-        na <- paste0(names(primerF), ".", names(primerR))
-    } else {na <- paste0(primerF, ".", primerR)} # otherwise use primer sequences
+    if(length(names) >0 && length(names) != length(primerF)){
+        stop("primer names must have same lenght as number of primer pairs")
+    } else if(length(names) == length(primerR)){
+        na <- names
+    } else if(length(names(primerR)) == length(primerR) && # 
+              length(names(primerF))== length(primerF)) {
+        ## concatenate forward and rev name
+        na <- paste0(names(primerF), ".", names(primerR)) 
+    } else {
+        na <- paste0(primerF, ".", primerR)
+    } # otherwise use primer sequences
     ## set all names the same!
     names(primerF) <- na
     names(primerR) <- na

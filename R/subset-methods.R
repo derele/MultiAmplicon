@@ -13,8 +13,10 @@ setMethod("[", c("PrimerPairsSet", "index", "missing", "ANY"),
           function(x, i, j, ..., drop=NA){
               newF <- x@primerF[i]
               newR <- x@primerR[i]
+              na <- names(x)[i]
               PrimerPairsSet(primerF=as.character(newF),
-                             primerR=as.character(newR))
+                             primerR=as.character(newR),
+                             names=na)
           })
 
 ##' @param x PairedReadFileSet-class object
@@ -60,7 +62,8 @@ setMethod("[", c("PairedDerep", "index", "missing", "ANY"),
 setMethod("[", "stratifiedFilesMatrix", function(x, i, j, ..., drop=TRUE) {
     m <- callNextMethod()
     stratifiedFilesMatrix(readsF=x@readsF[m], readsR=x@readsR[m],
-                          ncol=ncol(m), nrow=nrow(m))
+                          ncol=ncol(m), nrow=nrow(m),
+                          dimnames=list(rownames(m), colnames(m)))
 })
 
 
