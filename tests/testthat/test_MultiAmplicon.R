@@ -135,32 +135,33 @@ test_that("less stringent sorting results in more reads accepted", {
 MA3 <- dadaMulti(MA1, selfConsist=TRUE, pool=FALSE, 
                  multithread=TRUE)
 
+
+## put this in validity methods!!!
+## .isListOf(c(getDadaF(MA3)), "dada", nullOk=TRUE)
+
 context("Denoising works and doesn't confuse samples?")
 
-test_that("dada2 denoising produces a list of dada objects ", {
-    expect_equal(length(MA3@dada), nrow(MA3))
-    expect_equal(length(MA3@dada), nrow(getRawCounts(MA3)))
-    expect_equal(unlist(lapply(MA3@dada, length)),
-                 rowSums(getRawCounts(MA3)>0)) # >1 singl seq rm
+test_that("dada2 denoising produces a matrix of dada objects ", {
+    expect_equal(dim(getDadaF(MA3, dropEmpty=FALSE)), dim(getRawCounts(MA3)))
+    expect_equal(length(getDadaF(MA3)), length(getStratifiedFilesF(MA3)))
+    expect_equal(sapply(getDadaF(MA3, dropEmpty=FALSE), is.null),
+                 sapply(getRawCounts(MA3), "==", 0))
 })
 
 
 test_that("dada2 denoising produces identical results for replicate samplesd", {
-    expect_equal(lapply(getDadaF(MA3[, "S05_F_filt.fastq.gz"]),
-                        unname),
-                 ## have to unname the amplicon naming
-                 lapply(getDadaF(MA3[, "S05D_F_filt.fastq.gz"]),
-                        unname))
+    expect_equal(getDadaF(MA3[, "S05_F_filt.fastq.gz"]), 
+                 getDadaF(MA3[, "S05D_F_filt.fastq.gz"]))
 })
 
 
-up1.dadas <- unname(unlist(lapply(MA3@dada, function (x)
-    lapply(slot(x, "dadaF"), function (y) sum(getUniques(y))))))
-
-
-## test_that("all sequences are dereplicated ", {
-##     expect_equal(up1.counts, up1.dadas)
-## })
+test_that("all sequences are dereplicated ", {
+    up1.dadas <- unname(unlist(lapply(getDadaF(MA3), function (x){
+        length(x$map)
+    })))
+    up1.counts <- getRawCounts(MA3)[getRawCounts(MA3)>0]
+    expect_equal(up1.dadas, up1.counts)
+})
 
 MA4 <- mergeMulti(MA3, justConcatenate=c(TRUE, TRUE),
                   verbose=FALSE, maxMismatch = c(15, 20, 18))
@@ -281,7 +282,7 @@ test_that("subsetting leaves stuff intact", {
     ##                 getDadaF(MA6[subRnames, subCols]))
 
     ## ## DISCREPANCY!
-    ## MA6[1, 5]@dada
+    ## MA6@dada
     ## MA6[1, which(colnames(MA6)%in%"S04_F_filt.fastq.gz")]@dada
     ## MA6[1, colnames(MA6)%in%"S04_F_filt.fastq.gz"]@dada
     ## MA6[1, "S04_F_filt.fastq.gz"]@dada
@@ -300,7 +301,7 @@ resortedMA3 <- dadaMulti(MA1res,
                          selfConsist=TRUE, pool=FALSE, multithread=TRUE)
 
 ## in all other steps resorting does not produce an error
-resortedMA4 <- mergeMulti(resortedMA3, justConcatenate=TRUE)
+resortedMA4 <- mergeMulti(resortedMA3, justConcatenate=TRUE, maxMismatch = c(15, 20, 18))
 resortedMA5 <- makeSequenceTableMulti(resortedMA4)
 resortedMA6 <- removeChimeraMulti(resortedMA5)
 
@@ -321,10 +322,10 @@ test_that("Resorting produces identical output over samples", {
         as.data.frame(d)
     })
     conf <- do.call(rbind, confusion)
-    ## evaluate expect_equal(conf[, "Correct"], conf[, "Shuffle"]) 
-    #### ERROR FIX ME!!!  is this because re-dada is not guaranteed 
-    #### to give same results??
-    
+    ## ## evaluate!!!
+### expect_equal(conf[, "Correct"], conf[, "Shuffle"]) 
+#### ERROR FIX ME!!!  is this because re-dada is not guaranteed 
+#### to give same results??
 })
 
 context("Concatenating MultiAmplicon objects")

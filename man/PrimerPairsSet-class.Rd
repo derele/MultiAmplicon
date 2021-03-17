@@ -11,7 +11,11 @@
 \alias{[,PrimerPairsSet,index,missing,ANY-method}
 \title{A class representing sequences of forward and reverse primers.}
 \usage{
-PrimerPairsSet(primerF = character(), primerR = character())
+PrimerPairsSet(
+  primerF = character(),
+  primerR = character(),
+  names = character()
+)
 
 \S4method{length}{PrimerPairsSet}(x)
 

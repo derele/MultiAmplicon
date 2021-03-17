@@ -8,7 +8,7 @@
 \alias{getPrimerPairsSet}
 \alias{getPairedReadFileSet}
 \alias{getRawCounts}
-\alias{getStratifiedFiles}
+\alias{getSampleData}
 \alias{getStratifiedFilesF}
 \alias{getStratifiedFilesR}
 \alias{getDerepF}
@@ -22,7 +22,7 @@
 \alias{getSequencesFromTable}
 \alias{getSequencesFromTable,MultiAmplicon-method}
 \alias{show,MultiAmplicon-method}
-\alias{[,MultiAmplicon,index,index,ANY-method}
+\alias{[,MultiAmplicon,ANY,ANY,ANY-method}
 \alias{[,MultiAmplicon,index,missing,ANY-method}
 \alias{[,MultiAmplicon,missing,index,ANY-method}
 \title{The central data structure of the MultiAmplicon package}
@@ -30,12 +30,19 @@
 MultiAmplicon(
   PrimerPairsSet = PrimerPairsSet(),
   PairedReadFileSet = PairedReadFileSet(),
-  stratifiedFiles = stratifiedFilesMatrix(),
   sampleData = new("sample_data", data.frame(row.names = names(PairedReadFileSet),
     readsF = PairedReadFileSet@readsF, readsR = PairedReadFileSet@readsF)),
-  derep = list(),
-  dada = list(),
-  mergers = list(),
+  .Data = matrix(seq(1, length(PrimerPairsSet) * length(PairedReadFileSet)), nrow =
+    length(PrimerPairsSet), ncol = length(PairedReadFileSet), dimnames =
+    list(names(PrimerPairsSet), names(PairedReadFileSet))),
+  stratifiedFilesF = matrix(nrow = 0, ncol = 0),
+  stratifiedFilesR = matrix(nrow = 0, ncol = 0),
+  rawCounts = matrix(nrow = 0, ncol = 0),
+  derepF = matrix(nrow = 0, ncol = 0),
+  derepR = matrix(nrow = 0, ncol = 0),
+  dadaF = matrix(nrow = 0, ncol = 0),
+  dadaR = matrix(nrow = 0, ncol = 0),
+  mergers = matrix(nrow = 0, ncol = 0),
   sequenceTable = list(),
   sequenceTableNoChime = list(),
   taxonTable = list()
@@ -47,21 +54,21 @@ getPairedReadFileSet(MA)
 
 getRawCounts(MA)
 
-getStratifiedFiles(MA)
+getSampleData(MA)
 
 getStratifiedFilesF(MA, dropEmpty = TRUE)
 
 getStratifiedFilesR(MA, dropEmpty = TRUE)
 
-getDerepF(MA, simplify = TRUE)
+getDerepF(MA)
 
-getDerepR(MA, simplify = TRUE)
+getDerepR(MA)
 
-getDadaF(MA, simplify = TRUE)
+getDadaF(MA)
 
-getDadaR(MA, simplify = TRUE)
+getDadaR(MA)
 
-getMergers(MA, simplify = TRUE)
+getMergers(MA)
 
 getSequenceTable(MA, simplify = TRUE)
 
@@ -75,7 +82,7 @@ getSequencesFromTable(MA)
 
 \S4method{show}{MultiAmplicon}(object)
 
-\S4method{[}{MultiAmplicon,index,index,ANY}(x, i, j, ..., drop = FALSE)
+\S4method{[}{MultiAmplicon,ANY,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[}{MultiAmplicon,index,missing,ANY}(x, i, j, ..., drop = FALSE)
 
@@ -88,20 +95,14 @@ amplicons see \code{\link{PrimerPairsSet-class}}}
 \item{PairedReadFileSet}{a set of paired end sequencing data files
 \code{\link{PairedReadFileSet-class}}}
 
-\item{stratifiedFiles}{Users should not supply this parameter, the
-slot is created by \code{\link{sortAmplicons}}.}
-
 \item{sampleData}{Users should not supply this parameter. It's
 filled with a sample_data object from
 \code{\link[phyloseq]{phyloseq}}. The slot is created from
 sample names (same as \code{colnames(MA)}) and more data can
 be added by \code{\link{addSampleData}}.}
 
-\item{derep}{Users should not supply this parameter, the slot is
-created by \code{\link{derepMulti}}}
-
-\item{dada}{Users should not supply this parameter, the slot is
-created by \code{\link{dadaMulti}}}
+\item{.Data}{Users should not supply this parameter, the slot
+is created by \code{\link{sortAmplicons}}.}
 
 \item{mergers}{Users should not supply this parameter, the slot is
 created by \code{\link{mergeMulti}}}
@@ -135,8 +136,14 @@ amplicons)}
 
 \item{drop}{should not be used}
 
-\item{.Data}{Users should not supply this parameter, the slot
-is created by \code{\link{sortAmplicons}}.}
+\item{stratifiedFiles}{Users should not supply this parameter, the
+slot is created by \code{\link{sortAmplicons}}.}
+
+\item{derep}{Users should not supply this parameter, the slot is
+created by \code{\link{derepMulti}}}
+
+\item{dada}{Users should not supply this parameter, the slot is
+created by \code{\link{dadaMulti}}}
 }
 \description{
 The MultiAmplicon class is a container that stores at least primer

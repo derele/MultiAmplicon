@@ -63,19 +63,6 @@ PairedReadFileSet <- function(readsF=character(), readsR=character()){
 ##' @export
 setMethod("length", "PairedReadFileSet", function(x) length(x@readsF))
 
-setClass("stratifiedFilesMatrix",
-         representation("matrix", readsF="character", readsR="character"),
-         validity = function(object) {
-             msg <- NULL
-             if (length(object@readsF) != length(object@readsR))
-                 msg <- c(msg, "'readsF' and 'readsR' must be the same length")
-             if (is.null(msg)) TRUE else msg
-         })
-
-stratifiedFilesMatrix <- function(readsF=character(), readsR=character(), ...) {
-    new("stratifiedFilesMatrix", matrix(seq_along(readsF), ...),
-        readsF=readsF, readsR=readsR)
-}
 
 ##' A class representing sequences of forward and reverse primers.
 ##'
@@ -113,11 +100,11 @@ setClass("PrimerPairsSet", contains = "DNAStringSet",
                         .mapF="numeric", .mapR="numeric",
                         .uniqueF="character", .uniqueR="character"),         
          validity=function(object) {
-             if (any(width(c(object@primerF, object@primerR))<16)){
-                 warning("short primer (<16nt) provided are you sure about your primer sequences?")
+             if (any(width(c(object@primerF, object@primerR))<10)){
+                 warning("short primer (<10nt) provided are you sure about your primer sequences?")
              }
-             if (any(width(c(object@primerF, object@primerR))>26)){
-                 warning("long primer (>26nt) provided are you sure about your primer sequences?")
+             if (any(width(c(object@primerF, object@primerR))>30)){
+                 warning("long primer (>30nt) provided are you sure about your primer sequences?")
              }
              if (length(object@primerF) != length(object@primerR)){
                  "Same number of forward and reverse primer sequences needed to constitute Primer-Pairs"}
@@ -170,68 +157,6 @@ setMethod(length, "PrimerPairsSet", function(x) length(x@primerF))
 ##' @export
 ##' @rdname PrimerPairsSet-class
 setMethod(names, "PrimerPairsSet", function (x) x@names)
-
-##' A pair of two derep objects
-##'
-##' derep-class objects as defined by the package \code{dada2}
-##' (\code{\link[dada2]{derepFastq}}] are bundled as forward and
-##' reverse read pairs in this object
-##' @title PairedDerep-class
-##'
-##' @slot derepF derep object containing forward read pairs created by
-##'     \code{dada2}'s \code{\link[dada2]{derepFastq}} function
-##' @slot derepR derep object containing reverse read pairs created by
-##'     \code{dada2}'s \code{\link[dada2]{derepFastq}} function
-##' @return A PairedDerep-class object
-##' @author Emanuel Heitlinger
-setClass("PairedDerep",
-         slots = c(derepF="list", derepR="list"),
-         validity=function(object) {
-             if (length(object@derepF) != length(object@derepR)){
-                 "Same number of forward and reverse derep objects needed to constitute forward and reverse sequence read pairs"
-             }})
-
-##' @rdname PairedDerep-class
-setMethod("length", "PairedDerep", function(x){
-    length(x@derepF)
-})
-
-##' A pair of two dada objects 
-##'
-##' dada-class objects as defined by the package \code{dada2}
-##' (function \code{\link[dada2]{dada}}) are bundled as forward and
-##' reverse read pairs in this object
-##'
-##' @title PairedDada-class
-##' @author Emanuel Heitlinger
-setClass("PairedDada",
-         slots = c(dadaF="list", dadaR="list"),
-         validity=function(object) {
-             dF <- slot(object, "dadaF")
-             dR <- slot(object, "dadaR")
-             if (!.isListOf(dF, "dada") || !.isListOf(dR, "dada")){
-                 "only lists of dada class objects can form PairedDada-class objects"
-             }
-             if (length(dF) != length(dR)){"Same number of forward and reverse dada objects needed to constitute forward and reverse sequence read pairs"
-             }
-             if (any(names(dF) != names(dR))){
-                 paste("all forward and reverse dada objects needed to be named exactly the same (being produced from the same samples, names are, Forward:", names(dF), "Reverse:",  names(dR), "\n")
-             }
-         })
-
-##' @param dadaF a dada object of forward reads
-##' @param dadaR a dada object of reverse reads
-##' @rdname PairedDada-class
-PairedDada <- function(dadaF=list(), dadaR=list()){
-    new("PairedDada",
-        dadaF = dadaF,
-        dadaR = dadaR)
-}
-
-##' @rdname PairedDada-class
-setMethod("length", "PairedDada", function(x){
-    length(x@dadaF)
-})
 
 
 ##' The central data structure of the MultiAmplicon package
@@ -390,17 +315,19 @@ setMethod("length", "PairedDada", function(x){
 ##' @seealso \code{\link[dada2]{derepFastq}},\code{\link[dada2]{dada}}
 ##' @importFrom dada2 derepFastq dada
 ##' @importClassesFrom phyloseq sample_data
-## ##' @importFrom phyloseq sample_names ###  this doesn't work for some reasons for now
 ##' @author Emanuel Heitlinger
 ##' @exportClass MultiAmplicon
 setClass("MultiAmplicon",
          representation(PrimerPairsSet="PrimerPairsSet",
-                        PairedReadFileSet="PairedReadFileSet",                        
-                        stratifiedFiles="stratifiedFilesMatrix",
+                        PairedReadFileSet="PairedReadFileSet",
                         sampleData="sample_data", 
-                        derep="list",
-                        dada="list",
-                        mergers="list",
+                        rawCounts="matrix",
+                        stratifiedFilesF="matrix",
+                        stratifiedFilesR="matrix",
+                        derepF="matrix",
+                        derepR="matrix",
+                        dadaF="matrix", 
+                        dadaR="matrix", 
                         sequenceTable="list",
                         sequenceTableNoChime="list",
                         taxonTable="list"),
@@ -410,18 +337,21 @@ setClass("MultiAmplicon",
              ## PrimerPairsSet, rawCounts and sampleData
              ## directly. Other slots are list can additionally be
              ## checked at deeper levels
-             ## if(!all(rownames(object)%in%sample_names(object@sampleData))){
-             ##     "Sample_names of SampleData must be equeal rownames of  MultiAmplicon object"
-             ## }
-             if(!.isListOf(object@dada, "PairedDada")){
+             if(!all(colnames(object)%in%rownames(getSampleData(object)))){
+                  "Sample names of SampleData must be equal colhmn names of  MultiAmplicon object"
+             }
+             if(.isListOf(getDadaF(object), "dada", nullOk=TRUE)){
                  "PairedDada objects or an empty list must be provided for a valid MultiAmplicon object"
              }
-             if(!all(unlist(lapply(object@derep, .isListOf, "PairedDerep")))){
-                 "PairedDerep objects or an empty list must be provided for a valid MultiAmplicon object"
+             if(.isListOf(getDadaR(object), "dada", nullOk=TRUE)){
+                 "PairedDada objects or an empty list must be provided for a valid MultiAmplicon object"
              }
-             if(!all(unlist(lapply(object@mergers, .isListOf, "data.frame")))){
-                 "data.frame objects or an empty list must be provided for valid mergers in MultiAmplicon object"
-             }
+             ## if(!all(unlist(lapply(object@derep, .isListOf, "PairedDerep")))){
+             ##     "PairedDerep objects or an empty list must be provided for a valid MultiAmplicon object"
+             ## }
+             ## if(!all(unlist(lapply(object@mergers, .isListOf, "data.frame")))){
+             ##     "data.frame objects or an empty list must be provided for valid mergers in MultiAmplicon object"
+             ## }
              if(!.isListOf(object@sequenceTable, "matrix")){
                  "matrix objects or an empty list must be provided for valid sequenceTables in MultiAmplicon object"
              }
@@ -440,27 +370,41 @@ setClass("MultiAmplicon",
 ##'     MultiAmplicon-class
 MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
                           PairedReadFileSet = PairedReadFileSet(),
-                          .Data = matrix(ncol=0, nrow=0),
-                          stratifiedFiles = stratifiedFilesMatrix(),
                           sampleData = new("sample_data",
                                            data.frame(row.names=names(PairedReadFileSet),
                                                       readsF=PairedReadFileSet@readsF,
                                                       readsR=PairedReadFileSet@readsF)),
-                          derep = list(),
-                          dada = list(),
-                          mergers = list(),
+                          .Data = matrix(seq(1, length(PrimerPairsSet) *
+                                                length(PairedReadFileSet)),
+                                         nrow=length(PrimerPairsSet),
+                                         ncol=length(PairedReadFileSet),
+                                         dimnames=list(names(PrimerPairsSet),
+                                                       names(PairedReadFileSet))
+                                         ),
+                          stratifiedFilesF = matrix(nrow=0, ncol=0),
+                          stratifiedFilesR =matrix(nrow=0, ncol=0),
+                          rawCounts = matrix(nrow=0, ncol=0),
+                          derepF = matrix(nrow=0, ncol=0),
+                          derepR = matrix(nrow=0, ncol=0),
+                          dadaF = matrix(nrow=0, ncol=0),
+                          dadaR = matrix(nrow=0, ncol=0),
+                          mergers = matrix(nrow=0, ncol=0),
                           sequenceTable = list(),
                           sequenceTableNoChime = list(),
                           taxonTable = list()
                           ){
     new("MultiAmplicon",
+        .Data = .Data,
         PrimerPairsSet = PrimerPairsSet,
         PairedReadFileSet = PairedReadFileSet,
-        .Data = .Data,
-        stratifiedFiles = stratifiedFiles,
         sampleData = sampleData,
-        derep = derep,
-        dada = dada,
+        stratifiedFilesF = stratifiedFilesF,
+        stratifiedFilesR = stratifiedFilesR,
+        rawCounts = rawCounts,
+        derepF = derepF,
+        derepR = derepR,
+        dadaF = dadaF,
+        dadaR = dadaR,
         mergers = mergers,
         sequenceTable = sequenceTable,
         sequenceTableNoChime = sequenceTableNoChime,
@@ -485,71 +429,75 @@ getPairedReadFileSet <- function (MA) slot(MA, "PairedReadFileSet")
 ##' @param MA MultiAmplicon-class object
 ##' @export
 getRawCounts <- function (MA) {
-    return(slot(MA, ".Data"))
+    return(slot(MA, "rawCounts"))
 }
 
-
 ##' @rdname MultiAmplicon-class
+##' @param MA MultiAmplicon-class object
 ##' @export
-getStratifiedFiles <- function(MA) {
-    slot(MA, "stratifiedFiles")
+getSampleData <- function (MA) {
+    return(slot(MA, "sampleData"))
 }
 
 ##' @rdname MultiAmplicon-class
 ##' @param dropEmpty Should empty files be returned
 ##' @export
 getStratifiedFilesF <- function(MA, dropEmpty=TRUE) {
-    SF <- getStratifiedFiles(MA)
-    F <- slot(SF,  "readsF")
+    SF <- slot(MA, "stratifiedFilesF")
     if (dropEmpty) {
         exists <- which(getRawCounts(MA) > 0)
-        return(F[exists])
-    } else {return(F)}
+        return(SF[exists])
+    } else {return(SF)}
 }
 
 ##' @rdname MultiAmplicon-class
 ##' @param dropEmpty Should empty files be returned
 ##' @export
 getStratifiedFilesR <- function(MA, dropEmpty=TRUE) {
-    SR <- getStratifiedFiles(MA)
-    R <- slot(SR,  "readsF")
+    SR <- slot(MA,  "stratifiedFilesR")
     if (dropEmpty) {
         exists <- which(getRawCounts(MA) > 0)
-        return(R[exists])
-    } else {return(R)}
-}
-
-
-    
-##' @rdname MultiAmplicon-class
-##' @export
-getDerepF <-  function(MA, simplify=TRUE) {
-    .simpfy(lapply(MA@derep, function (x) lapply(x, slot, "derepF")),
-            simplify)
+        return(SR[exists])
+    } else {return(SR)}
 }
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-getDerepR <-  function(MA, simplify=TRUE) {
-    .simpfy(lapply(MA@derep, function (x) lapply(x, slot, "derepR")),
-            simplify)
+getDerepF <-  function(MA) {
+    slot(MA, "derepF")
 }
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-getDadaF <- function(MA, simplify=TRUE) {
-    .simpfy(lapply(MA@dada, slot, "dadaF"), simplify)
+getDerepR <-  function(MA) {
+        slot(MA, "derepR")
 }
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-getDadaR <- function(MA, simplify=TRUE) {
-    .simpfy(lapply(MA@dada, slot, "dadaR"), simplify)
+getDadaF <- function(MA, dropEmpty=TRUE) {
+    DF <- slot(MA, "dadaF")
+    if (dropEmpty) {
+        exists <- which(getRawCounts(MA) > 0)
+        return(DF[exists])
+    } else {return(DF)}
 }
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-getMergers <- function(MA, simplify=TRUE) .simpfy(MA@mergers, simplify)
+getDadaR <- function(MA, dropEmpty=TRUE) {
+    DR <- slot(MA, "dadaR")
+    if (dropEmpty) {
+        exists <- which(getRawCounts(MA) > 0)
+        return(DR[exists])
+    } else {return(DR)}
+}
+
+##' @rdname MultiAmplicon-class
+##' @export
+getMergers <- function(MA) {
+    slot(MA, "mergers")
+}
 
 ##' @rdname MultiAmplicon-class
 ##' @export
@@ -568,9 +516,6 @@ getSequenceTableNoChime <- function(MA, simplify=TRUE){
 getTaxonTable <- function(MA, simplify=TRUE){
     .simpfy(MA@taxonTable, simplify)
 }
-
-
-
 
 ##' @rdname MultiAmplicon-class
 ##' @export

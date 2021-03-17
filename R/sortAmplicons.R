@@ -74,6 +74,7 @@ setMethod(
         ## the data matrix of amplicons x samples stratified counts 
         PPS <- getPrimerPairsSet(MA)
         PRS <- getPairedReadFileSet(MA)
+
         NR <- length(PPS)
         NC <- length(PRS)
         data <- matrix(0, nrow=NR, ncol=NC)
@@ -88,9 +89,14 @@ setMethod(
         filebaseF <- paste0(filedir, "/", basenames, "_F.fastq.gz")
         filebaseR <- paste0(filedir, "/", basenames, "_R.fastq.gz")
 
-        stratFiles <- stratifiedFilesMatrix(filebaseF, filebaseR,
-                                            nrow=NR, ncol=NC, 
-                                            dimnames=list(names(PPS), names(PRS)))
+        stratFilesF <-matrix(filebaseF,
+                             nrow=NR, ncol=NC, 
+                             dimnames=list(names(PPS), names(PRS)))
+
+        stratFilesR <-matrix(filebaseR,
+                             nrow=NR, ncol=NC, 
+                             dimnames=list(names(PPS), names(PRS)))
+            
         readsF <- slot(PRS, "readsF")
         readsR <- slot(PRS, "readsR")
 
@@ -149,12 +155,12 @@ setMethod(
                                                          width(Rfq[select]))
                               }
                               ShortRead::writeFastq(F,
-                                                    file=stratFiles[y, x,
-                                                                    drop=FALSE]@readsF,
+                                                    file=stratFilesF[[y, x,
+                                                                    drop=FALSE]],
                                                     mode="a")
                               ShortRead::writeFastq(R,
-                                                    file=stratFiles[y, x,
-                                                                    drop=FALSE]@readsR,
+                                                    file=stratFilesR[[y, x,
+                                                                      drop=FALSE]],
                                                     mode="a")
                           }
                           matches[y] <- length(select[select==TRUE])
@@ -182,8 +188,12 @@ setMethod(
         if(!countOnly){
             MultiAmplicon(PrimerPairsSet = MA@PrimerPairsSet, 
                           PairedReadFileSet = MA@PairedReadFileSet,
-                          stratifiedFiles = stratFiles,
-                          .Data=data)
+                          .Data=MA@.Data,
+                          sampleData=MA@sampleData,
+                          stratifiedFilesF = stratFilesF,
+                          stratifiedFilesR = stratFilesR,
+                          rawCounts = data
+                          )
         }else{
             data
         }

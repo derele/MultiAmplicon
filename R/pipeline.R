@@ -117,7 +117,7 @@ dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
                       Ferr=NULL, Rerr=NULL, ...){
     ## alternatives: 
     ### .complainWhenAbsent(MA, "derep")
-    .complainWhenAbsent(MA, "stratifiedFiles")
+    .complainWhenAbsent(MA, "stratifiedFilesF")
     exp.args <- .extractEllipsis(list(...), nrow(MA))
     ## needs to be computed on pairs of amplicons
     PPdada <- mclapply(seq_along(rownames(MA)), function (i){
@@ -169,22 +169,29 @@ dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
            ### I even fix them here with the F (forward) names for equivalence
            names(dadaR) <- .fixSortedSampleNames(names(dadaF),
                                                  colnames(MA[i, ]))
-           Pdada <- PairedDada(dadaF = dadaF, dadaR = dadaR)
        } else {
-           Pdada <- PairedDada()
+           dadaF <- list()
+           dadaR <- list()
            message("\nskipping empty amplicon")
        }
-       return(Pdada)
+       return(list(dadaF, dadaR))
     }, mc.cores=mc.cores)
     names(PPdada) <- rownames(MA)
+    dadaF_ampXsamples <- lapply(PPdada, "[[", 1)
+    dadaR_ampXsamples <- lapply(PPdada, "[[", 2)
+    dadaFmat <- .meltMASlotList(dadaF_ampXsamples, MA)
+    dadaRmat <- .meltMASlotList(dadaR_ampXsamples, MA)
     MultiAmplicon(
-        PrimerPairsSet = MA@PrimerPairsSet,
-        PairedReadFileSet = MA@PairedReadFileSet,
-        .Data=MA@.Data,
-        stratifiedFiles = MA@stratifiedFiles,
-        sampleData = MA@sampleData,
-        derep = MA@derep,
-        dada = PPdada
+        PrimerPairsSet = getPrimerPairsSet(MA),
+        PairedReadFileSet = getPairedReadFileSet(MA),
+        sampleData = getSampleData(MA),
+        stratifiedFilesF = getStratifiedFilesF(MA, dropEmpty=FALSE),
+        stratifiedFilesR = getStratifiedFilesR(MA, dropEmpty=FALSE),
+        rawCounts = getRawCounts(MA),
+        derepF = getDerepF(MA),
+        derepR = getDerepR(MA),
+        dadaF = dadaFmat,
+        dadaR = dadaRmat
     )
 }
 
@@ -551,4 +558,12 @@ getPipelineSummary <- function(MA){
         ##    message(paste("with", newNames, "\n"))
     }
     newNames
+}
+
+.meltMASlotList <- function(MASlotList, MA){
+    sapply(colnames(MA), function(samples) {
+        sapply(rownames(MA), function(amp){
+            MASlotList[[amp]][[samples]] 
+        })
+    })
 }
