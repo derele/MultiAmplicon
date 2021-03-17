@@ -35,48 +35,53 @@
 ##' @author Emanuel Heitlinger
 derepMulti <- function(MA, mc.cores = getOption("mc.cores", 1L),
                        keep.single.singlets = FALSE, ...){
-    stop(paste("this function is unfunctional at the moment use",
-               "stratified files directly in dada/dadaMulti"))
-    .complainWhenAbsent(MA, "stratifiedFiles")
+    .complainWhenAbsent(MA, "stratifiedFilesF")
     exp.args <- .extractEllipsis(list(...), nrow(MA))    
-    PPderep <- mclapply(seq_along(MA@PrimerPairsSet), function (i){
+    PPderep <- mclapply(seq_along(rownames(MA)), function (i){
         ## work on possilbe different paramters for this particular amplicon
         args.here <- lapply(exp.args, "[", i)
         .paramMessage("derepFastq", args.here)
-        message("amplicon ", names(MA@PrimerPairsSet)[i],
-                " dereplicating for ",
-                length(MA@stratifiedFiles[[i]]@readsF), " of ",
-                length(MA@PairedReadFileSet@readsF), " possible sample files.\n")
+        SF <- getStratifiedFilesF(MA[i, ])
+        SR <- getStratifiedFilesR(MA[i, ])
+        message("amplicon ", rownames(MA)[i],
+                    " dereplicating for ",
+                    length(SF), " of ",
+                    length(getPairedReadFileSet(MA[i, ])), " possible sample files.\n")
         derepF <- do.call(derepFastq,
-                          c(list(getStratifiedFilesF(MA[i, ])), args.here))
+                              c(list(SF), args.here))
+        if (class(derepF)%in%"derep") {
+            derepF <- list(derepF)
+            ## using the stratfile basename
+            names(derepF) <- basename(SF)
+        }
+        names(derepF) <- .fixSortedSampleNames(names(derepF),
+                                               colnames(MA[i, ]))
         derepR <- do.call(derepFastq,
                           c(list(getStratifiedFilesR(MA[i, ])), args.here))
-        ## make it a list even if only one sample was dereplicated
-        if (class(derepF)%in%"derep") {
-            ## the same must be true for the revers then to keep them
-            ## in the same length
-            if(length(derepF$map) == 1 && keep.single.singlets == FALSE){
-                derepF <- list()
-                derepR <- list()
-                message("producing empty derep object for amplicon ",
-                    names(MA@PrimerPairsSet)[i],
-                    "as only one sequence is reported for one sample ",
-                    "set keep.single.singlets to TRUE to change this behaviour, ",
-                    "but be warned that this may lead to downstream errors." )
-            } else{
-                derepF <- list(derepF)
-                derepR <- list(derepR)
-            }
+        if (class(derepR)%in%"derep") {
+            derepR <- list(derepR)
+            ## using the stratfile basename
+            names(derepR) <- basename(SF)
         }
-        Pderep <- lapply(seq_along(derepF), function (w){
-            new("PairedDerep",
-                derepF = derepF[[w]],
-                derepR = derepR[[w]])
-        })
-        return(Pderep)
+        names(derepR) <- .fixSortedSampleNames(names(derepR),
+                                               colnames(MA[i, ]))
+        list(derepF, derepR)
     }, mc.cores = mc.cores)
     names(PPderep) <- rownames(MA)
-    initialize(MA, derep = PPderep)
+    derepF_ampXsamples <- lapply(PPderep, "[[", 1)
+    derepR_ampXsamples <- lapply(PPderep, "[[", 2)
+    derepFmat <- .meltMASlotList(derepF_ampXsamples, MA)
+    derepRmat <- .meltMASlotList(derepR_ampXsamples, MA)
+    MultiAmplicon(
+        PrimerPairsSet = getPrimerPairsSet(MA),
+        PairedReadFileSet = getPairedReadFileSet(MA),
+        sampleData = getSampleData(MA),
+        stratifiedFilesF = getStratifiedFilesF(MA, dropEmpty=FALSE),
+        stratifiedFilesR = getStratifiedFilesR(MA, dropEmpty=FALSE),
+        rawCounts = getRawCounts(MA),
+        derepF = derepFmat,
+        derepR = derepRmat
+    )
 }
 
 

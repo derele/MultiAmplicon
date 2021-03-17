@@ -132,6 +132,10 @@ test_that("less stringent sorting results in more reads accepted", {
 })
 
 
+MA2 <- derepMulti(MA1)
+
+
+
 MA3 <- dadaMulti(MA1, selfConsist=TRUE, pool=FALSE, 
                  multithread=TRUE)
 

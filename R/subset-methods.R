@@ -85,7 +85,7 @@ setMethod("[", "MultiAmplicon",
                   newderepF <- getDerepF(x)[i, j, drop=FALSE]
                   newderepR <- getDerepR(x)[i, j, drop=FALSE]
               } else {newderepF <- newderepR <- matrix(nrow=0, ncol=0)}
-              if(length(getDadaF(x))>0){
+              if(length(getDadaF(x, dropEmpty=FALSE))>0){
                   newdadaF <- getDadaF(x, dropEmpty=FALSE)[i, j, drop=FALSE]
                   newdadaR <- getDadaR(x, dropEmpty=FALSE)[i, j, drop=FALSE]                  
               } else {newdadaF <- newdadaR <- matrix(nrow=0, ncol=0)}

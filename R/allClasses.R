@@ -477,6 +477,7 @@ getDerepR <-  function(MA) {
 ##' @export
 getDadaF <- function(MA, dropEmpty=TRUE) {
     DF <- slot(MA, "dadaF")
+    if(all(dim(DF)==0)) return(DF)
     if (dropEmpty) {
         exists <- which(getRawCounts(MA) > 0)
         return(DF[exists])
@@ -487,6 +488,7 @@ getDadaF <- function(MA, dropEmpty=TRUE) {
 ##' @export
 getDadaR <- function(MA, dropEmpty=TRUE) {
     DR <- slot(MA, "dadaR")
+    if(all(dim(DR)==0)) return(DR)
     if (dropEmpty) {
         exists <- which(getRawCounts(MA) > 0)
         return(DR[exists])

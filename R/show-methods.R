@@ -48,7 +48,7 @@ setMethod("show", "MultiAmplicon", function(object){
     cat("\nContaining slot rawCounts: \n")
     show(getRawCounts(object))
     cat("\nContaining slots stratifiedFilesF and stratifiedFilesR with dimensions:",
-        dim(getStratifiedFilesF(MA1, dropEmpty=FALSE)),
+        dim(getStratifiedFilesF(object, dropEmpty=FALSE)),
         "\n of those", length(getStratifiedFilesF(object, dropEmpty=FALSE)),
         ",", length(getStratifiedFilesF(object, dropEmpty=TRUE)),
         "have files present\n")
