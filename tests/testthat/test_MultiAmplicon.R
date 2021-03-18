@@ -132,18 +132,23 @@ test_that("less stringent sorting results in more reads accepted", {
 })
 
 
+
+
 MA2 <- derepMulti(MA1)
 
 
-
+context("Dada denoising?")
 MA3 <- dadaMulti(MA1, selfConsist=TRUE, pool=FALSE, 
                  multithread=TRUE)
 
-
-## put this in validity methods!!!
-## .isListOf(c(getDadaF(MA3)), "dada", nullOk=TRUE)
-
-context("Denoising works and doesn't confuse samples?")
+test_that("Denoising returns a mtrix of dada object, and a list of non-empty objects?", {
+    ## put this also in validity methods!!!???
+    expect_true(all(c("matrix","array") %in% class(getDadaF(MA3, dropEmpty=FALSE))))
+    expect_true(class(getDadaF(MA3, dropEmpty=TRUE)) == "list")
+    expect_true(.isListOf(c(getDadaF(MA3)), "dada", nullOk=FALSE))
+    expect_false(.isListOf(c(getDadaF(MA3, dropEmpty=FALSE)), "dada", nullOk=FALSE))
+    expect_true(.isListOf(c(getDadaF(MA3, dropEmpty=TRUE)), "dada", nullOk=FALSE))
+})
 
 test_that("dada2 denoising produces a matrix of dada objects ", {
     expect_equal(dim(getDadaF(MA3, dropEmpty=FALSE)), dim(getRawCounts(MA3)))
@@ -161,8 +166,13 @@ test_that("dada2 denoising produces identical results for replicate samplesd", {
 
 test_that("all sequences are dereplicated ", {
     up1.dadas <- unname(unlist(lapply(getDadaF(MA3), function (x){
-        length(x$map)
+        sum(getUniques(x))
     })))
+    up1.dereps <- unname(unlist(lapply(getDerepF(MA2), function (x){
+        sum(getUniques(x))
+    })))
+
+
     up1.counts <- getRawCounts(MA3)[getRawCounts(MA3)>0]
     expect_equal(up1.dadas, up1.counts)
 })

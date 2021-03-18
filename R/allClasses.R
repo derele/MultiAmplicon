@@ -439,66 +439,58 @@ getSampleData <- function (MA) {
     return(slot(MA, "sampleData"))
 }
 
+.getSlot <- function(MA, slot, dropEmpty=TRUE){
+    x <- slot(MA, slot)
+    if(all(dim(x)==0)) return(x)
+    if (dropEmpty) {
+        exists <- which(getRawCounts(MA) > 0)
+        return(x[exists])
+    } else {return(x)}
+}
+
+
 ##' @rdname MultiAmplicon-class
 ##' @param dropEmpty Should empty files be returned
 ##' @export
 getStratifiedFilesF <- function(MA, dropEmpty=TRUE) {
-    SF <- slot(MA, "stratifiedFilesF")
-    if (dropEmpty) {
-        exists <- which(getRawCounts(MA) > 0)
-        return(SF[exists])
-    } else {return(SF)}
+    .getSlot(MA, "stratifiedFilesF", dropEmpty)
 }
 
 ##' @rdname MultiAmplicon-class
 ##' @param dropEmpty Should empty files be returned
 ##' @export
 getStratifiedFilesR <- function(MA, dropEmpty=TRUE) {
-    SR <- slot(MA,  "stratifiedFilesR")
-    if (dropEmpty) {
-        exists <- which(getRawCounts(MA) > 0)
-        return(SR[exists])
-    } else {return(SR)}
+    .getSlot(MA,  "stratifiedFilesR", dropEmpty)
 }
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-getDerepF <-  function(MA) {
-    slot(MA, "derepF")
+getDerepF <-  function(MA, dropEmpty=TRUE) {
+    .getSlot(MA, "derepF", dropEmpty)
 }
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-getDerepR <-  function(MA) {
-        slot(MA, "derepR")
+getDerepR <-  function(MA, dropEmpty=TRUE) {
+    .getSlot(MA, "derepR", dropEmpty)
 }
 
 ##' @rdname MultiAmplicon-class
 ##' @export
 getDadaF <- function(MA, dropEmpty=TRUE) {
-    DF <- slot(MA, "dadaF")
-    if(all(dim(DF)==0)) return(DF)
-    if (dropEmpty) {
-        exists <- which(getRawCounts(MA) > 0)
-        return(DF[exists])
-    } else {return(DF)}
+    .getSlot(MA, "dadaF", dropEmpty)
 }
 
 ##' @rdname MultiAmplicon-class
 ##' @export
 getDadaR <- function(MA, dropEmpty=TRUE) {
-    DR <- slot(MA, "dadaR")
-    if(all(dim(DR)==0)) return(DR)
-    if (dropEmpty) {
-        exists <- which(getRawCounts(MA) > 0)
-        return(DR[exists])
-    } else {return(DR)}
+    .getSlot(MA, "dadaR", dropEmpty)
 }
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-getMergers <- function(MA) {
-    slot(MA, "mergers")
+getMergers <- function(MA, dropEmpty=TRUE) {
+    .getSlot(MA, "mergers", dropEmpty)
 }
 
 ##' @rdname MultiAmplicon-class

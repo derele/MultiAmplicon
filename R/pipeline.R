@@ -73,6 +73,7 @@ derepMulti <- function(MA, mc.cores = getOption("mc.cores", 1L),
     derepFmat <- .meltMASlotList(derepF_ampXsamples, MA)
     derepRmat <- .meltMASlotList(derepR_ampXsamples, MA)
     MultiAmplicon(
+        .Data = MA@.Data,
         PrimerPairsSet = getPrimerPairsSet(MA),
         PairedReadFileSet = getPairedReadFileSet(MA),
         sampleData = getSampleData(MA),
