@@ -53,7 +53,10 @@ setMethod("show", "MultiAmplicon", function(object){
         ",", length(getStratifiedFilesF(object, dropEmpty=TRUE)),
         "have files present\n")
     cat("\nContaining slots derepF and derepR of dimensions:",
-        dim(getDerepF(object)), "\n")
+        dim(getDerepF(object, dropEmpty=FALSE)), 
+        "\n of those", length(getDerepF(object, dropEmpty=FALSE)),
+        ",", length(getDerepF(object, dropEmpty=TRUE)),
+        "have dada objects present\n")
     cat("\nContaining slots dadaF and dadaR of dimensions:",
         dim(getDadaF(object, dropEmpty=FALSE)),
     "\n of those", length(getDadaF(object, dropEmpty=FALSE)),

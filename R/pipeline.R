@@ -51,20 +51,21 @@ derepMulti <- function(MA, mc.cores = getOption("mc.cores", 1L),
                               c(list(SF), args.here))
         if (class(derepF)%in%"derep") {
             derepF <- list(derepF)
-            ## using the stratfile basename
-            names(derepF) <- basename(SF)
         }
-        names(derepF) <- .fixSortedSampleNames(names(derepF),
-                                               colnames(MA[i, ]))
         derepR <- do.call(derepFastq,
                           c(list(getStratifiedFilesR(MA[i, ])), args.here))
         if (class(derepR)%in%"derep") {
             derepR <- list(derepR)
-            ## using the stratfile basename
-            names(derepR) <- basename(SF)
         }
-        names(derepR) <- .fixSortedSampleNames(names(derepR),
-                                               colnames(MA[i, ]))
+        nnames <- colnames(MA[i, ])[getRawCounts(MA[i, ])>0]
+        if(!length(nnames)==length(derepF)|
+           !length(nnames)==length(derepR)){
+            stop(paste("incompatible names for dada in amplicon",
+                       rownames(MA)[i], "\n"))
+        }
+        ## using the non-zero raw counts for naming
+        names(derepF) <- nnames
+        names(derepR) <- nnames
         list(derepF, derepR)
     }, mc.cores = mc.cores)
     names(PPderep) <- rownames(MA)
@@ -121,22 +122,25 @@ derepMulti <- function(MA, mc.cores = getOption("mc.cores", 1L),
 ##' @author Emanuel Heitlinger
 dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
                       Ferr=NULL, Rerr=NULL, ...){
-    ## alternatives: 
-    ### .complainWhenAbsent(MA, "derep")
-    .complainWhenAbsent(MA, "stratifiedFilesF")
     exp.args <- .extractEllipsis(list(...), nrow(MA))
     ## needs to be computed on pairs of amplicons
     PPdada <- mclapply(seq_along(rownames(MA)), function (i){
         ## ## From a derep object 
-        ## dF <- getDerepF(MA[i, ])
-        ## dR <- getDerepR(MA[i, ])
-        ## ## Or directly from stratified files
-        dF <- getStratifiedFilesF(MA[i, ], dropEmpty=TRUE)
-        dR <- getStratifiedFilesR(MA[i, ], dropEmpty=TRUE)
-        message("\n\namplicon ", rownames(MA)[i],
+        dF <- getDerepF(MA[i, ], dropEmpty=TRUE)
+        dR <- getDerepR(MA[i, ], dropEmpty=TRUE)
+        if(length(dR)>0 && length(dR) >0) {
+            message("\ndada estimation from dereplicated read objects")
+        } else {
+            ## Work directly from stratified files
+            .complainWhenAbsent(MA, "stratifiedFilesF")
+            message("\ndada estimation directly from stratified files")
+            dF <- getStratifiedFilesF(MA[i, ], dropEmpty=TRUE)
+            dR <- getStratifiedFilesR(MA[i, ], dropEmpty=TRUE)
+        }
+        message("\namplicon ", rownames(MA)[i],
            ": dada estimation of sequence variants from ",
             length(dF), " of ",
-           length(getPairedReadFileSet(MA[i, ])), " possible sample files")
+           length(getPairedReadFileSet(MA[i, ])), " possible samples")
        if(length(dF)>0 && length(dR)>0){
            ## run functions for reverse and forward
            ## work on possilbe different paramters for this particular amplicon
@@ -151,30 +155,30 @@ dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
                if (length(dF) > 1) {
                    stop("dada collapsed but more than one stratified file found")
                }
-               names(dadaF) <- dF
            }
            if(!.isListOf(dadaF, "dada")) {
                stop(paste("incorrect classes reported for dadaF in amplicon",
                           rownames(MA)[i], "\n"))
            }
-           ## fix the names of the samples DANGEROUS!
-           names(dadaF) <- .fixSortedSampleNames(names(dadaF),
-                                                 colnames(MA[i, ]))
+           ## using the non-zero raw counts for naming
            dadaR <- do.call(dada, c(list(derep = dR, err=Rerr), args.here))
            ## make it a list in case of only one sample
            if (class(dadaR)%in%"dada"){
                dadaR <- list(dadaR)
-               ## using the stratfile fom the dadaF
-               names(dadaR) <- basename(dF)
            }
            if(!.isListOf(dadaR, "dada")) {
                stop(paste("incorrect classes reported for dadaR in amplicon",
                           rownames(MA)[i], "\n"))
            }
-           ## fix the names of the samples DANGEROUS! 
-           ### I even fix them here with the F (forward) names for equivalence
-           names(dadaR) <- .fixSortedSampleNames(names(dadaF),
-                                                 colnames(MA[i, ]))
+           nnames <- colnames(MA[i, ])[getRawCounts(MA[i, ])>0]
+           if(!length(nnames)==length(dadaF)|
+              !length(nnames)==length(dadaR)){
+               stop(paste("incompatible names for dada in amplicon",
+                          rownames(MA)[i], "\n"))
+           }
+           ## using the non-zero raw counts for naming
+           names(dadaF) <- nnames
+           names(dadaR) <- nnames
        } else {
            dadaF <- list()
            dadaR <- list()
@@ -194,8 +198,8 @@ dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
         stratifiedFilesF = getStratifiedFilesF(MA, dropEmpty=FALSE),
         stratifiedFilesR = getStratifiedFilesR(MA, dropEmpty=FALSE),
         rawCounts = getRawCounts(MA),
-        derepF = getDerepF(MA),
-        derepR = getDerepR(MA),
+        derepF = getDerepF(MA, dropEmpty=FALSE),
+        derepR = getDerepR(MA, dropEmpty=FALSE),
         dadaF = dadaFmat,
         dadaR = dadaRmat
     )
@@ -551,20 +555,20 @@ getPipelineSummary <- function(MA){
     }
 }
 
-.fixSortedSampleNames <- function (oldNames, sampleNames) {
-    ## most elegant would be one gigantic pattern, but sadly this
-    ## fails with a strange (but known) C-level error. So have to
-    ## break it down.
-    ### pattern <- paste(sampleNames, collapse="|")
-    pattern <- paste0(".*(", sampleNames, ").*")
-    newNames <- oldNames
-    ##     message(paste("replacing", oldNames, "\n"))
-    for(pat in pattern) {
-        newNames <- gsub(pat, "\\1", newNames)
-        ##    message(paste("with", newNames, "\n"))
-    }
-    newNames
-}
+## .fixSortedSampleNames <- function (oldNames, sampleNames) {
+##     ## most elegant would be one gigantic pattern, but sadly this
+##     ## fails with a strange (but known) C-level error. So have to
+##     ## break it down.
+##     ### pattern <- paste(sampleNames, collapse="|")
+##     pattern <- paste0(".*(", sampleNames, ").*")
+##     newNames <- oldNames
+##     ##     message(paste("replacing", oldNames, "\n"))
+##     for(pat in pattern) {
+##         newNames <- gsub(pat, "\\1", newNames)
+##         ##    message(paste("with", newNames, "\n"))
+##     }
+##     newNames
+## }
 
 .meltMASlotList <- function(MASlotList, MA){
     sapply(colnames(MA), function(samples) {

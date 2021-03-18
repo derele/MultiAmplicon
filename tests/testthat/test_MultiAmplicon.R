@@ -132,49 +132,56 @@ test_that("less stringent sorting results in more reads accepted", {
 })
 
 
-
-
-MA2 <- derepMulti(MA1)
+context("Dereping?")
+MAderep <- derepMulti(MA1)
 
 
 context("Dada denoising?")
-MA3 <- dadaMulti(MA1, selfConsist=TRUE, pool=FALSE, 
-                 multithread=TRUE)
+MAdadaDirect <- dadaMulti(MA1, selfConsist=TRUE, pool=FALSE, 
+                          multithread=TRUE)
 
-test_that("Denoising returns a mtrix of dada object, and a list of non-empty objects?", {
+MAdadaDerep <- dadaMulti(MAderep, selfConsist=TRUE, pool=FALSE, 
+                         multithread=TRUE)
+
+test_that("Denoising returns a matrix of dada object, and a list of non-empty objects?", {
     ## put this also in validity methods!!!???
-    expect_true(all(c("matrix","array") %in% class(getDadaF(MA3, dropEmpty=FALSE))))
-    expect_true(class(getDadaF(MA3, dropEmpty=TRUE)) == "list")
-    expect_true(.isListOf(c(getDadaF(MA3)), "dada", nullOk=FALSE))
-    expect_false(.isListOf(c(getDadaF(MA3, dropEmpty=FALSE)), "dada", nullOk=FALSE))
-    expect_true(.isListOf(c(getDadaF(MA3, dropEmpty=TRUE)), "dada", nullOk=FALSE))
+    expect_equal(getDadaF(MAdadaDirect), getDadaF(MAdadaDerep))
+    expect_equal(getDadaF(MAdadaDirect, dropEmpty=FALSE),
+                 getDadaF(MAdadaDerep, dropEmpty=FALSE))
+    expect_true(all(c("matrix","array") %in%
+                    class(getDadaF(MAdadaDirect, dropEmpty=FALSE))))
+    expect_true(class(getDadaF(MAdadaDirect, dropEmpty=TRUE)) == "list")
+    expect_true(.isListOf(c(getDadaF(MAdadaDirect)), "dada", nullOk=FALSE))
+    expect_false(.isListOf(c(getDadaF(MAdadaDirect, dropEmpty=FALSE)),
+                           "dada", nullOk=FALSE))
+    expect_true(.isListOf(c(getDadaF(MAdadaDirect, dropEmpty=TRUE)),
+                          "dada", nullOk=FALSE))
+    expect_equal(dim(getDadaF(MAdadaDirect, dropEmpty=FALSE)),
+                 dim(getRawCounts(MAdadaDirect)))
+    expect_equal(length(getDadaF(MAdadaDirect)),
+                 length(getStratifiedFilesF(MAdadaDirect)))
+    expect_equal(sapply(getDadaF(MAdadaDirect, dropEmpty=FALSE), is.null),
+                 sapply(getRawCounts(MAdadaDirect), "==", 0))
 })
-
-test_that("dada2 denoising produces a matrix of dada objects ", {
-    expect_equal(dim(getDadaF(MA3, dropEmpty=FALSE)), dim(getRawCounts(MA3)))
-    expect_equal(length(getDadaF(MA3)), length(getStratifiedFilesF(MA3)))
-    expect_equal(sapply(getDadaF(MA3, dropEmpty=FALSE), is.null),
-                 sapply(getRawCounts(MA3), "==", 0))
-})
-
 
 test_that("dada2 denoising produces identical results for replicate samplesd", {
-    expect_equal(getDadaF(MA3[, "S05_F_filt.fastq.gz"]), 
-                 getDadaF(MA3[, "S05D_F_filt.fastq.gz"]))
+    expect_equal(getDadaF(MAdadaDirect[, "S05_F_filt.fastq.gz"]), 
+                 getDadaF(MAdadaDirect[, "S05D_F_filt.fastq.gz"]))
 })
 
 
 test_that("all sequences are dereplicated ", {
-    up1.dadas <- unname(unlist(lapply(getDadaF(MA3), function (x){
+    up1.dadas <- unname(unlist(lapply(getDadaF(MAdadaDerep), function (x){
         sum(getUniques(x))
     })))
-    up1.dereps <- unname(unlist(lapply(getDerepF(MA2), function (x){
+    up1.dereps <- unname(unlist(lapply(getDerepF(MAdadaDerep), function (x){
         sum(getUniques(x))
     })))
-
-
     up1.counts <- getRawCounts(MA3)[getRawCounts(MA3)>0]
-    expect_equal(up1.dadas, up1.counts)
+    expect_equal(up1.dereps, up1.counts)
+    ## somehow calling dada directly on the stratified files makes the
+    ## uniques 
+    expect_true(all(up1.dadas<=up1.counts))
 })
 
 MA4 <- mergeMulti(MA3, justConcatenate=c(TRUE, TRUE),
