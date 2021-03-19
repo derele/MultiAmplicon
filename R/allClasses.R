@@ -327,7 +327,8 @@ setClass("MultiAmplicon",
                         derepF="matrix",
                         derepR="matrix",
                         dadaF="matrix", 
-                        dadaR="matrix", 
+                        dadaR="matrix",
+                        mergers="matrix",
                         sequenceTable="list",
                         sequenceTableNoChime="list",
                         taxonTable="list"),
@@ -546,6 +547,31 @@ setMethod("getSequencesFromTable", "MultiAmplicon",
 }
 
 
+##' @rdname MultiAmplicon-class
+##' @export
+setMethod("apply", signature(X = "MultiAmplicon",
+                             MARGIN = "numeric",
+                             FUN = "function"),
+          function (X, MARGIN, FUN, ...) {
+              if (length(MARGIN)>1){
+                  stop("MARGIN > 1 not supported for MultiAmplicon objects.\n")
+              }
+              FUN <- match.fun(FUN)
+              dn.ans <- dimnames(X)[MARGIN]
+              if (MARGIN==1) {
+                  sapply(seq(nrow(X)), function (i){
+                      FUN(X[i, ], ... )
+                  })
+              } else {
+                  if (MARGIN==2) {
+                      sapply(seq(ncol(X)), function (j){
+                          FUN(X[, j], ... )
+                      })
+                  } else {
+                      stop("Only MARGIN of 1 or 2 supported for a MultiAmplicon object.\n")
+                  }
+              }
+          })
 
 
 

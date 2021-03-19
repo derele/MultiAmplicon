@@ -57,15 +57,9 @@ derepMulti <- function(MA, mc.cores = getOption("mc.cores", 1L),
         if (class(derepR)%in%"derep") {
             derepR <- list(derepR)
         }
-        nnames <- colnames(MA[i, ])[getRawCounts(MA[i, ])>0]
-        if(!length(nnames)==length(derepF)|
-           !length(nnames)==length(derepR)){
-            stop(paste("incompatible names for dada in amplicon",
-                       rownames(MA)[i], "\n"))
-        }
         ## using the non-zero raw counts for naming
-        names(derepF) <- nnames
-        names(derepR) <- nnames
+        names(derepF) <- .deriveNames(MA[i, ], derepF)
+        names(derepR) <- .deriveNames(MA[i, ], derepR)
         list(derepF, derepR)
     }, mc.cores = mc.cores)
     names(PPderep) <- rownames(MA)
@@ -170,15 +164,9 @@ dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
                stop(paste("incorrect classes reported for dadaR in amplicon",
                           rownames(MA)[i], "\n"))
            }
-           nnames <- colnames(MA[i, ])[getRawCounts(MA[i, ])>0]
-           if(!length(nnames)==length(dadaF)|
-              !length(nnames)==length(dadaR)){
-               stop(paste("incompatible names for dada in amplicon",
-                          rownames(MA)[i], "\n"))
-           }
            ## using the non-zero raw counts for naming
-           names(dadaF) <- nnames
-           names(dadaR) <- nnames
+           names(dadaF) <- .deriveNames(MA[i, ], dadaF)
+           names(dadaR) <- .deriveNames(MA[i, ], dadaR)
        } else {
            dadaF <- list()
            dadaR <- list()
@@ -236,40 +224,53 @@ dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
 ##' @export
 ##' @author Emanuel Heitlinger
 mergeMulti <- function(MA, mc.cores=getOption("mc.cores", 1L), ...){
-    .complainWhenAbsent(MA, "dada")
+    .complainWhenAbsent(MA, "dadaF")
     exp.args <- .extractEllipsis(list(...), nrow(MA))
     mergers <- mclapply(seq_along(MA@PrimerPairsSet), function (i){     
-        daF <- getDadaF(MA[i, ])
-        daR <- getDadaR(MA[i, ])
-        ## ## From a derep object 
-        ##  deF <- getDerepF(MA[i, ])
-        ##  deR <- getDerepR(MA[i, ])
-        ## ## Or directly from stratified files
-        deF <- getStratifiedFilesF(MA[i, ])
-        deR <- getStratifiedFilesR(MA[i, ])
-        message("\nmerging sequences from " , length(MA@dada[[i]]),
+        ## The dada objects
+        daF <- getDadaF(MA[i, ], dropEmpty=TRUE)
+        daR <- getDadaR(MA[i, ], dropEmpty=TRUE)
+        ## From a derep object if present
+        deF <- getDerepF(MA[i, ], dropEmpty=TRUE)
+        deR <- getDerepR(MA[i, ], dropEmpty=TRUE)
+        if(length(deR)>0 && length(deR) >0) {
+            message("\nmerging based on dereplicated read objects")
+        } else {
+            ## Work directly from stratified files
+            .complainWhenAbsent(MA, "stratifiedFilesF")
+            message("\nmerging directly from stratified files")
+            deF <- getStratifiedFilesF(MA[i, ], dropEmpty=TRUE)
+            deR <- getStratifiedFilesR(MA[i, ], dropEmpty=TRUE)
+        }
+        message("\nmerging sequences from " , length(daF),
                 " samples for amplicon ",
-                MA@PrimerPairsSet@names[[i]])
-            ## work on possilbe different paramters for this particular amplicon
-            args.here <- lapply(exp.args, "[", i)
-            .paramMessage("mergePairs", args.here)
-            MP <- do.call(mergePairs,
-                          c(list(dadaF = daF, derepF = deF,
-                                 dadaR = daR, derepR = deR), args.here))
-            ## correct the case of one sample / amplicon 
-            if(class(MP)%in%"data.frame"){MP <- list(MP)}
+                rownames(MA)[[i]])
+        ## work on possilbe different paramters for this particular amplicon
+        args.here <- lapply(exp.args, "[", i)
+        .paramMessage("mergePairs", args.here)
+        MP <- do.call(mergePairs,
+                      c(list(dadaF = daF, derepF = deF,
+                             dadaR = daR, derepR = deR), args.here))
+        ## correct the case of one sample / amplicon 
+        if(class(MP)%in%"data.frame"){MP <- list(MP)}
+        names(MP) <- .deriveNames(MA[i, ], MP)
         return(MP)
     }, mc.cores=mc.cores)
-    names(mergers) <- names(MA@PrimerPairsSet)
+    names(mergers) <- rownames(MA)
+    mergersmat <- .meltMASlotList(mergers, MA)
     MultiAmplicon(
-        PrimerPairsSet = MA@PrimerPairsSet,
-        PairedReadFileSet = MA@PairedReadFileSet,
+        PrimerPairsSet = getPrimerPairsSet(MA),
+        PairedReadFileSet = getPairedReadFileSet(MA),
         .Data=MA@.Data,
-        stratifiedFiles = MA@stratifiedFiles,
-        sampleData = MA@sampleData,
-        derep = MA@derep,
-        dada = MA@dada,
-        mergers = mergers
+        sampleData = getSampleData(MA),
+        stratifiedFilesF = getStratifiedFilesF(MA, dropEmpty=FALSE),
+        stratifiedFilesR = getStratifiedFilesR(MA, dropEmpty=FALSE),
+        rawCounts = getRawCounts(MA),
+        derepF = getDerepF(MA, dropEmpty=FALSE),
+        derepR = getDerepR(MA, dropEmpty=FALSE),                        
+        dadaF = getDadaF(MA, dropEmpty=FALSE),
+        dadaR = getDadaR(MA, dropEmpty=FALSE),                        
+        mergers = mergersmat
     )
 }
 
@@ -409,16 +410,9 @@ setMethod("calcPropMerged", "MultiAmplicon",
           function(MA){
               .complainWhenAbsent(MA, "mergers")
               sgt <- function(x) sum(getUniques(x))
-              getN <- function(x) {
-                  ## check length for every sample in amplicon for
-                  ## mergers or just to have dada otherwise >1 as a
-                  if(any(unlist(sapply(x, nrow)) > 0) ||
-                     all(sapply(x, class)%in%"dada")){
-                      sum(unlist(sapply(x, sgt, simplify=FALSE)))
-                  } else {0}
-              }
-              nMerged <- sapply(getMergers(MA, simplify=FALSE), getN)
-              nBefore <- sapply(getDadaF(MA, simplify=FALSE), getN)
+
+              nMerged <- apply(getMergers(MA, dropEmpty=FALSE), sgt)
+              nBefore <- apply(getDadaF(MA, deropEmpty=FALSE), getN)
               prop <- nMerged/nBefore
               prop[is.nan(prop)] <- 0
               prop
@@ -569,6 +563,15 @@ getPipelineSummary <- function(MA){
 ##     }
 ##     newNames
 ## }
+
+.deriveNames <- function(MA, what){
+        nnames <- colnames(MA)[getRawCounts(MA)>0]
+        if(!length(nnames)==length(what)){
+            stop(paste("incompatible names in amplicon",
+                       rownames(MA), "for",  what ,"\n"))
+        }
+        nnames
+}
 
 .meltMASlotList <- function(MASlotList, MA){
     sapply(colnames(MA), function(samples) {

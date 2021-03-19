@@ -59,7 +59,6 @@ test_that("no reads were sorted into different samples" , {
             sort_track$UniqueSortedReads
         sort_track
     }
-
     sortingStats <- trackReadSorting(MA1)
     cat("\n\n Read sorting statistics\n")
     print(sortingStats)
@@ -131,7 +130,6 @@ test_that("less stringent sorting results in more reads accepted", {
                    getRawCounts(MA1)))
 })
 
-
 context("Dereping?")
 MAderep <- derepMulti(MA1)
 
@@ -177,23 +175,25 @@ test_that("all sequences are dereplicated ", {
     up1.dereps <- unname(unlist(lapply(getDerepF(MAdadaDerep), function (x){
         sum(getUniques(x))
     })))
-    up1.counts <- getRawCounts(MA3)[getRawCounts(MA3)>0]
+    up1.counts <- getRawCounts(MAdadaDerep)[getRawCounts(MAdadaDerep)>0]
     expect_equal(up1.dereps, up1.counts)
     ## somehow calling dada directly on the stratified files makes the
     ## uniques 
     expect_true(all(up1.dadas<=up1.counts))
 })
 
-MA4 <- mergeMulti(MA3, justConcatenate=c(TRUE, TRUE),
-                  verbose=FALSE, maxMismatch = c(15, 20, 18))
+MA4 <- mergeMulti(MAdadaDerep, justConcatenate=TRUE)
+
+## mmat <- mergeMulti(MAdadaDerep, justConcatenate=TRUE)
+
+### have to test the paramet split seperately!
+## c(TRUE, FALSE), verbose=FALSE, maxMismatch = c(15, 20, 18))
 
 context("Merging works?")
 test_that("merging produces a list of derep objects ", {
-    expect_equal(length(MA4@mergers), nrow(MA3))
-    expect_equal(length(MA4@mergers), nrow(getRawCounts(MA3)))
-    expect_equal(unlist(lapply(MA4@mergers, length)),
-                 rowSums(getRawCounts(MA3)>0)) # >1 singl seq rm
+    expect_equal(dim(getMergers(MA4, dropEmpty=FALSE)), dim(MAdadaDerep))
 })
+
 
 ## for some weird reason this fails (only on TravisCI) NO IDEA WHY
 context("Merging works?")
@@ -318,11 +318,11 @@ test_that("subsetting leaves stuff intact", {
 ### THIS analyses SAMPLE CONFUSION caused by resorting before dada
 MA1res <- MA1[, c(8, 6, 7, 1, 2, 3, 5)]
 
-resortedMA3 <- dadaMulti(MA1res,
+resortedMAdadaDerep <- dadaMulti(MA1res,
                          selfConsist=TRUE, pool=FALSE, multithread=TRUE)
 
 ## in all other steps resorting does not produce an error
-resortedMA4 <- mergeMulti(resortedMA3, justConcatenate=TRUE, maxMismatch = c(15, 20, 18))
+resortedMA4 <- mergeMulti(resortedMAdadaDerep, justConcatenate=TRUE, maxMismatch = c(15, 20, 18))
 resortedMA5 <- makeSequenceTableMulti(resortedMA4)
 resortedMA6 <- removeChimeraMulti(resortedMA5)
 
@@ -427,7 +427,7 @@ test_that("toPhyloseq multi2Single TRUE/FALSE work and give same resultsw ", {
 context("Get the pipeline summary")
 test_that("pipelin  Summary is a data.frame", {
     expect_s3_class(getPipelineSummary(MA6), "data.frame")
-    expect_s3_class(getPipelineSummary(MA3), "data.frame")
+    expect_s3_class(getPipelineSummary(MAdadaDerep), "data.frame")
 })
 
 

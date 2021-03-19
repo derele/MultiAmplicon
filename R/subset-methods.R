@@ -87,10 +87,10 @@ setMethod("[", "MultiAmplicon",
               } else {newderepF <- newderepR <- matrix(nrow=0, ncol=0)}
               if(length(getDadaF(x, dropEmpty=FALSE))>0){
                   newdadaF <- getDadaF(x, dropEmpty=FALSE)[i, j, drop=FALSE]
-                  newdadaR <- getDadaR(x, dropEmpty=FALSE)[i, j, drop=FALSE]                  
+                  newdadaR <- getDadaR(x, dropEmpty=FALSE)[i, j, drop=FALSE]
               } else {newdadaF <- newdadaR <- matrix(nrow=0, ncol=0)}
               if(length(getMergers(x))>0){
-                  newmergers <- getMergers(x)[i, j, drop=FALSE]
+                  newmergers <- getMergers(x, dropEmpty=FALSE)[i, j, drop=FALSE]
               } else {newmergers <- matrix(nrow=0, ncol=0)}
               if(length(getSequenceTable(x))>0){
                   newST <- lapply(seq_along(i), function (ii){

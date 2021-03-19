@@ -56,14 +56,17 @@ setMethod("show", "MultiAmplicon", function(object){
         dim(getDerepF(object, dropEmpty=FALSE)), 
         "\n of those", length(getDerepF(object, dropEmpty=FALSE)),
         ",", length(getDerepF(object, dropEmpty=TRUE)),
-        "have dada objects present\n")
+        "have derep objects present\n")
     cat("\nContaining slots dadaF and dadaR of dimensions:",
         dim(getDadaF(object, dropEmpty=FALSE)),
     "\n of those", length(getDadaF(object, dropEmpty=FALSE)),
     ",", length(getDadaF(object, dropEmpty=TRUE)),
     "have dada objects present\n")
     cat("\nContaining slot mergers of dimensions:",
-        dim(getMergers(object)),"\n")
+        dim(getMergers(object, dropEmpty=FALSE)),
+        "\n of those", length(getDadaF(object, dropEmpty=FALSE)),
+        ",", length(getMergers(object, dropEmpty=TRUE)),
+        "have merger objects present\n")
     cat("\nContaining slot sequenceTable of dimensions:",
         length(object@sequenceTable), "amplicons  x ",
         paste(.replace_inf_range(lapply(object@sequenceTable, nrow)),
