@@ -113,17 +113,17 @@ addSampleData <- function (MA, sampleData=NULL) {
     ## sampleData slot was introduced
     if(is.null(sampleData)){
         MA@sampleData <- new("sample_data",
-                             data.frame(row.names=names(MA@PairedReadFileSet),
+                             data.frame(row.names=rownames(MA),
                                         readsF=MA@PairedReadFileSet@readsF,
                                         readsR=MA@PairedReadFileSet@readsF))
         return(MA)
     } else {
         ## now merge... discard samples that are not either in the
         ## sequences or in the samples 
-        missingSeq <- base::rownames(sampleData)[!base::rownames(sampleData)%in%
-                                           base::rownames(MA@sampleData)]
-        missingSamples <- base::rownames(MA@sampleData)[!base::rownames(MA@sampleData)%in%
-                                              base::rownames(sampleData)]
+        missingSeq <- rownames(sampleData)[!rownames(sampleData)%in%
+                                           rownames(MA@sampleData)]
+        missingSamples <- rownames(MA@sampleData)[!rownames(MA@sampleData)%in%
+                                                  rownames(sampleData)]
         if (length(missingSamples)>0) {
             warning(paste(length(missingSamples), "samples are missing from your",
                           "sampleData but seem to have sequence data reported.",
@@ -142,13 +142,28 @@ addSampleData <- function (MA, sampleData=NULL) {
         ##     by.cols <- c(by.cols, "readsF", "readsR")
         ## }
         by.cols <- c("row.names", 
-                     intersect(base::colnames(sampleData),
-                               base::colnames(MA@sampleData)))
+                     intersect(colnames(sampleData),
+                               colnames(MA@sampleData)))
         mSampleData <- merge(MA@sampleData, sampleData, by=by.cols)
-        base::rownames(mSampleData) <- mSampleData$Row.names
+        rownames(mSampleData) <- mSampleData$Row.names
         mSampleData$Row.names <- NULL
         SData <- new("sample_data", mSampleData)
-        initialize(MA, sampleData = SData)
+        MultiAmplicon(
+            PrimerPairsSet = getPrimerPairsSet(MA),
+            PairedReadFileSet = getPairedReadFileSet(MA),
+            .Data=MA@.Data,
+            sampleData = SData,
+            stratifiedFilesF = getStratifiedFilesF(MA, dropEmpty=FALSE),
+            stratifiedFilesR = getStratifiedFilesR(MA, dropEmpty=FALSE),
+            derepF = getDerepF(MA, dropEmpty=FALSE),
+            derepR = getDerepR(MA, dropEmpty=FALSE),
+            dadaF = getDadaF(MA, dropEmpty=FALSE),
+            dadaR = getDadaR(MA, dropEmpty=FALSE),
+            mergers = getMergers(MA, dropEmpty=FALSE),
+            sequenceTable = getSequenceTable(MA),
+            sequenceTableNoChime = getSequenceTableNoChime(MA),
+            taxonTable = getTaxonTable(MA)
+    )
     }
 }
 
