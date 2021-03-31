@@ -440,12 +440,26 @@ getSampleData <- function (MA) {
     return(slot(MA, "sampleData"))
 }
 
-.getSlot <- function(MA, slot, dropEmpty=TRUE){
+.getSlot <- function(MA, slot, dropEmpty=TRUE, name=TRUE){
     x <- slot(MA, slot)
     if(all(dim(x)==0)) return(x)
     if (dropEmpty) {
         exists <- which(getRawCounts(MA) > 0)
-        return(x[exists])
+        exi <- x[exists]
+        if (name){
+            if(all(dim(x)>1)){
+                n.exi <- apply(expand.grid(rownames(MA1), colnames(MA1)),
+                               1, paste, collapse="|")
+            } else if(nrow(x)==1){
+                n.exi <- colnames(x)
+            } else if(ncol(x)==1){
+                n.exi <- rownames(x)
+            } else {
+                stop(paste("dimension error when extracting", slot))
+            }
+            names(exi) <- n.exi[exists]
+        }
+        return(exi)
     } else {return(x)}
 }
 
