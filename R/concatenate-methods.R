@@ -3,55 +3,10 @@
                       readsR=c(x@readsR, y@readsR))
 }
 
-.concatenateStratifiedFiles <- function(x, y){
-    if(nrow(x) != nrow(y)){
-        stop("Do you try to concatenate samples from MultiAmplicon objects with diffrent numbers of amplicons? This will not work!")
-    }
-    stratifiedFilesMatrix(readsF=c(x@readsF, y@readsF),
-                          readsR=c(x@readsR, y@readsR),
-                          ncol=ncol(x)+ncol(y), nrow=nrow(x),
-                          dimnames=list(rownames(x),
-                                        c(colnames(x), colnames(y))))
-}
-
-
-.concatenateRawCounts <- function(x, y){
-    cbind(getRawCounts(x), getRawCounts(y))
-}
 
 .concatenateSampleData <- function(x, y){
     bound <- rbind(x@sampleData, y@sampleData)
     new("sample_data", bound)
-}
-
-.concatenateDerep <- function(x, y){
-    dr <- lapply(seq_along(x@derep), function (i){
-        c(x@derep[[i]], y@derep[[i]])
-    })
-    names(dr) <- names(x@derep)
-    dr
-}
-
-.concatenateDada <- function(x, y){
-    FX <- getDadaF(x)
-    FY <- getDadaF(y)
-    RX <- getDadaR(x)
-    RY <- getDadaR(y)
-    PD <-  lapply(seq_along(FX), function (i){
-        dF <- c(FX[[i]], FY[[i]])
-        dR <- c(RX[[i]], RY[[i]])
-        new("PairedDada", dadaF=dF, dadaR=dR)
-    })
-    names(PD) <- names(x@dada)
-    PD
-}
-
-.concatenateMergers <- function(x, y){
-    mg <- lapply(seq_along(x@mergers), function (i){
-        c(x@mergers[[i]], y@mergers[[i]])
-    })
-    names(mg) <- names(x@mergers)
-    mg
 }
 
 .concatenateSequenceTable <- function(x, y){
@@ -101,22 +56,33 @@ concatenateMultiAmplicon <- function (MA1, MA2, what="samples") {
     if(what%in%"amplicons"){
         stop("concatenation of amplicons is not yet implemented, plaese open and issue on github and ask me prioritize this feature if you need it!")
     }
-    MultiAmplicon(MA1@PrimerPairsSet,
-                  .concatenatePairedReadFileSets(MA1@PairedReadFileSet,
-                                                 MA2@PairedReadFileSet),
-                  .Data = .concatenateRawCounts(MA1, MA2),
-                  .concatenateStratifiedFiles(MA1@stratifiedFiles,
-                                              MA2@stratifiedFiles),
-                  .concatenateSampleData(MA1, MA2),
-                  .concatenateDerep(MA1, MA2),
-                  .concatenateDada(MA1, MA2),
-                  .concatenateMergers(MA1, MA2),
-                  .concatenateSequenceTable(MA1@sequenceTable,
-                                            MA2@sequenceTable),
-                  .concatenateSequenceTable(MA1@sequenceTableNoChime,
-                                            MA2@sequenceTableNoChime),
-                  .concatenateTaxonTable(MA1@taxonTable,
-                                         MA2@taxonTable)
+    MultiAmplicon(PrimerPairsSet = getPrimerPairsSet(MA1),
+                  PairedReadFileSet =.concatenatePairedReadFileSets(
+                      getPairedReadFileSet(MA1), getPairedReadFileSet(MA2)),
+                  rawCounts = cbind(getRawCounts(MA1), getRawCounts(MA2)),
+                  stratifiedFilesF = cbind(
+                      getStratifiedFilesF(MA1, dropEmpty=FALSE),
+                      getStratifiedFilesF(MA2, dropEmpty=FALSE)),
+                  stratifiedFilesR = cbind(
+                      getStratifiedFilesR(MA1, dropEmpty=FALSE),
+                      getStratifiedFilesR(MA2, dropEmpty=FALSE)),
+                  sampleData = .concatenateSampleData(MA1, MA2),
+                  derepF = cbind(getDerepF(MA1, dropEmpty=FALSE),
+                                 getDerepF(MA2, dropEmpty=FALSE)),
+                  derepR = cbind(getDerepR(MA1, dropEmpty=FALSE),
+                                 getDerepR(MA2, dropEmpty=FALSE)),
+                  dadaF = cbind(getDadaF(MA1, dropEmpty=FALSE),
+                                 getDadaF(MA2, dropEmpty=FALSE)),
+                  dadaR = cbind(getDadaR(MA1, dropEmpty=FALSE),
+                                 getDadaR(MA2, dropEmpty=FALSE)),
+                  mergers = cbind(getMergers(MA1, dropEmpty=FALSE),
+                                  getMergers(MA2, dropEmpty=FALSE)),
+                  .concatenateSequenceTable(getSequenceTable(MA1),
+                                            getSequenceTable(MA2)),
+                  .concatenateSequenceTable(getSequenceTableNoChime(MA1),
+                                            getSequenceTableNoChime(MA2)),
+                  .concatenateTaxonTable(getTaxonTable(MA1),
+                                         getTaxonTable(MA2))
                   )
 }
 

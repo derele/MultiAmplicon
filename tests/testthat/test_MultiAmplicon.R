@@ -167,24 +167,7 @@ test_that("dada2 denoising produces identical results for replicate samplesd", {
                  getDadaF(MAdadaDirect[, "S05D_F_filt.fastq.gz"]))
 })
 
-
-test_that("all sequences are dereplicated ", {
-    up1.dadas <- unname(unlist(lapply(getDadaF(MAdadaDerep), function (x){
-        sum(getUniques(x))
-    })))
-    up1.dereps <- unname(unlist(lapply(getDerepF(MAdadaDerep), function (x){
-        sum(getUniques(x))
-    })))
-    up1.counts <- getRawCounts(MAdadaDerep)[getRawCounts(MAdadaDerep)>0]
-    expect_equal(up1.dereps, up1.counts)
-    ## somehow calling dada directly on the stratified files makes the
-    ## uniques 
-    expect_true(all(up1.dadas<=up1.counts))
-})
-
 MA4 <- mergeMulti(MAdadaDerep, justConcatenate=TRUE)
-
-## mmat <- mergeMulti(MAdadaDerep, justConcatenate=TRUE)
 
 ### have to test the paramet split seperately!
 ## c(TRUE, FALSE), verbose=FALSE, maxMismatch = c(15, 20, 18))
@@ -203,24 +186,25 @@ test_that("proportion of merged is between zero and one ", {
     )
 })
 
-
-
-up1.merge <- unname(unlist(lapply(MA4@mergers, function (x)
-    lapply(x, function (y) sum(getUniques(y))))))
-
+test_that("all sequences are dereplicated ", {
+    up1.dadas <- unlist(lapply(getDadaF(MAdadaDerep), function (x){
+        sum(getUniques(x))
+    }))
+    up1.dereps <- unlist(lapply(getDerepF(MAdadaDerep), function (x){
+        sum(getUniques(x))
+    }))
+    up1.mergers <- unname(unlist(lapply(getMergers(MA4), function (x){
+        sum(getUniques(x))
+    })))
+    up1.counts <- getRawCounts(MAdadaDerep)[getRawCounts(MAdadaDerep)>0]
+    expect_equal(up1.dereps, up1.counts)
+    ## somehow calling dada directly on the stratified files makes the
+    ## uniques 
+    expect_true(all(up1.dadas<=up1.counts))
+    expect_true(all(up1.mergers<=up1.dadas))
+})
 
 MA5 <- makeSequenceTableMulti(MA4)
-
-test_that("Identical files produce identical sequence tables ", {
-    lapply(MA5@sequenceTable, function(x) {
-        if("S05_F_filt.fastq.gz" %in% base::rownames(x)){
-            expect_equal(
-                unname(t(x["S05_F_filt.fastq.gz", ])),
-                unname(t(x["S05D_F_filt.fastq.gz", ])))
-        }
-    })
-})
-              
 
 MA6 <- removeChimeraMulti(MA5)
 
@@ -343,10 +327,7 @@ test_that("Resorting produces identical output over samples", {
         as.data.frame(d)
     })
     conf <- do.call(rbind, confusion)
-    ## ## evaluate!!!
-### expect_equal(conf[, "Correct"], conf[, "Shuffle"]) 
-#### ERROR FIX ME!!!  is this because re-dada is not guaranteed 
-#### to give same results??
+    expect_equal(conf[, "Correct"], conf[, "Shuffle"]) 
 })
 
 context("Concatenating MultiAmplicon objects")
@@ -354,9 +335,16 @@ context("Concatenating MultiAmplicon objects")
 MAcat <- concatenateMultiAmplicon(MA6[, 1:4],
                                   MA6[, 5:8]) 
 
+## ## FIX ME!!! Work on concatenation!
+
+### There's something completely wrong when subsetting (and
+### concatenating) sequence tables
+
+### Fixing the sample naming problem first!!!
+
 test_that("concatenating leaves stuff intact", {
     expect_equal(getRawCounts(MA6),   getRawCounts(MAcat))
-    expect_equal(getStratifiedFiles(MA6), getStratifiedFiles(MAcat))
+    expect_equal(getStratifiedFilesF(MA6), getStratifiedFilesF(MAcat))
 
     ## ## need to reimplement the pairedDada stuff!!
     ## expect_equal(getDadaF(MA6[subRows, subCnames]),
@@ -404,7 +392,6 @@ test_that("sample data warning when more sequence data than sample data", {
     expect_warning(addSampleData(MA, additionalSD),
                    "missing from your sampleData but seem to have sequence data reported")
 })
-
 
 
 

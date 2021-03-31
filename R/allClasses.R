@@ -559,14 +559,18 @@ setMethod("apply", signature(X = "MultiAmplicon",
               FUN <- match.fun(FUN)
               dn.ans <- dimnames(X)[MARGIN]
               if (MARGIN==1) {
-                  sapply(seq(nrow(X)), function (i){
+                  rowRes <- sapply(seq(nrow(X)), function (i){
                       FUN(X[i, ], ... )
                   })
+                  names(rowRes) <- rownames(X)
+                  rowRes
               } else {
                   if (MARGIN==2) {
-                      sapply(seq(ncol(X)), function (j){
+                      colRes <- sapply(seq(ncol(X)), function (j){
                           FUN(X[, j], ... )
                       })
+                      names(colRes) <- colnames(X)
+                      colRes
                   } else {
                       stop("Only MARGIN of 1 or 2 supported for a MultiAmplicon object.\n")
                   }

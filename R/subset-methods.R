@@ -101,21 +101,19 @@ setMethod("[", "MultiAmplicon",
                   })
                   names(newST) <- names(x@sequenceTable[i])
               } else{newST <- list()}
-              if(length(x@sequenceTableNoChime)>0){
+              if(length(getSequenceTableNoChime(x))>0){
                   newSTnC <- lapply(seq_along(i), function (ii){
-                      ST <- x@sequenceTableNoChime[[i[[ii]]]]
+                      ST <- getSequenceTableNoChime(x)[[i[[ii]]]]
                       if(nrow(ST)>=length(new.j[[ii]])){
                           ST[new.j[[ii]], , drop=FALSE]
                       } else {matrix(ncol=0, nrow=0)}
                   })
                   names(newSTnC) <- names(x@sequenceTableNoChime[i])         
               } else{newSTnC <- list()}
-              if(length(x@taxonTable)>0){
-                  newTT <- x@taxonTable[i]
+              if(length(getTaxonTable(x))>0){
+                  newTT <- getTaxonTable(x)[i]
                   names(newTT) <- names(x@taxonTable[i])         
               } else{newTT <- list()}
-              ## avoid warnings from ValidityCheck??
-              suppressWarnings(
                   MA.out <- MultiAmplicon(
                       ## .Data = m, not this! as
                       ## new indices needed
@@ -132,13 +130,13 @@ setMethod("[", "MultiAmplicon",
                       derepR = newderepR,
                       dadaF = newdadaF,
                       dadaR = newdadaR,
-                      mergers = newmergers#,
+                      mergers = newmergers,
 
                       ## ## more complex  to subset components
-                      ##                      sequenceTable = newST,
-                      ##                      sequenceTableNoChime = newSTnC,
-                      ##                       taxonTable = newTT
-                      ))
+                      sequenceTable = newST,
+                      sequenceTableNoChime = newSTnC,
+                      taxonTable = newTT
+                  )
               MA.out
           })
 
