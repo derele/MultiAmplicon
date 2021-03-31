@@ -155,6 +155,7 @@ addSampleData <- function (MA, sampleData=NULL) {
             sampleData = SData,
             stratifiedFilesF = getStratifiedFilesF(MA, dropEmpty=FALSE),
             stratifiedFilesR = getStratifiedFilesR(MA, dropEmpty=FALSE),
+            rawCounts = getRawCounts(MA),
             derepF = getDerepF(MA, dropEmpty=FALSE),
             derepR = getDerepR(MA, dropEmpty=FALSE),
             dadaF = getDadaF(MA, dropEmpty=FALSE),

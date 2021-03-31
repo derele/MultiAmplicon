@@ -307,25 +307,29 @@ mergeMulti <- function(MA, mc.cores=getOption("mc.cores", 1L), ...){
 makeSequenceTableMulti <- function(MA, mc.cores=getOption("mc.cores", 1L), ...){
     .complainWhenAbsent(MA, "mergers")
     exp.args <- .extractEllipsis(list(...), nrow(MA))
-    mergers <- getMergers(MA)
-    ## hack to remove mergers of length 1 which don't get properly
-    ## named dataframes    
-    mergers[unlist(lapply(mergers, length ))==1] <- list(list())
+    mergers <- apply(MA, 1, getMergers)
+    ## ## hack to remove mergers of length 1 which don't get properly
+    ## ## named dataframes    
+    ## mergers[unlist(lapply(mergers, length ))==1] <- list(list())
     sequenceTable <- mclapply(seq_along(mergers), function (i){
         args.here <- lapply(exp.args, "[", i)
         .paramMessage("makeSequenceTable", args.here)
         do.call(makeSequenceTable, c(list(mergers[[i]]), args.here))
     }, mc.cores=mc.cores)
-    names(sequenceTable) <- names(MA@PrimerPairsSet)
+    names(sequenceTable) <- rownames(MA)
     MultiAmplicon(
-        PrimerPairsSet = MA@PrimerPairsSet,
-        PairedReadFileSet = MA@PairedReadFileSet,
+        PrimerPairsSet = getPrimerPairsSet(MA),
+        PairedReadFileSet = getPairedReadFileSet(MA),
         .Data=MA@.Data,
-        stratifiedFiles = MA@stratifiedFiles,
         sampleData = MA@sampleData,
-        derep = MA@derep,
-        dada = MA@dada,
-        mergers = MA@mergers,
+        stratifiedFilesF = getStratifiedFilesF(MA, dropEmpty=FALSE),
+        stratifiedFilesR = getStratifiedFilesR(MA, dropEmpty=FALSE),
+        rawCounts = getRawCounts(MA),
+        derepF = getDerepF(MA, dropEmpty=FALSE),
+        derepR = getDerepR(MA, dropEmpty=FALSE),
+        dadaF = getDadaF(MA, dropEmpty=FALSE),
+        dadaR = getDadaR(MA, dropEmpty=FALSE),
+        mergers = getMergers(MA, dropEmpty=FALSE),
         sequenceTable = sequenceTable
     )
 }
@@ -363,28 +367,30 @@ makeSequenceTableMulti <- function(MA, mc.cores=getOption("mc.cores", 1L), ...){
 removeChimeraMulti <- function(MA, mc.cores = getOption("mc.cores", 1L), ...){
     .complainWhenAbsent(MA, "sequenceTable")
     exp.args <- .extractEllipsis(list(...), nrow(MA))
-    sequenceTableNoChime <-
-        mclapply(seq_along(MA@sequenceTable), function (i) { 
-            if (nrow(MA@sequenceTable[[i]])>0 && ncol(MA@sequenceTable[[i]])>0){
-                args.here <- lapply(exp.args, "[", i)
-                .paramMessage("removeBimeraDenovo", args.here)
-                do.call(removeBimeraDenovo, c(list(MA@sequenceTable[[i]]), args.here))
-            } else {matrix(nrow=0, ncol=0)}
-        },
-        mc.cores = mc.cores)
-    names(sequenceTableNoChime) <- MA@PrimerPairsSet@names
-    MultiAmplicon(
-        PrimerPairsSet = MA@PrimerPairsSet,
-        PairedReadFileSet = MA@PairedReadFileSet,
-        .Data=MA@.Data,
-        stratifiedFiles = MA@stratifiedFiles,
-        sampleData = MA@sampleData,
-        derep = MA@derep,
-        dada = MA@dada,
-        mergers = MA@mergers,
-        sequenceTable = MA@sequenceTable,
-        sequenceTableNoChime = sequenceTableNoChime
-    )
+    ST <- getSequenceTable(MA)
+    STN <- mclapply(seq_along(ST), function (i) { 
+        if (nrow(ST[[i]])>0 && ncol(ST[[i]])>0){
+            args.here <- lapply(exp.args, "[", i)
+            .paramMessage("removeBimeraDenovo", args.here)
+            do.call(removeBimeraDenovo, c(list(ST[[i]]), args.here))
+        } else {matrix(nrow=0, ncol=0)}
+    }, mc.cores = mc.cores)
+    names(STN) <- rownames(MA)
+    MultiAmplicon(.Data=MA@.Data,
+                  PairedReadFileSet = getPairedReadFileSet(MA),
+                  PrimerPairsSet = getPrimerPairsSet(MA),
+                  sampleData = getSampleData(MA),
+                  stratifiedFilesF = getStratifiedFilesF(MA, dropEmpty=FALSE),
+                  stratifiedFilesR = getStratifiedFilesR(MA, dropEmpty=FALSE),
+                  rawCounts = getRawCounts(MA),
+                  derepF = getDerepF(MA, dropEmpty=FALSE),
+                  derepR = getDerepR(MA, dropEmpty=FALSE),
+                  dadaF = getDadaF(MA, dropEmpty=FALSE),
+                  dadaR = getDadaR(MA, dropEmpty=FALSE),
+                  mergers = getMergers(MA, dropEmpty=FALSE),
+                  sequenceTable = getSequenceTable(MA),
+                  sequenceTableNoChime = STN
+                  )
 }
 
 ##' Calculate the proportion of merged sequences for a MultiAmplicon
@@ -410,9 +416,14 @@ setMethod("calcPropMerged", "MultiAmplicon",
           function(MA){
               .complainWhenAbsent(MA, "mergers")
               sgt <- function(x) sum(getUniques(x))
-
-              nMerged <- apply(getMergers(MA, dropEmpty=FALSE), sgt)
-              nBefore <- apply(getDadaF(MA, deropEmpty=FALSE), getN)
+              mergers <- apply(MA, 1, getMergers)
+              dadas <- apply(MA, 1, getDadaF)
+              nMerged <- unlist(lapply(mergers, function (amp) {
+                  sum(unlist(lapply(amp, sgt)))
+              }))
+              nBefore <- unlist(lapply(dadas, function (amp) {
+                  sum(unlist(lapply(amp, sgt)))
+              }))
               prop <- nMerged/nBefore
               prop[is.nan(prop)] <- 0
               prop
