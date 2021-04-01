@@ -51,19 +51,23 @@ derepMulti <- function(MA, mc.cores = getOption("mc.cores", 1L),
                               c(list(SF), args.here))
         if (class(derepF)%in%"derep") {
             derepF <- list(derepF)
+            ## using the non-zero raw counts for naming, necessary as
+            ## derep drops names when only sinlge files
+            names(derepF) <- .deriveNames(MA[i, ], derepF)
         }
         derepR <- do.call(derepFastq,
                           c(list(getStratifiedFilesR(MA[i, ])), args.here))
         if (class(derepR)%in%"derep") {
             derepR <- list(derepR)
-        }
-        ## using the non-zero raw counts for naming
-        names(derepF) <- .deriveNames(MA[i, ], derepF)
-        names(derepR) <- .deriveNames(MA[i, ], derepR)
+            ## using the non-zero raw counts for naming, necessary as
+            ## derep drops names when only sinlge files
+            names(derepR) <- .deriveNames(MA[i, ], derepR) ## reinstating for BAD            
+        }     
         list(derepF, derepR)
     }, mc.cores = mc.cores)
     names(PPderep) <- rownames(MA)
     derepF_ampXsamples <- lapply(PPderep, "[[", 1)
+    ##    return(derepF_ampXsamples) ## for now
     derepR_ampXsamples <- lapply(PPderep, "[[", 2)
     derepFmat <- .meltMASlotList(derepF_ampXsamples, MA)
     derepRmat <- .meltMASlotList(derepR_ampXsamples, MA)
@@ -146,6 +150,8 @@ dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
            if (class(dadaF)%in%"dada"){
                dadaF <- list(dadaF)
                ## then there should be only one stratified file
+               ## using the non-zero raw counts for naming
+               names(dadaF) <- .deriveNames(MA[i, ], dadaF)
                if (length(dF) > 1) {
                    stop("dada collapsed but more than one stratified file found")
                }
@@ -159,14 +165,14 @@ dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
            ## make it a list in case of only one sample
            if (class(dadaR)%in%"dada"){
                dadaR <- list(dadaR)
+               ## using the non-zero raw counts for naming
+               names(dadaR) <- .deriveNames(MA[i, ], dadaR)
+               
            }
            if(!.isListOf(dadaR, "dada")) {
                stop(paste("incorrect classes reported for dadaR in amplicon",
                           rownames(MA)[i], "\n"))
-           }
-           ## using the non-zero raw counts for naming
-           names(dadaF) <- .deriveNames(MA[i, ], dadaF)
-           names(dadaR) <- .deriveNames(MA[i, ], dadaR)
+           }           
        } else {
            dadaF <- list()
            dadaR <- list()
@@ -253,7 +259,7 @@ mergeMulti <- function(MA, mc.cores=getOption("mc.cores", 1L), ...){
                              dadaR = daR, derepR = deR), args.here))
         ## correct the case of one sample / amplicon 
         if(class(MP)%in%"data.frame"){MP <- list(MP)}
-        names(MP) <- .deriveNames(MA[i, ], MP)
+##        names(MP) <- .deriveNames(MA[i, ], MP)
         return(MP)
     }, mc.cores=mc.cores)
     names(mergers) <- rownames(MA)
