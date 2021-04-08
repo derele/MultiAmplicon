@@ -21,6 +21,7 @@
 \alias{getTaxonTable}
 \alias{getSequencesFromTable}
 \alias{getSequencesFromTable,MultiAmplicon-method}
+\alias{apply,MultiAmplicon,numeric,function-method}
 \alias{show,MultiAmplicon-method}
 \alias{[,MultiAmplicon,ANY,ANY,ANY-method}
 \alias{[,MultiAmplicon,index,missing,ANY-method}
@@ -60,25 +61,27 @@ getStratifiedFilesF(MA, dropEmpty = TRUE)
 
 getStratifiedFilesR(MA, dropEmpty = TRUE)
 
-getDerepF(MA)
+getDerepF(MA, dropEmpty = TRUE)
 
-getDerepR(MA)
+getDerepR(MA, dropEmpty = TRUE)
 
-getDadaF(MA)
+getDadaF(MA, dropEmpty = TRUE)
 
-getDadaR(MA)
+getDadaR(MA, dropEmpty = TRUE)
 
-getMergers(MA)
+getMergers(MA, dropEmpty = TRUE)
 
-getSequenceTable(MA, simplify = TRUE)
+getSequenceTable(MA, dropEmpty = TRUE, simplify = TRUE)
 
-getSequenceTableNoChime(MA, simplify = TRUE)
+getSequenceTableNoChime(MA, dropEmpty = TRUE, fill = FALSE)
 
 getTaxonTable(MA, simplify = TRUE)
 
 getSequencesFromTable(MA)
 
 \S4method{getSequencesFromTable}{MultiAmplicon}(MA)
+
+\S4method{apply}{MultiAmplicon,numeric,`function`}(X, MARGIN, FUN, ...)
 
 \S4method{show}{MultiAmplicon}(object)
 
@@ -122,6 +125,8 @@ list of taxonomyTable objects from
 
 \item{dropEmpty}{Should empty files be returned}
 
+\item{...}{not used}
+
 \item{object}{A \code{MultiAmplicon-class} object.}
 
 \item{x}{MultiAmplicon-class object}
@@ -131,8 +136,6 @@ amplicons)}
 
 \item{j}{numeric, logical or names vector for subsetting columns
 (== read files, corresponding usually to samples)}
-
-\item{...}{not used}
 
 \item{drop}{should not be used}
 

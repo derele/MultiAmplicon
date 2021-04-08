@@ -190,14 +190,14 @@ addSampleData <- function (MA, sampleData=NULL) {
 ##' @author Emanuel Heitlinger
 .fillSampleTables <- function (ST, samples){
     message("extracting ", length(samples), " requested samples")
-    missing.samples <- samples[!samples%in%base::rownames(ST)]
+    missing.samples <- samples[!samples%in%rownames(ST)]
     if(length(missing.samples)>0){
         fill <- matrix(0, nrow=length(missing.samples), ncol=ncol(ST))
-        base::rownames(fill) <- missing.samples
+        rownames(fill) <- missing.samples
         message("filling zeros for amplicon missing ", nrow(fill),
                 " samples ")
-        full <- rbind(ST, fill)
+        full <- as.matrix(rbind(ST, fill))
     } else {full <- ST}
-    full[samples, ]
+    full[samples, , drop=FALSE]
 }
 

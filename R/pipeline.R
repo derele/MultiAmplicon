@@ -258,8 +258,11 @@ mergeMulti <- function(MA, mc.cores=getOption("mc.cores", 1L), ...){
                       c(list(dadaF = daF, derepF = deF,
                              dadaR = daR, derepR = deR), args.here))
         ## correct the case of one sample / amplicon 
-        if(class(MP)%in%"data.frame"){MP <- list(MP)}
-##        names(MP) <- .deriveNames(MA[i, ], MP)
+        if(class(MP)%in%"data.frame"){
+            MP <- list(MP)
+            ## again get the (dropped) names from non-empty samples
+            names(MP) <- .deriveNames(MA[i, ], MP)
+        }
         return(MP)
     }, mc.cores=mc.cores)
     names(mergers) <- rownames(MA)
@@ -435,94 +438,6 @@ setMethod("calcPropMerged", "MultiAmplicon",
               prop
           })
 
-
-
-## Summary function for pipeline ------------------------------------
-
-##' Obtain summary data for amplicons run through the MultiAmplicon pipeline.
-##'
-##' Get statistics on the number of samples (with read data), the
-##' number of unique sequence variants and the number of reads left
-##' after processing of amplicons in the MultiAmplicon pipeline. In
-##' some steps of the pipeline dada2 performs quality filtering
-##' excluding non-credible sequence variants.
-##' 
-##' @title getPipelineSummary
-##' @param MA MultiAmplicon object with all slots filled for tracking.
-##' @return a data.frame of sample, unique sequences and sequencing
-##'     reads numbers per amplicon.
-##' @importFrom plyr revalue
-##' @export
-##' @author Emanuel Heitlinger
-getPipelineSummary <- function(MA){
-    slots <- c("stratifiedFiles", "dada", "mergers",
-               "sequenceTable", "sequenceTableNoChime")
-    slotFilled <- unlist(sapply(slots, function (x) length(slot(MA, x)))>0)
-    ### helper functions
-    getN <- function(x) unlist(lapply(x, function (y) sum(getUniques(y))))
-    getU <- function(x) unlist(lapply(x, function (y) length(getUniques(y))))
-    track.l <- lapply(seq_along(getDadaF(MA)), function (i) {
-        samples <- list(
-            sorted=length(getRawCounts(MA[i, ])[getRawCounts(MA[i, ])>0]),
-            ##  ## derep is currently defunct 
-            ##  derep=length(getDerepF(MA[i, ])),
-            denoised = if(slotFilled["dada"]) {
-                           length(getDadaF(MA[i,]))
-                       } else{0},
-            merged = if(slotFilled["mergers"]) {
-                         length(getMergers(MA[i,]))
-                     } else{0},
-            tabulated = if(slotFilled["sequenceTable"]) {
-                            nrow(getSequenceTable(MA[i,]))
-                        } else{0},
-            noChime= if(slotFilled["sequenceTableNoChime"]) {
-                         nrow(getSequenceTableNoChime(MA[i,]))
-                     } else{0}
-        )
-        uniques <- list(
-            ##  ## derep is currently defunct 
-            ##  derep=sum(getU(getDerepF(MA[i, ]))),
-            denoised = if(slotFilled["dada"]) {
-                           sum(getU(getDadaF(MA[i, ])))
-                       } else{0},
-            merged = if(slotFilled["mergers"]) {
-                         sum(getU(getMergers(MA[i, ])))
-                     } else{0},
-            tabulated = if(slotFilled["sequenceTable"]) {
-                            ncol(getSequenceTable(MA[i, ]))
-                        } else{0},
-            noChime = if(slotFilled["sequenceTableNoChime"]) {
-                          ncol(getSequenceTableNoChime(MA[i, ]))
-                      } else{0}
-        )
-        reads <- list(
-            sorted=sum(getRawCounts(MA[i, ])),
-            ##  ## derep is currently defunct 
-            ##  derep=sum(getN(getDerepF(MA[i, ]))),
-            denoised = if(slotFilled["dada"]) {
-                           sum(getN(getDadaF(MA[i, ])))
-                       } else{0},
-            merged = if(slotFilled["mergers"]) {
-                         sum(getN(getMergers(MA[i, ])))
-                     } else {0}, 
-            tabulated = if(slotFilled["sequenceTable"]) {
-                            sum(getSequenceTable(MA[i, ]))
-                        } else{0},
-            noChime= if(slotFilled["sequenceTableNoChime"]) {
-                         sum(getSequenceTableNoChime(MA[i, ]))
-                     } else {0}
-        )
-        list(samples, uniques, reads)
-    })
-    track <- reshape::melt(track.l)
-    track$L2 <- revalue(as.factor(track$L2), c("1"="samples",
-                                               "2"="uniques", "3"="reads"))
-    track$L3 <- factor(track$L3, levels = c("sorted", ## "derep",
-                                            "denoised", "merged",
-                                            "tabulated", "noChime"))
-    names(track) <- c("value", "pipeStep", "what", "primer")
-    return(track)
-}
 
 ## Util functions for pipeline ------------------------------------
 .extractEllipsis <- function(dotargs, n) {

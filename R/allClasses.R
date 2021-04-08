@@ -510,14 +510,22 @@ getMergers <- function(MA, dropEmpty=TRUE) {
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-getSequenceTable <- function(MA, simplify=TRUE){
-    .simpfy(MA@sequenceTable, simplify)
+getSequenceTable <- function(MA, dropEmpty=TRUE, simplify=TRUE){
+    ST <- MA@sequenceTable
+    if(!dropEmpty) {
+        ST <- lapply(ST, .fillSampleTables, colnames(MA))
+    }
+    .simpfy(ST, simplify)
 }
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-getSequenceTableNoChime <- function(MA, simplify=TRUE){
-    .simpfy(MA@sequenceTableNoChime, simplify)
+getSequenceTableNoChime <- function(MA, dropEmpty=TRUE, fill=FALSE){
+    STC <- MA@sequenceTableNoChime
+    if(!dropEmpty) {
+        STC <- lapply(STC, .fillSampleTables, colnames(MA))
+    }
+    .simpfy(STC, simplify)
 }
 
 ##' @rdname MultiAmplicon-class

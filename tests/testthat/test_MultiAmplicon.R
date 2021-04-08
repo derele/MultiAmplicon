@@ -169,6 +169,12 @@ test_that("dada2 denoising produces identical results for replicate samplesd", {
 
 MA4 <- mergeMulti(MAdadaDerep, justConcatenate=TRUE)
 
+## ## the one sequence dereps have been problematic! As the names are
+## ## dropped when those are "unlisted" by dada
+
+## getDerepF(MA4["Amp6F.Amp6R", ])
+## getDadaF(MA4["Amp6F.Amp6R", ]) getMergers(MA4["Amp6F.Amp6R", ])
+
 ### have to test the paramet split seperately!
 ## c(TRUE, FALSE), verbose=FALSE, maxMismatch = c(15, 20, 18))
 
@@ -193,9 +199,9 @@ test_that("all sequences are dereplicated ", {
     up1.dereps <- unlist(lapply(getDerepF(MAdadaDerep), function (x){
         sum(getUniques(x))
     }))
-    up1.mergers <- unname(unlist(lapply(getMergers(MA4), function (x){
+    up1.mergers <- unlist(lapply(getMergers(MA4), function (x){
         sum(getUniques(x))
-    })))
+    }))
     up1.counts <- getRawCounts(MAdadaDerep)[getRawCounts(MAdadaDerep)>0]
     expect_equal(up1.dereps, up1.counts)
     ## somehow calling dada directly on the stratified files makes the
@@ -204,9 +210,18 @@ test_that("all sequences are dereplicated ", {
     expect_true(all(up1.mergers<=up1.dadas))
 })
 
+### TODO: make pipeline tracking use getUniques and the like to get
+### matrices of counts for everything systematically...
+
 MA5 <- makeSequenceTableMulti(MA4)
 
 MA6 <- removeChimeraMulti(MA5)
+
+
+### TODO: make a test that compares the table rownames (samples) with
+### names of non-zero MA columns  
+
+
 
 
 test_that("Identical files produce identical NoChime sequence tables ", {
