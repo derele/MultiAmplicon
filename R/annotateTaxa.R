@@ -199,6 +199,6 @@ blastTaxAnnot <- function (MA, db="nt/nt",
                   mergers = getMergers(MA, dropEmpty=FALSE),
                   sequenceTable = getSequenceTable(MA),
                   sequenceTableNoChime = getSequenceTableNoChime(MA),
-                  taxonTable = taxTab.l)
-    )
+                  taxonTable = taxTab.l
+                  )
 }
