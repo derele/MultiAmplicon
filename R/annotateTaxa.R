@@ -185,17 +185,20 @@ blastTaxAnnot <- function (MA, db="nt/nt",
             new("taxonomyTable", x)
         } else {NULL}
     })
-    MultiAmplicon(
-        PrimerPairsSet = MA@PrimerPairsSet,
-        PairedReadFileSet = MA@PairedReadFileSet,
-        .Data=MA@.Data,
-        stratifiedFiles = MA@stratifiedFiles,
-        sampleData = MA@sampleData,
-        derep = MA@derep,
-        dada = MA@dada,
-        mergers = MA@mergers,
-        sequenceTable = MA@sequenceTable,
-        sequenceTableNoChime = MA@sequenceTableNoChime,
-        taxonTable = taxTab.l
+    MultiAmplicon(.Data=MA@.Data,
+                  PairedReadFileSet = getPairedReadFileSet(MA),
+                  PrimerPairsSet = getPrimerPairsSet(MA),
+                  sampleData = getSampleData(MA),
+                  stratifiedFilesF = getStratifiedFilesF(MA, dropEmpty=FALSE),
+                  stratifiedFilesR = getStratifiedFilesR(MA, dropEmpty=FALSE),
+                  rawCounts = getRawCounts(MA),
+                  derepF = getDerepF(MA, dropEmpty=FALSE),
+                  derepR = getDerepR(MA, dropEmpty=FALSE),
+                  dadaF = getDadaF(MA, dropEmpty=FALSE),
+                  dadaR = getDadaR(MA, dropEmpty=FALSE),
+                  mergers = getMergers(MA, dropEmpty=FALSE),
+                  sequenceTable = getSequenceTable(MA),
+                  sequenceTableNoChime = getSequenceTableNoChime(MA),
+                  taxonTable = taxTab.l)
     )
 }
