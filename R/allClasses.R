@@ -413,6 +413,14 @@ MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
         )
 }
 
+### ## NOTE TO MYSELF: in the longer term CONSIDER changing the data
+### ## structure of empty slots to contain zeros. This would make
+### ## handling of the objects more straigth forward
+
+### ## matrix(0, nrow=length(PrimerPairsSet),
+### ## ncol=length(PairedReadFileSet) vector("list",
+### ## length=length(PrimerPairsSet))
+
 
 ##' @rdname MultiAmplicon-class
 ##' @param MA MultiAmplicon-class object
@@ -448,7 +456,7 @@ getSampleData <- function (MA) {
         exi <- x[exists]
         if (name){
             if(all(dim(x)>1)){
-                n.exi <- apply(expand.grid(rownames(MA1), colnames(MA1)),
+                n.exi <- apply(expand.grid(rownames(MA), colnames(MA)),
                                1, paste, collapse="|")
             } else if(nrow(x)==1){
                 n.exi <- colnames(x)
