@@ -55,14 +55,17 @@ derepMulti <- function(MA, mc.cores = getOption("mc.cores", 1L),
             ## derep drops names when only sinlge files
             names(derepF) <- .deriveNames(MA[i, ], derepF)
         }
+        if (!.isListOf(derepF, "derep", nullOk=FALSE)){
+            stop("not a list of derep objects returned")
+        }
         derepR <- do.call(derepFastq,
-                          c(list(getStratifiedFilesR(MA[i, ])), args.here))
+                          c(list(SR), args.here))
         if (class(derepR)%in%"derep") {
             derepR <- list(derepR)
             ## using the non-zero raw counts for naming, necessary as
             ## derep drops names when only sinlge files
             names(derepR) <- .deriveNames(MA[i, ], derepR) ## reinstating for BAD            
-        }     
+        }
         list(derepF, derepR)
     }, mc.cores = mc.cores)
     names(PPderep) <- rownames(MA)
@@ -508,7 +511,7 @@ setMethod("calcPropMerged", "MultiAmplicon",
 .meltMASlotList <- function(MASlotList, MA){
     sapply(colnames(MA), function(samples) {
         sapply(rownames(MA), function(amp){
-            MASlotList[[amp]][[samples]] 
+            MASlotList[[amp]][samples]
         })
     })
 }
