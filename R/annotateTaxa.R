@@ -71,10 +71,6 @@ blastTaxAnnot <- function (MA, db="nt/nt",
     }
 
     if(!file.exists(outblast)){
-        DBmessage <-
-            paste0("using database ", db, " resulting in as blast database full path\n")
-        message(DBmessage)
-        
         ## We blast this file against NR with a gi-list excluding all
         ## uncultured sequences
         ## create the gi-list as a download from an NCBI Entrez Nucleotide
@@ -94,7 +90,7 @@ blastTaxAnnot <- function (MA, db="nt/nt",
                          "-outfmt", "'10 qaccver saccver pident length mismatch gapopen",
                          "qstart qend sstart send evalue bitscore staxid'",
                          ...)
-        message("STARTED running blast with command:\n",
+        message("RUNNING BLAST with command:\n",
                 command)
         system(command)
         cat("\nFINISHED running blast\n")
