@@ -56,7 +56,8 @@ concatenateMultiAmplicon <- function (MA1, MA2, what="samples") {
     if(what%in%"amplicons"){
         stop("concatenation of amplicons is not yet implemented, plaese open and issue on github and ask me prioritize this feature if you need it!")
     }
-    MultiAmplicon(PrimerPairsSet = getPrimerPairsSet(MA1),
+    MultiAmplicon(.Data = cbind(MA1@.Data, MA2@.Data),
+                  PrimerPairsSet = getPrimerPairsSet(MA1),
                   PairedReadFileSet =.concatenatePairedReadFileSets(
                       getPairedReadFileSet(MA1), getPairedReadFileSet(MA2)),
                   rawCounts = cbind(getRawCounts(MA1), getRawCounts(MA2)),
