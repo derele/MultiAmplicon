@@ -454,7 +454,7 @@ getSampleData <- function (MA) {
     if (dropEmpty) {
         exists <- which(getRawCounts(MA) > 0)
         exi <- x[exists]
-        if (name){
+        if (isTRUE(name)){
             if(all(dim(x)>1)){
                 n.exi <- apply(expand.grid(rownames(MA), colnames(MA)),
                                1, paste, collapse="|")
@@ -475,45 +475,45 @@ getSampleData <- function (MA) {
 ##' @rdname MultiAmplicon-class
 ##' @param dropEmpty Should empty files be returned
 ##' @export
-getStratifiedFilesF <- function(MA, dropEmpty=TRUE) {
-    .getSlot(MA, "stratifiedFilesF", dropEmpty)
+getStratifiedFilesF <- function(MA,  ...) {
+    .getSlot(MA, "stratifiedFilesF", ...)
 }
 
 ##' @rdname MultiAmplicon-class
 ##' @param dropEmpty Should empty files be returned
 ##' @export
-getStratifiedFilesR <- function(MA, dropEmpty=TRUE) {
-    .getSlot(MA,  "stratifiedFilesR", dropEmpty)
+getStratifiedFilesR <- function(MA, ...) {
+    .getSlot(MA,  "stratifiedFilesR", ...)
 }
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-getDerepF <-  function(MA, dropEmpty=TRUE) {
-    .getSlot(MA, "derepF", dropEmpty)
+getDerepF <-  function(MA, ...) {
+    .getSlot(MA, "derepF", ...)
 }
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-getDerepR <-  function(MA, dropEmpty=TRUE) {
-    .getSlot(MA, "derepR", dropEmpty)
+getDerepR <-  function(MA, ...) {
+    .getSlot(MA, "derepR", ...)
 }
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-getDadaF <- function(MA, dropEmpty=TRUE) {
-    .getSlot(MA, "dadaF", dropEmpty)
+getDadaF <- function(MA, ...) {
+    .getSlot(MA, "dadaF", ...)
 }
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-getDadaR <- function(MA, dropEmpty=TRUE) {
-    .getSlot(MA, "dadaR", dropEmpty)
+getDadaR <- function(MA, ...) {
+    .getSlot(MA, "dadaR", ...)
 }
 
 ##' @rdname MultiAmplicon-class
 ##' @export
-getMergers <- function(MA, dropEmpty=TRUE) {
-    .getSlot(MA, "mergers", dropEmpty)
+getMergers <- function(MA, ...) {
+    .getSlot(MA, "mergers", ...)
 }
 
 ##' @rdname MultiAmplicon-class
