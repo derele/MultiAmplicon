@@ -70,7 +70,6 @@ derepMulti <- function(MA, mc.cores = getOption("mc.cores", 1L),
     }, mc.cores = mc.cores)
     names(PPderep) <- rownames(MA)
     derepF_ampXsamples <- lapply(PPderep, "[[", 1)
-    ##    return(derepF_ampXsamples) ## for now
     derepR_ampXsamples <- lapply(PPderep, "[[", 2)
     derepFmat <- .meltMASlotList(derepF_ampXsamples, MA)
     derepRmat <- .meltMASlotList(derepR_ampXsamples, MA)
@@ -427,15 +426,15 @@ setGeneric("calcPropMerged", function(MA) {standardGeneric("calcPropMerged")})
 setMethod("calcPropMerged", "MultiAmplicon",
           function(MA){
               .complainWhenAbsent(MA, "mergers")
-              sgt <- function(x) sum(getUniques(x))
-              mergers <- apply(MA, 1, getMergers)
-              dadas <- apply(MA, 1, getDadaF)
-              nMerged <- unlist(lapply(mergers, function (amp) {
-                  sum(unlist(lapply(amp, sgt)))
-              }))
-              nBefore <- unlist(lapply(dadas, function (amp) {
-                  sum(unlist(lapply(amp, sgt)))
-              }))
+
+              input <- getCounts(getDadaF(MA,
+                                          dropEmpty=FALSE, name=FALSE),
+                                 "input") 
+              merged <- getCounts(getMergers(MA,
+                                             dropEmpty=FALSE, name=FALSE),
+                                  "input")
+              nBefore <- rowSums(input)
+              nMerged <- rowSums(merged)
               prop <- nMerged/nBefore
               prop[is.nan(prop)] <- 0
               prop
