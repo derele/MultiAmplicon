@@ -552,7 +552,9 @@ setGeneric("getSequencesFromTable", function(MA) {standardGeneric("getSequencesF
 setMethod("getSequencesFromTable", "MultiAmplicon",
           function (MA) {
               lapply(getSequenceTableNoChime(MA), function (y) {
-                  if(all(dim(y)>1)) getSequences(y) else NULL
+                  if(!is.null(dim(y)) && all(dim(y)>1)) {
+                      getSequences(y)}
+                  else NULL
               })
           })
 
