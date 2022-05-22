@@ -186,12 +186,17 @@ setMethod(names, "PrimerPairsSet", function (x) x@names)
 ##'     have tto be the same as \code{colnames(MA)}). More data can be
 ##'     added by \code{\link{addSampleData}}.
 ##' 
-##' @slot stratifiedFiles temporary files as a result of stratifying
+##' @slot stratifiedFilesF temporary files as a result of stratifying
 ##'     into amplicons and samples using the MultiAmplicon pipeline
 ##'     function \code{\link{sortAmplicons}}. Forward (sometimes
 ##'     called R1) and reverse (sometimes called R2) files are stored
-##'     as a (amplicons x samples) matrix of
-##'     \code{\link{PairedReadFileSet-class}} objects.
+##'     as a (amplicons x samples) matrix objects.
+##'
+##' @slot stratifiedFilesR temporary files as a result of stratifying
+##'     into amplicons and samples using the MultiAmplicon pipeline
+##'     function \code{\link{sortAmplicons}}. Forward (sometimes
+##'     called R1) and reverse (sometimes called R2) files are stored
+##'     as a (amplicons x samples) matrix objects.
 ##'
 ##' @slot derep A list of \code{\link{PairedDerep-class}} objects
 ##'     containing pairs of derep-class objects created by
@@ -450,7 +455,7 @@ getSampleData <- function (MA) {
 
 .getSlot <- function(MA, slot, dropEmpty=TRUE, name=TRUE){
     x <- slot(MA, slot)
-    if(all(dim(x)==0)) return(x)
+    if(all(dim(x)==0)||is.null(dim(x))) return(x)
     if (dropEmpty) {
         exists <- which(getRawCounts(MA) > 0)
         exi <- x[exists]
