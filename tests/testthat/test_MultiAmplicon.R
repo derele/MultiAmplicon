@@ -133,6 +133,9 @@ test_that("less stringent sorting results in more reads accepted", {
 context("Dereping?")
 MAderep <- derepMulti(MA1)
 
+## ## This should work, but doesn't!!! ToDO!!
+## MAderepSingle <- derepMulti(MA1[1,])
+## MAderepSingle <- derepMulti(MA1[6, ])
 
 context("Dada denoising?")
 MAdadaDirect <- dadaMulti(MA1, selfConsist=TRUE, pool=FALSE, 

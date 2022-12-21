@@ -18,8 +18,8 @@
 ##' @author Emanuel Heitlinger
 ##' @export
 toPhyloseq <- function(MA, samples, multi2Single=TRUE, ...){
-    STL <- getSequenceTableNoChime(MA, simplify=FALSE)
-    TTL <- getTaxonTable(MA, simplify=FALSE)
+    STL <- getSequenceTableNoChime(MA)
+    TTL <- getTaxonTable(MA)
     if(length(TTL) == nrow(MA)){
         TAX <- TRUE
     } else if(length(TTL) == 0){

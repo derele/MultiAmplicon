@@ -57,19 +57,19 @@ getRawCounts(MA)
 
 getSampleData(MA)
 
-getStratifiedFilesF(MA, dropEmpty = TRUE)
+getStratifiedFilesF(MA, ...)
 
-getStratifiedFilesR(MA, dropEmpty = TRUE)
+getStratifiedFilesR(MA, ...)
 
-getDerepF(MA, dropEmpty = TRUE)
+getDerepF(MA, ...)
 
-getDerepR(MA, dropEmpty = TRUE)
+getDerepR(MA, ...)
 
-getDadaF(MA, dropEmpty = TRUE)
+getDadaF(MA, ...)
 
-getDadaR(MA, dropEmpty = TRUE)
+getDadaR(MA, ...)
 
-getMergers(MA, dropEmpty = TRUE)
+getMergers(MA, ...)
 
 getSequenceTable(MA, dropEmpty = TRUE, simplify = TRUE)
 
@@ -81,7 +81,7 @@ getSequencesFromTable(MA)
 
 \S4method{getSequencesFromTable}{MultiAmplicon}(MA)
 
-\S4method{apply}{MultiAmplicon,numeric,`function`}(X, MARGIN, FUN, ...)
+\S4method{apply}{MultiAmplicon,numeric,`function`}(X, MARGIN, FUN, ..., simplify = TRUE)
 
 \S4method{show}{MultiAmplicon}(object)
 
@@ -123,9 +123,9 @@ list of taxonomyTable objects from
 
 \item{MA}{MultiAmplicon-class object}
 
-\item{dropEmpty}{Should empty files be returned}
-
 \item{...}{not used}
+
+\item{dropEmpty}{Should empty files be returned}
 
 \item{object}{A \code{MultiAmplicon-class} object.}
 
@@ -186,12 +186,17 @@ sample names (names of the \code{\link{PrimerPairsSet}}, which
 have tto be the same as \code{colnames(MA)}). More data can be
 added by \code{\link{addSampleData}}.}
 
-\item{\code{stratifiedFiles}}{temporary files as a result of stratifying
+\item{\code{stratifiedFilesF}}{temporary files as a result of stratifying
 into amplicons and samples using the MultiAmplicon pipeline
 function \code{\link{sortAmplicons}}. Forward (sometimes
 called R1) and reverse (sometimes called R2) files are stored
-as a (amplicons x samples) matrix of
-\code{\link{PairedReadFileSet-class}} objects.}
+as a (amplicons x samples) matrix objects.}
+
+\item{\code{stratifiedFilesR}}{temporary files as a result of stratifying
+into amplicons and samples using the MultiAmplicon pipeline
+function \code{\link{sortAmplicons}}. Forward (sometimes
+called R1) and reverse (sometimes called R2) files are stored
+as a (amplicons x samples) matrix objects.}
 
 \item{\code{derep}}{A list of \code{\link{PairedDerep-class}} objects
 containing pairs of derep-class objects created by

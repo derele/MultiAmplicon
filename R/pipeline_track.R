@@ -80,9 +80,52 @@ getCounts <- function(MaMat, what="input"){
 }
 
 ### a SHITLOAD of good tests possible with this now!!
+### TO DO!!! e.g.: 
 ## getRawCounts(MA6) == getCounts(getStratifiedFilesF(MA6, dropEmpty=FALSE), "input") ==
 ## getRawCounts(MA6) == getCounts(getDerepF(MA6, dropEmpty=FALSE), "input")
 
+
+getPipelineSummaryX <- function (MA) {
+    ## all those components, can be empsty or not
+    strat <- getStratifiedFilesF(MA, dropEmpty=FALSE)
+    derep <- getDerepF(MA, dropEmpty=FALSE)
+    dada <- getDadaF(MA, dropEmpty=FALSE)
+    mergers <- getMergers(MA, dropEmpty=FALSE)
+    seqT <- getSequenceTable(MA, dropEmpty=FALSE)
+    seqTn <- getSequenceTableNoChime(MA, dropEmpty=FALSE)
+    ## we need the raw counts and stratified files, otherwise tracking
+    ## makes no sense
+    .complainWhenAbsent(MA, "stratifiedFilesF")
+    rawCountsM <- getRawCounts(MA)
+    getHowMany <- function(x, na) {
+        M <- getCounts(x, "uniques")
+        M <- reshape::melt(M)
+        M <- rename(M, c(value = na))
+        M
+    }
+    if (all(dim(derep)>0)) {
+        derepM <- getHowMany(derep, "derep")
+    } else {
+        .complainWhenAbsent(MA, "stratifiedFilesF")
+        derepM <- getHowMany(strat, "derep")
+    } 
+    if (all(dim(dada)>0)) {
+        dadaM <- getHowMany(dada, "dada")
+    } else{dadaM <- matrix()}
+    if (all(dim(mergers)>0)) {
+        mergerM <- getHowMany(mergers, "mergers")
+    } else{mergerM <- matrix()}
+    if (length(seqT)>0) {
+        seqTM <- getHowMany(seqT, "seq")
+    } else{seqTM <- matrix()}
+    if (length(seqTn)>0) {
+        seqTnM <- getHowMany(seqTn, "seqNc")
+    } else{seqTnM <- matrix()}
+    Ml <- list(derepM, dadaM, mergerM, seqTM, seqTnM)
+    Reduce(function (x, y) {
+        merge(x, y, by=c("X1", "X2"))
+    }, Ml)
+}
 
 
 ## Summary function for pipeline ------------------------------------
