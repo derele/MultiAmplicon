@@ -7,14 +7,16 @@
 ##' @param j not used
 ##' @param ... not used
 ##' @param drop not used
-## ##' @importClassesFrom Matrix index 
+##' @importClassesFrom Matrix index
 ##' @rdname PrimerPairsSet-class
 setMethod("[", c("PrimerPairsSet", "index", "missing", "ANY"),
           function(x, i, j, ..., drop=NA){
               newF <- x@primerF[i]
               newR <- x@primerR[i]
+              na <- names(x)[i]
               PrimerPairsSet(primerF=as.character(newF),
-                             primerR=as.character(newR))
+                             primerR=as.character(newR),
+                             names=na)
           })
 
 ##' @param x PairedReadFileSet-class object
@@ -33,45 +35,22 @@ setMethod("[", c("PairedReadFileSet", "index", "missing", "ANY"),
                   names = x@names[i])
           })
 
-##' @param x PairedDerep-class
-##' @param i index or logical indicating which sequencing read file
-##'     pair to select or character string giving its name
-##' @param j not used
-##' @param ... not used
-##' @param drop not used
-##' @rdname PairedDerep-class
-setMethod("[", c("PairedDerep", "index", "missing", "ANY"),
-          function(x, i, j, ..., drop=TRUE){
-              newF <- slot(x, "derepF")[i]
-              newR <- slot(x, "derepR")[i]
-              new("PairedDerep",
-                  derepF=newF, derepR=newR)
-          })
+## ##' @param x stratifiedFilesMatrix-class
+## ##' @param i index, name or logical indicating which sequencing read file
+## ##'     pair to select or character string giving its name
+## ##' @param j index, name or logical indicating which sequencing read file
+## ##'     pair to select or character string giving its name
+## ##' @param ... not used
+## ##' @param drop not used
+## ##' @rdname stratifiedFilesMatrix-class
+## ##' @export
+## setMethod("[", "stratifiedFilesMatrix", function(x, i, j, ..., drop=TRUE) {
+##     m <- callNextMethod()
+##     stratifiedFilesMatrix(readsF=x@readsF[m], readsR=x@readsR[m],
+##                           ncol=ncol(m), nrow=nrow(m),
+##                           dimnames=list(rownames(m), colnames(m)))
+## })
 
-##' @param x PairedDada-class object
-##' @param i numeric to select
-##' @param j not used
-##' @param ... not used
-##' @param drop not used
-##' @rdname PairedDada-class
-setMethod("[", c("PairedDada", "index", "missing", "ANY"),
-          function(x, i, j, ..., drop=TRUE){
-              if(class(i)=="logical"){
-                  i <- logical.to.numeric(i, length(x))
-              }
-              if(class(i)=="character"){
-                  i <- name.to.numeric(i, names(x))
-              }
-              newF <- slot(x, "dadaF")[i]
-              newR <- slot(x, "dadaR")[i]
-              ## if we get a single object, but  need a list of them
-              if(class(newF)%in%"dada"){
-                  newF <- list(newF)
-                  newR <- list(newR)
-              }
-              new("PairedDada",
-                  dadaF=newF, dadaR=newR)
-          })
 
 ##' Subsetting for MultiAmplicon objects should conveniently subset
 ##' all (potentially) filled slots
@@ -85,55 +64,35 @@ setMethod("[", c("PairedDada", "index", "missing", "ANY"),
 ##' @param ... not used
 ##' @param drop should not be used
 ##' @rdname MultiAmplicon-class
-setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
-          function(x, i, j, ..., drop=FALSE){
-              newPrimer <- x@PrimerPairsSet[i]
-              suppressWarnings( ## to avoid validity messages
-                  newFiles <- x@PairedReadFileSet[j]
-              )
-              newSampleData <- x@sampleData[j,]
-              newRC <- matrix(ncol=0, nrow=0)
-              newSF <- list()
-              newderep <- list()
-              newdada <- list()
-              newmergers <- list()
-              newST <- list()
-              newSTnC <- list()
-              newTT <- list()
+
+setMethod("[", "MultiAmplicon",
+          function(x, i, j, ..., drop=TRUE){
+
               if(all(dim(getRawCounts(x)>0))){
-                  newRC <- as.matrix(getRawCounts(x)[i, j, drop=FALSE])
+                  newRC <- getRawCounts(x)[i, j, drop=FALSE]
+                  newSF <- getStratifiedFilesF(x, dropEmpty=FALSE)[i, j, drop=FALSE]
+                  newSR <- getStratifiedFilesR(x, dropEmpty=FALSE)[i, j, drop=FALSE]
                   ## we drop empty files from statified files
                   ## therefore we have to find new indices j. These
                   ## later have to be used also for the columns of
-                  ## sequence tables.
+                  ## sequence tables.                  
                   new.j <- lapply(seq_along(i), function (ii) {
-                      zero.i <- which(getRawCounts(x)[i[[ii]], ]>1) # >1 singl seq rm
+                      zero.i <- which(getRawCounts(x)[i[[ii]], ]>0) # >1 singl seq rm
                       which(zero.i%in%j)
                   })
-                  newSF <-  lapply(seq_along(i), function (ii) {
-                      x@stratifiedFiles[[i[[ii]]]][new.j[[ii]]]
-                  })
-                  names(newSF) <- names(x@stratifiedFiles[i])
-              }
-              if(length(x@derep)>0){
-                  newderep <- lapply(seq_along(i), function (ii){
-                      x@derep[[i[[ii]]]][new.j[[ii]]]
-                  })
-                  names(newderep) <- names(x@derep[i])
-              }
-              if(length(x@dada)>0){
-                  newdada <- lapply(seq_along(i), function (ii){
-                      x@dada[[i[[ii]]]][new.j[[ii]]]
-                  })
-                  names(newdada) <- names(x@dada[i])
-              }
-              if(length(x@mergers)>0){
-                  newmergers <- lapply(seq_along(i), function (ii){
-                      x@mergers[[i[[ii]]]][new.j[[ii]]]
-                  })
-                  names(newmergers) <- names(x@mergers[i])
-              }
-              if(length(x@sequenceTable)>0){
+              } else {newRC <- newSF <- newSR <- matrix(nrow=0, ncol=0)}
+              if(length(getDerepF(x))>0){
+                  newderepF <- getDerepF(x, dropEmpty=FALSE)[i, j, drop=FALSE]
+                  newderepR <- getDerepR(x, dropEmpty=FALSE)[i, j, drop=FALSE]
+              } else {newderepF <- newderepR <- matrix(nrow=0, ncol=0)}
+              if(length(getDadaF(x, dropEmpty=FALSE))>0){
+                  newdadaF <- getDadaF(x, dropEmpty=FALSE)[i, j, drop=FALSE]
+                  newdadaR <- getDadaR(x, dropEmpty=FALSE)[i, j, drop=FALSE]
+              } else {newdadaF <- newdadaR <- matrix(nrow=0, ncol=0)}
+              if(length(getMergers(x))>0){
+                  newmergers <- getMergers(x, dropEmpty=FALSE)[i, j, drop=FALSE]
+              } else {newmergers <- matrix(nrow=0, ncol=0)}
+              if(length(getSequenceTable(x))>0){
                   newST <- lapply(seq_along(i), function (ii){
                       ST <- x@sequenceTable[[i[[ii]]]]
                       if(nrow(ST)>=length(new.j[[ii]])){
@@ -141,34 +100,43 @@ setMethod("[", c("MultiAmplicon", "index", "index", "ANY"),
                       } else {matrix(ncol=0, nrow=0)}
                   })
                   names(newST) <- names(x@sequenceTable[i])
-              }
-              if(length(x@sequenceTableNoChime)>0){
+              } else{newST <- list()}
+              if(length(getSequenceTableNoChime(x))>0){
                   newSTnC <- lapply(seq_along(i), function (ii){
-                      ST <- x@sequenceTableNoChime[[i[[ii]]]]
+                      ST <- getSequenceTableNoChime(x)[[i[[ii]]]]
                       if(nrow(ST)>=length(new.j[[ii]])){
                           ST[new.j[[ii]], , drop=FALSE]
                       } else {matrix(ncol=0, nrow=0)}
                   })
                   names(newSTnC) <- names(x@sequenceTableNoChime[i])         
-              }
-              if(length(x@taxonTable)>0){
-                  newTT <- x@taxonTable[i]
+              } else{newSTnC <- list()}
+              if(length(getTaxonTable(x))>0){
+                  newTT <- getTaxonTable(x)[i]
                   names(newTT) <- names(x@taxonTable[i])         
-              }              
-              ## avoid warnings from ValidityCheck??
-              suppressWarnings(
-                  MA.out <- initialize(x,
-                                       PrimerPairsSet = newPrimer,
-                                       PairedReadFileSet = newFiles,
-                                       .Data= newRC,
-                                       sampleData = newSampleData,
-                                       stratifiedFiles = newSF,
-                                       derep = newderep,
-                                       dada = newdada,
-                                       mergers = newmergers,
-                                       sequenceTable = newST,
-                                       sequenceTableNoChime = newSTnC,
-                                       taxonTable = newTT))
+              } else{newTT <- list()}
+                  MA.out <- MultiAmplicon(
+                      ## .Data = m, not this! as
+                      ## new indices needed
+                      ## components to subset with one index
+                      PrimerPairsSet = getPrimerPairsSet(x)[i],
+                      PairedReadFileSet = getPairedReadFileSet(x)[j],
+                      sampleData = getSampleData(x)[j, , drop=FALSE],
+
+                      ## components that needed  to be tested for presence
+                      rawCounts = newRC,
+                      stratifiedFilesF = newSF,
+                      stratifiedFilesR = newSR,
+                      derepF = newderepF,
+                      derepR = newderepR,
+                      dadaF = newdadaF,
+                      dadaR = newdadaR,
+                      mergers = newmergers,
+
+                      ## ## more complex  to subset components
+                      sequenceTable = newST,
+                      sequenceTableNoChime = newSTnC,
+                      taxonTable = newTT
+                  )
               MA.out
           })
 

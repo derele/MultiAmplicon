@@ -18,8 +18,8 @@
 ##' @author Emanuel Heitlinger
 ##' @export
 toPhyloseq <- function(MA, samples, multi2Single=TRUE, ...){
-    STL <- getSequenceTableNoChime(MA, simplify=FALSE)
-    TTL <- getTaxonTable(MA, simplify=FALSE)
+    STL <- getSequenceTableNoChime(MA)
+    TTL <- getTaxonTable(MA)
     if(length(TTL) == nrow(MA)){
         TAX <- TRUE
     } else if(length(TTL) == 0){
@@ -113,17 +113,17 @@ addSampleData <- function (MA, sampleData=NULL) {
     ## sampleData slot was introduced
     if(is.null(sampleData)){
         MA@sampleData <- new("sample_data",
-                             data.frame(row.names=names(MA@PairedReadFileSet),
+                             data.frame(row.names=rownames(MA),
                                         readsF=MA@PairedReadFileSet@readsF,
                                         readsR=MA@PairedReadFileSet@readsF))
         return(MA)
     } else {
         ## now merge... discard samples that are not either in the
         ## sequences or in the samples 
-        missingSeq <- base::rownames(sampleData)[!base::rownames(sampleData)%in%
-                                           base::rownames(MA@sampleData)]
-        missingSamples <- base::rownames(MA@sampleData)[!base::rownames(MA@sampleData)%in%
-                                              base::rownames(sampleData)]
+        missingSeq <- rownames(sampleData)[!rownames(sampleData)%in%
+                                           rownames(MA@sampleData)]
+        missingSamples <- rownames(MA@sampleData)[!rownames(MA@sampleData)%in%
+                                                  rownames(sampleData)]
         if (length(missingSamples)>0) {
             warning(paste(length(missingSamples), "samples are missing from your",
                           "sampleData but seem to have sequence data reported.",
@@ -142,13 +142,29 @@ addSampleData <- function (MA, sampleData=NULL) {
         ##     by.cols <- c(by.cols, "readsF", "readsR")
         ## }
         by.cols <- c("row.names", 
-                     intersect(base::colnames(sampleData),
-                               base::colnames(MA@sampleData)))
+                     intersect(colnames(sampleData),
+                               colnames(MA@sampleData)))
         mSampleData <- merge(MA@sampleData, sampleData, by=by.cols)
-        base::rownames(mSampleData) <- mSampleData$Row.names
+        rownames(mSampleData) <- mSampleData$Row.names
         mSampleData$Row.names <- NULL
         SData <- new("sample_data", mSampleData)
-        initialize(MA, sampleData = SData)
+        MultiAmplicon(
+            PrimerPairsSet = getPrimerPairsSet(MA),
+            PairedReadFileSet = getPairedReadFileSet(MA),
+            .Data=MA@.Data,
+            sampleData = SData,
+            stratifiedFilesF = getStratifiedFilesF(MA, dropEmpty=FALSE),
+            stratifiedFilesR = getStratifiedFilesR(MA, dropEmpty=FALSE),
+            rawCounts = getRawCounts(MA),
+            derepF = getDerepF(MA, dropEmpty=FALSE),
+            derepR = getDerepR(MA, dropEmpty=FALSE),
+            dadaF = getDadaF(MA, dropEmpty=FALSE),
+            dadaR = getDadaR(MA, dropEmpty=FALSE),
+            mergers = getMergers(MA, dropEmpty=FALSE),
+            sequenceTable = getSequenceTable(MA),
+            sequenceTableNoChime = getSequenceTableNoChime(MA),
+            taxonTable = getTaxonTable(MA)
+    )
     }
 }
 
@@ -174,14 +190,14 @@ addSampleData <- function (MA, sampleData=NULL) {
 ##' @author Emanuel Heitlinger
 .fillSampleTables <- function (ST, samples){
     message("extracting ", length(samples), " requested samples")
-    missing.samples <- samples[!samples%in%base::rownames(ST)]
+    missing.samples <- samples[!samples%in%rownames(ST)]
     if(length(missing.samples)>0){
         fill <- matrix(0, nrow=length(missing.samples), ncol=ncol(ST))
-        base::rownames(fill) <- missing.samples
+        rownames(fill) <- missing.samples
         message("filling zeros for amplicon missing ", nrow(fill),
                 " samples ")
-        full <- rbind(ST, fill)
+        full <- as.matrix(rbind(ST, fill))
     } else {full <- ST}
-    full[samples, ]
+    full[samples, , drop=FALSE]
 }
 

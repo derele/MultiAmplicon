@@ -71,10 +71,6 @@ blastTaxAnnot <- function (MA, db="nt/nt",
     }
 
     if(!file.exists(outblast)){
-        DBmessage <-
-            paste0("using database ", db, " resulting in as blast database full path\n")
-        message(DBmessage)
-        
         ## We blast this file against NR with a gi-list excluding all
         ## uncultured sequences
         ## create the gi-list as a download from an NCBI Entrez Nucleotide
@@ -94,7 +90,7 @@ blastTaxAnnot <- function (MA, db="nt/nt",
                          "-outfmt", "'10 qaccver saccver pident length mismatch gapopen",
                          "qstart qend sstart send evalue bitscore staxid'",
                          ...)
-        message("STARTED running blast with command:\n",
+        message("RUNNING BLAST with command:\n",
                 command)
         system(command)
         cat("\nFINISHED running blast\n")
@@ -185,17 +181,20 @@ blastTaxAnnot <- function (MA, db="nt/nt",
             new("taxonomyTable", x)
         } else {NULL}
     })
-    MultiAmplicon(
-        PrimerPairsSet = MA@PrimerPairsSet,
-        PairedReadFileSet = MA@PairedReadFileSet,
-        .Data=MA@.Data,
-        stratifiedFiles = MA@stratifiedFiles,
-        sampleData = MA@sampleData,
-        derep = MA@derep,
-        dada = MA@dada,
-        mergers = MA@mergers,
-        sequenceTable = MA@sequenceTable,
-        sequenceTableNoChime = MA@sequenceTableNoChime,
-        taxonTable = taxTab.l
-    )
+    MultiAmplicon(.Data=MA@.Data,
+                  PairedReadFileSet = getPairedReadFileSet(MA),
+                  PrimerPairsSet = getPrimerPairsSet(MA),
+                  sampleData = getSampleData(MA),
+                  stratifiedFilesF = getStratifiedFilesF(MA, dropEmpty=FALSE),
+                  stratifiedFilesR = getStratifiedFilesR(MA, dropEmpty=FALSE),
+                  rawCounts = getRawCounts(MA),
+                  derepF = getDerepF(MA, dropEmpty=FALSE),
+                  derepR = getDerepR(MA, dropEmpty=FALSE),
+                  dadaF = getDadaF(MA, dropEmpty=FALSE),
+                  dadaR = getDadaR(MA, dropEmpty=FALSE),
+                  mergers = getMergers(MA, dropEmpty=FALSE),
+                  sequenceTable = getSequenceTable(MA),
+                  sequenceTableNoChime = getSequenceTableNoChime(MA),
+                  taxonTable = taxTab.l
+                  )
 }

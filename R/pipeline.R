@@ -35,48 +35,55 @@
 ##' @author Emanuel Heitlinger
 derepMulti <- function(MA, mc.cores = getOption("mc.cores", 1L),
                        keep.single.singlets = FALSE, ...){
-    stop(paste("this function is unfunctional at the moment use",
-               "stratified files directly in dada/dadaMulti"))
-    .complainWhenAbsent(MA, "stratifiedFiles")
+    .complainWhenAbsent(MA, "stratifiedFilesF")
     exp.args <- .extractEllipsis(list(...), nrow(MA))    
-    PPderep <- mclapply(seq_along(MA@PrimerPairsSet), function (i){
+    PPderep <- mclapply(seq_along(rownames(MA)), function (i){
         ## work on possilbe different paramters for this particular amplicon
         args.here <- lapply(exp.args, "[", i)
         .paramMessage("derepFastq", args.here)
-        message("amplicon ", names(MA@PrimerPairsSet)[i],
-                " dereplicating for ",
-                length(MA@stratifiedFiles[[i]]@readsF), " of ",
-                length(MA@PairedReadFileSet@readsF), " possible sample files.\n")
+        SF <- getStratifiedFilesF(MA[i, ])
+        SR <- getStratifiedFilesR(MA[i, ])
+        message("amplicon ", rownames(MA)[i],
+                    " dereplicating for ",
+                    length(SF), " of ",
+                    length(getPairedReadFileSet(MA[i, ])), " possible sample files.\n")
         derepF <- do.call(derepFastq,
-                          c(list(getStratifiedFilesF(MA[i, ])), args.here))
-        derepR <- do.call(derepFastq,
-                          c(list(getStratifiedFilesR(MA[i,])), args.here))
-        ## make it a list even if only one sample was dereplicated
+                              c(list(SF), args.here))
         if (class(derepF)%in%"derep") {
-            ## the same must be true for the revers then to keep them
-            ## in the same length
-            if(length(derepF$map) == 1 && keep.single.singlets == FALSE){
-                derepF <- list()
-                derepR <- list()
-                message("producing empty derep object for amplicon ",
-                    names(MA@PrimerPairsSet)[i],
-                    "as only one sequence is reported for one sample ",
-                    "set keep.single.singlets to TRUE to change this behaviour, ",
-                    "but be warned that this may lead to downstream errors." )
-            } else{
-                derepF <- list(derepF)
-                derepR <- list(derepR)
-            }
+            derepF <- list(derepF)
+            ## using the non-zero raw counts for naming, necessary as
+            ## derep drops names when only sinlge files
+            names(derepF) <- .deriveNames(MA[i, ], derepF)
         }
-        Pderep <- lapply(seq_along(derepF), function (w){
-            new("PairedDerep",
-                derepF = derepF[[w]],
-                derepR = derepR[[w]])
-        })
-        return(Pderep)
+        if (!.isListOf(derepF, "derep", nullOk=FALSE)){
+            stop("not a list of derep objects returned")
+        }
+        derepR <- do.call(derepFastq,
+                          c(list(SR), args.here))
+        if (class(derepR)%in%"derep") {
+            derepR <- list(derepR)
+            ## using the non-zero raw counts for naming, necessary as
+            ## derep drops names when only sinlge files
+            names(derepR) <- .deriveNames(MA[i, ], derepR) ## reinstating for BAD            
+        }
+        list(derepF, derepR)
     }, mc.cores = mc.cores)
     names(PPderep) <- rownames(MA)
-    initialize(MA, derep = PPderep)
+    derepF_ampXsamples <- lapply(PPderep, "[[", 1)
+    derepR_ampXsamples <- lapply(PPderep, "[[", 2)
+    derepFmat <- .meltMASlotList(derepF_ampXsamples, MA)
+    derepRmat <- .meltMASlotList(derepR_ampXsamples, MA)
+    MultiAmplicon(
+        .Data = MA@.Data,
+        PrimerPairsSet = getPrimerPairsSet(MA),
+        PairedReadFileSet = getPairedReadFileSet(MA),
+        sampleData = getSampleData(MA),
+        stratifiedFilesF = getStratifiedFilesF(MA, dropEmpty=FALSE),
+        stratifiedFilesR = getStratifiedFilesR(MA, dropEmpty=FALSE),
+        rawCounts = getRawCounts(MA),
+        derepF = derepFmat,
+        derepR = derepRmat
+    )
 }
 
 
@@ -115,22 +122,25 @@ derepMulti <- function(MA, mc.cores = getOption("mc.cores", 1L),
 ##' @author Emanuel Heitlinger
 dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
                       Ferr=NULL, Rerr=NULL, ...){
-    ## alternatives: 
-    ### .complainWhenAbsent(MA, "derep")
-    .complainWhenAbsent(MA, "stratifiedFiles")
     exp.args <- .extractEllipsis(list(...), nrow(MA))
     ## needs to be computed on pairs of amplicons
     PPdada <- mclapply(seq_along(rownames(MA)), function (i){
         ## ## From a derep object 
-        ## dF <- getDerepF(MA[i, ])
-        ## dR <- getDerepR(MA[i, ])
-        ## ## Or directly from stratified files
-        dF <- getStratifiedFilesF(MA[i, ])
-        dR <- getStratifiedFilesR(MA[i, ])
-        message("\n\namplicon ", rownames(MA)[i],
+        dF <- getDerepF(MA[i, ], dropEmpty=TRUE)
+        dR <- getDerepR(MA[i, ], dropEmpty=TRUE)
+        if(length(dR)>0 && length(dR) >0) {
+            message("\ndada estimation from dereplicated read objects")
+        } else {
+            ## Work directly from stratified files
+            .complainWhenAbsent(MA, "stratifiedFilesF")
+            message("\ndada estimation directly from stratified files")
+            dF <- getStratifiedFilesF(MA[i, ], dropEmpty=TRUE)
+            dR <- getStratifiedFilesR(MA[i, ], dropEmpty=TRUE)
+        }
+        message("\namplicon ", rownames(MA)[i],
            ": dada estimation of sequence variants from ",
             length(dF), " of ",
-           length(getPairedReadFileSet(MA[i, ])), " possible sample files")
+           length(getPairedReadFileSet(MA[i, ])), " possible samples")
        if(length(dF)>0 && length(dR)>0){
            ## run functions for reverse and forward
            ## work on possilbe different paramters for this particular amplicon
@@ -142,49 +152,52 @@ dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
            if (class(dadaF)%in%"dada"){
                dadaF <- list(dadaF)
                ## then there should be only one stratified file
+               ## using the non-zero raw counts for naming
+               names(dadaF) <- .deriveNames(MA[i, ], dadaF)
                if (length(dF) > 1) {
                    stop("dada collapsed but more than one stratified file found")
                }
-               names(dadaF) <- dF
            }
            if(!.isListOf(dadaF, "dada")) {
                stop(paste("incorrect classes reported for dadaF in amplicon",
                           rownames(MA)[i], "\n"))
            }
-           ## fix the names of the samples DANGEROUS!
-           names(dadaF) <- .fixSortedSampleNames(names(dadaF),
-                                                 colnames(MA[i, ]))
+           ## using the non-zero raw counts for naming
            dadaR <- do.call(dada, c(list(derep = dR, err=Rerr), args.here))
            ## make it a list in case of only one sample
            if (class(dadaR)%in%"dada"){
                dadaR <- list(dadaR)
-               ## using the stratfile fom the dadaF
-               names(dadaR) <- basename(dF)
+               ## using the non-zero raw counts for naming
+               names(dadaR) <- .deriveNames(MA[i, ], dadaR)
+               
            }
            if(!.isListOf(dadaR, "dada")) {
                stop(paste("incorrect classes reported for dadaR in amplicon",
                           rownames(MA)[i], "\n"))
-           }
-           ## fix the names of the samples DANGEROUS! 
-           ### I even fix them here with the F (forward) names for equivalence
-           names(dadaR) <- .fixSortedSampleNames(names(dadaF),
-                                                 colnames(MA[i, ]))
-           Pdada <- PairedDada(dadaF = dadaF, dadaR = dadaR)
+           }           
        } else {
-           Pdada <- PairedDada()
+           dadaF <- list()
+           dadaR <- list()
            message("\nskipping empty amplicon")
        }
-       return(Pdada)
+       return(list(dadaF, dadaR))
     }, mc.cores=mc.cores)
     names(PPdada) <- rownames(MA)
+    dadaF_ampXsamples <- lapply(PPdada, "[[", 1)
+    dadaR_ampXsamples <- lapply(PPdada, "[[", 2)
+    dadaFmat <- .meltMASlotList(dadaF_ampXsamples, MA)
+    dadaRmat <- .meltMASlotList(dadaR_ampXsamples, MA)
     MultiAmplicon(
-        PrimerPairsSet = MA@PrimerPairsSet,
-        PairedReadFileSet = MA@PairedReadFileSet,
-        .Data=MA@.Data,
-        stratifiedFiles = MA@stratifiedFiles,
-        sampleData = MA@sampleData,
-        derep = MA@derep,
-        dada = PPdada
+        PrimerPairsSet = getPrimerPairsSet(MA),
+        PairedReadFileSet = getPairedReadFileSet(MA),
+        sampleData = getSampleData(MA),
+        stratifiedFilesF = getStratifiedFilesF(MA, dropEmpty=FALSE),
+        stratifiedFilesR = getStratifiedFilesR(MA, dropEmpty=FALSE),
+        rawCounts = getRawCounts(MA),
+        derepF = getDerepF(MA, dropEmpty=FALSE),
+        derepR = getDerepR(MA, dropEmpty=FALSE),
+        dadaF = dadaFmat,
+        dadaR = dadaRmat
     )
 }
 
@@ -219,40 +232,56 @@ dadaMulti <- function(MA, mc.cores=getOption("mc.cores", 1L),
 ##' @export
 ##' @author Emanuel Heitlinger
 mergeMulti <- function(MA, mc.cores=getOption("mc.cores", 1L), ...){
-    .complainWhenAbsent(MA, "dada")
+    .complainWhenAbsent(MA, "dadaF")
     exp.args <- .extractEllipsis(list(...), nrow(MA))
     mergers <- mclapply(seq_along(MA@PrimerPairsSet), function (i){     
-        daF <- getDadaF(MA[i, ])
-        daR <- getDadaR(MA[i, ])
-        ## ## From a derep object 
-        ##  deF <- getDerepF(MA[i, ])
-        ##  deR <- getDerepR(MA[i, ])
-        ## ## Or directly from stratified files
-        deF <- getStratifiedFilesF(MA[i, ])
-        deR <- getStratifiedFilesR(MA[i, ])
-        message("\nmerging sequences from " , length(MA@dada[[i]]),
+        ## The dada objects
+        daF <- getDadaF(MA[i, ], dropEmpty=TRUE)
+        daR <- getDadaR(MA[i, ], dropEmpty=TRUE)
+        ## From a derep object if present
+        deF <- getDerepF(MA[i, ], dropEmpty=TRUE)
+        deR <- getDerepR(MA[i, ], dropEmpty=TRUE)
+        if(length(deR)>0 && length(deR) >0) {
+            message("\nmerging based on dereplicated read objects")
+        } else {
+            ## Work directly from stratified files
+            .complainWhenAbsent(MA, "stratifiedFilesF")
+            message("\nmerging directly from stratified files")
+            deF <- getStratifiedFilesF(MA[i, ], dropEmpty=TRUE)
+            deR <- getStratifiedFilesR(MA[i, ], dropEmpty=TRUE)
+        }
+        message("\nmerging sequences from " , length(daF),
                 " samples for amplicon ",
-                MA@PrimerPairsSet@names[[i]])
-            ## work on possilbe different paramters for this particular amplicon
-            args.here <- lapply(exp.args, "[", i)
-            .paramMessage("mergePairs", args.here)
-            MP <- do.call(mergePairs,
-                          c(list(dadaF = daF, derepF = deF,
-                                 dadaR = daR, derepR = deR), args.here))
-            ## correct the case of one sample / amplicon 
-            if(class(MP)%in%"data.frame"){MP <- list(MP)}
+                rownames(MA)[[i]])
+        ## work on possilbe different paramters for this particular amplicon
+        args.here <- lapply(exp.args, "[", i)
+        .paramMessage("mergePairs", args.here)
+        MP <- do.call(mergePairs,
+                      c(list(dadaF = daF, derepF = deF,
+                             dadaR = daR, derepR = deR), args.here))
+        ## correct the case of one sample / amplicon 
+        if(class(MP)%in%"data.frame"){
+            MP <- list(MP)
+            ## again get the (dropped) names from non-empty samples
+            names(MP) <- .deriveNames(MA[i, ], MP)
+        }
         return(MP)
     }, mc.cores=mc.cores)
-    names(mergers) <- names(MA@PrimerPairsSet)
+    names(mergers) <- rownames(MA)
+    mergersmat <- .meltMASlotList(mergers, MA)
     MultiAmplicon(
-        PrimerPairsSet = MA@PrimerPairsSet,
-        PairedReadFileSet = MA@PairedReadFileSet,
+        PrimerPairsSet = getPrimerPairsSet(MA),
+        PairedReadFileSet = getPairedReadFileSet(MA),
         .Data=MA@.Data,
-        stratifiedFiles = MA@stratifiedFiles,
-        sampleData = MA@sampleData,
-        derep = MA@derep,
-        dada = MA@dada,
-        mergers = mergers
+        sampleData = getSampleData(MA),
+        stratifiedFilesF = getStratifiedFilesF(MA, dropEmpty=FALSE),
+        stratifiedFilesR = getStratifiedFilesR(MA, dropEmpty=FALSE),
+        rawCounts = getRawCounts(MA),
+        derepF = getDerepF(MA, dropEmpty=FALSE),
+        derepR = getDerepR(MA, dropEmpty=FALSE),                        
+        dadaF = getDadaF(MA, dropEmpty=FALSE),
+        dadaR = getDadaR(MA, dropEmpty=FALSE),                        
+        mergers = mergersmat
     )
 }
 
@@ -289,25 +318,29 @@ mergeMulti <- function(MA, mc.cores=getOption("mc.cores", 1L), ...){
 makeSequenceTableMulti <- function(MA, mc.cores=getOption("mc.cores", 1L), ...){
     .complainWhenAbsent(MA, "mergers")
     exp.args <- .extractEllipsis(list(...), nrow(MA))
-    mergers <- getMergers(MA)
-    ## hack to remove mergers of length 1 which don't get properly
-    ## named dataframes    
-    mergers[unlist(lapply(mergers, length ))==1] <- list(list())
+    mergers <- apply(MA, 1, getMergers)
+    ## ## hack to remove mergers of length 1 which don't get properly
+    ## ## named dataframes    
+    ## mergers[unlist(lapply(mergers, length ))==1] <- list(list())
     sequenceTable <- mclapply(seq_along(mergers), function (i){
         args.here <- lapply(exp.args, "[", i)
         .paramMessage("makeSequenceTable", args.here)
         do.call(makeSequenceTable, c(list(mergers[[i]]), args.here))
     }, mc.cores=mc.cores)
-    names(sequenceTable) <- names(MA@PrimerPairsSet)
+    names(sequenceTable) <- rownames(MA)
     MultiAmplicon(
-        PrimerPairsSet = MA@PrimerPairsSet,
-        PairedReadFileSet = MA@PairedReadFileSet,
+        PrimerPairsSet = getPrimerPairsSet(MA),
+        PairedReadFileSet = getPairedReadFileSet(MA),
         .Data=MA@.Data,
-        stratifiedFiles = MA@stratifiedFiles,
         sampleData = MA@sampleData,
-        derep = MA@derep,
-        dada = MA@dada,
-        mergers = MA@mergers,
+        stratifiedFilesF = getStratifiedFilesF(MA, dropEmpty=FALSE),
+        stratifiedFilesR = getStratifiedFilesR(MA, dropEmpty=FALSE),
+        rawCounts = getRawCounts(MA),
+        derepF = getDerepF(MA, dropEmpty=FALSE),
+        derepR = getDerepR(MA, dropEmpty=FALSE),
+        dadaF = getDadaF(MA, dropEmpty=FALSE),
+        dadaR = getDadaR(MA, dropEmpty=FALSE),
+        mergers = getMergers(MA, dropEmpty=FALSE),
         sequenceTable = sequenceTable
     )
 }
@@ -345,28 +378,30 @@ makeSequenceTableMulti <- function(MA, mc.cores=getOption("mc.cores", 1L), ...){
 removeChimeraMulti <- function(MA, mc.cores = getOption("mc.cores", 1L), ...){
     .complainWhenAbsent(MA, "sequenceTable")
     exp.args <- .extractEllipsis(list(...), nrow(MA))
-    sequenceTableNoChime <-
-        mclapply(seq_along(MA@sequenceTable), function (i) { 
-            if (nrow(MA@sequenceTable[[i]])>0 && ncol(MA@sequenceTable[[i]])>0){
-                args.here <- lapply(exp.args, "[", i)
-                .paramMessage("removeBimeraDenovo", args.here)
-                do.call(removeBimeraDenovo, c(list(MA@sequenceTable[[i]]), args.here))
-            } else {matrix(nrow=0, ncol=0)}
-        },
-        mc.cores = mc.cores)
-    names(sequenceTableNoChime) <- MA@PrimerPairsSet@names
-    MultiAmplicon(
-        PrimerPairsSet = MA@PrimerPairsSet,
-        PairedReadFileSet = MA@PairedReadFileSet,
-        .Data=MA@.Data,
-        stratifiedFiles = MA@stratifiedFiles,
-        sampleData = MA@sampleData,
-        derep = MA@derep,
-        dada = MA@dada,
-        mergers = MA@mergers,
-        sequenceTable = MA@sequenceTable,
-        sequenceTableNoChime = sequenceTableNoChime
-    )
+    ST <- getSequenceTable(MA)
+    STN <- mclapply(seq_along(ST), function (i) { 
+        if (nrow(ST[[i]])>0 && ncol(ST[[i]])>0){
+            args.here <- lapply(exp.args, "[", i)
+            .paramMessage("removeBimeraDenovo", args.here)
+            do.call(removeBimeraDenovo, c(list(ST[[i]]), args.here))
+        } else {matrix(nrow=0, ncol=0)}
+    }, mc.cores = mc.cores)
+    names(STN) <- rownames(MA)
+    MultiAmplicon(.Data=MA@.Data,
+                  PairedReadFileSet = getPairedReadFileSet(MA),
+                  PrimerPairsSet = getPrimerPairsSet(MA),
+                  sampleData = getSampleData(MA),
+                  stratifiedFilesF = getStratifiedFilesF(MA, dropEmpty=FALSE),
+                  stratifiedFilesR = getStratifiedFilesR(MA, dropEmpty=FALSE),
+                  rawCounts = getRawCounts(MA),
+                  derepF = getDerepF(MA, dropEmpty=FALSE),
+                  derepR = getDerepR(MA, dropEmpty=FALSE),
+                  dadaF = getDadaF(MA, dropEmpty=FALSE),
+                  dadaR = getDadaR(MA, dropEmpty=FALSE),
+                  mergers = getMergers(MA, dropEmpty=FALSE),
+                  sequenceTable = getSequenceTable(MA),
+                  sequenceTableNoChime = STN
+                  )
 }
 
 ##' Calculate the proportion of merged sequences for a MultiAmplicon
@@ -391,110 +426,20 @@ setGeneric("calcPropMerged", function(MA) {standardGeneric("calcPropMerged")})
 setMethod("calcPropMerged", "MultiAmplicon",
           function(MA){
               .complainWhenAbsent(MA, "mergers")
-              sgt <- function(x) sum(getUniques(x))
-              getN <- function(x) {
-                  ## check length for every sample in amplicon for
-                  ## mergers or just to have dada otherwise >1 as a
-                  if(any(unlist(sapply(x, nrow)) > 0) ||
-                     all(sapply(x, class)%in%"dada")){
-                      sum(unlist(sapply(x, sgt, simplify=FALSE)))
-                  } else {0}
-              }
-              nMerged <- sapply(getMergers(MA, simplify=FALSE), getN)
-              nBefore <- sapply(getDadaF(MA, simplify=FALSE), getN)
+
+              input <- getCounts(getDadaF(MA,
+                                          dropEmpty=FALSE, name=FALSE),
+                                 "input") 
+              merged <- getCounts(getMergers(MA,
+                                             dropEmpty=FALSE, name=FALSE),
+                                  "input")
+              nBefore <- rowSums(input)
+              nMerged <- rowSums(merged)
               prop <- nMerged/nBefore
               prop[is.nan(prop)] <- 0
               prop
           })
 
-
-
-## Summary function for pipeline ------------------------------------
-
-##' Obtain summary data for amplicons run through the MultiAmplicon pipeline.
-##'
-##' Get statistics on the number of samples (with read data), the
-##' number of unique sequence variants and the number of reads left
-##' after processing of amplicons in the MultiAmplicon pipeline. In
-##' some steps of the pipeline dada2 performs quality filtering
-##' excluding non-credible sequence variants.
-##' 
-##' @title getPipelineSummary
-##' @param MA MultiAmplicon object with all slots filled for tracking.
-##' @return a data.frame of sample, unique sequences and sequencing
-##'     reads numbers per amplicon.
-##' @importFrom plyr revalue
-##' @export
-##' @author Emanuel Heitlinger
-getPipelineSummary <- function(MA){
-    slots <- c("stratifiedFiles", "dada", "mergers",
-               "sequenceTable", "sequenceTableNoChime")
-    slotFilled <- unlist(sapply(slots, function (x) length(slot(MA, x)))>0)
-    ### helper functions
-    getN <- function(x) unlist(lapply(x, function (y) sum(getUniques(y))))
-    getU <- function(x) unlist(lapply(x, function (y) length(getUniques(y))))
-    track.l <- lapply(seq_along(getDadaF(MA)), function (i) {
-        samples <- list(
-            sorted=length(getRawCounts(MA[i, ])[getRawCounts(MA[i, ])>0]),
-            ##  ## derep is currently defunct 
-            ##  derep=length(getDerepF(MA[i, ])),
-            denoised = if(slotFilled["dada"]) {
-                           length(getDadaF(MA[i,]))
-                       } else{0},
-            merged = if(slotFilled["mergers"]) {
-                         length(getMergers(MA[i,]))
-                     } else{0},
-            tabulated = if(slotFilled["sequenceTable"]) {
-                            nrow(getSequenceTable(MA[i,]))
-                        } else{0},
-            noChime= if(slotFilled["sequenceTableNoChime"]) {
-                         nrow(getSequenceTableNoChime(MA[i,]))
-                     } else{0}
-        )
-        uniques <- list(
-            ##  ## derep is currently defunct 
-            ##  derep=sum(getU(getDerepF(MA[i, ]))),
-            denoised = if(slotFilled["dada"]) {
-                           sum(getU(getDadaF(MA[i, ])))
-                       } else{0},
-            merged = if(slotFilled["mergers"]) {
-                         sum(getU(getMergers(MA[i, ])))
-                     } else{0},
-            tabulated = if(slotFilled["sequenceTable"]) {
-                            ncol(getSequenceTable(MA[i, ]))
-                        } else{0},
-            noChime = if(slotFilled["sequenceTableNoChime"]) {
-                          ncol(getSequenceTableNoChime(MA[i, ]))
-                      } else{0}
-        )
-        reads <- list(
-            sorted=sum(getRawCounts(MA[i, ])),
-            ##  ## derep is currently defunct 
-            ##  derep=sum(getN(getDerepF(MA[i, ]))),
-            denoised = if(slotFilled["dada"]) {
-                           sum(getN(getDadaF(MA[i, ])))
-                       } else{0},
-            merged = if(slotFilled["mergers"]) {
-                         sum(getN(getMergers(MA[i, ])))
-                     } else {0}, 
-            tabulated = if(slotFilled["sequenceTable"]) {
-                            sum(getSequenceTable(MA[i, ]))
-                        } else{0},
-            noChime= if(slotFilled["sequenceTableNoChime"]) {
-                         sum(getSequenceTableNoChime(MA[i, ]))
-                     } else {0}
-        )
-        list(samples, uniques, reads)
-    })
-    track <- reshape::melt(track.l)
-    track$L2 <- revalue(as.factor(track$L2), c("1"="samples",
-                                               "2"="uniques", "3"="reads"))
-    track$L3 <- factor(track$L3, levels = c("sorted", ## "derep",
-                                            "denoised", "merged",
-                                            "tabulated", "noChime"))
-    names(track) <- c("value", "pipeStep", "what", "primer")
-    return(track)
-}
 
 ## Util functions for pipeline ------------------------------------
 .extractEllipsis <- function(dotargs, n) {
@@ -538,17 +483,34 @@ getPipelineSummary <- function(MA){
     }
 }
 
-.fixSortedSampleNames <- function (oldNames, sampleNames) {
-    ## most elegant would be one gigantic pattern, but sadly this
-    ## fails with a strange (but known) C-level error. So have to
-    ## break it down.
-    ### pattern <- paste(sampleNames, collapse="|")
-    pattern <- paste0(".*(", sampleNames, ").*")
-    newNames <- oldNames
-    ##     message(paste("replacing", oldNames, "\n"))
-    for(pat in pattern) {
-        newNames <- gsub(pat, "\\1", newNames)
-        ##    message(paste("with", newNames, "\n"))
-    }
-    newNames
+## .fixSortedSampleNames <- function (oldNames, sampleNames) {
+##     ## most elegant would be one gigantic pattern, but sadly this
+##     ## fails with a strange (but known) C-level error. So have to
+##     ## break it down.
+##     ### pattern <- paste(sampleNames, collapse="|")
+##     pattern <- paste0(".*(", sampleNames, ").*")
+##     newNames <- oldNames
+##     ##     message(paste("replacing", oldNames, "\n"))
+##     for(pat in pattern) {
+##         newNames <- gsub(pat, "\\1", newNames)
+##         ##    message(paste("with", newNames, "\n"))
+##     }
+##     newNames
+## }
+
+.deriveNames <- function(MA, what){
+        nnames <- colnames(MA)[getRawCounts(MA)>0]
+        if(!length(nnames)==length(what)){
+            stop(paste("incompatible names in amplicon",
+                       rownames(MA), "for",  what ,"\n"))
+        }
+        nnames
+}
+
+.meltMASlotList <- function(MASlotList, MA){
+    sapply(colnames(MA), function(samples) {
+        sapply(rownames(MA), function(amp){
+            MASlotList[[amp]][samples]
+        })
+    })
 }

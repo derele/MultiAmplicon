@@ -67,129 +67,134 @@ setGeneric(name="sortAmplicons",
            })
 
 ##' @rdname sortAmplicons
-setMethod("sortAmplicons", "MultiAmplicon",
-          function(MA, filedir="stratified_files",
-                   n = 1e6, countOnly = FALSE, rmPrimer = TRUE, ...){
-##    .complainWhenAbsent(MA, "PrimerPairsSet")
-##    .complainWhenAbsent(MA, "PairedReadFileSet")          
-    ## the data matrix of amplicons x samples stratified counts 
-    NR <- length(MA@PrimerPairsSet@primerF)
-    NC <- length(MA@PairedReadFileSet@readsF)
-    data <- matrix(0, nrow=NR, ncol=NC)
-    ## colnames are sample names taken from file names
-    base::colnames(data) <- names(MA@PairedReadFileSet)
-    ## rownames have to come from (matched) primers
-    base::rownames(data) <- names(MA@PrimerPairsSet)
-    filepathF <- matrix("", nrow=NR, ncol=NC)
-    filepathR <- matrix("", nrow=NR, ncol=NC)
-    readsF <- MA@PairedReadFileSet@readsF
-    readsR <- MA@PairedReadFileSet@readsR
-    ## test whether filedir exists
-    if(!dir.exists(filedir)) {
-        message("creating directory ", filedir)
-        dir.create(filedir)
-    } else {
-        if (length(list.files("."))==0) {
-            message("using existing directory ", filedir)
+setMethod(
+    "sortAmplicons", "MultiAmplicon",
+    function(MA, filedir="stratified_files",
+             n = 1e6, countOnly = FALSE, rmPrimer = TRUE, ...){
+        ## the data matrix of amplicons x samples stratified counts 
+        PPS <- getPrimerPairsSet(MA)
+        PRS <- getPairedReadFileSet(MA)
+
+        NR <- length(PPS)
+        NC <- length(PRS)
+        data <- matrix(0, nrow=NR, ncol=NC)
+        ## colnames are sample names taken from file names
+        colnames(data) <- names(PRS)
+        ## rownames have to come from (matched) primers
+        rownames(data) <- names(PPS)
+        
+        namesGrid <- expand.grid(names(PPS), names(PRS))
+        basenames <- apply(namesGrid, 1, paste, collapse="_")          
+        
+        filebaseF <- paste0(filedir, "/", basenames, "_F.fastq.gz")
+        filebaseR <- paste0(filedir, "/", basenames, "_R.fastq.gz")
+
+        stratFilesF <-matrix(filebaseF,
+                             nrow=NR, ncol=NC, 
+                             dimnames=list(names(PPS), names(PRS)))
+
+        stratFilesR <-matrix(filebaseR,
+                             nrow=NR, ncol=NC, 
+                             dimnames=list(names(PPS), names(PRS)))
+            
+        readsF <- slot(PRS, "readsF")
+        readsR <- slot(PRS, "readsR")
+
+        ## test whether filedir exists
+        if(!dir.exists(filedir)) {
+            message("creating directory ", filedir)
+            dir.create(filedir)
         } else {
-            stop("directory for amplicon sorted files must be empty")
+            if (length(list.files("."))==0) {
+                message("using existing directory ", filedir)
+            } else {
+                stop("directory for amplicon sorted files must be empty")
+            }
         }
-    }
-    ## add sample data and metadata in columns
-    for(x in seq_along(readsF)) {
-        filebaseF <- paste0(filedir, "/", basename(readsF[[x]]))
-        filebaseR <- paste0(filedir, "/", basename(readsR[[x]]))
-        if(!file.exists(readsF[[x]]) | !file.exists(readsR[[x]])){
-            data[, base::colnames(data)[[x]]] <- 0
-            filepathF[,x] <- paste0(filebaseF, names(MA@PrimerPairsSet),
-                                   ".fastq.gz")
-            filepathR[,x] <- paste0(filebaseR, names(MA@PrimerPairsSet),
-                                   ".fastq.gz")
-            next()
+        ## add sample data and metadata in columns
+        for(x in seq_along(readsF)) {
+            if(!file.exists(readsF[[x]]) | !file.exists(readsR[[x]])){
+                data[, colnames(data)[[x]]] <- 0
+                next()
+            }
+            f <- ShortRead::FastqStreamer(readsF[[x]], n = n)
+            r <- ShortRead::FastqStreamer(readsR[[x]], n = n)
+            ## request forward and reverse file simultaneously
+            while(length(suppressWarnings(Ffq <- ShortRead::yield(f))) &&
+                  length(suppressWarnings(Rfq <- ShortRead::yield(r)))){
+                      fM <- lapply(MA@PrimerPairsSet@.uniqueF, function(x){
+                          as.vector(
+                              Biostrings::isMatchingStartingAt(x,
+                                                               ShortRead::sread(Ffq),
+                                                               fixed=FALSE, ...))
+                      })
+                      rM <- lapply(MA@PrimerPairsSet@.uniqueR, function(x){
+                          as.vector(
+                              Biostrings::isMatchingStartingAt(x,
+                                                               ShortRead::sread(Rfq),
+                                                               fixed=FALSE, ...))
+                      })
+                      matches <- numeric(length=length(MA@PrimerPairsSet))
+                      ## add primer pair data and metadata in rows 
+                      for(y in seq_along(MA@PrimerPairsSet)) {
+                          map.primerF <- MA@PrimerPairsSet@.mapF[[y]]
+                          map.primerR <- MA@PrimerPairsSet@.mapR[[y]]
+                                        # is reverse and forward matched
+                          select <- fM[[map.primerF]] & rM[[map.primerR]] 
+                          if(!countOnly){ # file operations only if requested
+                              lengthF <- length(MA@PrimerPairsSet@primerF[[y]])
+                              lengthR <- length(MA@PrimerPairsSet@primerR[[y]])
+                              F <- Ffq[select]
+                              R <- Rfq[select]
+                              if (rmPrimer){
+                                  F <- ShortRead::narrow(F,
+                                                         lengthF,
+                                                         width(Ffq[select]))
+                                  R <- ShortRead::narrow(R,
+                                                         lengthR,
+                                                         width(Rfq[select]))
+                              }
+                              ShortRead::writeFastq(F,
+                                                    file=stratFilesF[[y, x,
+                                                                    drop=FALSE]],
+                                                    mode="a")
+                              ShortRead::writeFastq(R,
+                                                    file=stratFilesR[[y, x,
+                                                                      drop=FALSE]],
+                                                    mode="a")
+                          }
+                          matches[y] <- length(select[select==TRUE])
+                      }
+                      ## need to add over the while loop because of fastq streaming 
+                      data[, colnames(data)[[x]]] <-
+                          data[, colnames(data)[[x]]] + matches
+                  }
+            close(f)
+            close(r)
+            doing <- ifelse(countOnly, "counting", "sorting")
+            msg <- paste("finished", doing, sum(data[, colnames(data)[[x]]]),
+                         "sequencing reads for", colnames(data)[[x]], "in",
+                         "\n", readsF[[x]], "and \n ", readsR[[x]], "\n",
+                         "into", sum(data[, colnames(data)[[x]]]>0),
+                         " amplicons")
+            if(doing%in%"sorting"){
+                msg <- paste(msg, "and written into",  normalizePath(filedir))
+            }
+            message(msg)
         }
-        f <- ShortRead::FastqStreamer(readsF[[x]], n = n)
-        r <- ShortRead::FastqStreamer(readsR[[x]], n = n)
-        ## request forward and reverse file simultaneously
-         while(length(suppressWarnings(Ffq <- ShortRead::yield(f))) &&
-               length(suppressWarnings(Rfq <- ShortRead::yield(r)))){
-                   fM <- lapply(MA@PrimerPairsSet@.uniqueF, function(x){
-                       as.vector(
-                           Biostrings::isMatchingStartingAt(x,
-                                                            ShortRead::sread(Ffq),
-                                                            fixed=FALSE, ...))
-                   })
-                   rM <- lapply(MA@PrimerPairsSet@.uniqueR, function(x){
-                       as.vector(
-                           Biostrings::isMatchingStartingAt(x,
-                                                            ShortRead::sread(Rfq),
-                                                            fixed=FALSE, ...))
-                   })
-                   matches <- numeric(length=length(MA@PrimerPairsSet))
-                   ## add primer pair data and metadata in rows 
-                   for(y in seq_along(MA@PrimerPairsSet)) {
-                       map.primerF <- MA@PrimerPairsSet@.mapF[[y]]
-                       map.primerR <- MA@PrimerPairsSet@.mapR[[y]]
-                       # is reverse and forward matched
-                       select <- fM[[map.primerF]] & rM[[map.primerR]] 
-                       if(!countOnly){ # file operations only if requested
-                           filepathF[y, x] <-
-                               paste0(filebaseF,
-                                      names(MA@PrimerPairsSet)[[y]],
-                                      ".fastq.gz")
-                           filepathR[y, x] <-
-                               paste0(filebaseR,
-                                      names(MA@PrimerPairsSet)[[y]],
-                                      ".fastq.gz")
-                           lengthF <- length(MA@PrimerPairsSet@primerF[[y]])
-                           lengthR <- length(MA@PrimerPairsSet@primerR[[y]])
-                           F <- Ffq[select]
-                           R <- Rfq[select]
-                           if (rmPrimer){
-                               F <- ShortRead::narrow(F,
-                                                      lengthF,
-                                                      width(Ffq[select]))
-                               R <- ShortRead::narrow(R,
-                                                      lengthR,
-                                                      width(Rfq[select]))
-                           }
-                           ShortRead::writeFastq(F, file=filepathF[[y, x]],
-                                                 mode="a")
-                           ShortRead::writeFastq(R, file=filepathR[[y, x]],
-                                                 mode="a")
-                       }
-                       matches[y] <- length(select[select==TRUE])
-                   }
-                   ## need to add over the while loop because of fastq streaming 
-                   data[, base::colnames(data)[[x]]] <-
-                       data[, base::colnames(data)[[x]]] + matches
-               }
-        close(f)
-        close(r)
-        doing <- ifelse(countOnly, "counting", "sorting")
-        msg <- paste("finished", doing, sum(data[, base::colnames(data)[[x]]]),
-            "sequencing reads for", base::colnames(data)[[x]], "in",
-            "\n", readsF[[x]], "and \n ", readsR[[x]], "\n",
-            "into", sum(data[, base::colnames(data)[[x]]]>0), " amplicons")
-        if(doing%in%"sorting"){
-            msg <- paste(msg, "and written into",  normalizePath(filedir))
+        ## run only on existing files to avoid warnings for non-existing
+        ## files. This means don't run on files corresponding to zeros
+        ## read counts repored 
+        if(!countOnly){
+            MultiAmplicon(PrimerPairsSet = MA@PrimerPairsSet, 
+                          PairedReadFileSet = MA@PairedReadFileSet,
+                          .Data=MA@.Data,
+                          sampleData=MA@sampleData,
+                          stratifiedFilesF = stratFilesF,
+                          stratifiedFilesR = stratFilesR,
+                          rawCounts = data
+                          )
+        }else{
+            data
         }
-        message(msg)
-    }
-    ## run only on existing files to avoid warnings for non-existing
-    ## files. This means don't run on files corresponding to zeros
-    ## read counts repored 
-    if(!countOnly){
-        stratifiedFiles <- lapply(seq_along(MA@PrimerPairsSet),
-                                  function(i){
-                                      existing <- which(data[i, ]>0)
-                                      PairedReadFileSet(filepathF[i, existing],
-                                                        filepathR[i, existing])
-                                  })
-        names(stratifiedFiles) <- names(MA@PrimerPairsSet)        
-        new.MA <- initialize(MA, data,
-                             stratifiedFiles = stratifiedFiles)
-        new.MA
-    }else{
-        data
-    }
-          })
+    })

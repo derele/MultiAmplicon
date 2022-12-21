@@ -40,33 +40,33 @@ setMethod("show", "MultiAmplicon", function(object){
     cat("A", class(object), "instance of dimensions", dim(object)[1], "",
         dim(object)[2],"\n")
     cat("\nContaining slot PrimerPairsSet: \n")
-    show(object@PrimerPairsSet)
+    show(getPrimerPairsSet(object))
     cat("\nContaining slot PairedReadFileSet: \n")
-    show(object@PairedReadFileSet)
-    cat("\nContaining slot stratifiedFiles of dimensions:",
-        length(object@stratifiedFiles), "amplicons x ",
-        paste(.replace_inf_range(lapply(object@stratifiedFiles, length)), collapse=" to "),
-        " samples \n")
+    show(getPairedReadFileSet(object))
     cat("\nContaining slot sampleData:")
-    show(object@sampleData)        
-    cat("\nContaining slot derep of dimensions:",
-        length(object@derep), "amplicons x ",
-        paste(.replace_inf_range(lapply(object@derep, length)), collapse=" to "),
-        " samples \n")
-    cat("\nContaining slot dada of dimensions:",
-        length(object@dada), "amplicons x ",
-        paste(.replace_inf_range(lapply(object@dada, length)), collapse=" to "),
-        " samples \n")
+    show(getSampleData(object))        
+    cat("\nContaining slot rawCounts: \n")
+    show(getRawCounts(object))
+    cat("\nContaining slots stratifiedFilesF and stratifiedFilesR with dimensions:",
+        dim(getStratifiedFilesF(object, dropEmpty=FALSE)),
+        "\n of those", length(getStratifiedFilesF(object, dropEmpty=FALSE)),
+        ",", length(getStratifiedFilesF(object, dropEmpty=TRUE)),
+        "have files present\n")
+    cat("\nContaining slots derepF and derepR of dimensions:",
+        dim(getDerepF(object, dropEmpty=FALSE)), 
+        "\n of those", length(getDerepF(object, dropEmpty=FALSE)),
+        ",", length(getDerepF(object, dropEmpty=TRUE)),
+        "have derep objects present\n")
+    cat("\nContaining slots dadaF and dadaR of dimensions:",
+        dim(getDadaF(object, dropEmpty=FALSE)),
+    "\n of those", length(getDadaF(object, dropEmpty=FALSE)),
+    ",", length(getDadaF(object, dropEmpty=TRUE)),
+    "have dada objects present\n")
     cat("\nContaining slot mergers of dimensions:",
-        length(object@mergers), "amplicons x ",
-        paste(.replace_inf_range(lapply(object@mergers, length)),
-              collapse=" to "),
-        " samples ==>", 
-        paste(.replace_inf_range(lapply(object@mergers, function (x) {
-            sum(unlist(lapply(x, nrow)))
-        })),
-        collapse=" to "),
-        "ASVs \n")
+        dim(getMergers(object, dropEmpty=FALSE)),
+        "\n of those", length(getDadaF(object, dropEmpty=FALSE)),
+        ",", length(getMergers(object, dropEmpty=TRUE)),
+        "have merger objects present\n")
     cat("\nContaining slot sequenceTable of dimensions:",
         length(object@sequenceTable), "amplicons  x ",
         paste(.replace_inf_range(lapply(object@sequenceTable, nrow)),

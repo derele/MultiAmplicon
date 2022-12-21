@@ -36,8 +36,8 @@ test_that("no reads were sorted into different samples" , {
         snames <- colnames(MA)
         names(readsFL) <- snames
         sort_track <- lapply(snames, function (sampl) { 
-            strat <- lapply(MA@stratifiedFiles, function(x) {
-                grep(sampl, x@readsF, value=TRUE)
+            strat <- lapply(getStratifiedFilesF(MA), function(x) {
+                grep(sampl, x, value=TRUE)
             })
             readsF_stratified <- ShortRead::readFastq(unlist(strat))
             IDsStrat <- ShortRead::id(readsF_stratified)
@@ -59,7 +59,6 @@ test_that("no reads were sorted into different samples" , {
             sort_track$UniqueSortedReads
         sort_track
     }
-
     sortingStats <- trackReadSorting(MA1)
     cat("\n\n Read sorting statistics\n")
     print(sortingStats)
@@ -91,38 +90,35 @@ test_that("rowCounts is zero for nonsensical primer", {
 ## get only non empty samples raw counts
 test_that("number of files written equals non-zero samples in rawCounts", {
     ## For multi amplicon objects
-    F.files <- unlist(lapply(MA1@stratifiedFiles, function (x) x@readsF))
-    R.files <- unlist(lapply(MA1@stratifiedFiles, function (x) x@readsF))
+    F.files <- unlist(getStratifiedFilesF(MA1))
+    R.files <- unlist(getStratifiedFilesR(MA1))
     expect_equal(sum(getRawCounts(MA1)>0), length(F.files))
     expect_equal(sum(getRawCounts(MA1)>0), length(R.files))
     ## For single amplicon objects
-    F.files <- unlist(lapply(SA1@stratifiedFiles, function (x) x@readsF))
-    R.files <- unlist(lapply(SA1@stratifiedFiles, function (x) x@readsF))
+    F.files <- unlist(getStratifiedFilesF(SA1))
+    R.files <- unlist(getStratifiedFilesR(SA1))
     expect_equal(sum(getRawCounts(SA1)>0), length(F.files))
     expect_equal(sum(getRawCounts(SA1)>0), length(R.files))
-})
-
-test_that("N statified files is N of non-zero samples x amplicons",{
-    ## For multi amplicon objects
-    expect_equal(rowSums(getRawCounts(MA1)>0), 
-                 unlist(lapply(MA1@stratifiedFiles, length)))
-    ## For single amplicon objects
-    expect_equal(rowSums(getRawCounts(SA1)>0), 
-                 unlist(lapply(SA1@stratifiedFiles, length)))
 })
 
 test_that("files for each amplicon contain the number of reads reported", {
     ## For multi amplicon objects
     expect_equivalent(
-        unlist(lapply(MA1@stratifiedFiles,
-                      function (x) length(ShortRead::readFastq(x@readsR)))),
+        lapply(seq(nrow(MA1)), function (i){
+            length(ShortRead::readFastq(getStratifiedFilesF(MA1[i, ])))
+        }), 
         rowSums(getRawCounts(MA1)))
-    ## For single amplicon objects
-    expect_equivalent(
-        unlist(lapply(SA1@stratifiedFiles,
-                      function (x) length(ShortRead::readFastq(x@readsR)))),
-        rowSums(getRawCounts(SA1)))
 })
+
+test_that("files for each sample contain the number of reads reported", {
+    ## For multi amplicon objects
+    expect_equivalent(
+        lapply(seq(ncol(MA1)), function (i){
+            length(ShortRead::readFastq(getStratifiedFilesF(MA1[, i])))
+        }), 
+        colSums(getRawCounts(MA1)))
+})
+
 
 context("SortAmplcion can be made less stringent?")
 test_that("less stringent sorting results in more reads accepted", {
@@ -134,74 +130,62 @@ test_that("less stringent sorting results in more reads accepted", {
                    getRawCounts(MA1)))
 })
 
+context("Dereping?")
+MAderep <- derepMulti(MA1)
 
-## MA2 <- derepMulti(MA1, mc.cores=1)
+## ## This should work, but doesn't!!! ToDO!!
+## MAderepSingle <- derepMulti(MA1[1,])
+## MAderepSingle <- derepMulti(MA1[6, ])
 
-## context("Dereplication works?")
-## test_that("dereplication produces a list of derep objects ", {
-##     expect_equal(length(MA2@derep), nrow(MA2))
-##     expect_equal(length(MA2@derep), nrow(getRawCounts(MA2)))
-##     expect_equal(unlist(lapply(MA2@derep, length)),
-##                  rowSums(getRawCounts(MA2)>1)) # >1 singl seq rm
-## })
+context("Dada denoising?")
+MAdadaDirect <- dadaMulti(MA1, selfConsist=TRUE, pool=FALSE, 
+                          multithread=TRUE)
 
-## up1.counts <- t(getRawCounts(MA2))[t(getRawCounts(MA2))>1] # >1 singl seq rm
+MAdadaDerep <- dadaMulti(MAderep, selfConsist=TRUE, pool=FALSE, 
+                         multithread=TRUE)
 
-## up1.dereps <- unname(unlist(lapply(MA2@derep, function (x){
-##     lapply(x, function (y) sum(slot(y, "derepF")$uniques))
-## })))
-
-## test_that("all sequences are dereplicated ", {
-## expect_equal(up1.counts, up1.dereps)
-## })
-
-## # At certain versions of dada2 setting OMEGA_C to avoid removing
-## # sequences was needed to avoid bugs resulting from empty amplicons
-## # this shouldn't be the case anymore.
-
-## MA3 <- dadaMulti(MA1, selfConsist=TRUE, pool=FALSE,
-## OMEGA_C=0, multithread=TRUE)
-
-MA3 <- dadaMulti(MA1, selfConsist=TRUE, pool=FALSE, 
-                 multithread=TRUE)
-
-context("Denoising works and doesn't confuse samples?")
-
-test_that("dada2 denoising produces a list of dada objects ", {
-    expect_equal(length(MA3@dada), nrow(MA3))
-    expect_equal(length(MA3@dada), nrow(getRawCounts(MA3)))
-    expect_equal(unlist(lapply(MA3@dada, length)),
-                 rowSums(getRawCounts(MA3)>1)) # >1 singl seq rm
+test_that("Denoising returns a matrix of dada object, and a list of non-empty objects?", {
+    ## put this also in validity methods!!!???
+    expect_equal(getDadaF(MAdadaDirect), getDadaF(MAdadaDerep))
+    expect_equal(getDadaF(MAdadaDirect, dropEmpty=FALSE),
+                 getDadaF(MAdadaDerep, dropEmpty=FALSE))
+    expect_true(all(c("matrix","array") %in%
+                    class(getDadaF(MAdadaDirect, dropEmpty=FALSE))))
+    expect_true(class(getDadaF(MAdadaDirect, dropEmpty=TRUE)) == "list")
+    expect_true(.isListOf(c(getDadaF(MAdadaDirect)), "dada", nullOk=FALSE))
+    expect_false(.isListOf(c(getDadaF(MAdadaDirect, dropEmpty=FALSE)),
+                           "dada", nullOk=FALSE))
+    expect_true(.isListOf(c(getDadaF(MAdadaDirect, dropEmpty=TRUE)),
+                          "dada", nullOk=FALSE))
+    expect_equal(dim(getDadaF(MAdadaDirect, dropEmpty=FALSE)),
+                 dim(getRawCounts(MAdadaDirect)))
+    expect_equal(length(getDadaF(MAdadaDirect)),
+                 length(getStratifiedFilesF(MAdadaDirect)))
+    expect_equal(sapply(getDadaF(MAdadaDirect, dropEmpty=FALSE), is.null),
+                 sapply(getRawCounts(MAdadaDirect), "==", 0))
 })
-
 
 test_that("dada2 denoising produces identical results for replicate samplesd", {
-    expect_equal(lapply(getDadaF(MA3[, "S05_F_filt.fastq.gz"]),
-                        unname),
-                 ## have to unname the amplicon naming
-                 lapply(getDadaF(MA3[, "S05D_F_filt.fastq.gz"]),
-                        unname))
+    expect_equal(getDadaF(MAdadaDirect[, "S05_F_filt.fastq.gz"]), 
+                 getDadaF(MAdadaDirect[, "S05D_F_filt.fastq.gz"]))
 })
 
+MA4 <- mergeMulti(MAdadaDerep, justConcatenate=TRUE)
 
-up1.dadas <- unname(unlist(lapply(MA3@dada, function (x)
-    lapply(slot(x, "dadaF"), function (y) sum(getUniques(y))))))
+## ## the one sequence dereps have been problematic! As the names are
+## ## dropped when those are "unlisted" by dada
 
+## getDerepF(MA4["Amp6F.Amp6R", ])
+## getDadaF(MA4["Amp6F.Amp6R", ]) getMergers(MA4["Amp6F.Amp6R", ])
 
-## test_that("all sequences are dereplicated ", {
-##     expect_equal(up1.counts, up1.dadas)
-## })
-
-MA4 <- mergeMulti(MA3, justConcatenate=c(TRUE, TRUE),
-                  verbose=FALSE, maxMismatch = c(15, 20, 18))
+### have to test the paramet split seperately!
+## c(TRUE, FALSE), verbose=FALSE, maxMismatch = c(15, 20, 18))
 
 context("Merging works?")
 test_that("merging produces a list of derep objects ", {
-    expect_equal(length(MA4@mergers), nrow(MA3))
-    expect_equal(length(MA4@mergers), nrow(getRawCounts(MA3)))
-    expect_equal(unlist(lapply(MA4@mergers, length)),
-                 rowSums(getRawCounts(MA3)>1)) # >1 singl seq rm
+    expect_equal(dim(getMergers(MA4, dropEmpty=FALSE)), dim(MAdadaDerep))
 })
+
 
 ## for some weird reason this fails (only on TravisCI) NO IDEA WHY
 context("Merging works?")
@@ -211,36 +195,36 @@ test_that("proportion of merged is between zero and one ", {
     )
 })
 
+test_that("all sequences are dereplicated ", {
+    up1.dadas <- unlist(lapply(getDadaF(MAdadaDerep), function (x){
+        sum(getUniques(x))
+    }))
+    up1.dereps <- unlist(lapply(getDerepF(MAdadaDerep), function (x){
+        sum(getUniques(x))
+    }))
+    up1.mergers <- unlist(lapply(getMergers(MA4), function (x){
+        sum(getUniques(x))
+    }))
+    up1.counts <- getRawCounts(MAdadaDerep)[getRawCounts(MAdadaDerep)>0]
+    expect_equal(up1.dereps, up1.counts)
+    ## somehow calling dada directly on the stratified files makes the
+    ## uniques 
+    expect_true(all(up1.dadas<=up1.counts))
+    expect_true(all(up1.mergers<=up1.dadas))
+})
 
-
-up1.merge <- unname(unlist(lapply(MA4@mergers, function (x)
-    lapply(x, function (y) sum(getUniques(y))))))
-
+### TODO: make pipeline tracking use getUniques and the like to get
+### matrices of counts for everything systematically...
 
 MA5 <- makeSequenceTableMulti(MA4)
 
-context("Sequence table is correct")
-test_that("stratified files result in the number of columns of sequence tables ",
-{
-    expect_true(all(unlist(lapply(MA5@stratifiedFiles, length)) ==
-                    unlist(lapply(MA5@sequenceTable, nrow)) |
-                    unlist(lapply(MA5@stratifiedFiles, length)) ==
-                    unlist(lapply(MA5@sequenceTable, nrow))+1))
-    ## last case for if a single sequence was dropped derep object
-})
-
-test_that("Identical files produce identical sequence tables ", {
-    lapply(MA5@sequenceTable, function(x) {
-        if("S05_F_filt.fastq.gz" %in% base::rownames(x)){
-            expect_equal(
-                unname(t(x["S05_F_filt.fastq.gz", ])),
-                unname(t(x["S05D_F_filt.fastq.gz", ])))
-        }
-    })
-})
-              
-
 MA6 <- removeChimeraMulti(MA5)
+
+
+### TODO: make a test that compares the table rownames (samples) with
+### names of non-zero MA columns  
+
+
 
 
 test_that("Identical files produce identical NoChime sequence tables ", {
@@ -260,8 +244,8 @@ test_that("Reads in sequence tables map to stratified files", {
     mapReadsStratTab <- function(MA) {
         getReadsBySample <- function(MA){
             sreads <- lapply(colnames(MA), function (sampl) { 
-                strat <- lapply(MA@stratifiedFiles, function(x) {
-                    grep(sampl, x@readsF, value=TRUE)
+                strat <- lapply(getStratifiedFilesF(MA), function(x) {
+                    grep(sampl, x, value=TRUE)
                 })
                 ShortRead::readFastq(unlist(strat))
             })
@@ -303,46 +287,130 @@ test_that("Reads in sequence tables map to stratified files", {
 
 context("Subsetting MultiAmplicon objects")
 
-test_that("subsetting leaves rawCounts intact", {
-    expect_equal(getRawCounts(MA6[2, 6]), getRawCounts(MA6)[2, 6, drop=FALSE])
-    expect_equal(getRawCounts(MA6[3:4, 2:5]), getRawCounts(MA6)[3:4, 2:5, drop=FALSE])
-    })
+subRows <- 3:4
+subRnames <- rownames(MA6)[subRows]
+
+subCols <- 2:5
+subCnames <- colnames(MA6)[subCols]
 
 
+test_that("subsetting leaves stuff intact", {
+    expect_equal(getRawCounts(MA6[subRows, subCols]),
+                 getRawCounts(MA6)[subRnames, subCnames, drop=FALSE])
+    expect_equal(getStratifiedFiles(MA6[subRows, subCols]),
+                 getStratifiedFiles(MA6[subRnames, subCnames, drop=FALSE]))
+
+    ## ## need to reimplement the pairedDada stuff!!
+    ##     expect_equal(getDadaF(MA6[subRows, subCnames]),
+    ##                 getDadaF(MA6[subRnames, subCols]))
+
+    ## ## DISCREPANCY!
+    ## MA6@dada
+    ## MA6[1, which(colnames(MA6)%in%"S04_F_filt.fastq.gz")]@dada
+    ## MA6[1, colnames(MA6)%in%"S04_F_filt.fastq.gz"]@dada
+    ## MA6[1, "S04_F_filt.fastq.gz"]@dada
+
+    
+    expect_equal(getSequenceTable(MA6[2, 6]), getSequenceTable(MA6[2, 6, drop=FALSE]))
+    expect_equal(getSequenceTableNoChime(MA6[2, 6]),
+                 getSequenceTableNoChime(MA6[2, 6, drop=FALSE]))
+})
 
 
 ### THIS analyses SAMPLE CONFUSION caused by resorting before dada
-resortedMA3 <- dadaMulti(MA1[, c(6:4,1L,3L,2L, 8L, 7L)],
-                  selfConsist=TRUE, pool=FALSE, multithread=TRUE)
+MA1res <- MA1[, c(8, 6, 7, 1, 2, 3, 5)]
+
+resortedMAdadaDerep <- dadaMulti(MA1res,
+                         selfConsist=TRUE, pool=FALSE, multithread=TRUE)
 
 ## in all other steps resorting does not produce an error
-resortedMA4 <- mergeMulti(resortedMA3, justConcatenate=TRUE)
+resortedMA4 <- mergeMulti(resortedMAdadaDerep, justConcatenate=TRUE, maxMismatch = c(15, 20, 18))
 resortedMA5 <- makeSequenceTableMulti(resortedMA4)
 resortedMA6 <- removeChimeraMulti(resortedMA5)
 
-## trackReadSorting(resortedMA6)
 
 ################# EVALUATE sorting #############
 
 test_that("Resorting produces identical output over samples", {
     seqtabs <- getSequenceTableNoChime(MA6)
-    Sorttabs <- getSequenceTableNoChime(resortedMA6)
-    SamSums <- lapply(seqtabs, base::rowSums)
-    SortSums <- lapply(Sorttabs, base::rowSums)
+    sorttabs <- getSequenceTableNoChime(resortedMA6)
+    SamSums <- lapply(seqtabs, rowSums)
+    SortSums <- lapply(sorttabs, rowSums)
     samorder <- colnames(MA6)
     ## over samples
-    confusion <- lapply(base::colnames(SamSums), function(name) {
-        df <- cbind(SamSums[[name]][samorder], SortSums[[name]][samorder])
-        base::rownames(df) <- samorder
-        base::colnames(df) <- c("Correct", "Shuffle")
-        df[is.na(df)] <- 0
-        df
+    confusion <- lapply(names(SamSums), function(name) {
+        d <- cbind(SamSums[[name]][samorder], SortSums[[name]][samorder])
+        rownames(d) <- samorder
+        colnames(d) <- c("Correct", "Shuffle")
+        as.data.frame(d)
     })
-    ## evaluate
-    lapply(confusion, function(x) {
-        expect_equal(x[, "Correct"], x[, "Shuffle"])
-    })
+    conf <- do.call(rbind, confusion)
+    expect_equal(conf[, "Correct"], conf[, "Shuffle"]) 
 })
+
+context("Concatenating MultiAmplicon objects")
+
+MAcat <- concatenateMultiAmplicon(MA6[, 1:4],
+                                  MA6[, 5:8]) 
+
+## ## FIX ME!!! Work on concatenation!
+
+### There's something completely wrong when subsetting (and
+### concatenating) sequence tables
+
+### Fixing the sample naming problem first!!!
+
+test_that("concatenating leaves stuff intact", {
+    expect_equal(getRawCounts(MA6),   getRawCounts(MAcat))
+    expect_equal(getStratifiedFilesF(MA6), getStratifiedFilesF(MAcat))
+
+    ## ## need to reimplement the pairedDada stuff!!
+    ## expect_equal(getDadaF(MA6[subRows, subCnames]),
+    ##          getDadaF(MA6[subRnames, subCols]))
+
+    expect_equal(getSequenceTable(MA6), getSequenceTable(MAcat))
+
+    expect_equal(getSequenceTableNoChime(MA6),
+                 getSequenceTableNoChime(MAcat))
+
+
+})
+
+
+
+## ## a solution would be a final push to make statified files a
+## ## matrix probably!!!?
+
+## test_that("Concatenating over samples works", {
+##     expect_equal(concatenateMultiAmplicon(MA[, 1:4], MA[, 5:8]), 
+##    MA)
+## })
+
+context("adding sample information to MA objects")
+
+additionalSD <- data.frame(whatever=letters[seq(ncol(MA6))],
+                           row.names=rownames(MA6@sampleData))
+
+test_that("sample data with exact matches of rowname works", {
+    expect_s4_class(addSampleData(MA, additionalSD), "MultiAmplicon")
+})
+
+additionalSD <- data.frame(whatever=letters[seq(ncol(MA6)+2)],
+                           row.names=c(rownames(MA6@sampleData), "foo", "bar"))
+
+test_that("sample data warning when more samples than sequence data", {
+    expect_warning(addSampleData(MA, additionalSD),
+                   "sampleData but have no sequence data reported\\. They will be omitted")
+})
+
+additionalSD <- data.frame(whatever=letters[1:4],
+                           row.names=rownames(MA6@sampleData)[1:4])
+
+test_that("sample data warning when more sequence data than sample data", {
+    expect_warning(addSampleData(MA, additionalSD),
+                   "missing from your sampleData but seem to have sequence data reported")
+})
+
 
 
 context("Handing over to Phyloseq")
@@ -364,5 +432,7 @@ test_that("toPhyloseq multi2Single TRUE/FALSE work and give same resultsw ", {
 context("Get the pipeline summary")
 test_that("pipelin  Summary is a data.frame", {
     expect_s3_class(getPipelineSummary(MA6), "data.frame")
-    expect_s3_class(getPipelineSummary(MA3), "data.frame")
+    expect_s3_class(getPipelineSummary(MAdadaDerep), "data.frame")
 })
+
+
