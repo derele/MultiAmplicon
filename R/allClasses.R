@@ -230,8 +230,10 @@ setMethod(names, "PrimerPairsSet", function (x) x@names)
 ##'
 ##' @slot taxonTable A list of matrix objects created by a function
 ##'     for taxonomical annotation (for example
-##'     \code{\link{blastTaxAnnot}}.  ASVs are in rows and taxnomical
-##'     ranks are in columns. 
+##'     \code{\link{blastTaxAnnot}}. The list is named with amplicon
+##'     names and slots are empty (NULL) before taxon annotation is
+##'     performed. Within the list elements ASVs are in rows and
+##'     taxnomical ranks are in columns.
 ##'
 ##' MultiAmplicon(PrimerPairsSet, PairedReadFileSet)
 ##' 
@@ -395,9 +397,12 @@ MultiAmplicon <- function(PrimerPairsSet = PrimerPairsSet(),
                           dadaF = matrix(nrow=0, ncol=0),
                           dadaR = matrix(nrow=0, ncol=0),
                           mergers = matrix(nrow=0, ncol=0),
-                          sequenceTable = list(),
-                          sequenceTableNoChime = list(),
-                          taxonTable = list()
+                          sequenceTable =
+                              sapply(names(PrimerPairsSet),function(x) NULL),
+                          sequenceTableNoChime =
+                              sapply(names(PrimerPairsSet),function(x) NULL),
+                          taxonTable =
+                              sapply(names(PrimerPairsSet),function(x) NULL)
                           ){
     new("MultiAmplicon",
         .Data = .Data,
