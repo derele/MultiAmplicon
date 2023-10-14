@@ -42,12 +42,13 @@
 
 
 blastTaxAnnot <- function (MA, db="nt/nt",
-                              num_threads= getOption("mc.cores", 1L),
-                              negative_gilist = system.file("extdata", "uncultured.gi",
-                                                            package = "MultiAmplicon"),
-                              infasta=paste0(tempfile(), ".fasta"),
-                              outblast=paste0(tempfile(), ".blt"),
-                              taxonSQL, ...
+                           num_threads= getOption("mc.cores", 1L),
+                           negative_gilist = system.file("extdata", "uncultured.gi",
+                                                         package = "MultiAmplicon"),
+                           infasta=paste0(tempfile(), ".fasta"),
+                           outblast=paste0(tempfile(), ".blt"),
+                           taxonSQL="/SAN/db/taxonomy/taxonomizr.sql",
+                           ...
                               ) {
 
     SEQ <- getSequencesFromTable(MA)    
@@ -95,7 +96,7 @@ blastTaxAnnot <- function (MA, db="nt/nt",
         system(command)
         cat("\nFINISHED running blast\n")
     } else {
-        message("file", outblast, " exists, using existing file!", 
+        message("file ", outblast, " exists, using existing file!", 
                 " To run blast again delete file")
     }
     ## we read the blast file  
@@ -121,13 +122,7 @@ blastTaxAnnot <- function (MA, db="nt/nt",
     ## forward and reverse query (for non-merged sequences that is)
     blt <- blastT[, list(bitsum = sum(bitscore)), by=c("ampProd", "staxid")]
 
-    ## ## now we would hav to generated a taxonomizr sql database
-    ## read.nodes.sql("/SAN/db/taxonomy/nodes.dmp",
-    ##                "/SAN/db/taxonomy/taxonomizr.sql")
-    ## read.names.sql("/SAN/db/taxonomy/names.dmp",
-    ##                "/SAN/db/taxonomy/taxonomizr.sql")
-    blast.tax <- getTaxonomy(unique(blt$staxid),
-                             "/SAN/db/taxonomy/taxonomizr.sql")
+    blast.tax <- getTaxonomy(unique(blt$staxid), taxonSQL)
     blast.tax <- as.data.table(blast.tax, keep.rownames="staxid")
     blast.tax$staxid <- gsub("\\s*", "", blast.tax$staxid)
     blt <- merge(blt, blast.tax, by="staxid", all=TRUE)
@@ -176,11 +171,13 @@ blastTaxAnnot <- function (MA, db="nt/nt",
     })
     names(annot.l) <- names(SEQ)[as.numeric(names(annot.l))]
     annot.l <- lapply(annot.l[names(SEQ)], function (x) x) ## drop array
-    taxTab.l <- lapply(annot.l, function (x) {
-        if (!is.null(x)) {
-            new("taxonomyTable", x)
+    taxTab.l <- lapply(seq_along(annot.l), function (i) {
+        if (!is.null(annot.l[[i]])) {
+            new("taxonomyTable", cbind(annot.l[[i]],
+                                       amplicon=names(annot.l)[i]))
         } else {NULL}
     })
+    names(taxTab.l) <- names(getPrimerPairsSet(MA))
     MultiAmplicon(.Data=MA@.Data,
                   PairedReadFileSet = getPairedReadFileSet(MA),
                   PrimerPairsSet = getPrimerPairsSet(MA),
