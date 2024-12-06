@@ -29,27 +29,10 @@ setMethod("[", c("PairedReadFileSet", "index", "missing", "ANY"),
           function(x, i, j, ..., drop=TRUE){
               newF <- x@readsF[i]
               newR <- x@readsR[i]
-              new("PairedReadFileSet",
+              PairedReadFileSet(
                   readsF = newF,
-                  readsR = newR,
-                  names = x@names[i])
+                  readsR = newR)
           })
-
-## ##' @param x stratifiedFilesMatrix-class
-## ##' @param i index, name or logical indicating which sequencing read file
-## ##'     pair to select or character string giving its name
-## ##' @param j index, name or logical indicating which sequencing read file
-## ##'     pair to select or character string giving its name
-## ##' @param ... not used
-## ##' @param drop not used
-## ##' @rdname stratifiedFilesMatrix-class
-## ##' @export
-## setMethod("[", "stratifiedFilesMatrix", function(x, i, j, ..., drop=TRUE) {
-##     m <- callNextMethod()
-##     stratifiedFilesMatrix(readsF=x@readsF[m], readsR=x@readsR[m],
-##                           ncol=ncol(m), nrow=nrow(m),
-##                           dimnames=list(rownames(m), colnames(m)))
-## })
 
 
 ##' Subsetting for MultiAmplicon objects should conveniently subset
@@ -92,7 +75,7 @@ setMethod("[", "MultiAmplicon",
               if(length(getMergers(x))>0){
                   newmergers <- getMergers(x, dropEmpty=FALSE)[i, j, drop=FALSE]
               } else {newmergers <- matrix(nrow=0, ncol=0)}
-              if(length(getSequenceTable(x))>0){
+              if(length(unlist(getSequenceTable(x)))>0){
                   newST <- lapply(seq_along(i), function (ii){
                       ST <- x@sequenceTable[[i[[ii]]]]
                       if(nrow(ST)>=length(new.j[[ii]])){
@@ -101,7 +84,7 @@ setMethod("[", "MultiAmplicon",
                   })
                   names(newST) <- names(x@sequenceTable[i])
               } else{newST <- list()}
-              if(length(getSequenceTableNoChime(x))>0){
+              if(length(unlist(getSequenceTableNoChime(x)))>0){
                   newSTnC <- lapply(seq_along(i), function (ii){
                       ST <- getSequenceTableNoChime(x)[[i[[ii]]]]
                       if(nrow(ST)>=length(new.j[[ii]])){

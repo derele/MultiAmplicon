@@ -1,3 +1,5 @@
+
+
 ##' A class representing file paths to paired end reads.
 ##'
 ##' Two character vectors of the same length specifying file names of
